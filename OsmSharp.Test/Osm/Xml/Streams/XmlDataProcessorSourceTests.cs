@@ -38,7 +38,7 @@ namespace OsmSharp.Test.Unittests.Osm.Xml.Streams
             // generate the source.
             var source = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.Test.Unittests.api.osm"));
+                    "OsmSharp.Test.data.api.osm"));
 
             // pull the data out.
             var target = new OsmStreamTargetEmpty();

@@ -389,7 +389,7 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
         [Test]
         public void TestSimpleToCompleteOsmNetwork()
         {
-            this.TestSimpleToCompleteOn("OsmSharp.Test.Unittests.test_network.osm");
+            this.TestSimpleToCompleteOn("OsmSharp.Test.data.test_network.osm");
         }
 
         /// <summary>
@@ -398,7 +398,7 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
         [Test]
         public void TestSimpleToCompleteOsmNetworkBig()
         {
-            this.TestSimpleToCompleteOn("OsmSharp.Test.Unittests.test_network_big.osm");
+            this.TestSimpleToCompleteOn("OsmSharp.Test.data.test_network_big.osm");
         }
 
         /// <summary>
@@ -407,7 +407,7 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
         [Test]
         public void TestSimpleToCompleteOsmNetworkReal1()
         {
-            this.TestSimpleToCompleteOn("OsmSharp.Test.Unittests.test_network_real1.osm");
+            this.TestSimpleToCompleteOn("OsmSharp.Test.data.test_network_real1.osm");
         }
 
         /// <summary>

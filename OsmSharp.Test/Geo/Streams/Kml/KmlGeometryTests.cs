@@ -39,7 +39,7 @@ namespace OsmSharp.Test.Unittests.Streams.IO.Kml
         {
             // initialize the geometry source.
             var kmlSource = new KmlFeatureStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test.v2.0.kml"));
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.data.test.v2.0.kml"));
 
             // pull all the objects from the stream into the given collection.
             var kmlCollection = new FeatureCollection(kmlSource);
@@ -58,7 +58,7 @@ namespace OsmSharp.Test.Unittests.Streams.IO.Kml
         {
             // initialize the geometry source.
             var kmlSource = new KmlFeatureStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test.v2.0.response.kml"));
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.data.test.v2.0.response.kml"));
 
             // pull all the objects from the stream into the given collection.
             var kmlCollection = new FeatureCollection(kmlSource);
@@ -83,7 +83,7 @@ namespace OsmSharp.Test.Unittests.Streams.IO.Kml
         {
             // initialize the geometry source.
             var kmlSource = new KmlFeatureStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test.v2.1.kml"));
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.data.test.v2.1.kml"));
 
             // pull all the objects from the stream into the given collection.
             var kmlCollection = new FeatureCollection(kmlSource);

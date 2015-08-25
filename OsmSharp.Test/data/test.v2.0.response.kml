@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0"><Response>
+  <name>sint plein gent belgium</name>
+  <Status>
+    <code>200</code>
+    <request>geocode</request>
+  </Status>
+  <Placemark id="p1">
+    <address>Sint-Jozefstraat, 9041 Gent, België</address>
+    <AddressDetails Accuracy="6" xmlns="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0"><Country><CountryNameCode>BE</CountryNameCode><CountryName>België</CountryName><AdministrativeArea><AdministrativeAreaName>Vlaams Gewest</AdministrativeAreaName><SubAdministrativeArea><SubAdministrativeAreaName>Oost-Vlaanderen</SubAdministrativeAreaName><Locality><LocalityName>Gent</LocalityName><DependentLocality><DependentLocalityName>Oostakker</DependentLocalityName><Thoroughfare><ThoroughfareName>Sint-Jozefstraat</ThoroughfareName></Thoroughfare><PostalCode><PostalCodeNumber>9041</PostalCodeNumber></PostalCode></DependentLocality></Locality></SubAdministrativeArea></AdministrativeArea></Country></AddressDetails>
+    <ExtendedData>
+      <LatLonBox north="51.0874351" south="51.0811399" east="3.7701827" west="3.7630714"/>
+    </ExtendedData>
+    <Point><coordinates>3.7668161,51.0842200,0</coordinates></Point>
+  </Placemark>
+  <Placemark id="p2">
+    <address>Sint-Martensstraat, 9000 Gent, België</address>
+    <AddressDetails Accuracy="6" xmlns="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0"><Country><CountryNameCode>BE</CountryNameCode><CountryName>België</CountryName><AdministrativeArea><AdministrativeAreaName>Vlaams Gewest</AdministrativeAreaName><SubAdministrativeArea><SubAdministrativeAreaName>Oost-Vlaanderen</SubAdministrativeAreaName><Locality><LocalityName>Gent</LocalityName><DependentLocality><DependentLocalityName>Gent</DependentLocalityName><Thoroughfare><ThoroughfareName>Sint-Martensstraat</ThoroughfareName></Thoroughfare><PostalCode><PostalCodeNumber>9000</PostalCodeNumber></PostalCode></DependentLocality></Locality></SubAdministrativeArea></AdministrativeArea></Country></AddressDetails>
+    <ExtendedData>
+      <LatLonBox north="51.0536919" south="51.0473966" east="3.7212979" west="3.7150027"/>
+    </ExtendedData>
+    <Point><coordinates>3.7182357,51.0506358,0</coordinates></Point>
+  </Placemark>
+  <Placemark id="p3">
+    <address>Sint-Daniëlstraat, 9050 Gent, België</address>
+    <AddressDetails Accuracy="6" xmlns="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0"><Country><CountryNameCode>BE</CountryNameCode><CountryName>België</CountryName><AdministrativeArea><AdministrativeAreaName>Vlaams Gewest</AdministrativeAreaName><SubAdministrativeArea><SubAdministrativeAreaName>Oost-Vlaanderen</SubAdministrativeAreaName><Locality><LocalityName>Gent</LocalityName><DependentLocality><DependentLocalityName>Ledeberg</DependentLocalityName><Thoroughfare><ThoroughfareName>Sint-Daniëlstraat</ThoroughfareName></Thoroughfare><PostalCode><PostalCodeNumber>9050</PostalCodeNumber></PostalCode></DependentLocality></Locality></SubAdministrativeArea></AdministrativeArea></Country></AddressDetails>
+    <ExtendedData>
+      <LatLonBox north="51.0360187" south="51.0297235" east="3.7480845" west="3.7417892"/>
+    </ExtendedData>
+    <Point><coordinates>3.7444491,51.0327376,0</coordinates></Point>
+  </Placemark>
+  <Placemark id="p4">
+    <address>Sint-Pieterstraat, 9870 Zulte, België</address>
+    <AddressDetails Accuracy="6" xmlns="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0"><Country><CountryNameCode>BE</CountryNameCode><CountryName>België</CountryName><AdministrativeArea><AdministrativeAreaName>Vlaams Gewest</AdministrativeAreaName><SubAdministrativeArea><SubAdministrativeAreaName>Oost-Vlaanderen</SubAdministrativeAreaName><Locality><LocalityName>Zulte</LocalityName><DependentLocality><DependentLocalityName>Olsene</DependentLocalityName><Thoroughfare><ThoroughfareName>Sint-Pieterstraat</ThoroughfareName></Thoroughfare><PostalCode><PostalCodeNumber>9870</PostalCodeNumber></PostalCode></DependentLocality></Locality></SubAdministrativeArea></AdministrativeArea></Country></AddressDetails>
+    <ExtendedData>
+      <LatLonBox north="50.9326215" south="50.9263262" east="3.4629102" west="3.4566150"/>
+    </ExtendedData>
+    <Point><coordinates>3.4595544,50.9297718,0</coordinates></Point>
+  </Placemark>
+  <Placemark id="p5">
+    <address>Sint-Jozefstraat, 9820 Merelbeke, België</address>
+    <AddressDetails Accuracy="6" xmlns="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0"><Country><CountryNameCode>BE</CountryNameCode><CountryName>België</CountryName><AdministrativeArea><AdministrativeAreaName>Vlaams Gewest</AdministrativeAreaName><SubAdministrativeArea><SubAdministrativeAreaName>Oost-Vlaanderen</SubAdministrativeAreaName><Locality><LocalityName>Merelbeke</LocalityName><DependentLocality><DependentLocalityName>Merelbeke</DependentLocalityName><Thoroughfare><ThoroughfareName>Sint-Jozefstraat</ThoroughfareName></Thoroughfare><PostalCode><PostalCodeNumber>9820</PostalCodeNumber></PostalCode></DependentLocality></Locality></SubAdministrativeArea></AdministrativeArea></Country></AddressDetails>
+    <ExtendedData>
+      <LatLonBox north="51.0195682" south="51.0132729" east="3.7658400" west="3.7595448"/>
+    </ExtendedData>
+    <Point><coordinates>3.7621310,51.0166250,0</coordinates></Point>
+  </Placemark>
+  <Placemark id="p6">
+    <address>Sint-Jozefstraat, 9880 Aalter, België</address>
+    <AddressDetails Accuracy="6" xmlns="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0"><Country><CountryNameCode>BE</CountryNameCode><CountryName>België</CountryName><AdministrativeArea><AdministrativeAreaName>Vlaams Gewest</AdministrativeAreaName><SubAdministrativeArea><SubAdministrativeAreaName>Oost-Vlaanderen</SubAdministrativeAreaName><Locality><LocalityName>Aalter</LocalityName><DependentLocality><DependentLocalityName>Aalter</DependentLocalityName><Thoroughfare><ThoroughfareName>Sint-Jozefstraat</ThoroughfareName></Thoroughfare><PostalCode><PostalCodeNumber>9880</PostalCodeNumber></PostalCode></DependentLocality></Locality></SubAdministrativeArea></AdministrativeArea></Country></AddressDetails>
+    <ExtendedData>
+      <LatLonBox north="51.0851642" south="51.0788689" east="3.4465551" west="3.4402599"/>
+    </ExtendedData>
+    <Point><coordinates>3.4433051,51.0821835,0</coordinates></Point>
+  </Placemark>
+  <Placemark id="p7">
+    <address>Sint-Janstraat, 9800 Deinze, België</address>
+    <AddressDetails Accuracy="6" xmlns="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0"><Country><CountryNameCode>BE</CountryNameCode><CountryName>België</CountryName><AdministrativeArea><AdministrativeAreaName>Vlaams Gewest</AdministrativeAreaName><SubAdministrativeArea><SubAdministrativeAreaName>Oost-Vlaanderen</SubAdministrativeAreaName><Locality><LocalityName>Deinze</LocalityName><DependentLocality><DependentLocalityName>Grammene</DependentLocalityName><Thoroughfare><ThoroughfareName>Sint-Janstraat</ThoroughfareName></Thoroughfare><PostalCode><PostalCodeNumber>9800</PostalCodeNumber></PostalCode></DependentLocality></Locality></SubAdministrativeArea></AdministrativeArea></Country></AddressDetails>
+    <ExtendedData>
+      <LatLonBox north="50.9797260" south="50.9734307" east="3.4757357" west="3.4694404"/>
+    </ExtendedData>
+    <Point><coordinates>3.4721757,50.9768540,0</coordinates></Point>
+  </Placemark>
+</Response></kml>

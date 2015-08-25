@@ -44,7 +44,7 @@ namespace OsmSharp.Test.Unittests.IO.Xml.Gpx
         {
             // instantiate and load the gpx test document.
             XmlStreamSource source = new XmlStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test.v1.0.gpx"));
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.data.test.v1.0.gpx"));
             GpxDocument document = new GpxDocument(source);
             object gpx = document.Gpx;
 
@@ -73,7 +73,7 @@ namespace OsmSharp.Test.Unittests.IO.Xml.Gpx
         {
             // instantiate and load the gpx test document.
             XmlStreamSource source = new XmlStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test.v1.0.gpx"));
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.data.test.v1.0.gpx"));
             GpxDocument document = new GpxDocument(source);
             object gpx = document.Gpx;
 
@@ -136,7 +136,7 @@ namespace OsmSharp.Test.Unittests.IO.Xml.Gpx
         {
             // instantiate and load the gpx test document.
             XmlStreamSource source = new XmlStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test.v1.1.gpx"));
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.data.test.v1.1.gpx"));
             GpxDocument document = new GpxDocument(source);
             object gpx = document.Gpx;
 
@@ -165,7 +165,7 @@ namespace OsmSharp.Test.Unittests.IO.Xml.Gpx
         {
             // instantiate and load the gpx test document.
             XmlStreamSource source = new XmlStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test.v1.1.gpx"));
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.data.test.v1.1.gpx"));
             GpxDocument document = new GpxDocument(source);
             object gpx = document.Gpx;
 
@@ -223,7 +223,7 @@ namespace OsmSharp.Test.Unittests.IO.Xml.Gpx
         {
             // instantiate and load the gpx test document.
             var source = new XmlStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.regression1.gpx"));
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.data.regression1.gpx"));
             var document = new GpxDocument(source);
             object gpx = document.Gpx;
 

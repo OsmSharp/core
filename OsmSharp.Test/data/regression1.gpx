@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" 
+     xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3" 
+     xmlns:wptx1="http://www.garmin.com/xmlschemas/WaypointExtension/v1" 
+     xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" 
+     creator="GPSMAP 62st" 
+     version="1.1" 
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+     xsi:schemaLocation="http://www.topografix.com/GPX/1/1 
+                         http://www.topografix.com/GPX/1/1/gpx.xsd 
+                         http://www.garmin.com/xmlschemas/GpxExtensions/v3 
+                         http://www8.garmin.com/xmlschemas/GpxExtensionsv3.xsd 
+                         http://www.garmin.com/xmlschemas/WaypointExtension/v1 
+                         http://www8.garmin.com/xmlschemas/WaypointExtensionv1.xsd 
+                         http://www.garmin.com/xmlschemas/TrackPointExtension/v1 
+                         http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd">   <metadata>
+        <link href="http://www.garmin.com">
+            <text>Garmin International</text>
+        </link>
+        <time>2013-05-06T21:21:39Z</time>
+    </metadata>
+    <trk>
+        <name>Aktueller Track: 06 MAI 2013 16:21</name>
+        <trkseg>        
+            <trkpt lat="47.7517450321" lon="14.3034374714">
+                <ele>581.73</ele>
+                <time>2013-05-06T14:22:32Z</time>
+                <extensions>
+                    <gpxtpx:TrackPointExtension>
+                        <gpxtpx:atemp>24.5</gpxtpx:atemp>
+                        <gpxtpx:hr>110</gpxtpx:hr>
+                    </gpxtpx:TrackPointExtension>
+                </extensions>
+            </trkpt>
+            <trkpt lat="47.7517618798" lon="14.3034445122">
+                <ele>586.06</ele>
+                <time>2013-05-06T14:22:37Z</time>
+                <extensions>
+                    <gpxtpx:TrackPointExtension>
+                        <gpxtpx:atemp>24.5</gpxtpx:atemp>
+                        <gpxtpx:hr>107</gpxtpx:hr>
+                    </gpxtpx:TrackPointExtension>
+                </extensions>
+            </trkpt>
+        </trkseg>
+    </trk>
+</gpx>

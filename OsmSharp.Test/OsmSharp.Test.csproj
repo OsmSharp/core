@@ -125,7 +125,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="data\test.v1.0.gpx" />
+    <EmbeddedResource Include="data\test.v1.1.gpx" />
+    <EmbeddedResource Include="data\test.v2.0.kml" />
+    <EmbeddedResource Include="data\test.v2.0.response.kml" />
+    <EmbeddedResource Include="data\test.v2.1.kml" />
+    <EmbeddedResource Include="data\api.osm" />
+    <EmbeddedResource Include="data\test_network_real1.osm" />
+    <EmbeddedResource Include="data\test_network_big.osm" />
+    <EmbeddedResource Include="data\test_network.osm" />
+    <EmbeddedResource Include="data\api.osm.pbf" />
+    <EmbeddedResource Include="data\regression1.gpx" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="data\capabilities.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

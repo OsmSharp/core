@@ -36,7 +36,7 @@ namespace OsmSharp.Test.Unittests.Osm.API
         public void OsmApiDeserializeTest()
         {
             Stream capabilities =
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.capabilities.xml");
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.data.capabilities.xml");
 
             XmlSerializer capabilities_serializer = new XmlSerializer(typeof(
                 OsmSharp.Osm.Xml.v0_6.osm));

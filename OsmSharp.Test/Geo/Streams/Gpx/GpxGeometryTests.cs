@@ -39,7 +39,7 @@ namespace OsmSharp.Test.Unittests.Geo.Streams.Gpx
         {
             // initialize the geometry source.
             var gpxSource = new GpxFeatureStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test.v1.0.gpx"),
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.data.test.v1.0.gpx"),
                 false);
 
             // pull all the objects from the stream into the given collection.

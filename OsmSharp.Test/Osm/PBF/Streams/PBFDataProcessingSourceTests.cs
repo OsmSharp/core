@@ -38,7 +38,7 @@ namespace OsmSharp.Test.Unittests.Osm.PBF.Streams
             // generate the source.
             var source = new PBFOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.Test.Unittests.api.osm.pbf"));
+                    "OsmSharp.Test.data.api.osm.pbf"));
 
             // pull the data out.
             var target = new OsmStreamTargetEmpty();
@@ -62,7 +62,7 @@ namespace OsmSharp.Test.Unittests.Osm.PBF.Streams
         public void MoveNextWayRegression1()
         {
             using (var fileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.Test.Unittests.kempen-big.osm.pbf"))
+                    "OsmSharp.Test.data.api.osm.pbf"))
             {
                 using (var reader = new PBFOsmStreamSource(fileStream))
                 {

@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{00BC45E6-1C16-4519-B8B5-B7BA3CEEBA4C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OsmSharp.Test</RootNamespace>
+    <AssemblyName>OsmSharp.Test</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Collections\Arrays\HugeArrayTests.cs" />
+    <Compile Include="Collections\Arrays\MemoryMappedHugeArrayTests.cs" />
+    <Compile Include="Collections\Cache\LRUCacheTests.cs" />
+    <Compile Include="Collections\Coordinates\HugeCoordinateCollectionIndexTests.cs" />
+    <Compile Include="Collections\HugeDictionaryTests.cs" />
+    <Compile Include="Collections\HugeHashSetTests.cs" />
+    <Compile Include="Collections\Indexes\MemoryMapped\MemoryMappedIndexTests.cs" />
+    <Compile Include="Collections\LargeBitArray32Tests.cs" />
+    <Compile Include="Collections\MemoryMapped\MemoryMappedHugeDictionaryTests.cs" />
+    <Compile Include="Collections\PermutationEnumerationTests.cs" />
+    <Compile Include="Collections\PriorityQueues\BinairyHeapTests.cs" />
+    <Compile Include="Collections\Sorting\QuickSortTests.cs" />
+    <Compile Include="Collections\SparseArrayTests.cs" />
+    <Compile Include="Collections\SparseLargeBitArray32Tests.cs" />
+    <Compile Include="Collections\SpatialIndexes\IndexReferenceImplementation.cs" />
+    <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndexTests.cs" />
+    <Compile Include="Collections\SpatialIndexes\RTreeStreamIndexTests.cs" />
+    <Compile Include="Collections\StringTableTests.cs" />
+    <Compile Include="Collections\Tags\TagsCollectionIndexSerializerTests.cs" />
+    <Compile Include="Collections\Tags\TagsCollectionIndexTests.cs" />
+    <Compile Include="Collections\Tags\TagsCollectionTests.cs" />
+    <Compile Include="Geo\GeoCoordinateTests.cs" />
+    <Compile Include="Geo\Geometries\LineairRingTests.cs" />
+    <Compile Include="Geo\Geometries\PolygonTests.cs" />
+    <Compile Include="Geo\Streams\GeoJson\GeoJsonConverterTests.cs" />
+    <Compile Include="Geo\Streams\Gpx\GpxGeometryTests.cs" />
+    <Compile Include="Geo\Streams\Kml\KmlGeometryTests.cs" />
+    <Compile Include="IO\Json\JsonConvertTest.cs" />
+    <Compile Include="IO\Xml\Gpx\GpxXmlTest.cs" />
+    <Compile Include="IO\Xml\Kml\KmlXmlTest.cs" />
+    <Compile Include="Math\Algorithms\HilbertCurveTests.cs" />
+    <Compile Include="Math\Algorithms\RotationTests.cs" />
+    <Compile Include="Math\Algorithms\SimplifyCurveTests.cs" />
+    <Compile Include="Math\MathTest.cs" />
+    <Compile Include="Math\Primitives\BoxF2DTests.cs" />
+    <Compile Include="Math\Primitives\Line2DTests.cs" />
+    <Compile Include="Math\Primitives\RectangleF2DTests.cs" />
+    <Compile Include="Math\Structures\LocatedObjectIndexTest.cs" />
+    <Compile Include="Math\Structures\LocatedObjectQTTests.cs" />
+    <Compile Include="Math\Structures\StringTrees\StringTreeDictionaryTest.cs" />
+    <Compile Include="Osm\API\OsmApiXmlTest.cs" />
+    <Compile Include="Osm\Cache\OsmDataCacheDiskTests.cs" />
+    <Compile Include="Osm\Cache\OsmDataCacheMemoryTests.cs" />
+    <Compile Include="Osm\Cache\OsmDataCacheTestsBase.cs" />
+    <Compile Include="Osm\ComparisonHelpers.cs" />
+    <Compile Include="Osm\Data\MemoryDataSourceTests.cs" />
+    <Compile Include="Osm\Geo\Interpreter\SimpleFeatureInterpreterTests.cs" />
+    <Compile Include="Osm\Geo\Streams\OsmFeatureStreamSourceTests.cs" />
+    <Compile Include="Osm\NodeTests.cs" />
+    <Compile Include="Osm\PBF\Streams\PBFDataProcessingSourceTests.cs" />
+    <Compile Include="Osm\Streams\Complete\OsmSimpleCompleteStreamSourceTests.cs" />
+    <Compile Include="Osm\Streams\Filters\OsmStreamFilterBaseTests.cs" />
+    <Compile Include="Osm\Streams\Filters\OsmStreamFilterExcludeTests.cs" />
+    <Compile Include="Osm\Streams\Filters\OsmStreamFilterReference.cs" />
+    <Compile Include="Osm\Streams\Filters\OsmStreamFilterSortTest.cs" />
+    <Compile Include="Osm\Streams\Filters\OsmStreamFilterTagsFilterTest.cs" />
+    <Compile Include="Osm\TagParsingTests.cs" />
+    <Compile Include="Osm\Tiles\TilesTests.cs" />
+    <Compile Include="Osm\Tiles\WebMercatorTests.cs" />
+    <Compile Include="Osm\Xml\Streams\XmlDataProcessorSourceTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Units\AngleUnitTests.cs" />
+    <Compile Include="Units\SpeedUnitTests.cs" />
+    <Compile Include="UtilitiesTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
+      <Project>{e20dc51a-431e-49f7-8018-53fe0de80386}</Project>
+      <Name>OsmSharp.Osm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
+      <Project>{077997fd-a61d-4dc0-b4b0-7429bf9824e8}</Project>
+      <Name>OsmSharp</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

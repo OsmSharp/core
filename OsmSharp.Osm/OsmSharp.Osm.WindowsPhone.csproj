@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B050A8E0-25FF-4FA1-B01E-0A06D7090863}</ProjectGuid>
+    <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OsmSharp.Osm</RootNamespace>
+    <AssemblyName>OsmSharp.Osm</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <TargetFrameworkProfile>WindowsPhone71</TargetFrameworkProfile>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\OutputWindowsPhone\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\OutputWindowsPhone\OsmSharp.Osm.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\OutputWindowsPhone\</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\OutputWindowsPhone\OsmSharp.Osm.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+    <Reference Include="mscorlib.extensions" />
+    <Reference Include="System.Xml.Serialization" />
+    <Reference Include="Zlib.Portable, Version=1.9.1.9000, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cache\OsmDataCache.cs" />
+    <Compile Include="Cache\OsmDataCacheMemory.cs" />
+    <Compile Include="Change.cs" />
+    <Compile Include="ChangeSet.cs" />
+    <Compile Include="ChangeSetInfo.cs" />
+    <Compile Include="Complete\CompleteChange.cs" />
+    <Compile Include="Complete\CompleteChangeSet.cs" />
+    <Compile Include="Complete\CompleteNode.cs" />
+    <Compile Include="Complete\CompleteOsmBase.cs" />
+    <Compile Include="Complete\CompleteOsmGeo.cs" />
+    <Compile Include="Complete\CompleteOsmGeoType.cs" />
+    <Compile Include="Complete\CompleteRelation.cs" />
+    <Compile Include="Complete\CompleteRelationMember.cs" />
+    <Compile Include="Complete\CompleteUser.cs" />
+    <Compile Include="Complete\CompleteWay.cs" />
+    <Compile Include="Complete\OsmBaseIdGenerator.cs" />
+    <Compile Include="Data\DataSourceReadOnlyBase.cs" />
+    <Compile Include="Data\IDataSource.cs" />
+    <Compile Include="Data\IDataSourceReadOnly.cs" />
+    <Compile Include="Data\INodeSource.cs" />
+    <Compile Include="Data\IOsmGeoSource.cs" />
+    <Compile Include="Data\IRelationSource.cs" />
+    <Compile Include="Data\IWaySource.cs" />
+    <Compile Include="Data\KeyGenerator.cs" />
+    <Compile Include="Filters\Filter.cs" />
+    <Compile Include="Filters\FilterAny.cs" />
+    <Compile Include="Filters\FilterBox.cs" />
+    <Compile Include="Filters\FilterCombined.cs" />
+    <Compile Include="Filters\FilterTag.cs" />
+    <Compile Include="Filters\FilterType.cs" />
+    <Compile Include="Filters\Tags\FilterTagCount.cs" />
+    <Compile Include="Filters\Tags\FilterTagExists.cs" />
+    <Compile Include="Filters\Tags\FilterTagMatch.cs" />
+    <Compile Include="Interpreter\GeometryInterpreter.cs" />
+    <Compile Include="Interpreter\SimpleGeometryInterpreter.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="OsmGeo.cs" />
+    <Compile Include="OsmGeoType.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Relation.cs" />
+    <Compile Include="RelationMember.cs" />
+    <Compile Include="Streams\ChangeSets\DataProcessorChangeSetFilter.cs" />
+    <Compile Include="Streams\ChangeSets\DataProcessorChangeSetSource.cs" />
+    <Compile Include="Streams\ChangeSets\DataProcessorChangeSetTarget.cs" />
+    <Compile Include="Streams\ChangeSets\Filters\BoundingBox\DataProcessorChangeSetFilterBoundingBox.cs" />
+    <Compile Include="Streams\ChangeSets\Filters\BoundingBox\IChangeSetFilterListener.cs" />
+    <Compile Include="Streams\Collections\OsmCollectionStreamWriter.cs" />
+    <Compile Include="Streams\Collections\OsmEnumerableStreamSource.cs" />
+    <Compile Include="Streams\Complete\OsmCompleteStreamSource.cs" />
+    <Compile Include="Streams\Complete\OsmCompleteStreamTarget.cs" />
+    <Compile Include="Streams\Complete\OsmSimpleCompleteStreamSource.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterBase.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterBoundingBox.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterProgress.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterSort.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterTags.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterTagsFilter.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterWithEvents.cs" />
+    <Compile Include="Streams\OsmStreamExtensions.cs" />
+    <Compile Include="Streams\OsmStreamFilter.cs" />
+    <Compile Include="Streams\OsmStreamSource.cs" />
+    <Compile Include="Streams\OsmStreamSourceEmpty.cs" />
+    <Compile Include="Streams\OsmStreamTarget.cs" />
+    <Compile Include="Streams\OsmStreamTargetEmpty.cs" />
+    <Compile Include="TagExtensions.cs" />
+    <Compile Include="Tiles\Tile.cs" />
+    <Compile Include="Tiles\TileDefaultsForRouting.cs" />
+    <Compile Include="Tiles\TileRange.cs" />
+    <Compile Include="Way.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OsmSharp\OsmSharp.WindowsPhone.csproj">
+      <Project>{5F0F6567-835D-4807-893C-F4B6C3E58CE8}</Project>
+      <Name>OsmSharp.WindowsPhone</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\Cache\" />
+    <Folder Include="Data\Memory\" />
+    <Folder Include="Data\PBF\Dense\" />
+    <Folder Include="Data\PBF\Processor\" />
+    <Folder Include="Interpreter\Complete\" />
+    <Folder Include="Streams\OsmGeoStream\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

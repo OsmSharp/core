@@ -1,0 +1,357 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5F0F6567-835D-4807-893C-F4B6C3E58CE8}</ProjectGuid>
+    <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OsmSharp</RootNamespace>
+    <AssemblyName>OsmSharp</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <TargetFrameworkProfile>WindowsPhone71</TargetFrameworkProfile>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\OutputWindowsPhone\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\OutputWindowsPhone\OsmSharp.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\OutputWindowsPhone\</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\OutputWindowsPhone\OsmSharp.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+    <Reference Include="mscorlib.extensions" />
+    <Reference Include="System.Xml.Serialization" />
+    <Reference Include="Zlib.Portable, Version=1.9.1.9000, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Collections\Cache\LRUCache.cs" />
+    <Compile Include="Collections\DictionaryProxy.cs" />
+    <Compile Include="Collections\DictionaryWithEvents.cs" />
+    <Compile Include="Collections\HashSet.cs" />
+    <Compile Include="Collections\HugeDictionary.cs" />
+    <Compile Include="Collections\ISet.cs" />
+    <Compile Include="Collections\LimitedStack.cs" />
+    <Compile Include="Collections\LongIndex\ILongIndexNode.cs" />
+    <Compile Include="Collections\LongIndex\LongIndex.cs" />
+    <Compile Include="Collections\LongIndex\LongIndexLeaf.cs" />
+    <Compile Include="Collections\LongIndex\LongIndexNode.cs" />
+    <Compile Include="Collections\ObjectTable.cs" />
+    <Compile Include="Collections\ObjectTableDictionary.cs" />
+    <Compile Include="Collections\PermutationEnumerator.cs" />
+    <Compile Include="Collections\PriorityQueues\BinairyHeap.cs" />
+    <Compile Include="Collections\PriorityQueues\IPriorityQueue.cs" />
+    <Compile Include="Collections\SortedDictionary.cs" />
+    <Compile Include="Collections\SortedList.cs" />
+    <Compile Include="Collections\SortedSet.cs" />
+    <Compile Include="Collections\SparseArray.cs" />
+    <Compile Include="Collections\SpatialIndexes\ISpatialIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\ISpatialIndexReadonly.cs" />
+    <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializer.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializerStream.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamSerializer.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamIndex.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamSerializer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\Tags\ITagsCollectionIndex.cs" />
+    <Compile Include="Collections\Tags\ITagsCollectionIndexReadonly.cs" />
+    <Compile Include="Collections\Tags\ITagsSource.cs" />
+    <Compile Include="Collections\Tags\Serializer\TagIndexSerializer.cs" />
+    <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />
+    <Compile Include="Collections\Tags\Tag.cs" />
+    <Compile Include="Collections\Tags\TagsCollection.cs" />
+    <Compile Include="Collections\Tags\TagsCollectionBase.cs" />
+    <Compile Include="Collections\Tags\TagsTableCollection.cs" />
+    <Compile Include="Collections\Tags\TagsTableCollectionIndex.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Encoding\ASCIIEncoding.cs" />
+    <Compile Include="GeoCoding\AccuracyEnum.cs" />
+    <Compile Include="GeoCoding\Facade.cs" />
+    <Compile Include="GeoCoding\IGeoCoder.cs" />
+    <Compile Include="GeoCoding\IGeoCoderResult.cs" />
+    <Compile Include="GeoCoding\Memory\IndexCommunes.cs" />
+    <Compile Include="GeoCoding\Memory\IndexHouseNumbers.cs" />
+    <Compile Include="GeoCoding\Memory\IndexPostalCodes.cs" />
+    <Compile Include="GeoCoding\Memory\IndexStreets.cs" />
+    <Compile Include="GeoCoding\Memory\InMemoryGeoCoder.cs" />
+    <Compile Include="Geo\Attributes\GeometryAttribute.cs" />
+    <Compile Include="Geo\Attributes\GeometryAttributeCollection.cs" />
+    <Compile Include="Geo\Attributes\IGeometryAttributesIndex.cs" />
+    <Compile Include="Geo\Attributes\SimpleGeometryAttributeCollection.cs" />
+    <Compile Include="Geo\Extensions.cs" />
+    <Compile Include="Geo\GeoCoordinate.cs" />
+    <Compile Include="Geo\GeoCoordinateBox.cs" />
+    <Compile Include="Geo\GeoCoordinateLine.cs" />
+    <Compile Include="Geo\GeoCoordinatePolygon.cs" />
+    <Compile Include="Geo\Geometries\Geometry.cs" />
+    <Compile Include="Geo\Geometries\GeometryCollection.cs" />
+    <Compile Include="Geo\Geometries\LineairRing.cs" />
+    <Compile Include="Geo\Geometries\LineString.cs" />
+    <Compile Include="Geo\Geometries\MultiLineString.cs" />
+    <Compile Include="Geo\Geometries\MultiPoint.cs" />
+    <Compile Include="Geo\Geometries\MultiPolygon.cs" />
+    <Compile Include="Geo\Geometries\Point.cs" />
+    <Compile Include="Geo\Geometries\Polygon.cs" />
+    <Compile Include="Geo\Meta\DirectionCalculator.cs" />
+    <Compile Include="Geo\Meta\DirectionEnum.cs" />
+    <Compile Include="Geo\Meta\RelativeDirection.cs" />
+    <Compile Include="Geo\Meta\RelativeDirectionCalculator.cs" />
+    <Compile Include="Geo\Meta\RelativeDirectionEnum.cs" />
+    <Compile Include="Geo\Projections\EllipticalMercator.cs" />
+    <Compile Include="Geo\Projections\IProjection.cs" />
+    <Compile Include="Geo\Projections\Lambert\Ellipsoids\Hayford1924Ellipsoid.cs" />
+    <Compile Include="Geo\Projections\Lambert\Ellipsoids\Wgs1984Ellipsoid.cs" />
+    <Compile Include="Geo\Projections\Lambert\International\Belgium\Belgium1972LambertProjection.cs" />
+    <Compile Include="Geo\Projections\Lambert\LambertCoordinate.cs" />
+    <Compile Include="Geo\Projections\Lambert\LambertEllipsoid.cs" />
+    <Compile Include="Geo\Projections\Lambert\LambertProjectionBase.cs" />
+    <Compile Include="Geo\Projections\ScaledProjection.cs" />
+    <Compile Include="Geo\Projections\SphericalMercator.cs" />
+    <Compile Include="Geo\Projections\WebMercator.cs" />
+    <Compile Include="Geo\Simple\GeoCoordinateCompact.cs" />
+    <Compile Include="Geo\Simple\GeoCoordinateSimple.cs" />
+    <Compile Include="Geo\Streams\GeoCollectionStreamSource.cs" />
+    <Compile Include="Geo\Streams\IGeoStreamSource.cs" />
+    <Compile Include="Geo\Streams\IGeoStreamTarget.cs" />
+    <Compile Include="IClonable.cs" />
+    <Compile Include="IO\ByteCache\DiskByteCache.cs" />
+    <Compile Include="IO\ByteCache\IByteCache.cs" />
+    <Compile Include="IO\ByteCache\MemoryByteCache.cs" />
+    <Compile Include="IO\CappedStream.cs" />
+    <Compile Include="IO\DelimitedFiles\DefaultDelimitedFormat.cs" />
+    <Compile Include="IO\DelimitedFiles\DelimitedFileHandler.cs" />
+    <Compile Include="IO\DelimitedFiles\DelimiterType.cs" />
+    <Compile Include="IO\DelimitedFiles\IDelimitedFormat.cs" />
+    <Compile Include="IO\LimitedStream.cs" />
+    <Compile Include="IO\StreamCache\IStreamCache.cs" />
+    <Compile Include="IO\StreamCache\MemoryCachedStream.cs" />
+    <Compile Include="Logging\Log.cs" />
+    <Compile Include="Logging\TraceSource.cs" />
+    <Compile Include="Math\AI\Genetic\Fitness\IFitnessCalculator.cs" />
+    <Compile Include="Math\AI\Genetic\Individual.cs" />
+    <Compile Include="Math\AI\Genetic\IProblem.cs" />
+    <Compile Include="Math\AI\Genetic\Operations\CombinedMutationOperation.cs" />
+    <Compile Include="Math\AI\Genetic\Operations\ICrossOverOperation.cs" />
+    <Compile Include="Math\AI\Genetic\Operations\IGenerationOperator.cs" />
+    <Compile Include="Math\AI\Genetic\Operations\IMutationOperation.cs" />
+    <Compile Include="Math\AI\Genetic\Operations\IOperation.cs" />
+    <Compile Include="Math\AI\Genetic\Population.cs" />
+    <Compile Include="Math\AI\Genetic\Selectors\ISelector.cs" />
+    <Compile Include="Math\AI\Genetic\Selectors\RandomSelector.cs" />
+    <Compile Include="Math\AI\Genetic\Selectors\TournamentBasedSelector.cs" />
+    <Compile Include="Math\AI\Genetic\Solvers\Solver.cs" />
+    <Compile Include="Math\AI\Genetic\Solvers\SolverSettings.cs" />
+    <Compile Include="Math\Algorithms\ConvexHull.cs" />
+    <Compile Include="Math\Algorithms\Rotation.cs" />
+    <Compile Include="Math\Algorithms\SimplifyCurve.cs" />
+    <Compile Include="Math\ILocationObject.cs" />
+    <Compile Include="Math\ITaggedObject.cs" />
+    <Compile Include="Math\PrimitiveF2D.cs" />
+    <Compile Include="Math\Primitives\BoxF2D.cs" />
+    <Compile Include="Math\Primitives\Enumerators\Lines\ILineList.cs" />
+    <Compile Include="Math\Primitives\Enumerators\Lines\LineEnumerable.cs" />
+    <Compile Include="Math\Primitives\Enumerators\Lines\LineEnumerator.cs" />
+    <Compile Include="Math\Primitives\Enumerators\Points\IPointList.cs" />
+    <Compile Include="Math\Primitives\Enumerators\Points\PointEnumerable.cs" />
+    <Compile Include="Math\Primitives\Enumerators\Points\PointEnumerator.cs" />
+    <Compile Include="Math\Primitives\LineF2D.cs" />
+    <Compile Include="Math\Primitives\PointF2D.cs" />
+    <Compile Include="Math\Primitives\PolygonF2D.cs" />
+    <Compile Include="Math\Primitives\Polyline2D.cs" />
+    <Compile Include="Math\Primitives\RectangleF2D.cs" />
+    <Compile Include="Math\Random\IRandomGenerator.cs" />
+    <Compile Include="Math\Random\RandomGenerator.cs" />
+    <Compile Include="Math\Random\StaticRandomGenerator.cs" />
+    <Compile Include="Math\StateMachines\FiniteStateMachine.cs" />
+    <Compile Include="Math\StateMachines\FiniteStateMachineState.cs" />
+    <Compile Include="Math\StateMachines\FiniteStateMachineTransition.cs" />
+    <Compile Include="Math\StateMachines\FiniteStateMachineTransitionCondition.cs" />
+    <Compile Include="Math\Structures\ILocatedObjectIndex.cs" />
+    <Compile Include="Math\Structures\KDTree\Tree2D.cs" />
+    <Compile Include="Math\Structures\KDTree\Tree2DNode.cs" />
+    <Compile Include="Math\Structures\LocatedObjectIndexList.cs" />
+    <Compile Include="Math\Structures\QTree\QuadTree.cs" />
+    <Compile Include="Math\Structures\StringTrees\StringTreeDictionary.cs" />
+    <Compile Include="Math\TSP\ArbitraryInsertion\ArbitraryInsertionSolver.cs" />
+    <Compile Include="Math\TSP\BruteForce\BruteForceSolver.cs" />
+    <Compile Include="Math\TSP\CheapestInsertion\CheapestInsertionSolver.cs" />
+    <Compile Include="Math\TSP\EdgeAssemblyGenetic\EdgeAssemblyCrossOverSolver.cs" />
+    <Compile Include="Math\TSP\Genetic\GeneticSolver.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Fitness.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\FitnessCalculator.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\GeneticProblem.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Individual.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Operations\CrossOver\BestDetailedPlacementCrossOverOperation.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Operations\CrossOver\BestPlacementCrossOverOperation.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Operations\CrossOver\DefaultCrossOverOperation.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Operations\CrossOver\EdgeAssemblyCrossover.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Operations\CrossOver\EdgeAssemblyCrossoverNaive.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Operations\CrossOver\EdgeRecombinationCrossOverOperation.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Operations\CrossOver\Helpers\AsymmetricAlternatingCycles.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Operations\CrossOver\SequentialContructiveCrossoverOperator.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Operations\Generation\3OptGenerationOperation.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Operations\Generation\BestPlacementGenerationOperation.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Operations\Generation\LKGenerationOperation.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Operations\Generation\RandomGenerationOperation.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Operations\Helpers\BestPlacementHelper.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Operations\Mutation\BestDetailedPlacementMutationOperator.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Operations\Mutation\BestPlacementMutationOperation.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Operations\Mutation\DefaultMutationOperation.cs" />
+    <Compile Include="Math\TSP\Genetic\Solver\Solver.cs" />
+    <Compile Include="Math\TSP\IImprovement.cs" />
+    <Compile Include="Math\TSP\ISolver.cs" />
+    <Compile Include="Math\TSP\LinKernighan\Edge.cs" />
+    <Compile Include="Math\TSP\LinKernighan\EdgeList.cs" />
+    <Compile Include="Math\TSP\LinKernighan\EdgeSet.cs" />
+    <Compile Include="Math\TSP\LinKernighan\LinKernighanSolver.cs" />
+    <Compile Include="Math\TSP\LinKernighan\SparseSets\SparseSet.cs" />
+    <Compile Include="Math\TSP\LinKernighan\SparseSets\SparseSetHelper.cs" />
+    <Compile Include="Math\TSP\LocalSearch\HillClimbing3Opt\HillClimbing3OptSolver.cs" />
+    <Compile Include="Math\TSP\Problems\IProblem.cs" />
+    <Compile Include="Math\TSP\Problems\MatrixProblem.cs" />
+    <Compile Include="Math\TSP\Problems\ProblemExtensions.cs" />
+    <Compile Include="Math\TSP\RandomizedArbitraryInsertion\RandomizedArbitraryInsertionSolver.cs" />
+    <Compile Include="Math\TSP\Random\RandomSolver.cs" />
+    <Compile Include="Math\TSP\SolverBase.cs" />
+    <Compile Include="Math\VectorF2D.cs" />
+    <Compile Include="Math\VRP\Core\BestPlacement\CheapestInsertionHelper.cs" />
+    <Compile Include="Math\VRP\Core\BestPlacement\CheapestInsertionResult.cs" />
+    <Compile Include="Math\VRP\Core\BestPlacement\InsertionCosts\BinaryHeapInsertionCosts.cs" />
+    <Compile Include="Math\VRP\Core\BestPlacement\InsertionCosts\IInsertionCosts.cs" />
+    <Compile Include="Math\VRP\Core\BestPlacement\SeedCustomers\ISeedCustomerSelector.cs" />
+    <Compile Include="Math\VRP\Core\BestPlacement\SeedCustomers\SimpleSeeds.cs" />
+    <Compile Include="Math\VRP\Core\IProblemWeights.cs" />
+    <Compile Include="Math\VRP\Core\LocalSearch\RePlace1OptHelper.cs" />
+    <Compile Include="Math\VRP\Core\LocalSearch\RePlace2OptHelper.cs" />
+    <Compile Include="Math\VRP\Core\NearestNeighbours10.cs" />
+    <Compile Include="Math\VRP\Core\Routes\ASymmetric\AsymmetricCycles.cs" />
+    <Compile Include="Math\VRP\Core\Routes\ASymmetric\DepotDynamicAsymmetricMultiRoute.cs" />
+    <Compile Include="Math\VRP\Core\Routes\ASymmetric\DynamicAsymmetricBetweenEnumerable.cs" />
+    <Compile Include="Math\VRP\Core\Routes\ASymmetric\DynamicAsymmetricMultiRoute.cs" />
+    <Compile Include="Math\VRP\Core\Routes\ASymmetric\DynamicAsymmetricRoute.cs" />
+    <Compile Include="Math\VRP\Core\Routes\ASymmetric\IASymmetricRoute.cs" />
+    <Compile Include="Math\VRP\Core\Routes\ASymmetric\SimpleAsymmetricRoute.cs" />
+    <Compile Include="Math\VRP\Core\Routes\BetweenEnumerator.cs" />
+    <Compile Include="Math\VRP\Core\Routes\DepotRoute.cs" />
+    <Compile Include="Math\VRP\Core\Routes\EdgeEnumerator.cs" />
+    <Compile Include="Math\VRP\Core\Routes\IMultiRoute.cs" />
+    <Compile Include="Math\VRP\Core\Routes\IRoute.cs" />
+    <Compile Include="Math\VRP\Core\Routes\RouteExtensions.cs" />
+    <Compile Include="Math\VRP\Core\Routes\Symmetric\DynamicSymmetricRoute.cs" />
+    <Compile Include="Math\VRP\Core\Routes\Symmetric\FixedSymmetricRoute.cs" />
+    <Compile Include="Math\VRP\Core\Routes\Symmetric\ISymmetricRoute.cs" />
+    <Compile Include="Math\VRP\Core\TwoOpt\TwoOptHelper.cs" />
+    <Compile Include="Math\VRP\Core\TwoOpt\TwoOptResult.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Facade.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Fitness.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\FitnessCalculator.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Genome.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Helpers\BestPlacementHelper.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Helpers\IndividualHelper.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Individual.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\CrossOver\DefaultCrossOverOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\CrossOver\RandomRandomBestSelectionCrossOverOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\CrossOver\RandomRandomSelectionCrossOverOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\CrossOver\RandomSelectionCrossOverOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Generation\BestFastPlacementGenerationOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Generation\BestPlacementGenerationOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\BestInSmallestMutationOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\BringingBestMutationOperator.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\DefaultMutationOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\DynamicCombinedMutation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\ExchangeMutationOperator.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\RedivideFromLargeMutationOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\RedivideToSmallMutationOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\RedoBestPlacementMutationOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\RoundCutMutationOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\RoundMergeMutationOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\RoundRedivideMutationOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\RoundReduceMultipleMutationOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\RoundSplitMutationOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\TakeInMutationOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\TakeOutMutationOperation.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Genetic\Problem.cs" />
+    <Compile Include="Math\VRP\MultiSalesman\Problems\IProblem.cs" />
+    <Compile Include="Progress\EmptyProgressReporter.cs" />
+    <Compile Include="Progress\IProgressEnabled.cs" />
+    <Compile Include="Progress\IProgressReporter.cs" />
+    <Compile Include="Progress\ProgressStatus.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Range.cs" />
+    <Compile Include="Units\Angle\Degree.cs" />
+    <Compile Include="Units\Angle\Radian.cs" />
+    <Compile Include="Units\Distance\Kilometer.cs" />
+    <Compile Include="Units\Distance\Meter.cs" />
+    <Compile Include="Units\Speed\KilometerPerHour.cs" />
+    <Compile Include="Units\Speed\Knots.cs" />
+    <Compile Include="Units\Speed\MeterPerSecond.cs" />
+    <Compile Include="Units\Speed\MilesPerHour.cs" />
+    <Compile Include="Units\Speed\Speed.cs" />
+    <Compile Include="Units\Time\Hour.cs" />
+    <Compile Include="Units\Time\Second.cs" />
+    <Compile Include="Units\Unit.cs" />
+    <Compile Include="Units\Weight\Gram.cs" />
+    <Compile Include="Units\Weight\Kilogram.cs" />
+    <Compile Include="Utilities.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Geo\IO\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

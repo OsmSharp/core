@@ -1,0 +1,772 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl"  href="xs3p.xsl"?>
+<xsd:schema targetNamespace="http://earth.google.com/kml/2.0" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://earth.google.com/kml/2.0">
+	<xsd:annotation>
+		<xsd:documentation>TimeStamp: 30-10-2005  
+  KML schema version 2.0 - 
+  For more information on KML visit http://www.keyhole.com/kml/docs/webhelp/index.htm
+  The KML 2.0 vocabulary was not fixed  at the end of October 2005.
+  This schema will be update weekly until fixation.</xsd:documentation>
+	</xsd:annotation>
+	<!--  ="/\w(\w|\d\_|)*/ -->
+	<xsd:attribute name="id" type="xsd:ID"/>
+	<xsd:element name="kml">
+		<xsd:complexType>
+			<xsd:choice>
+				<xsd:element ref="Document"/>
+				<xsd:element ref="Folder"/>
+				<xsd:element ref="Placemark"/>
+				<xsd:element ref="LookAt"/>
+				<xsd:element ref="NetworkLink"/>
+				<xsd:element ref="NetworkLinkControl"/>
+				<xsd:element ref="GroundOverlay"/>
+				<xsd:element ref="ScreenOverlay"/>
+			</xsd:choice>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="Document">
+		<xsd:complexType>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="Document" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="Folder" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="GroundOverlay" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="LookAt" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="NetworkLink" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="Placemark" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="Schema" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="ScreenOverlay" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="Style" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="StyleMap" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="StyleBlinker" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="description" minOccurs="0"/>
+				<xsd:element ref="name" minOccurs="0"/>
+				<xsd:element ref="Snippet" minOccurs="0"/>
+				<xsd:element ref="visibility" minOccurs="0"/>
+			</xsd:choice>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="Folder">
+		<xsd:complexType>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="Document" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="Folder" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="GroundOverlay" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="LookAt" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="NetworkLink" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="Placemark" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="ScreenOverlay" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="Style" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="description" minOccurs="0"/>
+				<xsd:element ref="name" minOccurs="0"/>
+				<xsd:element ref="Snippet" minOccurs="0"/>
+				<xsd:element ref="open" minOccurs="0"/>
+				<xsd:element ref="visibility" minOccurs="0"/>
+			</xsd:choice>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="Placemark">
+		<xsd:complexType>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="description" minOccurs="0"/>
+				<xsd:element ref="name" minOccurs="0"/>
+				<xsd:element ref="Snippet" minOccurs="0"/>
+				<xsd:element ref="Style" minOccurs="0"/>
+				<xsd:element ref="LookAt" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="MultiGeometry" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="MultiLineString" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="MultiPoint" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="MultiPolygon" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="Point" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="Polygon" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="TimePeriod" minOccurs="0"/>
+				<xsd:element ref="LineString" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="address" minOccurs="0"/>
+				<xsd:element ref="styleUrl" minOccurs="0"/>
+				<xsd:element ref="visibility" minOccurs="0"/>
+			</xsd:choice>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="GroundOverlay">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="Icon"/>
+				<xsd:element ref="LatLonBox"/>
+				<xsd:element ref="drawOrder" minOccurs="0"/>
+				<xsd:element ref="description" minOccurs="0"/>
+				<xsd:element ref="name" minOccurs="0"/>
+				<xsd:element ref="LookAt" minOccurs="0"/>
+				<xsd:element ref="visibility" minOccurs="0"/>
+				<xsd:element ref="refreshInterval" minOccurs="0"/>
+				<xsd:element ref="color" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="LatLonBox">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="north"/>
+				<xsd:element ref="east"/>
+				<xsd:element ref="south"/>
+				<xsd:element ref="west"/>
+				<xsd:element ref="rotation" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="north" type="xsd:double"/>
+	<xsd:element name="east" type="xsd:double"/>
+	<xsd:element name="south" type="xsd:double"/>
+	<xsd:element name="west" type="xsd:double"/>
+	<xsd:element name="rotation" type="xsd:decimal"/>
+	<xsd:element name="ScreenOverlay">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="Icon"/>
+				<xsd:element ref="drawOrder" minOccurs="0"/>
+				<xsd:element ref="description" minOccurs="0"/>
+				<xsd:element ref="name" minOccurs="0"/>
+				<xsd:element ref="overlayXY" minOccurs="0"/>
+				<xsd:element ref="screenXY" minOccurs="0"/>
+				<xsd:element ref="size" minOccurs="0"/>
+				<xsd:element ref="visibility" minOccurs="0"/>
+				<xsd:element ref="rotation" minOccurs="0"/>
+				<xsd:element ref="refreshInterval" minOccurs="0"/>
+				<xsd:element ref="color" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="overlayXY">
+		<xsd:complexType>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+			<xsd:attribute name="x" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:minInclusive value="0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+			<xsd:attribute name="y" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:minInclusive value="0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+			<xsd:attribute name="xunits" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:token">
+						<xsd:enumeration value="pixels"/>
+						<xsd:enumeration value="fraction"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+			<xsd:attribute name="yunits" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:token">
+						<xsd:enumeration value="pixels"/>
+						<xsd:enumeration value="fraction"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="screenXY">
+		<xsd:complexType>
+			<xsd:attribute name="x" type="xsd:decimal" use="required"/>
+			<xsd:attribute name="y" type="xsd:decimal" use="required"/>
+			<xsd:attribute name="xunits" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:token">
+						<xsd:enumeration value="pixels"/>
+						<xsd:enumeration value="insetPixels"/>
+						<xsd:enumeration value="fraction"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+			<xsd:attribute name="yunits" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:token">
+						<xsd:enumeration value="pixels"/>
+						<xsd:enumeration value="insetPixels"/>
+						<xsd:enumeration value="fraction"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="drawOrder">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:int">
+				<xsd:minInclusive value="0"/>
+				<xsd:maxInclusive value="99"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="Icon">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="href"/>
+				<xsd:element ref="h" minOccurs="0"/>
+				<xsd:element ref="w" minOccurs="0"/>
+				<xsd:element ref="x" minOccurs="0"/>
+				<xsd:element ref="y" minOccurs="0"/>
+				<xsd:element ref="refreshInterval" minOccurs="0"/>
+				<xsd:element ref="refreshMode" minOccurs="0"/>
+				<xsd:element ref="viewRefreshMode" minOccurs="0"/>
+				<xsd:element ref="viewRefreshTime" minOccurs="0"/>
+				<xsd:element ref="viewBoundScale" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="x">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:int">
+				<xsd:minInclusive value="0"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="y">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:int">
+				<xsd:minInclusive value="0"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="w">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:int">
+				<xsd:minInclusive value="-1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="h">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:int">
+				<xsd:minInclusive value="-1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="viewBoundScale" type="xsd:double">
+		<xsd:annotation>
+			<xsd:documentation>Used for overlays in either network links or placemark overlays to indicate the percentage of screen space to fill with data. If you are creating a ground overlay to deliver dynamic data via a network link, you can set the view-bound scale to 1.0 so that the dynamic date entirely fills the screen.  This would be a typical setting to use when the user will not need to adjust the size of the overlay. Values:  View bound scale is set to 1.0 as default for network links and 0.75 for overlays if not specified.  Otherwise, you can set the value to a fractional portion of the screen size, including values greater than 1.0. Keep in mind that when using this tag for ground overlays where the user might want to modify the position, you should keep the value to a smaller fraction of the screen size to provide for easier editing.  Otherwise, set the bound to reflect the area of data relative to the viewing boundaries of the client screen that you want to display.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="LookAt">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="longitude"/>
+				<xsd:element ref="latitude"/>
+				<xsd:element ref="range"/>
+				<xsd:element ref="tilt"/>
+				<xsd:element ref="heading"/>
+				<xsd:element ref="timePosition" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="longitude" type="xsd:double"/>
+	<xsd:element name="latitude" type="xsd:double"/>
+	<xsd:element name="range" type="xsd:double"/>
+	<xsd:element name="tilt">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:double">
+				<xsd:minInclusive value="-90"/>
+				<xsd:maxInclusive value="90"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="heading">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:double">
+				<xsd:minInclusive value="-360"/>
+				<xsd:maxInclusive value="360"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="timePosition">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:pattern value="(\d{4})*(\-\d{2})*(\-\d{2})*(T\d{2}:\d{2}:\d{2})*Z*"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="MultiGeometry">
+		<xsd:complexType>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="extrude" minOccurs="0"/>
+				<xsd:element ref="tessellate" minOccurs="0"/>
+				<xsd:element ref="altitudeMode" minOccurs="0"/>
+				<xsd:element ref="MultiGeometry" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="MultiLineString" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="MultiPoint" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="MultiPolygon" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="LineString" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="Point" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="Polygon" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="Placemark" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:choice>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="MultiLineString">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="LineString" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="LineString">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="extrude" minOccurs="0"/>
+				<xsd:element ref="tessellate" minOccurs="0"/>
+				<xsd:element ref="altitudeMode" minOccurs="0"/>
+				<xsd:element ref="coordinates"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="MultiPoint">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="Point" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="Point">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="altitudeMode" minOccurs="0"/>
+				<xsd:element ref="extrude" minOccurs="0"/>
+				<xsd:element ref="coordinates"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="MultiPolygon">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="Polygon" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="Polygon">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="extrude" minOccurs="0"/>
+				<xsd:element ref="tessellate" minOccurs="0"/>
+				<xsd:element ref="altitudeMode" minOccurs="0"/>
+				<xsd:element ref="innerBoundaryIs" minOccurs="0"/>
+				<xsd:element ref="outerBoundaryIs" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="innerBoundaryIs">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="LinearRing"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="outerBoundaryIs">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="LinearRing"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="LinearRing">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="coordinates"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="coordinates" type="xsd:string"/>
+	<xsd:element name="NetworkLinkControl">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="cookie" minOccurs="0"/>
+				<xsd:element ref="linkDescription" minOccurs="0"/>
+				<xsd:element ref="linkName" minOccurs="0"/>
+				<!--xsd:element ref="linkSnippet" minOccurs="0"/-->
+				<xsd:element ref="message" minOccurs="0"/>
+				<xsd:element ref="minRefreshPeriod" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="cookie" type="xsd:string"/>
+	<xsd:element name="linkDescription" type="xsd:string"/>
+	<xsd:element name="linkName" type="xsd:string"/>
+	<xsd:element name="message" type="xsd:string"/>
+	<xsd:element name="minRefreshPeriod" type="xsd:int"/>
+	<xsd:element name="NetworkLink">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="Url"/>
+				<xsd:element ref="flyToView" minOccurs="0"/>
+				<xsd:element ref="description" minOccurs="0"/>
+				<xsd:element ref="name" minOccurs="0"/>
+				<xsd:element ref="refreshVisibility" minOccurs="0"/>
+				<xsd:element ref="visibility" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="Url">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="href"/>
+				<xsd:element ref="refreshMode" minOccurs="0"/>
+				<xsd:element ref="refreshInterval" minOccurs="0"/>
+				<xsd:element ref="viewRefreshMode" minOccurs="0"/>
+				<xsd:element ref="viewRefreshTime" minOccurs="0"/>
+				<xsd:element ref="viewFormat" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="flyToView" type="xsd:boolean"/>
+	<xsd:element name="Schema">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="name" minOccurs="0"/>
+				<xsd:element ref="ObjArrayField" minOccurs="0"/>
+				<xsd:element ref="ObjField" minOccurs="0"/>
+				<xsd:element ref="SimpleArrayField" minOccurs="0"/>
+				<xsd:element ref="SimpleField" minOccurs="0"/>
+				<xsd:element ref="parent" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="ObjArrayField">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="name"/>
+				<xsd:element ref="type"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="ObjField">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="name"/>
+				<xsd:element ref="type"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="SimpleArrayField">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="name" minOccurs="0"/>
+				<xsd:element ref="type" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="SimpleField">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="name" minOccurs="0"/>
+				<xsd:element ref="type" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="parent" type="xsd:string"/>
+	<xsd:element name="type" type="xsd:string"/>
+	<xsd:element name="Style">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="Icon" minOccurs="0"/>
+				<xsd:element ref="IconStyle" minOccurs="0"/>
+				<xsd:element ref="LineStyle" minOccurs="0"/>
+				<xsd:element ref="PolyStyle" minOccurs="0"/>
+				<xsd:element ref="LabelStyle" minOccurs="0"/>
+				<xsd:element ref="BalloonStyle" minOccurs="0"/>
+				<xsd:element ref="color" minOccurs="0"/>
+				<xsd:element ref="scale" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="BalloonStyle">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="color" minOccurs="0"/>
+				<xsd:element ref="text" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="text" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>Child element of BalloonStyle, can contain HTML
+		Content should be wrapped by CDATA
+		name or description content is substituted by this text content
+		by using $[name] or $[description] one can use name/description content in the balloon</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="IconStyle">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="color" minOccurs="0"/>
+				<xsd:element ref="colorMode" minOccurs="0"/>
+				<xsd:element ref="heading" minOccurs="0"/>
+				<xsd:element ref="Icon" minOccurs="0"/>
+				<xsd:element ref="scale" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="LabelStyle">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="color" minOccurs="0"/>
+				<xsd:element ref="colorMode" minOccurs="0"/>
+				<xsd:element ref="scale" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="LineStyle">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="color" minOccurs="0"/>
+				<xsd:element ref="colorMode" minOccurs="0"/>
+				<xsd:element ref="width" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="PolyStyle">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="color" minOccurs="0"/>
+				<xsd:element ref="colorMode" minOccurs="0"/>
+				<xsd:element ref="fill" minOccurs="0"/>
+				<xsd:element ref="outline" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="width">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:int">
+				<xsd:minInclusive value="0"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="StyleBlinker">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="numCycles"/>
+				<xsd:element ref="State" minOccurs="2" maxOccurs="2"/>
+			</xsd:sequence>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="State">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="duration"/>
+				<xsd:element ref="key"/>
+				<xsd:element ref="styleUrl"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="duration" type="xsd:int"/>
+	<xsd:element name="numCycles" type="xsd:int"/>
+	<xsd:element name="StyleMap">
+		<xsd:complexType>
+			<xsd:choice>
+				<xsd:element ref="Pair" minOccurs="2" maxOccurs="2"/>
+			</xsd:choice>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="Pair">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="key"/>
+				<xsd:element ref="styleUrl"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="key">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="normal"/>
+				<xsd:enumeration value="highlight"/>
+				<xsd:enumeration value="select"/>
+				<xsd:enumeration value="on"/>
+				<xsd:enumeration value="off"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="styleUrl" type="xsd:anyURI"/>
+	<xsd:element name="viewFormat" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>A user defined variable.  Available parameters are as follows:
+		BBOX= [bboxWest],[bboxSouth],[bboxEast],[bboxNorth],[lookatLon],
+		[lookatLat],[lookatRange],[lookatTilt],[lookatHeading]
+		To check if it can occur as a child of Icon aswell.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="altitudeMode">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="clampedToGround"/>
+				<xsd:enumeration value="relativeToGround"/>
+				<xsd:enumeration value="absolute"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="color">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:hexBinary"/>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="colorMode">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="normal"/>
+				<xsd:enumeration value="random"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="scale" type="xsd:decimal"/>
+	<xsd:element name="TimePeriod">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="begin" minOccurs="0"/>
+				<xsd:element ref="end" minOccurs="0"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="begin">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="TimeInstant" minOccurs="0"/>
+			</xsd:all>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="end">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="TimeInstant" minOccurs="0"/>
+			</xsd:all>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="TimeInstant">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element ref="timePosition"/>
+			</xsd:all>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="name" type="xsd:string"/>
+	<xsd:element name="description" type="xsd:string"/>
+	<xsd:element name="Snippet">
+		<xsd:complexType>
+			<xsd:simpleContent>
+				<xsd:extension base="xsd:string">
+					<xsd:attribute name="maxLines" type="xsd:unsignedByte" use="optional"/>
+				</xsd:extension>
+			</xsd:simpleContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="open" type="xsd:boolean"/>
+	<xsd:element name="visibility" type="xsd:boolean"/>
+	<xsd:element name="extrude" type="xsd:boolean"/>
+	<xsd:element name="fill" type="xsd:boolean"/>
+	<xsd:element name="outline" type="xsd:boolean"/>
+	<xsd:element name="tessellate" type="xsd:boolean"/>
+	<xsd:element name="href" type="xsd:anyURI"/>
+	<xsd:element name="address" type="xsd:string"/>
+	<xsd:element name="refreshMode">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="onChange"/>
+				<xsd:enumeration value="onInterval"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="refreshInterval" type="xsd:int"/>
+	<xsd:element name="refreshVisibility" type="xsd:boolean"/>
+	<xsd:element name="viewRefreshMode">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="never"/>
+				<xsd:enumeration value="onRequest"/>
+				<xsd:enumeration value="onStop"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="viewRefreshTime">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:int">
+				<xsd:minInclusive value="0"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="size">
+		<xsd:complexType>
+			<xsd:attribute name="x" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:minInclusive value="-1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+			<xsd:attribute name="y" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:minInclusive value="-1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+			<xsd:attribute name="xunits" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:token">
+						<xsd:enumeration value="pixels"/>
+						<xsd:enumeration value="insetPixels"/>
+						<xsd:enumeration value="fraction"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+			<xsd:attribute name="yunits" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:token">
+						<xsd:enumeration value="pixels"/>
+						<xsd:enumeration value="insetPixels"/>
+						<xsd:enumeration value="fraction"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+			<xsd:attribute name="id" type="xsd:ID" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

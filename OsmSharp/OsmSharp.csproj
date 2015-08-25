@@ -1,0 +1,521 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OsmSharp</RootNamespace>
+    <AssemblyName>OsmSharp</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile147</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Output\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\Output\OsmSharp.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Output\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\Output\OsmSharp.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>..\Output\OsmSharp.XML</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>..\Output\OsmSharp.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
+    <Compile Include="Collections\Arrays\HugeArrayBase.cs" />
+    <Compile Include="Collections\Arrays\MappedHugeArray.cs" />
+    <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArray.cs" />
+    <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArrayInt64.cs" />
+    <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArrayInt32.cs" />
+    <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArraySingle.cs" />
+    <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArrayUInt64.cs" />
+    <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArrayUInt32.cs" />
+    <Compile Include="Collections\Cache\LRUCache.cs" />
+    <Compile Include="Collections\Coordinates\Collections\HugeCoordinateCollectionIndex.cs" />
+    <Compile Include="Collections\Coordinates\CoordinateIndex.cs" />
+    <Compile Include="Collections\Coordinates\HugeCoordinateIndex.cs" />
+    <Compile Include="Collections\Coordinates\Collections\ICoordinateCollection.cs" />
+    <Compile Include="Collections\Coordinates\ICoordinateIndex.cs" />
+    <Compile Include="Collections\Arrays\HugeArray.cs" />
+    <Compile Include="Collections\HugeDictionary.cs" />
+    <Compile Include="Collections\HugeHashSet.cs" />
+    <Compile Include="Collections\Indexes\Index.cs" />
+    <Compile Include="Collections\Indexes\IndexBase.cs" />
+    <Compile Include="Collections\Indexes\MemoryMapped\MemoryMappedIndex.cs" />
+    <Compile Include="Collections\ISet.cs" />
+    <Compile Include="Collections\LargeBitArray32.cs" />
+    <Compile Include="Collections\LimitedStack.cs" />
+    <Compile Include="Collections\LongIndex\ILongIndex.cs" />
+    <Compile Include="Collections\LongIndex\LongIndex.cs" />
+    <Compile Include="Collections\MemoryMapped\MemoryMappedHugeDictionary.cs" />
+    <Compile Include="Collections\ObjectTable.cs" />
+    <Compile Include="Collections\ObjectTableDictionary.cs" />
+    <Compile Include="Collections\PermutationEnumerator.cs" />
+    <Compile Include="Collections\PriorityQueues\BinairyHeap.cs" />
+    <Compile Include="Collections\PriorityQueues\BinaryHeapLong.cs" />
+    <Compile Include="Collections\PriorityQueues\IPriorityQueue.cs" />
+    <Compile Include="Collections\SortedDictionary.cs" />
+    <Compile Include="Collections\SortedList.cs" />
+    <Compile Include="Collections\SortedSet.cs" />
+    <Compile Include="Collections\Sorting\QuickSort.cs" />
+    <Compile Include="Collections\SparseArray.cs" />
+    <Compile Include="Collections\SparseLargeBitArray32.cs" />
+    <Compile Include="Collections\SpatialIndexes\ISpatialIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\ISpatialIndexReadonly.cs" />
+    <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializer.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializerStream.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamSerializer.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamSerializer.cs" />
+    <Compile Include="Collections\Tags\Index\ITagsIndex.cs" />
+    <Compile Include="Collections\Tags\ITagsSource.cs" />
+    <Compile Include="Collections\Tags\Serializer\TagsCollectionSerializer.cs" />
+    <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />
+    <Compile Include="Collections\Tags\Tag.cs" />
+    <Compile Include="Collections\Tags\TagsCollection.cs" />
+    <Compile Include="Collections\Tags\TagsCollectionBase.cs" />
+    <Compile Include="Collections\Tags\TagsTableCollection.cs" />
+    <Compile Include="Collections\Tags\Index\TagsIndex.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Data\SQLite\SQLiteConnectionBase.cs" />
+    <Compile Include="Encoding\ASCIIEncoding.cs" />
+    <Compile Include="Geo\Attributes\GeometryAttribute.cs" />
+    <Compile Include="Geo\Attributes\GeometryAttributeCollection.cs" />
+    <Compile Include="Geo\Attributes\IGeometryAttributesIndex.cs" />
+    <Compile Include="Geo\Attributes\SimpleGeometryAttributeCollection.cs" />
+    <Compile Include="Geo\Extensions.cs" />
+    <Compile Include="Geo\Features\Feature.cs" />
+    <Compile Include="Geo\Features\FeatureCollection.cs" />
+    <Compile Include="Geo\GeoCoordinate.cs" />
+    <Compile Include="Geo\GeoCoordinateBox.cs" />
+    <Compile Include="Geo\GeoCoordinateLine.cs" />
+    <Compile Include="Geo\Geometries\Geometry.cs" />
+    <Compile Include="Geo\Geometries\GeometryCollection.cs" />
+    <Compile Include="Geo\Geometries\GeometryCollectionBase.cs" />
+    <Compile Include="Geo\Geometries\LineairRing.cs" />
+    <Compile Include="Geo\Geometries\LineString.cs" />
+    <Compile Include="Geo\Geometries\MultiLineString.cs" />
+    <Compile Include="Geo\Geometries\MultiPoint.cs" />
+    <Compile Include="Geo\Geometries\MultiPolygon.cs" />
+    <Compile Include="Geo\Geometries\Point.cs" />
+    <Compile Include="Geo\Geometries\Polygon.cs" />
+    <Compile Include="Geo\Meta\DirectionCalculator.cs" />
+    <Compile Include="Geo\Meta\DirectionEnum.cs" />
+    <Compile Include="Geo\Meta\RelativeDirection.cs" />
+    <Compile Include="Geo\Meta\RelativeDirectionCalculator.cs" />
+    <Compile Include="Geo\Meta\RelativeDirectionEnum.cs" />
+    <Compile Include="Geo\Projections\IProjection.cs" />
+    <Compile Include="Geo\Projections\Lambert\Ellipsoids\Hayford1924Ellipsoid.cs" />
+    <Compile Include="Geo\Projections\Lambert\Ellipsoids\Wgs1984Ellipsoid.cs" />
+    <Compile Include="Geo\Projections\Lambert\International\Belgium\Belgium1972LambertProjection.cs" />
+    <Compile Include="Geo\Projections\Lambert\LambertCoordinate.cs" />
+    <Compile Include="Geo\Projections\Lambert\LambertEllipsoid.cs" />
+    <Compile Include="Geo\Projections\Lambert\LambertProjectionBase.cs" />
+    <Compile Include="Geo\Projections\ScaledProjection.cs" />
+    <Compile Include="Geo\Projections\WebMercator.cs" />
+    <Compile Include="Geo\Simple\GeoCoordinateSimple.cs" />
+    <Compile Include="Geo\Streams\FeatureCollectionStreamSource.cs" />
+    <Compile Include="Geo\Streams\GeoJson\GeoJsonConverter.cs" />
+    <Compile Include="Geo\Streams\GeoJson\GeoJsonFeatureStreamSource.cs" />
+    <Compile Include="Geo\Streams\Gpx\GpxFeatureStreamSource.cs" />
+    <Compile Include="Geo\Streams\IFeatureStreamSource.cs" />
+    <Compile Include="Geo\Streams\IFeatureStreamTarget.cs" />
+    <Compile Include="Geo\Streams\Kml\KmlFeatureStreamSource.cs" />
+    <Compile Include="IClonable.cs" />
+    <Compile Include="IO\CappedStream.cs" />
+    <Compile Include="IO\DelimitedFiles\DefaultDelimitedFormat.cs" />
+    <Compile Include="IO\DelimitedFiles\DelimitedFileHandler.cs" />
+    <Compile Include="IO\DelimitedFiles\DelimiterType.cs" />
+    <Compile Include="IO\DelimitedFiles\IDelimitedFormat.cs" />
+    <Compile Include="IO\Json\Bson\BsonBinaryType.cs" />
+    <Compile Include="IO\Json\Bson\BsonBinaryWriter.cs" />
+    <Compile Include="IO\Json\Bson\BsonObjectId.cs" />
+    <Compile Include="IO\Json\Bson\BsonReader.cs" />
+    <Compile Include="IO\Json\Bson\BsonToken.cs" />
+    <Compile Include="IO\Json\Bson\BsonType.cs" />
+    <Compile Include="IO\Json\Bson\BsonWriter.cs" />
+    <Compile Include="IO\Json\ConstructorHandling.cs" />
+    <Compile Include="IO\Json\Converters\BinaryConverter.cs" />
+    <Compile Include="IO\Json\Converters\BsonObjectIdConverter.cs" />
+    <Compile Include="IO\Json\Converters\CustomCreationConverter.cs" />
+    <Compile Include="IO\Json\Converters\DataSetConverter.cs" />
+    <Compile Include="IO\Json\Converters\DataTableConverter.cs" />
+    <Compile Include="IO\Json\Converters\DateTimeConverterBase.cs" />
+    <Compile Include="IO\Json\Converters\DiscriminatedUnionConverter.cs" />
+    <Compile Include="IO\Json\Converters\EntityKeyMemberConverter.cs" />
+    <Compile Include="IO\Json\Converters\ExpandoObjectConverter.cs" />
+    <Compile Include="IO\Json\Converters\IsoDateTimeConverter.cs" />
+    <Compile Include="IO\Json\Converters\JavaScriptDateTimeConverter.cs" />
+    <Compile Include="IO\Json\Converters\JsonValueConverter.cs" />
+    <Compile Include="IO\Json\Converters\KeyValuePairConverter.cs" />
+    <Compile Include="IO\Json\Converters\RegexConverter.cs" />
+    <Compile Include="IO\Json\Converters\StringEnumConverter.cs" />
+    <Compile Include="IO\Json\Converters\VersionConverter.cs" />
+    <Compile Include="IO\Json\Converters\XmlNodeConverter.cs" />
+    <Compile Include="IO\Json\DateFormatHandling.cs" />
+    <Compile Include="IO\Json\DateParseHandling.cs" />
+    <Compile Include="IO\Json\DateTimeZoneHandling.cs" />
+    <Compile Include="IO\Json\DefaultValueHandling.cs" />
+    <Compile Include="IO\Json\FloatFormatHandling.cs" />
+    <Compile Include="IO\Json\FloatParseHandling.cs" />
+    <Compile Include="IO\Json\FormatterAssemblyStyle.cs" />
+    <Compile Include="IO\Json\Formatting.cs" />
+    <Compile Include="IO\Json\IJsonLineInfo.cs" />
+    <Compile Include="IO\Json\JsonArrayAttribute.cs" />
+    <Compile Include="IO\Json\JsonConstructorAttribute.cs" />
+    <Compile Include="IO\Json\JsonContainerAttribute.cs" />
+    <Compile Include="IO\Json\JsonConvert.cs" />
+    <Compile Include="IO\Json\JsonConverter.cs" />
+    <Compile Include="IO\Json\JsonConverterAttribute.cs" />
+    <Compile Include="IO\Json\JsonConverterCollection.cs" />
+    <Compile Include="IO\Json\JsonDictionaryAttribute.cs" />
+    <Compile Include="IO\Json\JsonException.cs" />
+    <Compile Include="IO\Json\JsonExtensionDataAttribute.cs" />
+    <Compile Include="IO\Json\JsonIgnoreAttribute.cs" />
+    <Compile Include="IO\Json\JsonObjectAttribute.cs" />
+    <Compile Include="IO\Json\JsonPosition.cs" />
+    <Compile Include="IO\Json\JsonPropertyAttribute.cs" />
+    <Compile Include="IO\Json\JsonReader.cs" />
+    <Compile Include="IO\Json\JsonReaderException.cs" />
+    <Compile Include="IO\Json\JsonSerializationException.cs" />
+    <Compile Include="IO\Json\JsonSerializer.cs" />
+    <Compile Include="IO\Json\JsonSerializerSettings.cs" />
+    <Compile Include="IO\Json\JsonTextReader.cs" />
+    <Compile Include="IO\Json\JsonTextWriter.cs" />
+    <Compile Include="IO\Json\JsonToken.cs" />
+    <Compile Include="IO\Json\JsonValidatingReader.cs" />
+    <Compile Include="IO\Json\JsonWriter.cs" />
+    <Compile Include="IO\Json\JsonWriterException.cs" />
+    <Compile Include="IO\Json\Linq\Extensions.cs" />
+    <Compile Include="IO\Json\Linq\IJEnumerable.cs" />
+    <Compile Include="IO\Json\Linq\JArray.cs" />
+    <Compile Include="IO\Json\Linq\JConstructor.cs" />
+    <Compile Include="IO\Json\Linq\JContainer.cs" />
+    <Compile Include="IO\Json\Linq\JEnumerable.cs" />
+    <Compile Include="IO\Json\Linq\JObject.cs" />
+    <Compile Include="IO\Json\Linq\JProperty.cs" />
+    <Compile Include="IO\Json\Linq\JPropertyDescriptor.cs" />
+    <Compile Include="IO\Json\Linq\JPropertyKeyedCollection.cs" />
+    <Compile Include="IO\Json\Linq\JRaw.cs" />
+    <Compile Include="IO\Json\Linq\JsonMergeSettings.cs" />
+    <Compile Include="IO\Json\Linq\JsonPath\ArrayIndexFilter.cs" />
+    <Compile Include="IO\Json\Linq\JsonPath\ArrayMultipleIndexFilter.cs" />
+    <Compile Include="IO\Json\Linq\JsonPath\ArraySliceFilter.cs" />
+    <Compile Include="IO\Json\Linq\JsonPath\FieldFilter.cs" />
+    <Compile Include="IO\Json\Linq\JsonPath\FieldMultipleFilter.cs" />
+    <Compile Include="IO\Json\Linq\JsonPath\JPath.cs" />
+    <Compile Include="IO\Json\Linq\JsonPath\PathFilter.cs" />
+    <Compile Include="IO\Json\Linq\JsonPath\QueryExpression.cs" />
+    <Compile Include="IO\Json\Linq\JsonPath\QueryFilter.cs" />
+    <Compile Include="IO\Json\Linq\JsonPath\ScanFilter.cs" />
+    <Compile Include="IO\Json\Linq\JToken.cs" />
+    <Compile Include="IO\Json\Linq\JTokenEqualityComparer.cs" />
+    <Compile Include="IO\Json\Linq\JTokenReader.cs" />
+    <Compile Include="IO\Json\Linq\JTokenType.cs" />
+    <Compile Include="IO\Json\Linq\JTokenWriter.cs" />
+    <Compile Include="IO\Json\Linq\JValue.cs" />
+    <Compile Include="IO\Json\Linq\MergeArrayHandling.cs" />
+    <Compile Include="IO\Json\MemberSerialization.cs" />
+    <Compile Include="IO\Json\MetadataPropertyHandling.cs" />
+    <Compile Include="IO\Json\MissingMemberHandling.cs" />
+    <Compile Include="IO\Json\NullValueHandling.cs" />
+    <Compile Include="IO\Json\ObjectCreationHandling.cs" />
+    <Compile Include="IO\Json\PreserveReferencesHandling.cs" />
+    <Compile Include="IO\Json\ReferenceLoopHandling.cs" />
+    <Compile Include="IO\Json\Required.cs" />
+    <Compile Include="IO\Json\Schema\Extensions.cs" />
+    <Compile Include="IO\Json\Schema\JsonSchema.cs" />
+    <Compile Include="IO\Json\Schema\JsonSchemaBuilder.cs" />
+    <Compile Include="IO\Json\Schema\JsonSchemaConstants.cs" />
+    <Compile Include="IO\Json\Schema\JsonSchemaException.cs" />
+    <Compile Include="IO\Json\Schema\JsonSchemaGenerator.cs" />
+    <Compile Include="IO\Json\Schema\JsonSchemaModel.cs" />
+    <Compile Include="IO\Json\Schema\JsonSchemaModelBuilder.cs" />
+    <Compile Include="IO\Json\Schema\JsonSchemaNode.cs" />
+    <Compile Include="IO\Json\Schema\JsonSchemaNodeCollection.cs" />
+    <Compile Include="IO\Json\Schema\JsonSchemaResolver.cs" />
+    <Compile Include="IO\Json\Schema\JsonSchemaType.cs" />
+    <Compile Include="IO\Json\Schema\JsonSchemaWriter.cs" />
+    <Compile Include="IO\Json\Schema\UndefinedSchemaIdHandling.cs" />
+    <Compile Include="IO\Json\Schema\ValidationEventArgs.cs" />
+    <Compile Include="IO\Json\Schema\ValidationEventHandler.cs" />
+    <Compile Include="IO\Json\SerializationBinder.cs" />
+    <Compile Include="IO\Json\Serialization\CachedAttributeGetter.cs" />
+    <Compile Include="IO\Json\Serialization\CamelCasePropertyNamesContractResolver.cs" />
+    <Compile Include="IO\Json\Serialization\DefaultContractResolver.cs" />
+    <Compile Include="IO\Json\Serialization\DefaultReferenceResolver.cs" />
+    <Compile Include="IO\Json\Serialization\DefaultSerializationBinder.cs" />
+    <Compile Include="IO\Json\Serialization\DiagnosticsTraceWriter.cs" />
+    <Compile Include="IO\Json\Serialization\DynamicValueProvider.cs" />
+    <Compile Include="IO\Json\Serialization\ErrorContext.cs" />
+    <Compile Include="IO\Json\Serialization\ErrorEventArgs.cs" />
+    <Compile Include="IO\Json\Serialization\ExpressionValueProvider.cs" />
+    <Compile Include="IO\Json\Serialization\IAttributeProvider.cs" />
+    <Compile Include="IO\Json\Serialization\IContractResolver.cs" />
+    <Compile Include="IO\Json\Serialization\IReferenceResolver.cs" />
+    <Compile Include="IO\Json\Serialization\ITraceWriter.cs" />
+    <Compile Include="IO\Json\Serialization\IValueProvider.cs" />
+    <Compile Include="IO\Json\Serialization\JsonArrayContract.cs" />
+    <Compile Include="IO\Json\Serialization\JsonContainerContract.cs" />
+    <Compile Include="IO\Json\Serialization\JsonContract.cs" />
+    <Compile Include="IO\Json\Serialization\JsonDictionaryContract.cs" />
+    <Compile Include="IO\Json\Serialization\JsonDynamicContract.cs" />
+    <Compile Include="IO\Json\Serialization\JsonFormatterConverter.cs" />
+    <Compile Include="IO\Json\Serialization\JsonISerializableContract.cs" />
+    <Compile Include="IO\Json\Serialization\JsonLinqContract.cs" />
+    <Compile Include="IO\Json\Serialization\JsonObjectContract.cs" />
+    <Compile Include="IO\Json\Serialization\JsonPrimitiveContract.cs" />
+    <Compile Include="IO\Json\Serialization\JsonProperty.cs" />
+    <Compile Include="IO\Json\Serialization\JsonPropertyCollection.cs" />
+    <Compile Include="IO\Json\Serialization\JsonSerializerInternalBase.cs" />
+    <Compile Include="IO\Json\Serialization\JsonSerializerInternalReader.cs" />
+    <Compile Include="IO\Json\Serialization\JsonSerializerInternalWriter.cs" />
+    <Compile Include="IO\Json\Serialization\JsonSerializerProxy.cs" />
+    <Compile Include="IO\Json\Serialization\JsonStringContract.cs" />
+    <Compile Include="IO\Json\Serialization\JsonTypeReflector.cs" />
+    <Compile Include="IO\Json\Serialization\MemoryTraceWriter.cs" />
+    <Compile Include="IO\Json\Serialization\ObjectConstructor.cs" />
+    <Compile Include="IO\Json\Serialization\OnErrorAttribute.cs" />
+    <Compile Include="IO\Json\Serialization\ReflectionAttributeProvider.cs" />
+    <Compile Include="IO\Json\Serialization\ReflectionValueProvider.cs" />
+    <Compile Include="IO\Json\Serialization\TraceJsonReader.cs" />
+    <Compile Include="IO\Json\Serialization\TraceJsonWriter.cs" />
+    <Compile Include="IO\Json\StringEscapeHandling.cs" />
+    <Compile Include="IO\Json\TraceLevel.cs" />
+    <Compile Include="IO\Json\TypeNameHandling.cs" />
+    <Compile Include="IO\Json\Utilities\Base64Encoder.cs" />
+    <Compile Include="IO\Json\Utilities\BidirectionalDictionary.cs" />
+    <Compile Include="IO\Json\Utilities\CollectionUtils.cs" />
+    <Compile Include="IO\Json\Utilities\CollectionWrapper.cs" />
+    <Compile Include="IO\Json\Utilities\ConvertUtils.cs" />
+    <Compile Include="IO\Json\Utilities\DateTimeParser.cs" />
+    <Compile Include="IO\Json\Utilities\DateTimeUtils.cs" />
+    <Compile Include="IO\Json\Utilities\DictionaryWrapper.cs" />
+    <Compile Include="IO\Json\Utilities\DynamicProxy.cs" />
+    <Compile Include="IO\Json\Utilities\DynamicProxyMetaObject.cs" />
+    <Compile Include="IO\Json\Utilities\DynamicReflectionDelegateFactory.cs" />
+    <Compile Include="IO\Json\Utilities\DynamicUtils.cs" />
+    <Compile Include="IO\Json\Utilities\EnumUtils.cs" />
+    <Compile Include="IO\Json\Utilities\EnumValue.cs" />
+    <Compile Include="IO\Json\Utilities\ExpressionReflectionDelegateFactory.cs" />
+    <Compile Include="IO\Json\Utilities\FSharpUtils.cs" />
+    <Compile Include="IO\Json\Utilities\ILGeneratorExtensions.cs" />
+    <Compile Include="IO\Json\Utilities\ImmutableCollectionsUtils.cs" />
+    <Compile Include="IO\Json\Utilities\JavaScriptUtils.cs" />
+    <Compile Include="IO\Json\Utilities\JsonTokenUtils.cs" />
+    <Compile Include="IO\Json\Utilities\LateBoundReflectionDelegateFactory.cs" />
+    <Compile Include="IO\Json\Utilities\LinqBridge.cs" />
+    <Compile Include="IO\Json\Utilities\MathUtils.cs" />
+    <Compile Include="IO\Json\Utilities\MethodCall.cs" />
+    <Compile Include="IO\Json\Utilities\MiscellaneousUtils.cs" />
+    <Compile Include="IO\Json\Utilities\PropertyNameTable.cs" />
+    <Compile Include="IO\Json\Utilities\ReflectionDelegateFactory.cs" />
+    <Compile Include="IO\Json\Utilities\ReflectionObject.cs" />
+    <Compile Include="IO\Json\Utilities\ReflectionUtils.cs" />
+    <Compile Include="IO\Json\Utilities\StringBuffer.cs" />
+    <Compile Include="IO\Json\Utilities\StringReference.cs" />
+    <Compile Include="IO\Json\Utilities\StringUtils.cs" />
+    <Compile Include="IO\Json\Utilities\ThreadSafeStore.cs" />
+    <Compile Include="IO\Json\Utilities\TypeExtensions.cs" />
+    <Compile Include="IO\Json\Utilities\ValidationUtils.cs" />
+    <Compile Include="IO\Json\WriteState.cs" />
+    <Compile Include="IO\FastBitConverter.cs" />
+    <Compile Include="IO\LimitedStream.cs" />
+    <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorInt64.cs" />
+    <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorInt32.cs" />
+    <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorVariable.cs" />
+    <Compile Include="IO\MemoryMappedFiles\MemoryMappedAccessor.cs" />
+    <Compile Include="IO\MemoryMappedFiles\MemoryMappedDelegates.cs" />
+    <Compile Include="IO\MemoryMappedFiles\MemoryMappedFile.cs" />
+    <Compile Include="IO\MemoryMappedFiles\MemoryMappedStream.cs" />
+    <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorUInt32.cs" />
+    <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorSingle.cs" />
+    <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorUInt64.cs" />
+    <Compile Include="IO\StreamCache\IStreamCache.cs" />
+    <Compile Include="IO\StreamCache\MemoryCachedStream.cs" />
+    <Compile Include="IO\Web\HttpStatusCode.cs" />
+    <Compile Include="IO\Web\HttpWebRequest.cs" />
+    <Compile Include="IO\Web\HttpWebResponse.cs" />
+    <Compile Include="IO\Web\WebException.cs" />
+    <Compile Include="IO\Xml\Gpx\GpxDocument.cs" />
+    <Compile Include="IO\Xml\Gpx\v1_0\gpx.cs">
+      <DependentUpon>gpx.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\Gpx\v1_1\gpx.cs">
+      <DependentUpon>gpx.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\IXmlSource.cs" />
+    <Compile Include="IO\Xml\Kml\KmlDocument.cs" />
+    <Compile Include="IO\Xml\Kml\v2_0\kml.cs">
+      <DependentUpon>kml.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\Kml\v2_0_response\kml.cs">
+      <DependentUpon>kml.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\Kml\v2_1\kml.cs">
+      <DependentUpon>kml.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\Nominatim\Reverse\v1\reverse.cs">
+      <DependentUpon>reverse.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\Nominatim\Search\SearchDocument.cs" />
+    <Compile Include="IO\Xml\Nominatim\Search\v1\search.cs">
+      <DependentUpon>search.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\Sources\XmlReaderSource.cs" />
+    <Compile Include="IO\Xml\Sources\XmlStreamSource.cs" />
+    <Compile Include="IO\Xml\Sources\XmlStringSource.cs" />
+    <Compile Include="Logging\Log.cs" />
+    <Compile Include="Logging\SourceLevels.cs" />
+    <Compile Include="Logging\TraceEventType.cs" />
+    <Compile Include="Logging\TraceListener.cs" />
+    <Compile Include="Logging\TraceSource.cs" />
+    <Compile Include="Math\Algorithms\ConvexHull.cs" />
+    <Compile Include="Math\Algorithms\HilbertCurve.cs" />
+    <Compile Include="Math\Algorithms\Rotation.cs" />
+    <Compile Include="Math\Algorithms\SimplifyCurve.cs" />
+    <Compile Include="Math\Algorithms\Tessellation\LineairRingTessellator.cs" />
+    <Compile Include="Math\ILocationObject.cs" />
+    <Compile Include="Math\ITaggedObject.cs" />
+    <Compile Include="Math\PrimitiveF2D.cs" />
+    <Compile Include="Math\Primitives\BoxF2D.cs" />
+    <Compile Include="Math\Primitives\Enumerators\Lines\ILineList.cs" />
+    <Compile Include="Math\Primitives\Enumerators\Lines\LineEnumerable.cs" />
+    <Compile Include="Math\Primitives\Enumerators\Lines\LineEnumerator.cs" />
+    <Compile Include="Math\Primitives\Enumerators\Points\IPointList.cs" />
+    <Compile Include="Math\Primitives\Enumerators\Points\PointEnumerable.cs" />
+    <Compile Include="Math\Primitives\Enumerators\Points\PointEnumerator.cs" />
+    <Compile Include="Math\Primitives\LineF2D.cs" />
+    <Compile Include="Math\Primitives\PointF2D.cs" />
+    <Compile Include="Math\Primitives\PolygonF2D.cs" />
+    <Compile Include="Math\Primitives\Polyline2D.cs" />
+    <Compile Include="Math\Primitives\RectangleF2D.cs" />
+    <Compile Include="Math\Random\IRandomGenerator.cs" />
+    <Compile Include="Math\Random\RandomGenerator.cs" />
+    <Compile Include="Math\Random\StaticRandomGenerator.cs" />
+    <Compile Include="Math\StateMachines\FiniteStateMachine.cs" />
+    <Compile Include="Math\StateMachines\FiniteStateMachineState.cs" />
+    <Compile Include="Math\StateMachines\FiniteStateMachineTransition.cs" />
+    <Compile Include="Math\StateMachines\FiniteStateMachineTransitionCondition.cs" />
+    <Compile Include="Math\Structures\ILocatedObjectIndex.cs" />
+    <Compile Include="Math\Structures\KDTree\Tree2D.cs" />
+    <Compile Include="Math\Structures\KDTree\Tree2DNode.cs" />
+    <Compile Include="Math\Structures\LocatedObjectIndexList.cs" />
+    <Compile Include="Math\Structures\QTree\QuadTree.cs" />
+    <Compile Include="Math\Structures\StringTrees\StringTreeDictionary.cs" />
+    <Compile Include="Math\VectorF2D.cs" />
+    <Compile Include="PCLExtensions.cs" />
+    <Compile Include="Progress\EmptyProgressReporter.cs" />
+    <Compile Include="Progress\IProgressEnabled.cs" />
+    <Compile Include="Progress\IProgressReporter.cs" />
+    <Compile Include="Progress\ProgressStatus.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Range.cs" />
+    <Compile Include="Units\Angle\Degree.cs" />
+    <Compile Include="Units\Angle\Radian.cs" />
+    <Compile Include="Units\Distance\Kilometer.cs" />
+    <Compile Include="Units\Distance\Meter.cs" />
+    <Compile Include="Units\Speed\KilometerPerHour.cs" />
+    <Compile Include="Units\Speed\Knots.cs" />
+    <Compile Include="Units\Speed\MeterPerSecond.cs" />
+    <Compile Include="Units\Speed\MilesPerHour.cs" />
+    <Compile Include="Units\Speed\Speed.cs" />
+    <Compile Include="Units\Time\Hour.cs" />
+    <Compile Include="Units\Time\MilliSecond.cs" />
+    <Compile Include="Units\Time\Second.cs" />
+    <Compile Include="Units\Unit.cs" />
+    <Compile Include="Units\Weight\Gram.cs" />
+    <Compile Include="Units\Weight\Kilogram.cs" />
+    <Compile Include="Utilities.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="Zlib.Portable">
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="IO\Xml\Gpx\v1_0\gpx.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="IO\Xml\Gpx\v1_1\gpx.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="IO\Xml\Kml\v2_0\kml.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="IO\Xml\Kml\v2_0_response\kml.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="IO\Xml\Kml\v2_1\kml.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="IO\Xml\Nominatim\Reverse\v1\reverse.xsc">
+      <DependentUpon>reverse.xsd</DependentUpon>
+    </None>
+    <None Include="IO\Xml\Nominatim\Reverse\v1\reverse.xsd" />
+    <None Include="IO\Xml\Nominatim\Reverse\v1\reverse.xss">
+      <DependentUpon>reverse.xsd</DependentUpon>
+    </None>
+    <None Include="IO\Xml\Nominatim\Search\v1\search.xsc">
+      <DependentUpon>search.xsd</DependentUpon>
+    </None>
+    <None Include="IO\Xml\Nominatim\Search\v1\search.xsd" />
+    <None Include="IO\Xml\Nominatim\Search\v1\search.xss">
+      <DependentUpon>search.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

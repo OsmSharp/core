@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="reversegeocode">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="result" nillable="true" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:simpleContent msdata:ColumnName="result_Text" msdata:Ordinal="5">
+              <xs:extension base="xs:string">
+                <xs:attribute name="place_id" type="xs:string" />
+                <xs:attribute name="osm_type" type="xs:string" />
+                <xs:attribute name="osm_id" type="xs:string" />
+                <xs:attribute name="lat" type="xs:string" />
+                <xs:attribute name="lon" type="xs:string" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="addressparts" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="house_number" type="xs:string" minOccurs="0" />
+              <xs:element name="road" type="xs:string" minOccurs="0" />
+              <xs:element name="suburb" type="xs:string" minOccurs="0" />
+              <xs:element name="city" type="xs:string" minOccurs="0" />
+              <xs:element name="county" type="xs:string" minOccurs="0" />
+              <xs:element name="state_district" type="xs:string" minOccurs="0" />
+              <xs:element name="state" type="xs:string" minOccurs="0" />
+              <xs:element name="postcode" type="xs:string" minOccurs="0" />
+              <xs:element name="country" type="xs:string" minOccurs="0" />
+              <xs:element name="country_code" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="timestamp" type="xs:string" />
+      <xs:attribute name="attribution" type="xs:string" />
+      <xs:attribute name="querystring" type="xs:string" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="reversegeocode" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

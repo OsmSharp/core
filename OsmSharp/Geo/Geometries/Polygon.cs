@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,11 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Math.Geo;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Geo.Geometries
 {
@@ -41,7 +39,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Creates a new polygon.
         /// </summary>
-        /// <param name="outline">The outline of the polygon.</param>
         public Polygon(LineairRing outline)
         {
             this.Holes = new List<LineairRing>();
@@ -51,8 +48,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Creates a new polygon.
         /// </summary>
-        /// <param name="outline"></param>
-        /// <param name="holes"></param>
         public Polygon(LineairRing outline, IEnumerable<LineairRing> holes)
         {
             this.Holes = holes;
@@ -95,13 +90,12 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Returns true if the point is inside this polygon.
         /// </summary>
-        /// <param name="point"></param>
         /// <returns></returns>
         public bool Contains(GeoCoordinate point)
         {
             if (this.Ring.Contains(point))
             {
-                foreach (LineairRing hole in this.Holes)
+                foreach (var hole in this.Holes)
                 {
                     if (hole.Contains(point))
                     {
@@ -116,7 +110,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Returns true if the given ring is contained in this polygon.
         /// </summary>
-        /// <param name="lineairRing"></param>
         /// <returns></returns>
         public bool Contains(LineairRing lineairRing)
         {
@@ -136,7 +129,7 @@ namespace OsmSharp.Geo.Geometries
                     return false;
                 }
             }
-            foreach (LineairRing hole in this.Holes)
+            foreach (var hole in this.Holes)
             {
                 foreach (var coordinate in hole.Coordinates)
                 {
@@ -152,7 +145,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Returns true if the given polygon is contained in this polygon.
         /// </summary>
-        /// <param name="polygon"></param>
         /// <returns></returns>
         public bool Contains(Polygon polygon)
         {
@@ -162,7 +154,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Returns true if this polygon is inside the given bounding box.
         /// </summary>
-        /// <param name="box"></param>
         /// <returns></returns>
         public override bool IsInside(GeoCoordinateBox box)
         {

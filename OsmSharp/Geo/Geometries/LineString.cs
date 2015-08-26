@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,11 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OsmSharp.Math.Geo;
+using System.Collections.Generic;
 
 namespace OsmSharp.Geo.Geometries
 {
@@ -40,7 +37,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Creates a new linestring.
         /// </summary>
-        /// <param name="coordinates">The coordinates in this linestring.</param>
         public LineString(IEnumerable<GeoCoordinate> coordinates)
         {
             this.Coordinates = new List<GeoCoordinate>(coordinates);
@@ -49,7 +45,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Creates a new linestring.
         /// </summary>
-        /// <param name="coordinates">The coordinates in this linestring.</param>
         public LineString(params GeoCoordinate[] coordinates)
         {
             this.Coordinates = new List<GeoCoordinate>(coordinates);
@@ -75,7 +70,7 @@ namespace OsmSharp.Geo.Geometries
         /// <returns></returns>
         public override bool IsInside(GeoCoordinateBox box)
         {
-            for (int idx = 0; idx < this.Coordinates.Count - 1; idx++)
+            for (var idx = 0; idx < this.Coordinates.Count - 1; idx++)
             {
                 if (box.IntersectsPotentially(this.Coordinates[idx], this.Coordinates[idx + 1]))
                 {

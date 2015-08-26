@@ -26,10 +26,7 @@ namespace OsmSharp.Geo.Features
     /// </summary>
     public class FeatureCollection : IEnumerable<Feature>
     {
-        /// <summary>
-        /// Holds the list of features.
-        /// </summary>
-        private List<Feature> _features;
+        private readonly List<Feature> _features;
 
         /// <summary>
         /// Creates a new feature collection.
@@ -42,7 +39,6 @@ namespace OsmSharp.Geo.Features
         /// <summary>
         /// Creates a new Feature collection.
         /// </summary>
-        /// <param name="features"></param>
         public FeatureCollection(IEnumerable<Feature> features)
         {
             _features = new List<Feature>(features);
@@ -62,7 +58,6 @@ namespace OsmSharp.Geo.Features
         /// <summary>
         /// Adds a new feature.
         /// </summary>
-        /// <param name="feature"></param>
         public void Add(Feature feature)
         {
             _features.Add(feature);
@@ -71,7 +66,6 @@ namespace OsmSharp.Geo.Features
         /// <summary>
         /// Adds all features in the given enumerable.
         /// </summary>
-        /// <param name="features"></param>
         public void AddRange(IEnumerable<Feature> features)
         {
             foreach (var feature in features)
@@ -81,9 +75,8 @@ namespace OsmSharp.Geo.Features
         }
 
         /// <summary>
-        /// Returns the Feature at the given idx.
+        /// Returns the feature at the given idx.
         /// </summary>
-        /// <param name="idx"></param>
         /// <returns></returns>
         public Feature this[int idx]
         {
@@ -119,7 +112,7 @@ namespace OsmSharp.Geo.Features
         /// <summary>
         /// Returns true if at least one of the features in this collection exists inside the given boundingbox.
         /// </summary>
-        /// <param name="box"></param>
+        /// 
         /// <returns></returns>
         public bool IsInside(GeoCoordinateBox box)
         {

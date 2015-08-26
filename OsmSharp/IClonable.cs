@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -19,7 +19,7 @@
 namespace OsmSharp
 {
     /// <summary>
-    /// IClonable interface to build for Windows Phone.
+    /// IClonable interface.
     /// </summary>
     public interface ICloneable
     {

@@ -37,7 +37,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Creates a new multilinestring.
         /// </summary>
-        /// <param name="lineStrings"></param>
         public MultiLineString(params LineString[] lineStrings)
             :base(lineStrings)
         {
@@ -47,7 +46,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Creates a new multilinestring.
         /// </summary>
-        /// <param name="lineStrings"></param>
         public MultiLineString(IEnumerable<LineString> lineStrings)
             : base(lineStrings)
         {

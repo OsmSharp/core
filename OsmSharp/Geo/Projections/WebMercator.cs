@@ -1,7 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2015 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using OsmSharp.Units.Angle;
 
 namespace OsmSharp.Math.Geo.Projections
@@ -21,27 +35,24 @@ namespace OsmSharp.Math.Geo.Projections
         /// <summary>
         /// Converts the lat/lon to projected coordinates.
         /// </summary>
-        /// <param name="lat"></param>
-        /// <param name="lon"></param>
         /// <returns></returns>
         public double[] ToPixel(double lat, double lon)
         {
-            double n = System.Math.Floor(System.Math.Pow(2, DefaultZoom));
+            var n = System.Math.Floor(System.Math.Pow(2, DefaultZoom));
 
-            Radian rad = new Degree(lat);
+            var rad = new Degree(lat);
 
-            double x = (((lon + 180.0f) / 360.0f) * (double)n);
-            double y = (
+            var x = (((lon + 180.0f) / 360.0f) * (double)n);
+            var y = (
                 (1.0f - (System.Math.Log(System.Math.Tan(rad.Value) + (1.0f / System.Math.Cos(rad.Value))))
                 / System.Math.PI) / 2f * (double)n);
 
-            return new double[]{x,y};
+            return new double[] {x, y};
         }
 
         /// <summary>
         /// Converts the lat/lon to projected coordinates.
         /// </summary>
-        /// <param name="coordinate"></param>
         /// <returns></returns>
         public double[] ToPixel(GeoCoordinate coordinate)
         {
@@ -51,15 +62,13 @@ namespace OsmSharp.Math.Geo.Projections
         /// <summary>
         /// Converts the given projected coordinates to lat/lon.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
         /// <returns></returns>
         public GeoCoordinate ToGeoCoordinates(double x, double y)
         {
-            double n = System.Math.PI - ((2.0 * System.Math.PI * (y)) / System.Math.Pow(2.0, DefaultZoom));
+            var n = System.Math.PI - ((2.0 * System.Math.PI * (y)) / System.Math.Pow(2.0, DefaultZoom));
 
-            double longitude = (((x) / System.Math.Pow(2.0, DefaultZoom) * 360.0) - 180.0);
-            double latitude = (180.0 / System.Math.PI * System.Math.Atan(System.Math.Sinh(n)));
+            var longitude = (((x) / System.Math.Pow(2.0, DefaultZoom) * 360.0) - 180.0);
+            var latitude = (180.0 / System.Math.PI * System.Math.Atan(System.Math.Sinh(n)));
 
             return new GeoCoordinate(latitude, longitude);
         }
@@ -67,11 +76,10 @@ namespace OsmSharp.Math.Geo.Projections
         /// <summary>
         /// Converts longitude to a projected x-coordinate.
         /// </summary>
-        /// <param name="lon"></param>
         /// <returns></returns>
         public double LongitudeToX(double lon)
         {
-            double n = System.Math.Floor(System.Math.Pow(2, DefaultZoom));
+            var n = System.Math.Floor(System.Math.Pow(2, DefaultZoom));
 
             return (((lon + 180.0f) / 360.0f) * n);
         }
@@ -79,13 +87,12 @@ namespace OsmSharp.Math.Geo.Projections
         /// <summary>
         /// Converts the latitude to a projected y-coordinate.
         /// </summary>
-        /// <param name="lat"></param>
         /// <returns></returns>
         public double LatitudeToY(double lat)
         {
-            double n = System.Math.Floor(System.Math.Pow(2, DefaultZoom));
+            var n = System.Math.Floor(System.Math.Pow(2, DefaultZoom));
 
-            Radian rad = new Degree(lat);
+            var rad = new Degree(lat);
 
             return (
                 (1.0f - (System.Math.Log(System.Math.Tan(rad.Value) + (1.0f / System.Math.Cos(rad.Value))))
@@ -95,11 +102,10 @@ namespace OsmSharp.Math.Geo.Projections
         /// <summary>
         /// Converts the projected y-coordinate to latitude.
         /// </summary>
-        /// <param name="y"></param>
         /// <returns></returns>
         public double YToLatitude(double y)
         {
-            double n = System.Math.PI - ((2.0 * System.Math.PI * (y)) / System.Math.Pow(2.0, DefaultZoom));
+            var n = System.Math.PI - ((2.0 * System.Math.PI * (y)) / System.Math.Pow(2.0, DefaultZoom));
 
             return  (180.0 / System.Math.PI * System.Math.Atan(System.Math.Sinh(n)));
         }
@@ -107,7 +113,6 @@ namespace OsmSharp.Math.Geo.Projections
         /// <summary>
         /// Converts the projected x-coordinate to longitude.
         /// </summary>
-        /// <param name="x"></param>
         /// <returns></returns>
         public double XToLongitude(double x)
         {
@@ -117,7 +122,6 @@ namespace OsmSharp.Math.Geo.Projections
         /// <summary>
         /// Returns the scale for the given zoomlevel.
         /// </summary>
-        /// <param name="zoomLevel"></param>
         /// <returns></returns>
         public double ToZoomFactor(double zoomLevel)
         {
@@ -127,7 +131,6 @@ namespace OsmSharp.Math.Geo.Projections
         /// <summary>
         /// Returns the scale for the given zoomFactor.
         /// </summary>
-        /// <param name="zoomFactor"></param>
         /// <returns></returns>
         public double ToZoomLevel(double zoomFactor)
         {

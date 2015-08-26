@@ -28,8 +28,6 @@ namespace OsmSharp.Geo.Features
         /// <summary>
         /// Creates a new feature.
         /// </summary>
-        /// <param name="geometry">The geometry.</param>
-        /// <remarks>Attributes will be empty.</remarks>
         public Feature(Geometries.Geometry geometry)
         {
             this.Geometry = geometry;
@@ -39,8 +37,6 @@ namespace OsmSharp.Geo.Features
         /// <summary>
         /// Creates a new feature.
         /// </summary>
-        /// <param name="geometry">The geometry.</param>
-        /// <param name="attributes">The attributes.</param>
         public Feature(Geometries.Geometry geometry, Attributes.GeometryAttributeCollection attributes)
         {
             this.Geometry = geometry;

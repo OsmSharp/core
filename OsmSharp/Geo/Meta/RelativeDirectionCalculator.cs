@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,10 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using OsmSharp.Units.Angle;
 
 namespace OsmSharp.Math.Geo.Meta
@@ -37,16 +34,16 @@ namespace OsmSharp.Math.Geo.Meta
         /// <returns></returns>
         public static RelativeDirection Calculate(GeoCoordinate from, GeoCoordinate along, GeoCoordinate to)
         {
-            RelativeDirection direction = new RelativeDirection();
+            var direction = new RelativeDirection();
 
-            double margin = 65;
-            double straight_on = 10;
-            double turn_back = 5;
+            var margin = 65.0;
+            var straight_on = 10.0;
+            var turn_back = 5.0;
 
-            GeoCoordinateLine line_from = new GeoCoordinateLine(from, along);
-            GeoCoordinateLine line_to = new GeoCoordinateLine(along, to);
+            var lineFrom = new GeoCoordinateLine(from, along);
+            var lineTo = new GeoCoordinateLine(along, to);
 
-            Degree angle = line_from.Direction.Angle(line_to.Direction);
+            var angle = lineFrom.Direction.Angle(lineTo.Direction);
 
             if (angle >= new Degree(360 - straight_on)
                 || angle < new Degree(straight_on))
@@ -88,7 +85,6 @@ namespace OsmSharp.Math.Geo.Meta
             {
                 direction.Direction = RelativeDirectionEnum.SlightlyRight;
             }
-            //direction.Direction = RelativeDirectionEnum.StraightOn;
             direction.Angle = angle;
 
             return direction;

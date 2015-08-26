@@ -26,9 +26,6 @@ namespace OsmSharp.Geo.Attributes
     /// </summary>
     public class SimpleGeometryAttributeCollection : GeometryAttributeCollection
     {
-        /// <summary>
-        /// Holds the attributes.
-        /// </summary>
         private readonly List<GeometryAttribute> _attributes;
 
         /// <summary>
@@ -42,7 +39,6 @@ namespace OsmSharp.Geo.Attributes
         /// <summary>
         /// Creates a new attributes collection initialized with the given existing attributes.
         /// </summary>
-        /// <param name="attributes"></param>
         public SimpleGeometryAttributeCollection(IEnumerable<GeometryAttribute> attributes)
         {
             _attributes = new List<GeometryAttribute>();
@@ -52,7 +48,6 @@ namespace OsmSharp.Geo.Attributes
         /// <summary>
         /// Creates a new attributes collection initialized with the given existing key-value tags.
         /// </summary>
-        /// <param name="tags"></param>
         public SimpleGeometryAttributeCollection(IEnumerable<OsmSharp.Collections.Tags.Tag> tags)
         {
             _attributes = new List<GeometryAttribute>();
@@ -80,8 +75,6 @@ namespace OsmSharp.Geo.Attributes
         /// <summary>
         /// Adds a new attribute (key-value pair) to this attributes collection.
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
         public override void Add(string key, object value)
         {
             _attributes.Add(new GeometryAttribute()
@@ -94,7 +87,6 @@ namespace OsmSharp.Geo.Attributes
         /// <summary>
         /// Adds a new attribute to this collection.
         /// </summary>
-        /// <param name="attribute"></param>
         public override void Add(GeometryAttribute attribute)
         {
             _attributes.Add(attribute);
@@ -103,8 +95,6 @@ namespace OsmSharp.Geo.Attributes
         /// <summary>
         /// Adds a new attribute (key-value pair) to this attributes collection.
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
         public override void AddOrReplace(string key, object value)
         {
             for (int idx = 0; idx < _attributes.Count; idx++)
@@ -123,7 +113,6 @@ namespace OsmSharp.Geo.Attributes
         /// <summary>
         /// Adds a new tag to this collection.
         /// </summary>
-        /// <param name="tag"></param>
         public override void AddOrReplace(GeometryAttribute tag)
         {
             this.AddOrReplace(tag.Key, tag.Value);
@@ -132,7 +121,6 @@ namespace OsmSharp.Geo.Attributes
         /// <summary>
         /// Returns true if the given key is found.
         /// </summary>
-        /// <param name="key"></param>
         /// <returns></returns>
         public override bool ContainsKey(string key)
         {
@@ -142,8 +130,6 @@ namespace OsmSharp.Geo.Attributes
         /// <summary>
         /// Returns true if the given key exists and gets the value parameter.
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
         /// <returns></returns>
         public override bool TryGetValue(string key, out object value)
         {
@@ -159,8 +145,6 @@ namespace OsmSharp.Geo.Attributes
         /// <summary>
         /// Returns true if the given key-value pair is found in this attributes collection.
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
         /// <returns></returns>
         public override bool ContainsKeyValue(string key, object value)
         {

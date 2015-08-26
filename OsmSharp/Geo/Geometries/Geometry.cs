@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,11 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Geo.Attributes;
 using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Geo.Geometries
@@ -41,7 +36,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Returns true if this geometry is inside the given bounding box.
         /// </summary>
-        /// <param name="box"></param>
         /// <returns></returns>
         public abstract bool IsInside(GeoCoordinateBox box);
     }

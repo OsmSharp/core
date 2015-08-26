@@ -36,7 +36,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Creates a new geometry collection.
         /// </summary>
-        /// <param name="geometries"></param>
         public GeometryCollection(params Geometry[] geometries)
             : base(geometries)
         {
@@ -46,7 +45,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Creates a new geometry collection.
         /// </summary>
-        /// <param name="geometries"></param>
         public GeometryCollection(IEnumerable<Geometry> geometries)
             : base(geometries)
         {

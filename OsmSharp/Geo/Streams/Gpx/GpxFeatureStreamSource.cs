@@ -16,14 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using System.IO;
-using OsmSharp.Geo.Attributes;
+using OsmSharp.Geo.Features;
 using OsmSharp.Geo.Geometries;
+using OsmSharp.IO.Xml.Gpx;
 using OsmSharp.IO.Xml.Sources;
 using OsmSharp.Math.Geo;
-using OsmSharp.IO.Xml.Gpx;
-using OsmSharp.Geo.Features;
+using System.Collections.Generic;
+using System.IO;
 
 namespace OsmSharp.Geo.Streams.Gpx
 {
@@ -32,20 +31,12 @@ namespace OsmSharp.Geo.Streams.Gpx
     /// </summary>
     public class GpxFeatureStreamSource : FeatureCollectionStreamSource
     {
-        /// <summary>
-        /// Holds the stream containing the source-data.
-        /// </summary>
-        private Stream _stream;
-
-        /// <summary>
-        /// Holds the flag to create invidiual points for each track position.
-        /// </summary>
-        private bool _createTrackPoints = true;
+        private readonly Stream _stream;
+        private readonly bool _createTrackPoints = true;
 
         /// <summary>
         /// Creates a new Gpx-geometry stream.
-        /// </summary>
-        /// <param name="stream"></param>
+        /// </summary>-
         public GpxFeatureStreamSource(Stream stream)
             : base(new FeatureCollection())
         {
@@ -54,9 +45,7 @@ namespace OsmSharp.Geo.Streams.Gpx
 
         /// <summary>
         /// Creates a new Gpx-geometry stream.
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="createTrackPoints"></param>
+        /// </summary>-
         public GpxFeatureStreamSource(Stream stream, bool createTrackPoints)
             : base(new FeatureCollection())
         {
@@ -75,11 +64,6 @@ namespace OsmSharp.Geo.Streams.Gpx
             base.Initialize();
         }
 
-        #region Read Gpx
-
-        /// <summary>
-        /// The gpx object.
-        /// </summary>
         private bool _read = false;
 
         /// <summary>
@@ -91,9 +75,9 @@ namespace OsmSharp.Geo.Streams.Gpx
             if (_stream.CanSeek) { _stream.Seek(0, SeekOrigin.Begin); }
 
             // instantiate and load the gpx test document.
-            XmlStreamSource source = new XmlStreamSource(_stream);
-            GpxDocument document = new GpxDocument(source);
-            object gpx = document.Gpx;
+            var source = new XmlStreamSource(_stream);
+            var document = new GpxDocument(source);
+            var gpx = document.Gpx;
 
             switch (document.Version)
             {
@@ -407,7 +391,5 @@ namespace OsmSharp.Geo.Streams.Gpx
                 this.FeatureCollection.Add(lineString);
             }
         }
-
-        #endregion
     }
 }

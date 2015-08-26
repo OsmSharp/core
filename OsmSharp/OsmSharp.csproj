@@ -149,15 +149,12 @@
     <Compile Include="Geo\Projections\Lambert\Ellipsoids\Hayford1924Ellipsoid.cs" />
     <Compile Include="Geo\Projections\Lambert\Ellipsoids\Wgs1984Ellipsoid.cs" />
     <Compile Include="Geo\Projections\Lambert\International\Belgium\Belgium1972LambertProjection.cs" />
-    <Compile Include="Geo\Projections\Lambert\LambertCoordinate.cs" />
     <Compile Include="Geo\Projections\Lambert\LambertEllipsoid.cs" />
     <Compile Include="Geo\Projections\Lambert\LambertProjectionBase.cs" />
-    <Compile Include="Geo\Projections\ScaledProjection.cs" />
     <Compile Include="Geo\Projections\WebMercator.cs" />
     <Compile Include="Geo\Simple\GeoCoordinateSimple.cs" />
     <Compile Include="Geo\Streams\FeatureCollectionStreamSource.cs" />
     <Compile Include="Geo\Streams\GeoJson\GeoJsonConverter.cs" />
-    <Compile Include="Geo\Streams\GeoJson\GeoJsonFeatureStreamSource.cs" />
     <Compile Include="Geo\Streams\Gpx\GpxFeatureStreamSource.cs" />
     <Compile Include="Geo\Streams\IFeatureStreamSource.cs" />
     <Compile Include="Geo\Streams\IFeatureStreamTarget.cs" />

@@ -37,7 +37,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Creates a new multipolygon string.
         /// </summary>
-        /// <param name="polygons"></param>
         public MultiPolygon(params Polygon[] polygons)
             : base(polygons)
         {
@@ -47,7 +46,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Creates a new multipolygon string.
         /// </summary>
-        /// <param name="polygons"></param>
         public MultiPolygon(IEnumerable<Polygon> polygons)
             : base(polygons)
         {

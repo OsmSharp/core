@@ -16,39 +16,22 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using System.IO;
-using OsmSharp.Geo.Attributes;
+using OsmSharp.Geo.Features;
 using OsmSharp.Geo.Geometries;
-using OsmSharp.Math.Geo;
 using OsmSharp.IO.Xml.Kml;
 using OsmSharp.IO.Xml.Sources;
-using OsmSharp.Geo.Features;
+using OsmSharp.Math.Geo;
+using System.Collections.Generic;
+using System.IO;
 
 namespace OsmSharp.Geo.Streams.Kml
 {
     /// <summary>
-    /// Gpx-stream source.
+    /// KML-stream source.
     /// </summary>
-    /// <remarks>
-    ///         Folders => ???
-    ///         Document => ???    
-    ///             Placemark => ???
-    ///             Geometry => 
-    ///                 Polygon => Polygon
-    ///                     InnerBoundary => LineairRing
-    ///                     OuterBoundary => LineairRing
-    ///                 Point => Point
-    ///                 LineString => LineString
-    ///                 LineairRing => LineairRing
-    ///                 MultiGeometery => MultiX
-    /// </remarks>
     public class KmlFeatureStreamSource : FeatureCollectionStreamSource
     {
-        /// <summary>
-        /// Holds the stream containing the source-data.
-        /// </summary>
-        private Stream _stream;
+        private readonly Stream _stream;
 
         /// <summary>
         /// Creates a new Kml-geometry stream.
@@ -861,17 +844,17 @@ namespace OsmSharp.Geo.Streams.Kml
         /// <returns></returns>
         private static IList<GeoCoordinate> ConvertCoordinates(string coordinates)
         {
-            IList<GeoCoordinate> geo_coordinates = new List<GeoCoordinate>();
-            string[] coordinate_strings = coordinates.Split('\n');
-            for (int idx = 0; idx < coordinate_strings.Length; idx++)
+            var geoCoordinates = new List<GeoCoordinate>();
+            var coordinateStrings = coordinates.Split('\n');
+            for (int idx = 0; idx < coordinateStrings.Length; idx++)
             {
-                string coordinate_string = coordinate_strings[idx];
-                if (coordinate_string != null &&
-                    coordinate_string.Length > 0 &&
-                    coordinate_string.Trim().Length > 0)
+                var coordinateString = coordinateStrings[idx];
+                if (coordinateString != null &&
+                    coordinateString.Length > 0 &&
+                    coordinateString.Trim().Length > 0)
                 {
-                    string[] coordinate_split = coordinate_string.Split(',');
-                    double longitude = 0f;
+                    var coordinate_split = coordinateString.Split(',');
+                    var longitude = 0.0;
                     if (!double.TryParse(coordinate_split[0],
                         System.Globalization.NumberStyles.Any,
                         System.Globalization.CultureInfo.InvariantCulture,
@@ -879,7 +862,7 @@ namespace OsmSharp.Geo.Streams.Kml
                     {
                         // parsing failed!
                     }
-                    double latitude = 0f;
+                    var latitude = 0.0;
                     if (!double.TryParse(coordinate_split[1],
                         System.Globalization.NumberStyles.Any,
                         System.Globalization.CultureInfo.InvariantCulture,
@@ -888,10 +871,10 @@ namespace OsmSharp.Geo.Streams.Kml
                         // parsing failed!
                     }
 
-                    geo_coordinates.Add(new GeoCoordinate(latitude, longitude));
+                    geoCoordinates.Add(new GeoCoordinate(latitude, longitude));
                 }
             }
-            return geo_coordinates;
+            return geoCoordinates;
         }
     }
 }

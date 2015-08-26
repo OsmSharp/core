@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,11 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace OsmSharp.Math.Geo
 {
     /// <summary>
@@ -31,9 +26,6 @@ namespace OsmSharp.Math.Geo
         /// <summary>
         /// Estimates distance.
         /// </summary>
-        /// <param name="coordinates"></param>
-        /// <param name="start"></param>
-        /// <param name="lenght"></param>
         /// <returns></returns>
         public static double DistanceEstimate(this GeoCoordinate[] coordinates, int start, int lenght)
         {

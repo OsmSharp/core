@@ -36,7 +36,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Creates a new multipoint.
         /// </summary>
-        /// <param name="points"></param>
         public MultiPoint(params Point[] points)
             :base(points)
         {
@@ -46,7 +45,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Creates a new multipoint.
         /// </summary>
-        /// <param name="points"></param>
         public MultiPoint(IEnumerable<Point> points)
             : base(points)
         {

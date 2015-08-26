@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,10 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using OsmSharp.Math.Geo.Lambert.Ellipsoids;
 
 namespace OsmSharp.Math.Geo.Lambert
@@ -28,20 +25,9 @@ namespace OsmSharp.Math.Geo.Lambert
     /// </summary>
     public abstract class LambertEllipsoid
     {
-        /// <summary>
-        /// The distance from the center of the ellipsoid to one of the focus points.
-        /// </summary>
-        private double _semi_major_axis;
-
-        /// <summary>
-        /// The flattening of this ellipsoid.
-        /// </summary>
-        private double _flattening;
-
-        /// <summary>
-        /// The eccentricity of this ellipsoid, calculated upon creation.
-        /// </summary>
-        private double _eccentricity;
+        private readonly double _semiMajorAxis;
+        private readonly double _flattening;
+        private readonly double _eccentricity;
 
         /// <summary>
         /// Creates a new ellipsoid.
@@ -51,14 +37,12 @@ namespace OsmSharp.Math.Geo.Lambert
         protected LambertEllipsoid(double semi_major_axis,
             double flattening)
         {
-            _semi_major_axis = semi_major_axis;
+            _semiMajorAxis = semi_major_axis;
             _flattening = flattening;
 
             // calculate eccentricity.
             _eccentricity = System.Math.Sqrt(_flattening * (2 - _flattening));
         }
-
-        #region Properties
 
         /// <summary>
         /// Returns the calculated eccentricity of this ellipsoid.
@@ -78,7 +62,7 @@ namespace OsmSharp.Math.Geo.Lambert
         {
             get
             {
-                return _semi_major_axis;
+                return _semiMajorAxis;
             }
         }
 
@@ -93,13 +77,9 @@ namespace OsmSharp.Math.Geo.Lambert
             }
         }
 
-        #endregion
-
         #region Static Default Ellipsoids
 
-        #region Hayford 1924
-
-        private static Hayford1924Ellipsoid _hayford_1924_ellipsoid;
+        private static Hayford1924Ellipsoid _hayford1924Ellipsoid;
 
         /// <summary>
         /// Returns the hayford 1924 ellisoid.
@@ -108,19 +88,15 @@ namespace OsmSharp.Math.Geo.Lambert
         {
             get
             {
-                if (_hayford_1924_ellipsoid == null)
+                if (_hayford1924Ellipsoid == null)
                 {
-                    _hayford_1924_ellipsoid = new Hayford1924Ellipsoid();
+                    _hayford1924Ellipsoid = new Hayford1924Ellipsoid();
                 }
-                return _hayford_1924_ellipsoid;
+                return _hayford1924Ellipsoid;
             }
         }
 
-        #endregion
-
-        #region Wgs 1984
-
-        private static Wgs1984Ellipsoid _wgs_1984_ellipsoid;
+        private static Wgs1984Ellipsoid _wgs1984Ellipsoid;
 
         /// <summary>
         /// Returns the wgs 1984 ellisoid.
@@ -129,15 +105,13 @@ namespace OsmSharp.Math.Geo.Lambert
         {
             get
             {
-                if (_wgs_1984_ellipsoid == null)
+                if (_wgs1984Ellipsoid == null)
                 {
-                    _wgs_1984_ellipsoid = new Wgs1984Ellipsoid();
+                    _wgs1984Ellipsoid = new Wgs1984Ellipsoid();
                 }
-                return _wgs_1984_ellipsoid;
+                return _wgs1984Ellipsoid;
             }
         }
-
-        #endregion
 
         #endregion
     }

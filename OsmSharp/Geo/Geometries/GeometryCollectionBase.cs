@@ -27,10 +27,7 @@ namespace OsmSharp.Geo.Geometries
     public abstract class GeometryCollectionBase<GeometryType> : Geometry, IEnumerable<GeometryType>
         where GeometryType : Geometry
     {
-        /// <summary>
-        /// Holds the list of geometries.
-        /// </summary>
-        private List<GeometryType> _geometries;
+        private readonly List<GeometryType> _geometries;
 
         /// <summary>
         /// Creates a new geometry collection.
@@ -43,7 +40,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Creates a new geometry collection.
         /// </summary>
-        /// <param name="geometries"></param>
         public GeometryCollectionBase(IEnumerable<GeometryType> geometries)
         {
             _geometries = new List<GeometryType>(geometries);
@@ -63,7 +59,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Adds a new geometry.
         /// </summary>
-        /// <param name="geometry"></param>
         public void Add(GeometryType geometry)
         {
             _geometries.Add(geometry);
@@ -72,7 +67,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Adds all geometries in the given enumerable.
         /// </summary>
-        /// <param name="geometries"></param>
         public void AddRange(IEnumerable<GeometryType> geometries)
         {
             foreach (var geometry in geometries)
@@ -84,7 +78,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Returns the geometry at the given idx.
         /// </summary>
-        /// <param name="idx"></param>
         /// <returns></returns>
         public GeometryType this[int idx]
         {
@@ -120,7 +113,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Returns true if at least one of the geometries in this collection exists inside the given boundingbox.
         /// </summary>
-        /// <param name="box"></param>
         /// <returns></returns>
         public override bool IsInside(GeoCoordinateBox box)
         {

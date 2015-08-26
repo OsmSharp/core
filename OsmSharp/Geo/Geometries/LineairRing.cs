@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,13 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OsmSharp.Math.Geo;
-using OsmSharp.Math.Primitives;
-using OsmSharp.Math;
+using System.Collections.Generic;
 
 namespace OsmSharp.Geo.Geometries
 {
@@ -62,18 +57,17 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Returns true if the given vertex is convex.
         /// </summary>
-        /// <param name="vertexIdx"></param>
         /// <returns></returns>
         public bool IsEar(int vertexIdx)
         {
             int previousIdx = vertexIdx == 0 ? this.Coordinates.Count - 1 : vertexIdx - 1;
             int nextIdx = vertexIdx == this.Coordinates.Count - 1 ? 0 : vertexIdx + 1;
 
-            GeoCoordinate vertex = this.Coordinates[vertexIdx];
-            GeoCoordinate previous = this.Coordinates[previousIdx];
-            GeoCoordinate next = this.Coordinates[nextIdx];
+            var vertex = this.Coordinates[vertexIdx];
+            var previous = this.Coordinates[previousIdx];
+            var next = this.Coordinates[nextIdx];
 
-            GeoCoordinate between = (next + previous) / 2;
+            var between = (next + previous) / 2;
 
             return (this.Contains(between));
         }
@@ -84,11 +78,12 @@ namespace OsmSharp.Geo.Geometries
         /// <returns></returns>
         public GeoCoordinate[] GetNeigbours(int vertexIdx)
         {
-            int previousIdx = vertexIdx == 0 ? this.Coordinates.Count - 1 : vertexIdx - 1;
-            int nextIdx = vertexIdx == this.Coordinates.Count - 1 ? 0 : vertexIdx + 1;
+            var previousIdx = vertexIdx == 0 ? this.Coordinates.Count - 1 : vertexIdx - 1;
+            var nextIdx = vertexIdx == this.Coordinates.Count - 1 ? 0 : vertexIdx + 1;
 
-            GeoCoordinate previous = this.Coordinates[previousIdx];
-            GeoCoordinate next = this.Coordinates[nextIdx];
+            var previous = this.Coordinates[previousIdx];
+            var next = this.Coordinates[nextIdx];
+
             return new GeoCoordinate[] { previous, next };
         }
 
@@ -96,22 +91,22 @@ namespace OsmSharp.Geo.Geometries
         /// Returns true if the given coordinate is contained in the inner area of the ring or lying on the border of the ring.
         /// Fast way based on the winding number aproach.        
         /// </summary>
-        /// <param name="coordinate"></param>
         /// <returns></returns>
         public bool Contains(GeoCoordinate coordinate)
         {
-            bool flipflop = false;
+            var flipflop = false;
             const bool includeBorder = true; // Algoritm could be parameterized to optionally include the border.
 
-            for (int i = 0, j = Coordinates.Count - 1; i < Coordinates.Count; j = i++)
+            for (int i = 0, j = this.Coordinates.Count - 1; i < this.Coordinates.Count; j = i++)
             {
                 if (Coordinates[j].Equals(coordinate))
                     return includeBorder;
 
-                bool b = Coordinates[i].Latitude <= coordinate.Latitude;
-                if (b != (Coordinates[j].Latitude <= coordinate.Latitude))
+                var b = this.Coordinates[i].Latitude <= coordinate.Latitude;
+                if (b != (this.Coordinates[j].Latitude <= coordinate.Latitude))
                 {
-                    var triangularOrientation = (Coordinates[j].Longitude - Coordinates[i].Longitude) * (coordinate.Latitude - Coordinates[i].Latitude) - (Coordinates[j].Latitude - Coordinates[i].Latitude) * (coordinate.Longitude - Coordinates[i].Longitude);
+                    var triangularOrientation = (this.Coordinates[j].Longitude - this.Coordinates[i].Longitude) *
+                        (coordinate.Latitude - this.Coordinates[i].Latitude) - (this.Coordinates[j].Latitude - this.Coordinates[i].Latitude) * (coordinate.Longitude - Coordinates[i].Longitude);
                     if (triangularOrientation > 0 && b || triangularOrientation < 0 && !b)
                         flipflop = !flipflop;
                     else if (triangularOrientation == 0)
@@ -124,7 +119,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Returns true if the given ring is contained in this ring.
         /// </summary>
-        /// <param name="lineairRing"></param>
         /// <returns></returns>
         public bool Contains(LineairRing lineairRing)
         {

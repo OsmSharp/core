@@ -16,12 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Math.Primitives;
+using OsmSharp.Math.Random;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using OsmSharp.Math.Primitives;
-using OsmSharp.Math.Random;
 
 namespace OsmSharp.Math.Geo
 {

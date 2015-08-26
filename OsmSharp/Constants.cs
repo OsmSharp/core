@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -26,7 +26,7 @@ namespace OsmSharp
         /// <summary>
         /// The radius of earth in meters.
         /// </summary>
-        public static double RadiusOfEarth = 6371000;
+        public const double RadiusOfEarth = 6371000;
 
         /// <summary>
         /// 2.0 * Math.PI

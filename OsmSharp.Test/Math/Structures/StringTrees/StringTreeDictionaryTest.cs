@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using OsmSharp.Math.Structures.StringTrees;
 
-namespace OsmSharp.Test.Unittests
+namespace OsmSharp.Test
 {
     /// <summary>
     /// Does some string dictionary tests.

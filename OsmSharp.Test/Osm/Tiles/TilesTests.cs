@@ -21,7 +21,7 @@ using NUnit.Framework;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Tiles;
 
-namespace OsmSharp.Test.Unittests.Osm.Tiles
+namespace OsmSharp.Test.Osm.Tiles
 {
     /// <summary>
     /// Does some tests on the tile calculations.

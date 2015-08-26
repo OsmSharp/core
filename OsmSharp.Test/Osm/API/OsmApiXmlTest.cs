@@ -21,7 +21,7 @@ using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
 
-namespace OsmSharp.Test.Unittests.Osm.API
+namespace OsmSharp.Test.Osm.API
 {
     /// <summary>
     /// Summary description for UnitTest1

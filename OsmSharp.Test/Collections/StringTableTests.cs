@@ -23,7 +23,7 @@ using System.Linq;
 using NUnit.Framework;
 using OsmSharp.Collections;
 
-namespace OsmSharp.Test.Unittests
+namespace OsmSharp.Test
 {
     /// <summary>
     /// Summary description for StringTableTests

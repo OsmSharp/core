@@ -23,7 +23,7 @@ using OsmSharp.Geo.Geometries;
 using OsmSharp.Geo.Streams.Kml;
 using OsmSharp.Geo.Features;
 
-namespace OsmSharp.Test.Unittests.Streams.IO.Kml
+namespace OsmSharp.Test.Streams.IO.Kml
 {
     /// <summary>
     /// Contains test to read/write Kml files using geometry streams.

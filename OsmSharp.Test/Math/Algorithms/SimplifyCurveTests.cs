@@ -22,7 +22,7 @@ using OsmSharp.Math;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Math.Algorithms;
 
-namespace OsmSharp.Test.Unittests.Math.Algorithms
+namespace OsmSharp.Test.Math.Algorithms
 {
     /// <summary>
     /// Contains simple simplification tests.

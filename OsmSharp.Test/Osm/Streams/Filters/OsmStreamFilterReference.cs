@@ -22,7 +22,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Streams.Filters;
 
-namespace OsmSharp.Test.Unittests.Osm.Streams.Filters
+namespace OsmSharp.Test.Osm.Streams.Filters
 {
     /// <summary>
     /// A simple reference implementation that filters out all objects with even ids.

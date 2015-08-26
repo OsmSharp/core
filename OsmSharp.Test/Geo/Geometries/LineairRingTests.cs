@@ -25,7 +25,7 @@ using OsmSharp.Geo.Geometries;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
 
-namespace OsmSharp.Test.Unittests.Geo.Geometries
+namespace OsmSharp.Test.Geo.Geometries
 {
     /// <summary>
     /// Containts tests for the lineair ring.

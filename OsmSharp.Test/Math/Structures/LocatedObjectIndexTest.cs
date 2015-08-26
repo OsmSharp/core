@@ -23,7 +23,7 @@ using NUnit.Framework;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Structures;
 
-namespace OsmSharp.Test.Unittests.Math.Structures
+namespace OsmSharp.Test.Math.Structures
 {
     /// <summary>
     /// Contains common test functions for located object index tests.

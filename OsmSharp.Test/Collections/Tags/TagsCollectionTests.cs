@@ -19,7 +19,7 @@
 using NUnit.Framework;
 using OsmSharp.Collections.Tags;
 
-namespace OsmSharp.Test.Unittests.Collections.Tags
+namespace OsmSharp.Test.Collections.Tags
 {
     /// <summary>
     /// Contains tests for tags collections.

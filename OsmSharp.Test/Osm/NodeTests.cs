@@ -19,7 +19,7 @@
 using NUnit.Framework;
 using OsmSharp.Osm;
 
-namespace OsmSharp.Test.Unittests.Osm
+namespace OsmSharp.Test.Osm
 {
     /// <summary>
     /// Contains some regression tests on nodes.

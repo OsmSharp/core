@@ -40,7 +40,7 @@ namespace OsmSharp.Math.Geo.Projections
         {
             var n = System.Math.Floor(System.Math.Pow(2, DefaultZoom));
 
-            var rad = new Degree(lat);
+            var rad = (Radian)(new Degree(lat));
 
             var x = (((lon + 180.0f) / 360.0f) * (double)n);
             var y = (
@@ -92,7 +92,7 @@ namespace OsmSharp.Math.Geo.Projections
         {
             var n = System.Math.Floor(System.Math.Pow(2, DefaultZoom));
 
-            var rad = new Degree(lat);
+            var rad = (Radian)(new Degree(lat));
 
             return (
                 (1.0f - (System.Math.Log(System.Math.Tan(rad.Value) + (1.0f / System.Math.Cos(rad.Value))))

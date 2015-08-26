@@ -23,7 +23,7 @@ using OsmSharp.IO.MemoryMappedFiles;
 using System.Collections.Generic;
 using System.IO;
 
-namespace OsmSharp.Test.Unittests.Collections.Tags
+namespace OsmSharp.Test.Collections.Tags
 {
     /// <summary>
     /// Contains tests for the SimpleTagsCollectionIndexTests.

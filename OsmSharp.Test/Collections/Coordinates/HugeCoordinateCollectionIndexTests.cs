@@ -22,7 +22,7 @@ using OsmSharp.Math.Geo;
 using System.Collections.Generic;
 using System.IO;
 
-namespace OsmSharp.Test.Unittests.Collections.Coordinates
+namespace OsmSharp.Test.Collections.Coordinates
 {
     /// <summary>
     /// Testclass with facilities to test the huge dictionary.

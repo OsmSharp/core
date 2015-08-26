@@ -23,7 +23,7 @@ using OsmSharp.Math.Random;
 using System.Collections.Generic;
 using System.IO;
 
-namespace OsmSharp.Test.Unittests.Collections.Indexes.MemoryMapped
+namespace OsmSharp.Test.Collections.Indexes.MemoryMapped
 {
     /// <summary>
     /// Contains test for a memory-mapped index.

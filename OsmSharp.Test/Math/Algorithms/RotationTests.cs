@@ -22,7 +22,7 @@ using OsmSharp.Math.Primitives;
 using OsmSharp.Math.Algorithms;
 using OsmSharp.Units.Angle;
 
-namespace OsmSharp.Test.Unittests.Math.Algorithms
+namespace OsmSharp.Test.Math.Algorithms
 {
 	/// <summary>
 	/// Rotation tests.

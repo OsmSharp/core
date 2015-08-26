@@ -21,7 +21,7 @@ using OsmSharp.Units.Distance;
 using OsmSharp.Units.Speed;
 using OsmSharp.Units.Time;
 
-namespace OsmSharp.Test.Unittests.Units
+namespace OsmSharp.Test.Units
 {
     /// <summary>
     /// Tests for unit-conversion speed classes.

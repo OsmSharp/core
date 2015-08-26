@@ -20,7 +20,7 @@ using NUnit.Framework;
 using OsmSharp.IO.Json;
 using System;
 
-namespace OsmSharp.Test.Unittests.IO.Json
+namespace OsmSharp.Test.IO.Json
 {
     /// <summary>
     /// Tests json serialization.

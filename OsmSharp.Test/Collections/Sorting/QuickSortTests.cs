@@ -19,7 +19,7 @@
 using NUnit.Framework;
 using OsmSharp.Collections.Sorting;
 
-namespace OsmSharp.Test.Unittests.Collections.Sorting
+namespace OsmSharp.Test.Collections.Sorting
 {
     /// <summary>
     /// Tests the quicksort implementation.

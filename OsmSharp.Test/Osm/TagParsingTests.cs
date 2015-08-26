@@ -24,7 +24,7 @@ using OsmSharp.Units.Speed;
 using OsmSharp.Units.Weight;
 using OsmSharp.Units.Distance;
 
-namespace OsmSharp.Test.Unittests.Osm
+namespace OsmSharp.Test.Osm
 {
     /// <summary>
     /// Contains test methods for parsing functions.

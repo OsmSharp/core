@@ -443,10 +443,6 @@
     <Compile Include="Math\Structures\StringTrees\StringTreeDictionary.cs" />
     <Compile Include="Math\VectorF2D.cs" />
     <Compile Include="PCLExtensions.cs" />
-    <Compile Include="Progress\EmptyProgressReporter.cs" />
-    <Compile Include="Progress\IProgressEnabled.cs" />
-    <Compile Include="Progress\IProgressReporter.cs" />
-    <Compile Include="Progress\ProgressStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="Units\Angle\Degree.cs" />

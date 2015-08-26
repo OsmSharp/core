@@ -26,7 +26,7 @@ using OsmSharp.IO.Xml.Gpx;
 using OsmSharp.IO.Xml.Sources;
 using System.Reflection;
 
-namespace OsmSharp.Test.Unittests.IO.Xml.Gpx
+namespace OsmSharp.Test.IO.Xml.Gpx
 {
     /// <summary>
     /// Tests the Gpx Xml serializer/deserializer.

@@ -23,7 +23,7 @@ using OsmSharp.Osm.Data.Memory;
 using System;
 using System.Collections.Generic;
 
-namespace OsmSharp.Test.Unittests.Osm.Data
+namespace OsmSharp.Test.Osm.Data
 {
     /// <summary>
     /// Does some raw data memory tests.

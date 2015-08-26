@@ -21,7 +21,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Units.Distance;
 using OsmSharp.Math.Geo.Meta;
 
-namespace OsmSharp.Test.Unittests.Geo
+namespace OsmSharp.Test.Geo
 {
     /// <summary>
     /// Contains tests for the GeoCoordinate class.

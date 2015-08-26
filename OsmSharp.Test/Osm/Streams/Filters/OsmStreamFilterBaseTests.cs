@@ -24,7 +24,7 @@ using NUnit.Framework;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Streams;
 
-namespace OsmSharp.Test.Unittests.Osm.Streams.Filters
+namespace OsmSharp.Test.Osm.Streams.Filters
 {
     /// <summary>
     /// Contains tests for the OsmStreamFilterBase.

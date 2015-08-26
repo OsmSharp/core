@@ -19,7 +19,7 @@
 using NUnit.Framework;
 using OsmSharp.Osm.Cache;
 
-namespace OsmSharp.Test.Unittests.Osm.Cache
+namespace OsmSharp.Test.Osm.Cache
 {
     /// <summary>
     /// Contains test for the memory osm data cache.

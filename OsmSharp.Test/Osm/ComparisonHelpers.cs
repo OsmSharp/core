@@ -21,7 +21,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Osm;
 using System.Linq;
 
-namespace OsmSharp.Test.Unittests.Osm
+namespace OsmSharp.Test.Osm
 {
     /// <summary>
     /// Contains various comparison helpers.

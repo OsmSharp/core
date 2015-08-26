@@ -21,7 +21,7 @@ using OsmSharp.Math.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OsmSharp.Test.Unittests.Collections.SpatialIndexes
+namespace OsmSharp.Test.Collections.SpatialIndexes
 {
     /// <summary>
     /// Reference implementation of a spatial index.

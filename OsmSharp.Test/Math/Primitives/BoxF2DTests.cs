@@ -23,7 +23,7 @@ using System.Text;
 using NUnit.Framework;
 using OsmSharp.Math.Primitives;
 
-namespace OsmSharp.Test.Unittests.Math.Primitives
+namespace OsmSharp.Test.Math.Primitives
 {
     /// <summary>
     /// Holds common tests for the BoxF2D class.

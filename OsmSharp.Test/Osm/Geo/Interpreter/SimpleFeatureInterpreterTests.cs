@@ -25,7 +25,7 @@ using OsmSharp.Osm.Geo.Interpreter;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OsmSharp.Test.Unittests.Osm.Geo.Interpreter
+namespace OsmSharp.Test.Osm.Geo.Interpreter
 {
     /// <summary>
     /// Contains tests for the default feature interpreter class testing as many of the openstreetmap tags ->  geometry logic as possible.

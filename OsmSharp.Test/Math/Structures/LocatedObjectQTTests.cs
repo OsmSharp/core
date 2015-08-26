@@ -21,7 +21,7 @@ using OsmSharp.Math.Structures;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Structures.QTree;
 
-namespace OsmSharp.Test.Unittests.Math.Structures
+namespace OsmSharp.Test.Math.Structures
 {
     /// <summary>
     /// Contains tests for a QuadTree index.

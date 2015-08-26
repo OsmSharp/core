@@ -24,7 +24,7 @@ using NUnit.Framework;
 using OsmSharp.Math;
 using OsmSharp.Math.Primitives;
 
-namespace OsmSharp.Test.Unittests.Math.Primitives
+namespace OsmSharp.Test.Math.Primitives
 {
     /// <summary>
     /// Tests for the Line2D class.

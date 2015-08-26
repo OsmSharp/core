@@ -19,7 +19,7 @@
 using NUnit.Framework;
 using OsmSharp.Collections;
 
-namespace OsmSharp.Test.Unittests.Collections
+namespace OsmSharp.Test.Collections
 {
     /// <summary>
     /// Contains tests for a sparse large bit array.

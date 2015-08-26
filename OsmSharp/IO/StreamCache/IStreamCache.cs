@@ -35,7 +35,6 @@ namespace OsmSharp.IO.StreamCache
         /// <summary>
         /// The given stream can be disposed.
         /// </summary>
-        /// <param name="stream"></param>
         void Dispose(Stream stream);
     }
 }

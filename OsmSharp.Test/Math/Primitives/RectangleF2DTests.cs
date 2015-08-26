@@ -21,7 +21,7 @@ using NUnit.Framework;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Math;
 
-namespace OsmSharp.Test.Unittests.Math.Primitives
+namespace OsmSharp.Test.Math.Primitives
 {
 	/// <summary>
 	/// Contains test for the RectangleF2D primitive.

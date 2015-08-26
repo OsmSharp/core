@@ -28,7 +28,7 @@ using OsmSharp.Math.Random;
 using ProtoBuf.Meta;
 using System.Linq;
 
-namespace OsmSharp.Test.Unittests.Collections.SpatialIndexes
+namespace OsmSharp.Test.Collections.SpatialIndexes
 {
     /// <summary>
     /// Contains tests for the R-tree index.

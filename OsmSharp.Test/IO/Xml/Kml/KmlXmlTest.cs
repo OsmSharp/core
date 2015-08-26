@@ -22,7 +22,7 @@ using OsmSharp.IO.Xml.Sources;
 using System.IO;
 using System.Reflection;
 
-namespace OsmSharp.Test.Unittests.IO.Xml.Kml
+namespace OsmSharp.Test.IO.Xml.Kml
 {
     /// <summary>
     /// Containts tests to read/write test kml-files.

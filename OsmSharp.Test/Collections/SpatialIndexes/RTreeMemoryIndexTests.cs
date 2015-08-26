@@ -25,7 +25,7 @@ using OsmSharp.Math.Primitives;
 using OsmSharp.Math.Random;
 using System.Linq;
 
-namespace OsmSharp.Test.Unittests.Collections.SpatialIndexes
+namespace OsmSharp.Test.Collections.SpatialIndexes
 {
     /// <summary>
     /// Contains tests for the R-tree index.

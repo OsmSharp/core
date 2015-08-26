@@ -23,7 +23,7 @@ using System.Text;
 using NUnit.Framework;
 using OsmSharp.Collections.Cache;
 
-namespace OsmSharp.Test.Unittests.Collections.Cache
+namespace OsmSharp.Test.Collections.Cache
 {
     /// <summary>
     /// Contains tests for the LRU in-memory cache implementation.

@@ -22,7 +22,7 @@ using OsmSharp.Collections.Tags.Index;
 using OsmSharp.IO.MemoryMappedFiles;
 using System.IO;
 
-namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
+namespace OsmSharp.Test.Collections.Tags.Serializer
 {
     /// <summary>
     /// Tests tag index serializer.

@@ -21,7 +21,7 @@ using NUnit.Framework;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Osm.Xml.Streams;
 
-namespace OsmSharp.Test.Unittests.Osm.Xml.Streams
+namespace OsmSharp.Test.Osm.Xml.Streams
 {
     /// <summary>
     /// Summary description for XmlDataProcessorSourceTests

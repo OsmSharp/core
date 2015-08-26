@@ -20,7 +20,7 @@ using System;
 using NUnit.Framework;
 using OsmSharp.Units.Angle;
 
-namespace OsmSharp.Test.Unittests
+namespace OsmSharp.Test
 {
     /// <summary>
     /// Tests for the angle unit classes.

@@ -22,7 +22,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Streams.Filters;
 
-namespace OsmSharp.Test.Unittests.Osm.Streams.Filters
+namespace OsmSharp.Test.Osm.Streams.Filters
 {
     /// <summary>
     /// Contains tests for the OsmStreamFilterSort.

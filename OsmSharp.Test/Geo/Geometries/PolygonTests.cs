@@ -24,7 +24,7 @@ using NUnit.Framework;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Math.Geo;
 
-namespace OsmSharp.Test.Unittests.Geo.Geometries
+namespace OsmSharp.Test.Geo.Geometries
 {
     /// <summary>
     /// Containts tests for the polygons.

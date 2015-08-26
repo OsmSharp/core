@@ -23,7 +23,7 @@ using OsmSharp.Osm.Streams.Filters;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OsmSharp.Test.Unittests.Osm.Streams.Filters
+namespace OsmSharp.Test.Osm.Streams.Filters
 {
     /// <summary>
     /// Tests the stream filter that excludes objects from other streams.

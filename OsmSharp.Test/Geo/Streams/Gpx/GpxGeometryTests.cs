@@ -23,7 +23,7 @@ using OsmSharp.Geo.Geometries;
 using OsmSharp.Geo.Streams.Gpx;
 using OsmSharp.Geo.Features;
 
-namespace OsmSharp.Test.Unittests.Geo.Streams.Gpx
+namespace OsmSharp.Test.Geo.Streams.Gpx
 {
     /// <summary>
     /// Contains test to read/write gpx files using geometry streams.

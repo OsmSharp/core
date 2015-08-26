@@ -24,7 +24,7 @@ using OsmSharp.Geo.Streams.GeoJson;
 using OsmSharp.Math.Geo;
 using System.Collections.Generic;
 
-namespace OsmSharp.Test.Unittests.Geo.Streams.GeoJson
+namespace OsmSharp.Test.Geo.Streams.GeoJson
 {
     /// <summary>
     /// Tests the GeoJson converter.

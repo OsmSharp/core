@@ -27,7 +27,7 @@ using OsmSharp.Osm.Streams;
 using OsmSharp.Osm.Streams.Complete;
 using OsmSharp.Osm.Xml.Streams;
 
-namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
+namespace OsmSharp.Test.Osm.Streams.Complete
 {
     /// <summary>
     /// Contains test for the simple to complete stream conversion class.

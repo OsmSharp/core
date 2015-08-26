@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace OsmSharp.Test.Unittests.Collections.MemoryMapped
+namespace OsmSharp.Test.Collections.MemoryMapped
 {
     /// <summary>
     /// Contains tests for the memory-mapped huge dictionary.

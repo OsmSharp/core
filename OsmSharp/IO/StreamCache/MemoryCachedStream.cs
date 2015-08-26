@@ -26,18 +26,15 @@ namespace OsmSharp.IO.StreamCache
     /// </summary>
     public class MemoryCachedStream : IStreamCache
     {
-        /// <summary>
-        /// Holds the streams.
-        /// </summary>
         private readonly HashSet<Stream> _streams = new HashSet<Stream>(); 
 
         /// <summary>
         /// Creates a new stream.
         /// </summary>
         /// <returns></returns>
-        public System.IO.Stream CreateNew()
+        public Stream CreateNew()
         {
-            Stream stream = new MemoryStream();
+            var stream = new MemoryStream();
             _streams.Add(stream);
             return stream;
         }
@@ -45,7 +42,6 @@ namespace OsmSharp.IO.StreamCache
         /// <summary>
         /// Disposes all resource associated with this object.
         /// </summary>
-        /// <param name="stream"></param>
         public void Dispose(Stream stream)
         {
             _streams.Remove(stream);

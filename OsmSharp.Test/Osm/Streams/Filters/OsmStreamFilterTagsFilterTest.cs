@@ -23,7 +23,7 @@ using OsmSharp.Osm;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Collections.Tags;
 
-namespace OsmSharp.Test.Unittests.Osm.Streams.Filters
+namespace OsmSharp.Test.Osm.Streams.Filters
 {
     /// <summary>
     /// Holds tests for the tags filter.

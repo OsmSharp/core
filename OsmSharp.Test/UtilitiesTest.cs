@@ -20,7 +20,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace OsmSharp.Test.Unittests
+namespace OsmSharp.Test
 {
     /// <summary>
     /// Contains tests for the (extension) methods in the utilities class.

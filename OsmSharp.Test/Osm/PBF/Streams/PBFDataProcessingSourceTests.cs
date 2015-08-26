@@ -21,7 +21,7 @@ using System.Reflection;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Osm.PBF.Streams;
 
-namespace OsmSharp.Test.Unittests.Osm.PBF.Streams
+namespace OsmSharp.Test.Osm.PBF.Streams
 {
     /// <summary>
     /// Contains tests for the PBF osm streams.

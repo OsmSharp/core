@@ -24,7 +24,7 @@ using OsmSharp.Math.Random;
 using System;
 using System.IO;
 
-namespace OsmSharp.Test.Unittests.Collections.Arrays
+namespace OsmSharp.Test.Collections.Arrays
 {  
     /// <summary>
     /// Contains tests for the huge array.

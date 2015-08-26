@@ -22,7 +22,7 @@ using OsmSharp.Osm;
 using OsmSharp.Osm.Cache;
 using System;
 
-namespace OsmSharp.Test.Unittests.Osm.Cache
+namespace OsmSharp.Test.Osm.Cache
 {
     /// <summary>
     /// Base class containing test code for any OsmDataCache implementation.

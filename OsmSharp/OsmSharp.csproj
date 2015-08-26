@@ -161,10 +161,6 @@
     <Compile Include="Geo\Streams\Kml\KmlFeatureStreamSource.cs" />
     <Compile Include="IClonable.cs" />
     <Compile Include="IO\CappedStream.cs" />
-    <Compile Include="IO\DelimitedFiles\DefaultDelimitedFormat.cs" />
-    <Compile Include="IO\DelimitedFiles\DelimitedFileHandler.cs" />
-    <Compile Include="IO\DelimitedFiles\DelimiterType.cs" />
-    <Compile Include="IO\DelimitedFiles\IDelimitedFormat.cs" />
     <Compile Include="IO\Json\Bson\BsonBinaryType.cs" />
     <Compile Include="IO\Json\Bson\BsonBinaryWriter.cs" />
     <Compile Include="IO\Json\Bson\BsonObjectId.cs" />

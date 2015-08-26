@@ -1,7 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2015 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System.IO;
 
 namespace OsmSharp.IO
@@ -11,20 +25,12 @@ namespace OsmSharp.IO
     /// </summary>
     public class LimitedStream : Stream
     {
-        /// <summary>
-        /// Holds the offset or the header length.
-        /// </summary>
         private readonly long _offset;
-
-        /// <summary>
-        /// Holds the stream.
-        /// </summary>
         private readonly Stream _stream;
 
         /// <summary>
         /// Creates a new routing serializer stream.
         /// </summary>
-        /// <param name="stream"></param>
         public LimitedStream(Stream stream)
         {
             _stream = stream;
@@ -85,9 +91,6 @@ namespace OsmSharp.IO
         ///     stream and advances the position within the stream by the number of bytes
         ///     read.
         /// </summary>
-        /// <param name="buffer"></param>
-        /// <param name="offset"></param>
-        /// <param name="count"></param>
         /// <returns></returns>
         public override int Read(byte[] buffer, int offset, int count)
         {
@@ -98,8 +101,6 @@ namespace OsmSharp.IO
         /// Sets the position within the current
         ///     stream.
         /// </summary>
-        /// <param name="offset"></param>
-        /// <param name="origin"></param>
         /// <returns></returns>
         public override long Seek(long offset, SeekOrigin origin)
         {
@@ -113,7 +114,6 @@ namespace OsmSharp.IO
         /// <summary>
         /// Sets the length of the current stream.
         /// </summary>
-        /// <param name="value"></param>
         public override void SetLength(long value)
         {
             _stream.SetLength(value + _offset);
@@ -124,9 +124,6 @@ namespace OsmSharp.IO
         ///     stream and advances the current position within this stream by the number
         ///     of bytes written.
         /// </summary>
-        /// <param name="buffer"></param>
-        /// <param name="offset"></param>
-        /// <param name="count"></param>
         public override void Write(byte[] buffer, int offset, int count)
         {
             _stream.Write(buffer, offset, count);

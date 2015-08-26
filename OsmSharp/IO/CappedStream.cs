@@ -26,27 +26,13 @@ namespace OsmSharp.IO
     /// </summary>
     public class CappedStream : Stream
     {
-        /// <summary>
-        /// Holds the stream.
-        /// </summary>
         private readonly Stream _stream;
-
-        /// <summary>
-        /// Holds the offset.
-        /// </summary>
         private readonly long _offset;
-
-        /// <summary>
-        /// Holds the length.
-        /// </summary>
         private readonly long _length;
 
         /// <summary>
         /// Creates a new capped stream.
         /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="offset"></param>
-        /// <param name="length"></param>
         public CappedStream(Stream stream, long offset, long length)
         {
             _stream = stream;
@@ -109,9 +95,6 @@ namespace OsmSharp.IO
         ///     stream and advances the position within the stream by the number of bytes
         ///     read.
         /// </summary>
-        /// <param name="buffer"></param>
-        /// <param name="offset"></param>
-        /// <param name="count"></param>
         /// <returns></returns>
         public override int Read(byte[] buffer, int offset, int count)
         {
@@ -127,8 +110,6 @@ namespace OsmSharp.IO
         /// Sets the position within the current
         ///     stream.
         /// </summary>
-        /// <param name="offset"></param>
-        /// <param name="origin"></param>
         /// <returns></returns>
         public override long Seek(long offset, SeekOrigin origin)
         {
@@ -142,7 +123,6 @@ namespace OsmSharp.IO
         /// <summary>
         /// Sets the length of the current stream.
         /// </summary>
-        /// <param name="value"></param>
         public override void SetLength(long value)
         {
             _stream.SetLength(value + _offset);
@@ -164,8 +144,6 @@ namespace OsmSharp.IO
         ///     stream and advance the current position within this stream by the number
         ///     of bytes.
         /// </summary>
-        /// <param name="offset"></param>
-        /// <param name="count"></param>
         /// <returns></returns>
         public bool WritePossible(int offset, int count)
         {
@@ -177,9 +155,6 @@ namespace OsmSharp.IO
         ///     stream and advances the current position within this stream by the number
         ///     of bytes written.
         /// </summary>
-        /// <param name="buffer"></param>
-        /// <param name="offset"></param>
-        /// <param name="count"></param>
         public override void Write(byte[] buffer, int offset, int count)
         {
             if (this.Position + count > this.Length)

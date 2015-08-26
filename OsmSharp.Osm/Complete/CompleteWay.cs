@@ -16,16 +16,12 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OsmSharp.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm;
-using OsmSharp.Osm.Cache;
 using OsmSharp.Osm.Data;
+using System;
+using System.Collections.Generic;
 
 namespace OsmSharp.Osm
 {
@@ -34,15 +30,11 @@ namespace OsmSharp.Osm
     /// </summary>
     public class CompleteWay : CompleteOsmGeo
     {
-        /// <summary>
-        /// Holds the nodes of this way.
-        /// </summary>
         private readonly List<Node> _nodes;
 
         /// <summary>
         /// Creates a new way.
         /// </summary>
-        /// <param name="id"></param>
         internal protected CompleteWay(long id)
             : base(id)
         {
@@ -52,8 +44,6 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Creates a new way using a string table.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="stringTable"></param>
         internal protected CompleteWay(ObjectTable<string> stringTable, long id)
             : base(stringTable, id)
         {
@@ -86,12 +76,10 @@ namespace OsmSharp.Osm
         public List<GeoCoordinate> GetCoordinates()
         {
             var coordinates = new List<GeoCoordinate>();
-
             for (int idx = 0; idx < this.Nodes.Count; idx++)
             {
                 coordinates.Add(this.Nodes[idx].Coordinate);
             }
-
             return coordinates;
         }
 
@@ -101,7 +89,7 @@ namespace OsmSharp.Osm
         /// <param name="w"></param>
         public void CopyTo(CompleteWay w)
         {
-            foreach (Tag tag in this.Tags)
+            foreach (var tag in this.Tags)
             {
                 w.Tags.Add(tag.Key, tag.Value);
             }
@@ -162,7 +150,6 @@ namespace OsmSharp.Osm
             way.UserName = this.User;
             way.Version = (ulong?)this.Version;
             way.Visible = this.Visible;
-
             way.Nodes = new List<long>();
             foreach (Node node in this.Nodes)
             {
@@ -181,12 +168,9 @@ namespace OsmSharp.Osm
                 this.Id);
         }
 
-        #region Way factory functions
-
         /// <summary>
-        /// Creates a new way with a given id.
+        /// Creates a new way.
         /// </summary>
-        /// <param name="id"></param>
         /// <returns></returns>
         public static CompleteWay Create(long id)
         {
@@ -194,10 +178,8 @@ namespace OsmSharp.Osm
         }
 
         /// <summary>
-        /// Creates a new way from a SimpleWay given a dictionary with nodes.
+        /// Creates a new ways.
         /// </summary>
-        /// <param name="simpleWay"></param>
-        /// <param name="nodes"></param>
         /// <returns></returns>
         public static CompleteWay CreateFrom(Way simpleWay, IDictionary<long, Node> nodes)
         {
@@ -205,10 +187,9 @@ namespace OsmSharp.Osm
             if (nodes == null) throw new ArgumentNullException("nodes");
             if (simpleWay.Id == null) throw new Exception("simpleWay.id is null");
 
-            CompleteWay way = Create(simpleWay.Id.Value);
-
+            var way = Create(simpleWay.Id.Value);
             way.ChangeSetId = simpleWay.ChangeSetId;
-            foreach (Tag pair in simpleWay.Tags)
+            foreach (var pair in simpleWay.Tags)
             {
                 way.Tags.Add(pair);
             }
@@ -230,15 +211,12 @@ namespace OsmSharp.Osm
             way.UserId = simpleWay.UserId;
             way.Version = simpleWay.Version.HasValue ? (long)simpleWay.Version.Value : (long?)null;
             way.Visible = simpleWay.Visible.HasValue && simpleWay.Visible.Value;
-
             return way;
         }
 
         /// <summary>
-        /// Creates a new way from a SimpleWay.
+        /// Creates a new way.
         /// </summary>
-        /// <param name="simpleWay"></param>
-        /// <param name="nodeSource"></param>
         /// <returns></returns>
         public static CompleteWay CreateFrom(Way simpleWay, INodeSource nodeSource)
         {
@@ -246,12 +224,11 @@ namespace OsmSharp.Osm
             if (nodeSource == null) throw new ArgumentNullException("nodeSource");
             if (simpleWay.Id == null) throw new Exception("simpleWay.id is null");
 
-            CompleteWay way = Create(simpleWay.Id.Value);
-
+            var way = Create(simpleWay.Id.Value);
             way.ChangeSetId = simpleWay.ChangeSetId;
             if (simpleWay.Tags != null)
             {
-                foreach (Tag pair in simpleWay.Tags)
+                foreach (var pair in simpleWay.Tags)
                 {
                     way.Tags.Add(pair);
                 }
@@ -260,13 +237,13 @@ namespace OsmSharp.Osm
             {
                 for (int idx = 0; idx < simpleWay.Nodes.Count; idx++)
                 {
-                    long nodeId = simpleWay.Nodes[idx];
-                    Node node = nodeSource.GetNode(nodeId);
+                    var nodeId = simpleWay.Nodes[idx];
+                    var node = nodeSource.GetNode(nodeId);
                     if (node == null)
                     {
                         return null;
                     }
-                    Node completeNode = node;
+                    var completeNode = node;
                     if (completeNode != null)
                     {
                         way.Nodes.Add(completeNode);
@@ -282,15 +259,12 @@ namespace OsmSharp.Osm
             way.UserId = simpleWay.UserId;
             way.Version = simpleWay.Version.HasValue ? (long)simpleWay.Version.Value : (long?)null;
             way.Visible = simpleWay.Visible.HasValue && simpleWay.Visible.Value;
-
             return way;
         }
 
         /// <summary>
-        /// Creates a new way with a given id given a stringtable.
+        /// Creates a new way.
         /// </summary>
-        /// <param name="table"></param>
-        /// <param name="id"></param>
         /// <returns></returns>
         public static CompleteWay Create(ObjectTable<string> table, long id)
         {
@@ -298,11 +272,8 @@ namespace OsmSharp.Osm
         }
 
         /// <summary>
-        /// Creates a new way from a SimpleWay given a stringtable.
+        /// Creates a new way.
         /// </summary>
-        /// <param name="table"></param>
-        /// <param name="simpleWay"></param>
-        /// <param name="nodes"></param>
         /// <returns></returns>
         public static CompleteWay CreateFrom(ObjectTable<string> table, Way simpleWay,
                                         IDictionary<long, Node> nodes)
@@ -312,16 +283,15 @@ namespace OsmSharp.Osm
             if (nodes == null) throw new ArgumentNullException("nodes");
             if (simpleWay.Id == null) throw new Exception("simpleWay.id is null");
 
-            CompleteWay way = Create(table, simpleWay.Id.Value);
-
+            var way = Create(table, simpleWay.Id.Value);
             way.ChangeSetId = simpleWay.ChangeSetId;
-            foreach (Tag pair in simpleWay.Tags)
+            foreach (var pair in simpleWay.Tags)
             {
                 way.Tags.Add(pair);
             }
             for (int idx = 0; idx < simpleWay.Nodes.Count; idx++)
             {
-                long nodeId = simpleWay.Nodes[idx];
+                var nodeId = simpleWay.Nodes[idx];
                 Node node = null;
                 if (nodes.TryGetValue(nodeId, out node))
                 {
@@ -337,10 +307,7 @@ namespace OsmSharp.Osm
             way.UserId = simpleWay.UserId;
             way.Version = simpleWay.Version.HasValue ? (long)simpleWay.Version.Value : (long?)null;
             way.Visible = simpleWay.Visible.HasValue && simpleWay.Visible.Value;
-
             return way;
         }
-
-        #endregion
     }
 }

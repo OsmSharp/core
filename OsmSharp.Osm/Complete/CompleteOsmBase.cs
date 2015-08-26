@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,13 +16,10 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using OsmSharp.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
-using OsmSharp.Collections;
+using System;
 
 namespace OsmSharp.Osm
 {
@@ -33,10 +30,7 @@ namespace OsmSharp.Osm
     /// </summary>   
     public abstract class CompleteOsmBase : IEquatable<CompleteOsmBase>
     {
-        /// <summary>
-        /// Holds the id of the object.
-        /// </summary>
-        private long _id;
+        private readonly long _id;
 
         /// <summary>
         /// Creates a new base object.

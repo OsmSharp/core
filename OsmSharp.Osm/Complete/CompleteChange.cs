@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,11 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace OsmSharp.Osm
 {
     /// <summary>
@@ -28,15 +23,8 @@ namespace OsmSharp.Osm
     /// </summary>
     public class CompleteChange
     {
-        /// <summary>
-        /// Contains the type of change.
-        /// </summary>
-        private ChangeType _type;
-
-        /// <summary>
-        /// Contains the object to change.
-        /// </summary>
-        private CompleteOsmGeo _obj;
+        private readonly ChangeType _type;
+        private readonly CompleteOsmGeo _obj;
 
         /// <summary>
         /// Creates a new change object.

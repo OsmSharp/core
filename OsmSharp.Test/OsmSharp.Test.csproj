@@ -90,7 +90,6 @@
     <Compile Include="Math\Structures\LocatedObjectQTTests.cs" />
     <Compile Include="Math\Structures\StringTrees\StringTreeDictionaryTest.cs" />
     <Compile Include="Osm\API\OsmApiXmlTest.cs" />
-    <Compile Include="Osm\Cache\OsmDataCacheDiskTests.cs" />
     <Compile Include="Osm\Cache\OsmDataCacheMemoryTests.cs" />
     <Compile Include="Osm\Cache\OsmDataCacheTestsBase.cs" />
     <Compile Include="Osm\ComparisonHelpers.cs" />

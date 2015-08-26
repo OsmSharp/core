@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -18,7 +18,6 @@
 
 using OsmSharp.Collections;
 using OsmSharp.Geo.Features;
-using OsmSharp.Geo.Geometries;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Geo.Interpreter;
 
@@ -62,12 +61,38 @@ namespace OsmSharp.Osm
         /// <returns></returns>
         public abstract OsmSharp.Osm.OsmGeo ToSimple();
 
+        /// <summary>
+        /// The bounding box of object.
+        /// </summary>
+        public override GeoCoordinateBox BoundingBox
+        {
+            get
+            {
+                return this.Features.Box;
+            }
+        }
+
+        /// <summary>
+        /// Gets/Sets the changeset id.
+        /// </summary>
+        public long? ChangeSetId
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets/Sets the visible flag.
+        /// </summary>
+        public bool Visible { get; set; }
+
         #region Features - Interpreter
 
         /// <summary>
         /// The interpreter for these objects.
         /// </summary>
-        public static FeatureInterpreter FeatureInterperter = new SimpleFeatureInterpreter(); // set a default geometry interpreter.
+        public static FeatureInterpreter FeatureInterperter = 
+            new SimpleFeatureInterpreter();
 
         /// <summary>
         /// The feature(s) this OSM-object represents.
@@ -99,33 +124,5 @@ namespace OsmSharp.Osm
 
         #endregion
         
-        #region Properties
-
-        /// <summary>
-        /// The bounding box of object.
-        /// </summary>
-        public override GeoCoordinateBox BoundingBox
-        {
-            get
-            {
-                return this.Features.Box;
-            }
-        }
-
-        /// <summary>
-        /// Gets/Sets the changeset id.
-        /// </summary>
-        public long? ChangeSetId
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets/Sets the visible flag.
-        /// </summary>
-        public bool Visible { get; set; }
-
-        #endregion
     }
 }

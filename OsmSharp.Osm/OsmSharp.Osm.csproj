@@ -79,7 +79,6 @@
     <Compile Include="ChangeSetInfo.cs" />
     <Compile Include="Complete\CompleteChange.cs" />
     <Compile Include="Complete\CompleteChangeSet.cs" />
-    <Compile Include="Complete\CompleteNode.cs" />
     <Compile Include="Complete\CompleteOsmBase.cs" />
     <Compile Include="Complete\CompleteOsmGeo.cs" />
     <Compile Include="Complete\CompleteOsmGeoType.cs" />
@@ -88,7 +87,6 @@
     <Compile Include="Complete\CompleteUser.cs" />
     <Compile Include="Complete\CompleteWay.cs" />
     <Compile Include="Complete\ICompleteOsmGeo.cs" />
-    <Compile Include="Complete\OsmBaseIdGenerator.cs" />
     <Compile Include="Data\Cache\DataSourceCache.cs" />
     <Compile Include="Data\DataSourceReadOnlyBase.cs" />
     <Compile Include="Data\IDataSource.cs" />

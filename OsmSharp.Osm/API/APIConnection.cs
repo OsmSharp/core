@@ -16,6 +16,12 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Tags;
+using OsmSharp.IO.Xml.Sources;
+using OsmSharp.Math.Geo;
+using OsmSharp.Osm.Data.Core.API;
+using OsmSharp.Osm.Xml;
+using OsmSharp.Osm.Xml.v0_6;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,12 +29,6 @@ using System.Net;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using OsmSharp.Collections.Tags;
-using OsmSharp.IO.Xml.Sources;
-using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Data.Core.API;
-using OsmSharp.Osm.Xml;
-using OsmSharp.Osm.Xml.v0_6;
 
 namespace OsmSharp.Osm.API
 {

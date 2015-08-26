@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,11 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OsmSharp.Math.Geo;
+using System.Collections.Generic;
 
 namespace OsmSharp.Osm
 {
@@ -29,10 +26,7 @@ namespace OsmSharp.Osm
     /// </summary>
     public class CompleteChangeSet : CompleteOsmBase
     {
-        /// <summary>
-        /// Holds all the changes in this changeset.
-        /// </summary>
-        private IList<CompleteChange> _changes;
+        private readonly IList<CompleteChange> _changes;
 
         /// <summary>
         /// Creates a new changeset.
@@ -43,8 +37,6 @@ namespace OsmSharp.Osm
         {
             _changes = new List<CompleteChange>();
         }
-
-        #region Properties
 
         /// <summary>
         /// Returns an ordered list of all changes in this changeset.
@@ -64,13 +56,11 @@ namespace OsmSharp.Osm
         {
             get
             {
-                IList<CompleteOsmGeo> objs = new List<CompleteOsmGeo>();
-
-                foreach (CompleteChange change in this.Changes)
+                var objs = new List<CompleteOsmGeo>();
+                foreach (var change in this.Changes)
                 {
                     objs.Add(change.Object);
                 }
-
                 return objs;
             }
         }
@@ -84,13 +74,11 @@ namespace OsmSharp.Osm
             {
                 if (this.Objects.Count > 0)
                 {
-                    GeoCoordinateBox box = this.Objects[0].BoundingBox;
-
+                    var box = this.Objects[0].BoundingBox;
                     for (int idx = 1; idx < this.Objects.Count; idx++)
                     {
                         box = box + this.Objects[idx].BoundingBox;
                     }
-
                     return box;
                 }
                 return null;
@@ -104,7 +92,5 @@ namespace OsmSharp.Osm
         {
             get { return CompleteOsmType.ChangeSet; }
         }
-
-        #endregion
     }
 }

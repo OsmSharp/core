@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,12 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
 using OsmSharp.Collections;
-using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Data;
+using System;
+using System.Collections.Generic;
 
 namespace OsmSharp.Osm
 {
@@ -30,9 +29,6 @@ namespace OsmSharp.Osm
     /// </summary>
     public class CompleteRelation : CompleteOsmGeo
     {
-        /// <summary>
-        /// Holds the members of this relation.
-        /// </summary>
         private readonly IList<CompleteRelationMember> _members;
 
         /// <summary>
@@ -110,26 +106,25 @@ namespace OsmSharp.Osm
             relation.UserName = this.User;
             relation.Version = (ulong?)this.Version;
             relation.Visible = this.Visible;
-
             relation.Members = new List<RelationMember>();
-            foreach (CompleteRelationMember member in this.Members)
+            foreach (var member in this.Members)
             {
-                var simple_member = new RelationMember();
-                simple_member.MemberId = member.Member.Id;
-                simple_member.MemberRole = member.Role;
+                var simpleMember = new RelationMember();
+                simpleMember.MemberId = member.Member.Id;
+                simpleMember.MemberRole = member.Role;
                 switch (member.Member.Type)
                 {
                     case CompleteOsmType.Node:
-                        simple_member.MemberType = OsmGeoType.Node;
+                        simpleMember.MemberType = OsmGeoType.Node;
                         break;
                     case CompleteOsmType.Relation:
-                        simple_member.MemberType = OsmGeoType.Relation;
+                        simpleMember.MemberType = OsmGeoType.Relation;
                         break;
                     case CompleteOsmType.Way:
-                        simple_member.MemberType = OsmGeoType.Way;
+                        simpleMember.MemberType = OsmGeoType.Way;
                         break;
                 }
-                relation.Members.Add(simple_member);
+                relation.Members.Add(simpleMember);
             }
             return relation;
         }
@@ -141,7 +136,6 @@ namespace OsmSharp.Osm
         public IList<GeoCoordinate> GetCoordinates()
         {
             var coordinates = new List<GeoCoordinate>();
-
             for (int idx = 0; idx < this.Members.Count; idx++)
             {
                 if (this.Members[idx].Member is Node)
@@ -160,7 +154,6 @@ namespace OsmSharp.Osm
                     coordinates.AddRange(relation.GetCoordinates());
                 }
             }
-
             return coordinates;
         }
 
@@ -179,10 +172,6 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Creates a relation from a SimpleRelation.
         /// </summary>
-        /// <param name="simpleRelation"></param>
-        /// <param name="nodes"></param>
-        /// <param name="ways"></param>
-        /// <param name="relations"></param>
         /// <returns></returns>
         public static CompleteRelation CreateFrom(Relation simpleRelation,
             IDictionary<long, Node> nodes,
@@ -195,10 +184,10 @@ namespace OsmSharp.Osm
             if (relations == null) throw new ArgumentNullException("relations");
             if (simpleRelation.Id == null) throw new Exception("simpleRelation.Id is null");
 
-            CompleteRelation relation = Create(simpleRelation.Id.Value);
+            var relation = Create(simpleRelation.Id.Value);
 
             relation.ChangeSetId = simpleRelation.ChangeSetId;
-            foreach (Tag pair in simpleRelation.Tags)
+            foreach (var pair in simpleRelation.Tags)
             {
                 relation.Tags.Add(pair);
             }
@@ -252,15 +241,12 @@ namespace OsmSharp.Osm
             relation.UserId = simpleRelation.UserId;
             relation.Version = simpleRelation.Version.HasValue ? (long)simpleRelation.Version.Value : (long?)null;
             relation.Visible = simpleRelation.Visible.HasValue && simpleRelation.Visible.Value;
-
             return relation;
         }
 
         /// <summary>
         /// Creates a relation from a SimpleRelation.
         /// </summary>
-        /// <param name="simpleRelation"></param>
-        /// <param name="osmGeoSource"></param>
         /// <returns></returns>
         public static CompleteRelation CreateFrom(Relation simpleRelation, IOsmGeoSource osmGeoSource)
         {
@@ -268,34 +254,33 @@ namespace OsmSharp.Osm
             if (osmGeoSource == null) throw new ArgumentNullException("osmGeoSource");
             if (simpleRelation.Id == null) throw new Exception("simpleRelation.Id is null");
 
-            CompleteRelation relation = Create(simpleRelation.Id.Value);
+            var relation = Create(simpleRelation.Id.Value);
 
             relation.ChangeSetId = simpleRelation.ChangeSetId;
             if (simpleRelation.Tags != null)
             {
-                foreach (Tag pair in simpleRelation.Tags)
+                foreach (var pair in simpleRelation.Tags)
                 {
                     relation.Tags.Add(pair);
                 }
             }
             if (simpleRelation.Members != null)
             {
-                for (int idx = 0; idx < simpleRelation.Members.Count; idx++)
+                for (var idx = 0; idx < simpleRelation.Members.Count; idx++)
                 {
-                    long memberId = simpleRelation.Members[idx].MemberId.Value;
-                    string role = simpleRelation.Members[idx].MemberRole;
-
+                    var memberId = simpleRelation.Members[idx].MemberId.Value;
+                    var role = simpleRelation.Members[idx].MemberRole;
                     var member = new CompleteRelationMember();
                     member.Role = role;
                     switch (simpleRelation.Members[idx].MemberType.Value)
                     {
                         case OsmGeoType.Node:
-                            Node simpleNode = osmGeoSource.GetNode(memberId);
+                            var simpleNode = osmGeoSource.GetNode(memberId);
                             if (simpleNode == null)
                             {
                                 return null;
                             }
-                            Node completeNode = simpleNode;
+                            var completeNode = simpleNode;
                             if (completeNode != null)
                             {
                                 member.Member = completeNode;
@@ -306,12 +291,12 @@ namespace OsmSharp.Osm
                             }
                             break;
                         case OsmGeoType.Way:
-                            Way simpleWay = osmGeoSource.GetWay(memberId);
+                            var simpleWay = osmGeoSource.GetWay(memberId);
                             if (simpleWay == null)
                             {
                                 return null;
                             }
-                            CompleteWay completeWay = CompleteWay.CreateFrom(simpleWay, osmGeoSource);
+                            var completeWay = CompleteWay.CreateFrom(simpleWay, osmGeoSource);
                             if (completeWay != null)
                             {
                                 member.Member = completeWay;
@@ -322,12 +307,12 @@ namespace OsmSharp.Osm
                             }
                             break;
                         case OsmGeoType.Relation:
-                            Relation simpleRelationMember = osmGeoSource.GetRelation(memberId);
+                            var simpleRelationMember = osmGeoSource.GetRelation(memberId);
                             if (simpleRelationMember == null)
                             {
                                 return null;
                             }
-                            CompleteRelation completeRelation = CompleteRelation.CreateFrom(simpleRelationMember, osmGeoSource);
+                            var completeRelation = CompleteRelation.CreateFrom(simpleRelationMember, osmGeoSource);
                             if (completeRelation != null)
                             {
                                 member.Member = completeRelation;
@@ -346,17 +331,12 @@ namespace OsmSharp.Osm
             relation.UserId = simpleRelation.UserId;
             relation.Version = simpleRelation.Version.HasValue ? (long)simpleRelation.Version.Value : (long?)null;
             relation.Visible = simpleRelation.Visible.HasValue && simpleRelation.Visible.Value;
-
             return relation;
         }
 
         /// <summary>
         /// Creates a relation from a SimpleRelation.
         /// </summary>
-        /// <param name="simpleRelation"></param>
-        /// <param name="osmGeoSource"></param>
-        /// <param name="ways"></param>
-        /// <param name="relations"></param>
         /// <returns></returns>
         public static CompleteRelation CreateFrom(Relation simpleRelation, IOsmGeoSource osmGeoSource,
             IDictionary<long, CompleteWay> ways,
@@ -366,10 +346,9 @@ namespace OsmSharp.Osm
             if (osmGeoSource == null) throw new ArgumentNullException("osmGeoSource");
             if (simpleRelation.Id == null) throw new Exception("simpleRelation.Id is null");
 
-            CompleteRelation relation = Create(simpleRelation.Id.Value);
-
+            var relation = Create(simpleRelation.Id.Value);
             relation.ChangeSetId = simpleRelation.ChangeSetId;
-            foreach (Tag pair in simpleRelation.Tags)
+            foreach (var pair in simpleRelation.Tags)
             {
                 relation.Tags.Add(pair);
             }
@@ -377,13 +356,12 @@ namespace OsmSharp.Osm
             {
                 long memberId = simpleRelation.Members[idx].MemberId.Value;
                 string role = simpleRelation.Members[idx].MemberRole;
-
                 var member = new CompleteRelationMember();
                 member.Role = role;
                 switch (simpleRelation.Members[idx].MemberType.Value)
                 {
                     case OsmGeoType.Node:
-                        Node simpleNode = osmGeoSource.GetNode(memberId);
+                        var simpleNode = osmGeoSource.GetNode(memberId);
                         if (simpleNode != null)
                         {
                             member.Member = simpleNode;
@@ -397,7 +375,7 @@ namespace OsmSharp.Osm
                         CompleteWay completeWay;
                         if (!ways.TryGetValue(memberId, out completeWay))
                         {
-                            Way simpleWay = osmGeoSource.GetWay(memberId);
+                            var simpleWay = osmGeoSource.GetWay(memberId);
                             if (simpleWay != null)
                             {
                                 completeWay = CompleteWay.CreateFrom(simpleWay, osmGeoSource);
@@ -439,15 +417,12 @@ namespace OsmSharp.Osm
             relation.UserId = simpleRelation.UserId;
             relation.Version = simpleRelation.Version.HasValue ? (long)simpleRelation.Version.Value : (long?)null;
             relation.Visible = simpleRelation.Visible.HasValue && simpleRelation.Visible.Value;
-
             return relation;
         }
 
         /// <summary>
         /// Creates a new relation.
         /// </summary>
-        /// <param name="table"></param>
-        /// <param name="id"></param>
         /// <returns></returns>
         public static CompleteRelation Create(ObjectTable<string> table, long id)
         {
@@ -457,11 +432,6 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Creates a new relation from a SimpleRelation.
         /// </summary>
-        /// <param name="table"></param>
-        /// <param name="simpleRelation"></param>
-        /// <param name="nodes"></param>
-        /// <param name="ways"></param>
-        /// <param name="relations"></param>
         /// <returns></returns>
         public static CompleteRelation CreateFrom(ObjectTable<string> table, Relation simpleRelation,
             IDictionary<long, Node> nodes,
@@ -474,18 +444,16 @@ namespace OsmSharp.Osm
             if (relations == null) throw new ArgumentNullException("relations");
             if (simpleRelation.Id == null) throw new Exception("simpleRelation.Id is null");
 
-            CompleteRelation relation = Create(table, simpleRelation.Id.Value);
-
+            var relation = Create(table, simpleRelation.Id.Value);
             relation.ChangeSetId = simpleRelation.ChangeSetId;
-            foreach (Tag pair in simpleRelation.Tags)
+            foreach (var pair in simpleRelation.Tags)
             {
                 relation.Tags.Add(pair);
             }
-            for (int idx = 0; idx < simpleRelation.Members.Count; idx++)
+            for (var idx = 0; idx < simpleRelation.Members.Count; idx++)
             {
-                long memberId = simpleRelation.Members[idx].MemberId.Value;
-                string role = simpleRelation.Members[idx].MemberRole;
-
+                var memberId = simpleRelation.Members[idx].MemberId.Value;
+                var role = simpleRelation.Members[idx].MemberRole;
                 var member = new CompleteRelationMember();
                 member.Role = role;
                 switch (simpleRelation.Members[idx].MemberType.Value)
@@ -531,14 +499,12 @@ namespace OsmSharp.Osm
             relation.UserId = simpleRelation.UserId;
             relation.Version = simpleRelation.Version.HasValue ? (long)simpleRelation.Version.Value : (long?)null;
             relation.Visible = simpleRelation.Visible.HasValue && simpleRelation.Visible.Value;
-
             return relation;
         }
 
         /// <summary>
         /// Creates a new changeset.
         /// </summary>
-        /// <param name="id"></param>
         /// <returns></returns>
         public static CompleteChangeSet CreateChangeSet(long id)
         {

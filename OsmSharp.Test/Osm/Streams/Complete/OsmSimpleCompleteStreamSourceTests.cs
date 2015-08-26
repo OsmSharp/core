@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,16 +16,15 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using NUnit.Framework;
 using OsmSharp.Osm;
-using OsmSharp.Osm.Data;
 using OsmSharp.Osm.Data.Memory;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Osm.Streams.Complete;
 using OsmSharp.Osm.Xml.Streams;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace OsmSharp.Test.Osm.Streams.Complete
 {
@@ -42,7 +41,7 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         public void TestSimpleToCompleteNode()
         {
             // execute
-            List<ICompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
+            var completeList = this.PullToCompleteList(new OsmGeo[] {
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1) });
@@ -68,7 +67,7 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         public void TestSimpleToCompleteWay()
         {
             // execute
-            List<ICompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
+            var completeList = this.PullToCompleteList(new OsmGeo[] {
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
@@ -106,7 +105,7 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         public void TestSimpleToCompleteRelation()
         {
             // execute
-            List<ICompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
+            var completeList = this.PullToCompleteList(new OsmGeo[] {
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
@@ -148,7 +147,7 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         public void TestSimpleToCompleteNestedRelations()
         {
             // execute
-            List<ICompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
+            var completeList = this.PullToCompleteList(new OsmGeo[] {
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
@@ -195,7 +194,7 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         public void TestSimpleToCompleteNestedRelationsReverseOrder()
         {
             // execute
-            List<ICompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
+            var completeList = this.PullToCompleteList(new OsmGeo[] {
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
@@ -242,7 +241,7 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         public void TestSimpleToCompleteMultipleUsagesNodesInWays()
         {
             // execute
-            List<ICompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
+            var completeList = this.PullToCompleteList(new OsmGeo[] {
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
@@ -297,7 +296,7 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         public void TestSimpleToCompleteMultipleUsages()
         {
             // execute
-            List<ICompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
+            var completeList = this.PullToCompleteList(new OsmGeo[] {
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
@@ -393,24 +392,6 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         }
 
         /// <summary>
-        /// Tests simple to complete of test_network_big.
-        /// </summary>
-        [Test]
-        public void TestSimpleToCompleteOsmNetworkBig()
-        {
-            this.TestSimpleToCompleteOn("OsmSharp.Test.data.test_network_big.osm");
-        }
-
-        /// <summary>
-        /// Tests simple to complete of test_network_real1.
-        /// </summary>
-        [Test]
-        public void TestSimpleToCompleteOsmNetworkReal1()
-        {
-            this.TestSimpleToCompleteOn("OsmSharp.Test.data.test_network_real1.osm");
-        }
-
-        /// <summary>
         /// Execute the simple-to-complete code.
         /// </summary>
         /// <param name="osmGeoList"></param>
@@ -449,26 +430,26 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         /// <param name="actual"></param>
         private void Compare(MemoryDataSource expected, List<ICompleteOsmGeo> actual)
         {
-            List<ICompleteOsmGeo> exectedList = new List<ICompleteOsmGeo>();
-            foreach (Node node in expected.GetNodes())
+            var exectedList = new List<ICompleteOsmGeo>();
+            foreach (var node in expected.GetNodes())
             {
-                Node completeNode = node;
+                var completeNode = node;
                 if (completeNode != null)
                 {
                     exectedList.Add(completeNode);
                 }
             }
-            foreach (Way way in expected.GetWays())
+            foreach (var way in expected.GetWays())
             {
-                CompleteWay completeWay = CompleteWay.CreateFrom(way, expected);
+                var completeWay = CompleteWay.CreateFrom(way, expected);
                 if (completeWay != null)
                 {
                     exectedList.Add(completeWay);
                 }
             }
-            foreach (Relation relation in expected.GetRelations())
+            foreach (var relation in expected.GetRelations())
             {
-                CompleteRelation completeRelation = CompleteRelation.CreateFrom(relation, expected);
+                var completeRelation = CompleteRelation.CreateFrom(relation, expected);
                 if (completeRelation != null)
                 {
                     exectedList.Add(completeRelation);

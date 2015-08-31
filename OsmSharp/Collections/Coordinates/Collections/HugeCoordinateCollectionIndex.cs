@@ -166,7 +166,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
         /// <param name="id"></param>
         /// <param name="coordinates"></param>
         /// <returns></returns>
-        public bool Get(long id, out ICoordinateCollection coordinates)
+        public bool TryGet(long id, out ICoordinateCollection coordinates)
         {
             long index, size;
             if (this.TryGetIndexAndSize(id, out index, out size))
@@ -179,6 +179,16 @@ namespace OsmSharp.Collections.Coordinates.Collections
         }
 
         /// <summary>
+        /// Quickly switches two elements.
+        /// </summary>
+        public void Switch(long id1, long id2)
+        {
+            var data = _index[id1];
+            _index[id1] = _index[id2];
+            _index[id2] = data;
+        }
+
+        /// <summary>
         /// Gets or sets the coordinate collection at the given id.
         /// </summary>
         /// <param name="id"></param>
@@ -188,7 +198,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
             get
             {
                 ICoordinateCollection coordinates;
-                if(this.Get(id, out coordinates))
+                if(this.TryGet(id, out coordinates))
                 {
                     return coordinates;
                 }
@@ -223,8 +233,6 @@ namespace OsmSharp.Collections.Coordinates.Collections
             { 
                 _maxId = size - 1;
             }
-
-            //this.Trim();
         }
 
         /// <summary>

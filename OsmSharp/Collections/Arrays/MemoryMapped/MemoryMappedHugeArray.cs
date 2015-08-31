@@ -29,50 +29,27 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
     public abstract class MemoryMappedHugeArray<T> : HugeArrayBase<T>
         where T : struct
     {
-        /// <summary>
-        /// Holds the length of this array.
-        /// </summary>
         private long _length;
+        private readonly MemoryMappedFile _file;
+        private readonly List<MemoryMappedAccessor<T>> _accessors;
+        private readonly int _elementSize;
+        private readonly long _fileSizeBytes;
+        private readonly long _fileElementSize = DefaultFileElementSize;
 
         /// <summary>
-        /// Holds the file to create the memory mapped accessors.
-        /// </summary>
-        private MemoryMappedFile _file;
-
-        /// <summary>
-        /// Holds the list of accessors, one for each range.
-        /// </summary>
-        private List<MemoryMappedAccessor<T>> _accessors;
-
-        /// <summary>
-        /// Holds the default file element size.
+        /// The default element file size.
         /// </summary>
         public static long DefaultFileElementSize = (long)1024;
 
         /// <summary>
-        /// Holds the default buffer size.
+        /// The default buffer size.
         /// </summary>
         public static int DefaultBufferSize = 128;
 
         /// <summary>
-        /// Holds the default cache size.
+        /// The default cache size.
         /// </summary>
         public static int DefaultCacheSize = 64 * 8;
-
-        /// <summary>
-        /// Holds the file element size.
-        /// </summary>
-        private long _fileElementSize = DefaultFileElementSize;
-
-        /// <summary>
-        /// Holds the element size.
-        /// </summary>
-        private int _elementSize;
-
-        /// <summary>
-        /// Holds the maximum array size in bytes.
-        /// </summary>
-        private long _fileSizeBytes;
 
         /// <summary>
         /// Creates a memory mapped huge array.
@@ -101,9 +78,9 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
             _cachedBuffers = new LRUCache<long, CachedBuffer>(cacheSize);
             _cachedBuffers.OnRemove += new LRUCache<long, CachedBuffer>.OnRemoveDelegate(buffer_OnRemove);
 
-            var arrayCount = (int)System.Math.Ceiling((double)size / _fileElementSize);
-            _accessors = new List<MemoryMappedAccessor<T>>(arrayCount);
-            for (int arrayIdx = 0; arrayIdx < arrayCount; arrayIdx++)
+            var blockCount = (int)System.Math.Ceiling((double)size / _fileElementSize);
+            _accessors = new List<MemoryMappedAccessor<T>>(blockCount);
+            for (int i = 0; i < blockCount; i++)
             {
                 _accessors.Add(this.CreateAccessor(_file, _fileSizeBytes));
             }
@@ -128,13 +105,10 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// <summary>
         /// Resizes this array.
         /// </summary>
-        /// <param name="size"></param>
+        /// 
         public override void Resize(long size)
         {
-            if (size < 0)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
+            if (size < 0) { throw new ArgumentOutOfRangeException(); }
 
             // clear cache (and save dirty blocks).
             _cachedBuffers.Clear();
@@ -144,20 +118,20 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
             var oldSize = _length;
             _length = size;
 
-            var arrayCount = (int)System.Math.Ceiling((double)size / _fileElementSize);
+            var blockCount = (int)System.Math.Ceiling((double)size / _fileElementSize);
             // _accessors = new List<MemoryMappedAccessor<T>>(arrayCount);
-            if (arrayCount < _accessors.Count)
+            if (blockCount < _accessors.Count)
             { // decrease files/accessors.
-                for (int arrayIdx = (int)arrayCount; arrayIdx < _accessors.Count; arrayIdx++)
+                for (int i = (int)blockCount; i < _accessors.Count; i++)
                 {
-                    _accessors[arrayIdx].Dispose();
-                    _accessors[arrayIdx] = null;
+                    _accessors[i].Dispose();
+                    _accessors[i] = null;
                 }
-                _accessors.RemoveRange((int)arrayCount, (int)(_accessors.Count - arrayCount));
+                _accessors.RemoveRange((int)blockCount, (int)(_accessors.Count - blockCount));
             }
             else
             { // increase files/accessors.
-                for (int arrayIdx = _accessors.Count; arrayIdx < arrayCount; arrayIdx++)
+                for (int i = _accessors.Count; i < blockCount; i++)
                 {
                     _accessors.Add(this.CreateAccessor(_file, _fileSizeBytes));
                 }
@@ -167,7 +141,6 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// <summary>
         /// Returns the element at the given index.
         /// </summary>
-        /// <param name="idx"></param>
         /// <returns></returns>
         public override T this[long idx]
         {
@@ -180,7 +153,6 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
 
                 // sync buffer.
                 var relativePosition = this.SyncBuffer(idx);
-
                 return _cachedBuffer.Buffer[relativePosition];
             }
             set
@@ -192,7 +164,6 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
 
                 // sync buffer.
                 var relativePosition = this.SyncBuffer(idx);
-
                 _cachedBuffer.Buffer[relativePosition] = value;
                 _cachedBuffer.IsDirty = true;
             }

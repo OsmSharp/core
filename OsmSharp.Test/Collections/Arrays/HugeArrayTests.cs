@@ -29,94 +29,118 @@ namespace OsmSharp.Test.Collections.Arrays
     [TestFixture]
     public class HugeArrayTests
     {
-        ///// <summary>
-        ///// A simple test for the huge array.
-        ///// </summary>
-        //[Test]
-        //public void HugeArraySimpleTest()
-        //{
-        //    var stringArrayRef = new string[1000];
-        //    var stringArray = new HugeArray<string>(1000, 300);
+        /// <summary>
+        /// Tests the argument verifications on the constructors.
+        /// </summary>
+        [Test]
+        public void ConstructorParameterExceptions()
+        {
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+                {
+                    new HugeArray<int>(-1);
+                });
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                new HugeArray<int>(-1, 2);
+            });
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                new HugeArray<int>(10, -1);
+            });
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                new HugeArray<int>(10, 3);
+            });
+        }
 
-        //    var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
-        //    for (int idx = 0; idx < 1000; idx++)
-        //    {
-        //        if (randomGenerator.Generate(2.0) > 1)
-        //        { // add data.
-        //            stringArrayRef[idx] = idx.ToString();
-        //            stringArray[idx] = idx.ToString();
-        //        }
-        //        else
-        //        {
-        //            stringArrayRef[idx] = null;
-        //            stringArray[idx] = null;
-        //        }
-        //    }
+        /// <summary>
+        /// A comparison test for the huge array to a regular array.
+        /// </summary>
+        [Test]
+        public void CompareToArrayTest()
+        {
+            var stringArrayRef = new string[1000];
+            var stringArray = new HugeArray<string>(1000);
 
-        //    for (int idx = 0; idx < 1000; idx++)
-        //    {
-        //        Assert.AreEqual(stringArrayRef[idx], stringArray[idx]);
-        //    }
-        //}
+            var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
+            for (var idx = 0; idx < 1000; idx++)
+            {
+                if (randomGenerator.Generate(2.0) > 1)
+                { // add data.
+                    stringArrayRef[idx] = idx.ToString();
+                    stringArray[idx] = idx.ToString();
+                }
+                else
+                {
+                    stringArrayRef[idx] = null;
+                    stringArray[idx] = null;
+                }
+            }
 
-        ///// <summary>
-        ///// A simple test resizing the huge array 
-        ///// </summary>
-        //[Test]
-        //public void HugeArrayResizeTests()
-        //{
-        //    var stringArrayRef = new string[1000];
-        //    var stringArray = new HugeArray<string>(1000, 300);
+            for (var idx = 0; idx < 1000; idx++)
+            {
+                Assert.AreEqual(stringArrayRef[idx], stringArray[idx]);
+            }
+        }
 
-        //    var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
-        //    for (int idx = 0; idx < 1000; idx++)
-        //    {
-        //        if (randomGenerator.Generate(2.0) > 1)
-        //        { // add data.
-        //            stringArrayRef[idx] = idx.ToString();
-        //            stringArray[idx] = idx.ToString();
-        //        }
-        //        else
-        //        {
-        //            stringArrayRef[idx] = null;
-        //            stringArray[idx] = null;
-        //        }
-        //    }
+        /// <summary>
+        /// A test resizing a huge array 
+        /// </summary>
+        [Test]
+        public void ResizeTest()
+        {
+            var stringArrayRef = new string[1000];
+            var stringArray = new HugeArray<string>(1000);
 
-        //    Array.Resize<string>(ref stringArrayRef, 335);
-        //    stringArray.Resize(335);
+            var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
+            for (int idx = 0; idx < 1000; idx++)
+            {
+                if (randomGenerator.Generate(2.0) > 1)
+                { // add data.
+                    stringArrayRef[idx] = idx.ToString();
+                    stringArray[idx] = idx.ToString();
+                }
+                else
+                {
+                    stringArrayRef[idx] = null;
+                    stringArray[idx] = null;
+                }
+            }
 
-        //    Assert.AreEqual(stringArrayRef.Length, stringArray.Length);
-        //    for (int idx = 0; idx < stringArrayRef.Length; idx++)
-        //    {
-        //        Assert.AreEqual(stringArrayRef[idx], stringArray[idx]);
-        //    }
+            Array.Resize<string>(ref stringArrayRef, 335);
+            stringArray.Resize(335);
 
-        //    stringArrayRef = new string[1000];
-        //    stringArray = new HugeArray<string>(1000, 300);
+            Assert.AreEqual(stringArrayRef.Length, stringArray.Length);
+            for (int idx = 0; idx < stringArrayRef.Length; idx++)
+            {
+                Assert.AreEqual(stringArrayRef[idx], stringArray[idx]);
+            }
 
-        //    for (int idx = 0; idx < 1000; idx++)
-        //    {
-        //        if (randomGenerator.Generate(2.0) > 1)
-        //        { // add data.
-        //            stringArrayRef[idx] = idx.ToString();
-        //            stringArray[idx] = idx.ToString();
-        //        }
-        //        else
-        //        {
-        //            stringArrayRef[idx] = null;
-        //            stringArray[idx] = null;
-        //        }
-        //    }
+            stringArrayRef = new string[1000];
+            stringArray = new HugeArray<string>(1000);
 
-        //    Array.Resize<string>(ref stringArrayRef, 1235);
-        //    stringArray.Resize(1235);
+            for (int idx = 0; idx < 1000; idx++)
+            {
+                if (randomGenerator.Generate(2.0) > 1)
+                { // add data.
+                    stringArrayRef[idx] = idx.ToString();
+                    stringArray[idx] = idx.ToString();
+                }
+                else
+                {
+                    stringArrayRef[idx] = null;
+                    stringArray[idx] = null;
+                }
+            }
 
-        //    Assert.AreEqual(stringArrayRef.Length, stringArray.Length);
-        //    for (int idx = 0; idx < stringArrayRef.Length; idx++)
-        //    {
-        //        Assert.AreEqual(stringArrayRef[idx], stringArray[idx]);
-        //    }
-        //}
+            Array.Resize<string>(ref stringArrayRef, 1235);
+            stringArray.Resize(1235);
+
+            Assert.AreEqual(stringArrayRef.Length, stringArray.Length);
+            for (int idx = 0; idx < stringArrayRef.Length; idx++)
+            {
+                Assert.AreEqual(stringArrayRef[idx], stringArray[idx]);
+            }
+        }
     }
 }

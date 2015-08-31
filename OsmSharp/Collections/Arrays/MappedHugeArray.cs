@@ -27,40 +27,10 @@ namespace OsmSharp.Collections.Arrays
         where TMapped : struct
         where T : struct
     {
-        /// <summary>
-        /// Holds the base array.
-        /// </summary>
-        private HugeArrayBase<T> _baseArray;
-
-        /// <summary>
-        /// Holds the size of one element.
-        /// </summary>
-        private int _elementSize;
-
-        /// <summary>
-        /// Holds the map to implemenation.
-        /// </summary>
-        private MapTo _mapTo;
-
-        /// <summary>
-        /// Delegate to abstract mapping implementation for structure mapping.
-        /// </summary>
-        /// <param name="array"></param>
-        /// <param name="idx"></param>
-        /// <param name="toMap"></param>
-        public delegate void MapTo(HugeArrayBase<T> array, long idx, TMapped toMap);
-
-        /// <summary>
-        /// Holds the map from implemenation.
-        /// </summary>
-        private MapFrom _mapFrom;
-
-        /// <summary>
-        /// Delegate to abstract mapping implementation for structure mapping.
-        /// </summary>
-        /// <param name="array"></param>
-        /// <param name="idx"></param>
-        public delegate TMapped MapFrom(HugeArrayBase<T> array, long idx);
+        private readonly HugeArrayBase<T> _baseArray;
+        private readonly int _elementSize;
+        private readonly MapTo _mapTo;
+        private readonly MapFrom _mapFrom;
 
         /// <summary>
         /// Creates a new mapped huge array.
@@ -78,6 +48,16 @@ namespace OsmSharp.Collections.Arrays
         }
 
         /// <summary>
+        /// Delegate to abstract mapping implementation for structure mapping.
+        /// </summary>
+        public delegate void MapTo(HugeArrayBase<T> array, long idx, TMapped toMap);
+
+        /// <summary>
+        /// Delegate to abstract mapping implementation for structure mapping.
+        /// </summary>
+        public delegate TMapped MapFrom(HugeArrayBase<T> array, long idx);
+
+        /// <summary>
         /// Returns the length of this array.
         /// </summary>
         public override long Length
@@ -88,7 +68,6 @@ namespace OsmSharp.Collections.Arrays
         /// <summary>
         /// Resizes this array.
         /// </summary>
-        /// <param name="size"></param>
         public override void Resize(long size)
         {
             _baseArray.Resize(size * _elementSize);
@@ -117,7 +96,6 @@ namespace OsmSharp.Collections.Arrays
         public override void Dispose()
         {
             _baseArray.Dispose();
-            _baseArray = null;
         }
     }
 }

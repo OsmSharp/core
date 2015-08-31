@@ -33,10 +33,10 @@ namespace OsmSharp.Test.Collections.Arrays
     public class MemoryMappedMemoryMappedHugeArrayTests
     {
         /// <summary>
-        /// A simple test for the huge array.
+        /// Tests argument checks.
         /// </summary>
         [Test]
-        public void MemoryMappedHugeArrayArgumentTest()
+        public void ArgumentTest()
         {
             using (var intArray = new MemoryMappedHugeArrayUInt32(new MemoryMappedStream(new MemoryStream()), 1000, 1024))
             {
@@ -63,12 +63,32 @@ namespace OsmSharp.Test.Collections.Arrays
         }
 
         /// <summary>
-        /// A simple test for the huge array.
+        /// Tests for the array when it has zero-size.
         /// </summary>
         [Test]
-        public void MemoryMappedHugeArrayTest()
+        public void ZeroSizeTest()
         {
-            using (var intArray = new MemoryMappedHugeArrayUInt32(new MemoryMappedStream(new MemoryStream()), 1000, 1024))
+            using (var array = new MemoryMappedHugeArrayUInt32(
+                new MemoryMappedStream(new MemoryStream()), 0, 1024))
+            {
+                Assert.AreEqual(0, array.Length);
+            }
+            using (var array = new MemoryMappedHugeArrayUInt32(
+                new MemoryMappedStream(new MemoryStream()), 100, 1024))
+            {
+                array.Resize(0);
+                Assert.AreEqual(0, array.Length);
+            }
+        }
+
+        /// <summary>
+        /// A test for the huge array.
+        /// </summary>
+        [Test]
+        public void CompareToArrayTest()
+        {
+            using (var intArray = new MemoryMappedHugeArrayUInt32(
+                new MemoryMappedStream(new MemoryStream()), 1000, 1024))
             {
                 var intArrayRef = new uint[1000];
 
@@ -88,7 +108,7 @@ namespace OsmSharp.Test.Collections.Arrays
                     Assert.AreEqual(intArrayRef[idx], intArray[idx]);
                 }
 
-                for (int idx = 0; idx < 1000; idx++)
+                for (var idx = 0; idx < 1000; idx++)
                 {
                     Assert.AreEqual(intArrayRef[idx], intArray[idx]);
                 }
@@ -96,7 +116,7 @@ namespace OsmSharp.Test.Collections.Arrays
         }
 
         /// <summary>
-        /// A simple test resizing the huge array 
+        /// Tests resizing the array.
         /// </summary>
         [Test]
         public void MemoryMappedHugeArrayResizeTests()

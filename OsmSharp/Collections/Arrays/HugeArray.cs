@@ -25,42 +25,42 @@ namespace OsmSharp.Collections.Arrays
     /// </summary>
     public class HugeArray<T> : HugeArrayBase<T>
     {
-        /// <summary>
-        /// Holds the arrays.
-        /// </summary>
-        private T[][] _arrays;
-
-        /// <summary>
-        /// Holds the maximum array size.
-        /// </summary>
-        private int _arraySize = (int)System.Math.Pow(2, 20);
-
-        /// <summary>
-        /// Holds the array size power of 2.
-        /// </summary>
+        private T[][] blocks;
+        private readonly int _blockSize = (int)System.Math.Pow(2, 20); // Holds the maximum array size, always needs to be a power of 2.
         private int _arrayPow = 20;
-
-        /// <summary>
-        /// Holds the size of this array.
-        /// </summary>
-        private long _size;
+        private long _size; // the total size of this array.
 
         /// <summary>
         /// Creates a new huge array.
         /// </summary>
-        /// <param name="size"></param>
         public HugeArray(long size)
+            : this(size, (int)System.Math.Pow(2, 20))
         {
-            _arraySize = (int)System.Math.Pow(2, 20);
+
+        }
+
+        /// <summary>
+        /// Creates a new huge array.
+        /// </summary>
+        public HugeArray(long size, int blockSize)
+        {
+            if (size < 0) { throw new ArgumentOutOfRangeException("Size needs to be bigger than or equal to zero."); }
+            if (blockSize < 0) { throw new ArgumentOutOfRangeException("Blocksize needs to be bigger than or equal to zero."); }
+            if ((blockSize & (blockSize - 1)) != 0) { throw new ArgumentOutOfRangeException("Blocksize needs to be a power of 2."); }
+
+            _blockSize = blockSize;
             _size = size;
 
-            long arrayCount = (long)System.Math.Ceiling((double)size / _arraySize);
-            _arrays = new T[arrayCount][];
-            for (int arrayIdx = 0; arrayIdx < arrayCount - 1; arrayIdx++)
+            var blockCount = (long)System.Math.Ceiling((double)size / _blockSize);
+            blocks = new T[blockCount][];
+            for (var i = 0; i < blockCount - 1; i++)
             {
-                _arrays[arrayIdx] = new T[_arraySize];
+                blocks[i] = new T[_blockSize];
             }
-            _arrays[arrayCount - 1] = new T[size - ((arrayCount - 1) * _arraySize)];
+            if (blockCount > 0)
+            {
+                blocks[blockCount - 1] = new T[size - ((blockCount - 1) * _blockSize)];
+            }
         }
 
         /// <summary>
@@ -72,15 +72,15 @@ namespace OsmSharp.Collections.Arrays
         {
             get
             {
-                long arrayIdx = idx >> _arrayPow;
-                long localIdx = idx - (arrayIdx << _arrayPow);
-                return _arrays[arrayIdx][localIdx];
+                var block = idx >> _arrayPow;
+                var localIdx = idx - (block << _arrayPow);
+                return blocks[block][localIdx];
             }
             set
             {
-                long arrayIdx = (long)System.Math.Floor(idx / _arraySize);
-                long localIdx = idx % _arraySize;
-                _arrays[arrayIdx][localIdx] = value;
+                long block = (long)System.Math.Floor(idx / _blockSize);
+                long localIdx = idx % _blockSize;
+                blocks[block][localIdx] = value;
             }
         }
 
@@ -90,38 +90,41 @@ namespace OsmSharp.Collections.Arrays
         /// <param name="size"></param>
         public override void Resize(long size)
         {
-            if (size <= 0) { throw new ArgumentOutOfRangeException("Cannot resize a huge array to a size of zero or smaller."); }
+            if (size < 0) { throw new ArgumentOutOfRangeException("Cannot resize a huge array to a size of zero or smaller."); }
 
             _size = size;
 
-            long arrayCount = (long)System.Math.Ceiling((double)size / _arraySize);
-            if (arrayCount != _arrays.Length)
+            var blockCount = (long)System.Math.Ceiling((double)size / _blockSize);
+            if (blockCount != blocks.Length)
             {
-                Array.Resize<T[]>(ref _arrays, (int)arrayCount);
+                Array.Resize<T[]>(ref blocks, (int)blockCount);
             }
-            for (int arrayIdx = 0; arrayIdx < arrayCount - 1; arrayIdx++)
+            for (int i = 0; i < blockCount - 1; i++)
             {
-                if (_arrays[arrayIdx] == null)
+                if (blocks[i] == null)
                 { // there is no array, create it.
-                    _arrays[arrayIdx] = new T[_arraySize];
+                    blocks[i] = new T[_blockSize];
                 }
-                if (_arrays[arrayIdx].Length != _arraySize)
+                if (blocks[i].Length != _blockSize)
                 { // the size is the same, keep it as it.
-                    var localArray = _arrays[arrayIdx];
-                    Array.Resize<T>(ref localArray, (int)_arraySize);
-                    _arrays[arrayIdx] = localArray;
+                    var localArray = blocks[i];
+                    Array.Resize<T>(ref localArray, (int)_blockSize);
+                    blocks[i] = localArray;
                 }
             }
-            var lastArraySize = size - ((arrayCount - 1) * _arraySize);
-            if (_arrays[arrayCount - 1] == null)
-            { // there is no array, create it.
-                _arrays[arrayCount - 1] = new T[lastArraySize];
-            }
-            if (_arrays[arrayCount - 1].Length != lastArraySize)
-            { // the size is the same, keep it as it.
-                var localArray = _arrays[arrayCount - 1];
-                Array.Resize<T>(ref localArray, (int)lastArraySize);
-                _arrays[arrayCount - 1] = localArray;
+            if (blockCount > 0)
+            {
+                var lastBlockSize = size - ((blockCount - 1) * _blockSize);
+                if (blocks[blockCount - 1] == null)
+                { // there is no array, create it.
+                    blocks[blockCount - 1] = new T[lastBlockSize];
+                }
+                if (blocks[blockCount - 1].Length != lastBlockSize)
+                { // the size is the same, keep it as it.
+                    var localArray = blocks[blockCount - 1];
+                    Array.Resize<T>(ref localArray, (int)lastBlockSize);
+                    blocks[blockCount - 1] = localArray;
+                }
             }
         }
 

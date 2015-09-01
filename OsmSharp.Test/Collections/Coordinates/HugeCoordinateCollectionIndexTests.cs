@@ -460,6 +460,37 @@ namespace OsmSharp.Test.Collections.Coordinates
 
                 Assert.AreEqual(expected, data.Length);
             }
+
+            // build a coordinate collection.
+            coordinates = new HugeCoordinateCollectionIndex(100);
+
+            // serialize and test size.
+            expected = 2 * 8 + // header, indexsize and coordinates size.
+                0 * 8 + // index.
+                0 * 8; // 8 coordinates.
+            using (var stream = new MemoryStream())
+            {
+                Assert.AreEqual(expected, coordinates.Serialize(stream));
+                data = stream.ToArray();
+
+                Assert.AreEqual(expected, data.Length);
+            }
+
+            // build a coordinate collection.
+            coordinates = new HugeCoordinateCollectionIndex(100);
+            coordinates.Add(0, null);
+
+            // serialize and test size.
+            expected = 2 * 8 + // header, indexsize and coordinates size.
+                1 * 8 + // index.
+                0 * 8; // 8 coordinates.
+            using (var stream = new MemoryStream())
+            {
+                Assert.AreEqual(expected, coordinates.Serialize(stream));
+                data = stream.ToArray();
+
+                Assert.AreEqual(expected, data.Length);
+            }
         }
 
         /// <summary>

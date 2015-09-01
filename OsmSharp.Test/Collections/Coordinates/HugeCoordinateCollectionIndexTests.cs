@@ -19,8 +19,11 @@
 using NUnit.Framework;
 using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Simple;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
+using System;
 
 namespace OsmSharp.Test.Collections.Coordinates
 {
@@ -31,10 +34,122 @@ namespace OsmSharp.Test.Collections.Coordinates
     public class HugeCoordinateCollectionIndexTests
     {
         /// <summary>
-        /// Tests the index with a small amount of coordinates.
+        /// Tests adding a collection.
         /// </summary>
         [Test]
-        public void TestSmall()
+        public void TestAdd()
+        {
+            var coordinates = new HugeCoordinateCollectionIndex(10);
+            coordinates.Add(0, new CoordinateArrayCollection<GeoCoordinate>(
+                new GeoCoordinate[] { 
+                    new GeoCoordinate(0, 1),
+                    new GeoCoordinate(2, 3) }));
+            Assert.Catch<InvalidOperationException>(() =>
+            {
+                coordinates.Add(0, null);
+            });
+
+            ICoordinateCollection actual;
+            Assert.IsTrue(coordinates.TryGet(0, out actual));
+            Assert.AreEqual(2, actual.Count);
+            Assert.AreEqual(0, actual.ElementAt(0).Latitude);
+            Assert.AreEqual(1, actual.ElementAt(0).Longitude);
+            Assert.AreEqual(2, actual.ElementAt(1).Latitude);
+            Assert.AreEqual(3, actual.ElementAt(1).Longitude);
+
+            coordinates = new HugeCoordinateCollectionIndex(10);
+            coordinates.Add(0, new CoordinateArrayCollection<GeoCoordinate>(
+                new GeoCoordinate[] { 
+                    new GeoCoordinate(0, 1),
+                    new GeoCoordinate(2, 3) }));
+            Assert.Catch<InvalidOperationException>(() =>
+            {
+                coordinates.Add(0, null);
+            });
+            coordinates.Add(1, new CoordinateArrayCollection<GeoCoordinate>(
+                new GeoCoordinate[] { 
+                    new GeoCoordinate(4, 5),
+                    new GeoCoordinate(6, 7),
+                    new GeoCoordinate(8, 9) }));
+            Assert.Catch<InvalidOperationException>(() =>
+            {
+                coordinates.Add(1, null);
+            });
+
+            Assert.IsTrue(coordinates.TryGet(0, out actual));
+            Assert.AreEqual(2, actual.Count);
+            Assert.AreEqual(0, actual.ElementAt(0).Latitude);
+            Assert.AreEqual(1, actual.ElementAt(0).Longitude);
+            Assert.AreEqual(2, actual.ElementAt(1).Latitude);
+            Assert.AreEqual(3, actual.ElementAt(1).Longitude);
+
+            Assert.IsTrue(coordinates.TryGet(1, out actual));
+            Assert.AreEqual(3, actual.Count);
+            Assert.AreEqual(4, actual.ElementAt(0).Latitude);
+            Assert.AreEqual(5, actual.ElementAt(0).Longitude);
+            Assert.AreEqual(6, actual.ElementAt(1).Latitude);
+            Assert.AreEqual(7, actual.ElementAt(1).Longitude);
+            Assert.AreEqual(8, actual.ElementAt(2).Latitude);
+            Assert.AreEqual(9, actual.ElementAt(2).Longitude);
+        }
+
+        /// <summary>
+        /// Tests a adding a collection of zero-size of a connection that is null.
+        /// </summary>
+        [Test]
+        public void TestNullVersusEmpty()
+        {
+            var coordinates = new HugeCoordinateCollectionIndex(10);
+            coordinates.Add(0, new CoordinateArrayCollection<GeoCoordinate>(
+                new GeoCoordinate[] { }));
+            coordinates.Add(1, null);
+
+            ICoordinateCollection actual;
+            Assert.IsTrue(coordinates.TryGet(0, out actual));
+            Assert.AreEqual(0, actual.Count);
+
+            Assert.IsTrue(coordinates.TryGet(1, out actual));
+            Assert.AreEqual(null, actual);
+
+            Assert.IsFalse(coordinates.TryGet(2, out actual));
+        }
+
+        /// <summary>
+        /// Tests removing an element.
+        /// </summary>
+        [Test]
+        public void TestRemove()
+        {
+            var coordinates = new HugeCoordinateCollectionIndex(10);
+            coordinates.Add(0, new CoordinateArrayCollection<GeoCoordinate>(
+                new GeoCoordinate[] { }));
+
+            coordinates.Remove(0);
+
+            ICoordinateCollection actual;
+            Assert.IsFalse(coordinates.TryGet(0, out actual));
+            Assert.Catch<KeyNotFoundException>(() =>
+            {
+                actual = coordinates[0];
+            });
+
+            coordinates = new HugeCoordinateCollectionIndex(10);
+            coordinates.Add(0, null);
+
+            coordinates.Remove(0);
+
+            Assert.IsFalse(coordinates.TryGet(0, out actual));
+            Assert.Catch<KeyNotFoundException>(() =>
+            {
+                actual = coordinates[0];
+            });
+        }
+
+        /// <summary>
+        /// Tests the index by filling it along with a dictionary and comparing the results.
+        /// </summary>
+        [Test]
+        public void TestCompareWithDictionary()
         {
             OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
 
@@ -45,7 +160,7 @@ namespace OsmSharp.Test.Collections.Coordinates
             var maxCollectionSize = 4;
             var referenceDictionary = new Dictionary<long, ICoordinateCollection>();
             var coordinates = new HugeCoordinateCollectionIndex(400);
-            for(int idx = 0; idx < size; idx++)
+            for(int id = 0; id < size; id++)
             {
                 var currentSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(maxCollectionSize) + 1;
                 var coordinatesArray = new GeoCoordinate[currentSize];
@@ -55,8 +170,8 @@ namespace OsmSharp.Test.Collections.Coordinates
                     currentSize--;
                 }
                 var coordinatesCollection = new CoordinateArrayCollection<GeoCoordinate>(coordinatesArray);
-                referenceDictionary[idx] = coordinatesCollection;
-                coordinates[idx] = coordinatesCollection;
+                referenceDictionary[id] = coordinatesCollection;
+                coordinates[id] = coordinatesCollection;
             }
 
             // check result.
@@ -259,85 +374,134 @@ namespace OsmSharp.Test.Collections.Coordinates
         }
 
         /// <summary>
-        /// Tests serializing a huge coordinate collection index.
+        /// Tests compress functionality.
+        /// </summary>
+        [Test]
+        public void TestCompress()
+        {
+            // build a coordinate collection.
+            var coordinates = new HugeCoordinateCollectionIndex(100);
+            coordinates.Add(0, new CoordinateArrayCollection<GeoCoordinate>(
+                new GeoCoordinate[] { 
+                    new GeoCoordinate(0, 0),
+                    new GeoCoordinate(1, 1) }));
+            coordinates.Add(1, new CoordinateArrayCollection<GeoCoordinate>(
+                new GeoCoordinate[] { 
+                    new GeoCoordinate(2, 2),
+                    new GeoCoordinate(3, 3) }));
+
+            // compress.
+            coordinates.Compress();
+
+            // check if everything is still there.
+            Assert.AreEqual(8, coordinates.LengthCoordinates);
+            Assert.AreEqual(2, coordinates.LengthIndex);
+            Assert.IsTrue(coordinates[0].ElementAt(0).Latitude == 0);
+            Assert.IsTrue(coordinates[0].ElementAt(0).Longitude == 0);
+            Assert.IsTrue(coordinates[0].ElementAt(1).Latitude == 1);
+            Assert.IsTrue(coordinates[0].ElementAt(1).Longitude == 1);
+            Assert.IsTrue(coordinates[1].ElementAt(0).Latitude == 2);
+            Assert.IsTrue(coordinates[1].ElementAt(0).Longitude == 2);
+            Assert.IsTrue(coordinates[1].ElementAt(1).Latitude == 3);
+            Assert.IsTrue(coordinates[1].ElementAt(1).Longitude == 3);
+
+            // build a coordinate collection and remove some data.
+            coordinates = new HugeCoordinateCollectionIndex(100);
+            coordinates.Add(0, new CoordinateArrayCollection<GeoCoordinate>(
+                new GeoCoordinate[] { 
+                    new GeoCoordinate(0, 0),
+                    new GeoCoordinate(1, 1) }));
+            coordinates.Add(1, new CoordinateArrayCollection<GeoCoordinate>(
+                new GeoCoordinate[] { 
+                    new GeoCoordinate(2, 2),
+                    new GeoCoordinate(3, 3) }));
+            coordinates.Remove(0);
+
+            // compress.
+            coordinates.Compress();
+
+            // check if everything is still there.
+            Assert.AreEqual(4, coordinates.LengthCoordinates);
+            Assert.AreEqual(2, coordinates.LengthIndex);
+            ICoordinateCollection actual;
+            Assert.IsFalse(coordinates.TryGet(0, out actual));
+            Assert.IsTrue(coordinates[1].ElementAt(0).Latitude == 2);
+            Assert.IsTrue(coordinates[1].ElementAt(0).Longitude == 2);
+            Assert.IsTrue(coordinates[1].ElementAt(1).Latitude == 3);
+            Assert.IsTrue(coordinates[1].ElementAt(1).Longitude == 3);
+        }
+
+        /// <summary>
+        /// Tests serialization.
         /// </summary>
         [Test]
         public void TestSerialize()
         {
-            OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
-
-            var box = new GeoCoordinateBox(
-                new GeoCoordinate(90, 180),
-                new GeoCoordinate(-90, -180));
-            var size = 5;
-            var maxCollectionSize = 4;
-            var referenceDictionary = new Dictionary<long, ICoordinateCollection>();
+            // build a coordinate collection.
             var coordinates = new HugeCoordinateCollectionIndex(100);
-            for (int idx = 0; idx < size; idx++)
-            {
-                var currentSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(maxCollectionSize) + 1;
-                var coordinatesArray = new GeoCoordinate[currentSize];
-                while (currentSize > 0)
-                {
-                    coordinatesArray[currentSize - 1] = box.GenerateRandomIn(OsmSharp.Math.Random.StaticRandomGenerator.Get());
-                    currentSize--;
-                }
-                var coordinatesCollection = new CoordinateArrayCollection<GeoCoordinate>(coordinatesArray);
-                referenceDictionary[idx] = coordinatesCollection;
-                coordinates[idx] = coordinatesCollection;
-            }
+            coordinates.Add(0, new CoordinateArrayCollection<GeoCoordinate>(
+                new GeoCoordinate[] { 
+                    new GeoCoordinate(0, 0),
+                    new GeoCoordinate(1, 1) }));
+            coordinates.Add(1, new CoordinateArrayCollection<GeoCoordinate>(
+                new GeoCoordinate[] { 
+                    new GeoCoordinate(2, 2),
+                    new GeoCoordinate(3, 3) }));
 
-            coordinates.Trim();
-            coordinates.Compress();
-
+            // serialize and test size.
             byte[] data = null;
+            var expected = 2 * 8 + // header, indexsize and coordinates size.
+                2 * 8 + // index.
+                4 * 8; // 8 coordinates.
             using(var stream = new MemoryStream())
             {
-                long length = coordinates.Serialize(stream);
+                Assert.AreEqual(expected, coordinates.Serialize(stream));
                 data = stream.ToArray();
 
-                Assert.AreEqual(168, length);
-                Assert.AreEqual(data.Length, length);
+                Assert.AreEqual(expected, data.Length);
             }
+        }
 
-            var result = HugeCoordinateCollectionIndex.Deserialize(new MemoryStream(data));
+        /// <summary>
+        /// Tests deserialization.
+        /// </summary>
+        [Test]
+        public void TestDeserialize()
+        {
+            // build a coordinate collection.
+            var coordinates = new HugeCoordinateCollectionIndex(100);
+            coordinates.Add(0, new CoordinateArrayCollection<GeoCoordinate>(
+                new GeoCoordinate[] { 
+                    new GeoCoordinate(0, 1),
+                    new GeoCoordinate(2, 3) }));
+            coordinates.Add(1, new CoordinateArrayCollection<GeoCoordinate>(
+                new GeoCoordinate[] { 
+                    new GeoCoordinate(4, 5),
+                    new GeoCoordinate(6, 7) }));
 
-            // check result.
-            for (int idx = 0; idx < size; idx++)
+            // serialize/deserialize and test size.
+            using (var stream = new MemoryStream())
             {
-                var referenceCollection = referenceDictionary[idx];
-                var collection = result[idx];
+                coordinates.Serialize(stream);
 
-                referenceCollection.Reset();
-                collection.Reset();
+                stream.Seek(0, SeekOrigin.Begin);
 
-                while (referenceCollection.MoveNext())
-                {
-                    Assert.IsTrue(collection.MoveNext());
-                    Assert.AreEqual(referenceCollection.Latitude, collection.Latitude);
-                    Assert.AreEqual(referenceCollection.Longitude, collection.Longitude);
-                }
-                Assert.IsFalse(collection.MoveNext());
-            }
+                coordinates = HugeCoordinateCollectionIndex.Deserialize(stream, false);
 
-            result = HugeCoordinateCollectionIndex.Deserialize(new MemoryStream(data), true);
+                ICoordinateCollection actual;
+                Assert.IsTrue(coordinates.TryGet(0, out actual));
+                Assert.AreEqual(2, actual.Count);
+                Assert.AreEqual(0, actual.ElementAt(0).Latitude);
+                Assert.AreEqual(1, actual.ElementAt(0).Longitude);
+                Assert.AreEqual(2, actual.ElementAt(1).Latitude);
+                Assert.AreEqual(3, actual.ElementAt(1).Longitude);
 
-            // check result.
-            for (int idx = 0; idx < size; idx++)
-            {
-                var referenceCollection = referenceDictionary[idx];
-                var collection = result[idx];
-
-                referenceCollection.Reset();
-                collection.Reset();
-
-                while (referenceCollection.MoveNext())
-                {
-                    Assert.IsTrue(collection.MoveNext());
-                    Assert.AreEqual(referenceCollection.Latitude, collection.Latitude);
-                    Assert.AreEqual(referenceCollection.Longitude, collection.Longitude);
-                }
-                Assert.IsFalse(collection.MoveNext());
+                Assert.IsTrue(coordinates.TryGet(1, out actual));
+                Assert.AreEqual(2, actual.Count);
+                Assert.AreEqual(4, actual.ElementAt(0).Latitude);
+                Assert.AreEqual(5, actual.ElementAt(0).Longitude);
+                Assert.AreEqual(6, actual.ElementAt(1).Latitude);
+                Assert.AreEqual(7, actual.ElementAt(1).Longitude);
             }
         }
 

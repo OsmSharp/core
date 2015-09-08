@@ -76,6 +76,7 @@
     <Compile Include="Geo\Streams\GeoJson\GeoJsonConverterTests.cs" />
     <Compile Include="Geo\Streams\Gpx\GpxGeometryTests.cs" />
     <Compile Include="Geo\Streams\Kml\KmlGeometryTests.cs" />
+    <Compile Include="Geo\Streams\Poly\PolyFileConverterTests.cs" />
     <Compile Include="IO\Json\JsonConvertTest.cs" />
     <Compile Include="IO\Xml\Gpx\GpxXmlTest.cs" />
     <Compile Include="IO\Xml\Kml\KmlXmlTest.cs" />

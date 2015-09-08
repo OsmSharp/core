@@ -159,6 +159,7 @@
     <Compile Include="Geo\Streams\IFeatureStreamSource.cs" />
     <Compile Include="Geo\Streams\IFeatureStreamTarget.cs" />
     <Compile Include="Geo\Streams\Kml\KmlFeatureStreamSource.cs" />
+    <Compile Include="Geo\Streams\Poly\PolyFileConverter.cs" />
     <Compile Include="IClonable.cs" />
     <Compile Include="IO\CappedStream.cs" />
     <Compile Include="IO\Json\Bson\BsonBinaryType.cs" />

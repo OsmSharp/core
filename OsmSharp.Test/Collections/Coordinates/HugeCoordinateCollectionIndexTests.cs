@@ -534,37 +534,6 @@ namespace OsmSharp.Test.Collections.Coordinates
                 Assert.AreEqual(6, actual.ElementAt(1).Latitude);
                 Assert.AreEqual(7, actual.ElementAt(1).Longitude);
             }
-
-            // build a coordinate collection.
-            coordinates = new HugeCoordinateCollectionIndex(100);
-
-            // serialize/deserialize and test size.
-            using (var stream = new MemoryStream())
-            {
-                coordinates.Serialize(stream);
-
-                stream.Seek(0, SeekOrigin.Begin);
-
-                coordinates = HugeCoordinateCollectionIndex.Deserialize(stream, false);
-                Assert.AreEqual(0, coordinates.LengthIndex);
-                Assert.AreEqual(0, coordinates.LengthCoordinates);
-            }
-
-            // build a coordinate collection.
-            coordinates = new HugeCoordinateCollectionIndex(100);
-            coordinates.Add(0, null);
-
-            // serialize/deserialize and test size.
-            using (var stream = new MemoryStream())
-            {
-                coordinates.Serialize(stream);
-
-                stream.Seek(0, SeekOrigin.Begin);
-
-                coordinates = HugeCoordinateCollectionIndex.Deserialize(stream, false);
-                Assert.AreEqual(1, coordinates.LengthIndex);
-                Assert.AreEqual(0, coordinates.LengthCoordinates);
-            }
         }
 
         /// <summary>

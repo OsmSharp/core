@@ -611,26 +611,9 @@ namespace OsmSharp.Collections.Coordinates.Collections
             var coordinateLength = BitConverter.ToInt64(longBytes, 0);
 
             var file = new MemoryMappedStream(new LimitedStream(stream));
+            var indexArray = new MemoryMappedHugeArrayUInt64(file, indexLength, indexLength, 1024);
+            var coordinateArray = new MemoryMappedHugeArraySingle(file, coordinateLength, coordinateLength, 1024);
 
-            HugeArrayBase<ulong> indexArray;
-            if(indexLength == 0)
-            { // create an empty array.
-                indexArray = new HugeArray<ulong>(0);
-            }
-            else
-            { // use the stream.
-                indexArray = new MemoryMappedHugeArrayUInt64(file, indexLength, indexLength, 1024);
-            }
-            HugeArrayBase<float> coordinateArray;
-            if(coordinateLength == 0)
-            { // create an empty array.
-                coordinateArray = new HugeArray<float>(0);
-            }
-            else
-            { // use the stream.
-                coordinateArray = new MemoryMappedHugeArraySingle(file, coordinateLength, coordinateLength, 1024);
-            }
-            
             if (copy)
             { // copy the data.
                 var indexArrayCopy = new HugeArray<ulong>(indexLength);

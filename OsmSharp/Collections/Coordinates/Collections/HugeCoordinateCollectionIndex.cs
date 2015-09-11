@@ -515,7 +515,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
             }
 
             // sort vertices and coordinates.
-            QuickSort.Sort((i) => ((long)(_index[sortedVertices[i]] / (ulong)MAX_COLLECTION_SIZE)) * 2, (i, j) =>
+            QuickSort.Sort((i) => ((long)(_index[i] / (ulong)MAX_COLLECTION_SIZE)) * 2, (i, j) =>
             {
                 var tempRef = sortedVertices[i];
                 sortedVertices[i] = sortedVertices[j];

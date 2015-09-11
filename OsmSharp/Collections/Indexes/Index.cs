@@ -41,6 +41,14 @@ namespace OsmSharp.Collections.Indexes
         }
 
         /// <summary>
+        /// Creates a new index based on the existing data.
+        /// </summary>
+        internal Index(List<T> objects)
+        {
+            _objects = objects;
+        }
+
+        /// <summary>
         /// Returns true if this index is readonly.
         /// </summary>
         public override bool IsReadonly

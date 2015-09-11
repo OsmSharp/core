@@ -118,9 +118,9 @@ namespace OsmSharp.Collections.Coordinates.Collections
             }
             _index[id] = this.DoAdd(coordinates);
 
-            if (_nextId <= id)
+            if (_maxId < id)
             { // update max id.
-                _nextId = id + 1;
+                _maxId = id;
             }
         }
 
@@ -191,9 +191,9 @@ namespace OsmSharp.Collections.Coordinates.Collections
                     _index[id] = this.DoAdd(value);
                 }
 
-                if (_nextId <= id)
+                if (_maxId < id)
                 { // update max id.
-                    _nextId = id + 1;
+                    _maxId = id;
                 }
             }
         }
@@ -204,10 +204,9 @@ namespace OsmSharp.Collections.Coordinates.Collections
         public void Resize(long size)
         {
             _index.Resize(size);
-
-            if(_nextId > size)
+            if(_maxId >= size)
             { 
-                _nextId = size;
+                _maxId = size - 1;
             }
         }
 
@@ -236,7 +235,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
         #region Helper Methods
 
         private long _nextIdx = 0;
-        private long _nextId = 0;
+        private long _maxId = 0;
 
         /// <summary>
         /// Increases the size of the coordinates array.
@@ -495,7 +494,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
         /// <returns></returns>
         public void Trim()
         {
-            _index.Resize(_nextId);
+            _index.Resize(_maxId + 1);
             _coordinates.Resize(_nextIdx * 2);
         }
 
@@ -572,21 +571,17 @@ namespace OsmSharp.Collections.Coordinates.Collections
             // write in this order: index, shapes.
             using (var file = new MemoryMappedStream(new LimitedStream(stream)))
             {
-                if (indexSize > 0)
-                { // write index.
-                    var indexArray = new MemoryMappedHugeArrayUInt64(file, indexSize, indexSize, 1024);
-                    indexArray.CopyFrom(_index, indexSize);
-                    indexArray.Dispose();
-                    position = position + (indexSize * 8);
-                }
+                // write index.
+                var indexArray = new MemoryMappedHugeArrayUInt64(file, indexSize, indexSize, 1024);
+                indexArray.CopyFrom(_index, indexSize);
+                indexArray.Dispose();
+                position = position + (indexSize * 8);
 
-                if(coordinatesCount > 0)
-                { // write coordinates.
-                    var coordinatesArray = new MemoryMappedHugeArraySingle(file, coordinatesCount, coordinatesCount, 1024);
-                    coordinatesArray.CopyFrom(_coordinates);
-                    coordinatesArray.Dispose();
-                    position = position + (coordinatesCount * 4);
-                }
+                // write coordinates.
+                var coordinatesArray = new MemoryMappedHugeArraySingle(file, coordinatesCount, coordinatesCount, 1024);
+                coordinatesArray.CopyFrom(_coordinates);
+                coordinatesArray.Dispose();
+                position = position + (coordinatesCount * 4);
             }
 
             return position;

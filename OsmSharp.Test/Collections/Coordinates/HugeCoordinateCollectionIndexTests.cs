@@ -432,6 +432,191 @@ namespace OsmSharp.Test.Collections.Coordinates
         }
 
         /// <summary>
+        /// Tests the index by filling it along with a dictionary and comparing the results.
+        /// </summary>
+        [Test]
+        public void TestCompressAndCompareWithDictionary()
+        {
+            OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
+
+            var box = new GeoCoordinateBox(
+                new GeoCoordinate(90, 180),
+                new GeoCoordinate(-90, -180));
+            var size = 100;
+            var maxCollectionSize = 4;
+            var referenceDictionary = new Dictionary<long, ICoordinateCollection>();
+            var coordinates = new HugeCoordinateCollectionIndex(400);
+            for (int id = 0; id < size; id++)
+            {
+                var currentSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(maxCollectionSize) + 1;
+                var coordinatesArray = new GeoCoordinate[currentSize];
+                while (currentSize > 0)
+                {
+                    coordinatesArray[currentSize - 1] = box.GenerateRandomIn(OsmSharp.Math.Random.StaticRandomGenerator.Get());
+                    currentSize--;
+                }
+                var coordinatesCollection = new CoordinateArrayCollection<GeoCoordinate>(coordinatesArray);
+                referenceDictionary[id] = coordinatesCollection;
+                coordinates[id] = coordinatesCollection;
+            }
+
+            coordinates.Compress();
+
+            // check result.
+            for (int idx = 0; idx < size; idx++)
+            {
+                var referenceCollection = referenceDictionary[idx];
+                var collection = coordinates[idx];
+
+                referenceCollection.Reset();
+                collection.Reset();
+
+                while (referenceCollection.MoveNext())
+                {
+                    Assert.IsTrue(collection.MoveNext());
+                    Assert.AreEqual(referenceCollection.Latitude, collection.Latitude);
+                    Assert.AreEqual(referenceCollection.Longitude, collection.Longitude);
+                }
+                Assert.IsFalse(collection.MoveNext());
+            }
+
+            // generate new randoms.
+            for (int idx = 0; idx < size; idx++)
+            {
+                var currentSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(maxCollectionSize) + 1;
+                var coordinatesArray = new GeoCoordinate[currentSize];
+                while (currentSize > 0)
+                {
+                    coordinatesArray[currentSize - 1] = box.GenerateRandomIn(OsmSharp.Math.Random.StaticRandomGenerator.Get());
+                    currentSize--;
+                }
+                var coordinatesCollection = new CoordinateArrayCollection<GeoCoordinate>(coordinatesArray);
+                referenceDictionary[idx] = coordinatesCollection;
+                coordinates[idx] = coordinatesCollection;
+
+                var referenceCollection = referenceDictionary[idx];
+                var collection = coordinates[idx];
+
+                referenceCollection.Reset();
+                collection.Reset();
+
+                while (referenceCollection.MoveNext())
+                {
+                    Assert.IsTrue(collection.MoveNext());
+                    Assert.AreEqual(referenceCollection.Latitude, collection.Latitude);
+                    Assert.AreEqual(referenceCollection.Longitude, collection.Longitude);
+                }
+                Assert.IsFalse(collection.MoveNext());
+            }
+
+            coordinates.Compress();
+
+            // check again.
+            for (int idx = 0; idx < size; idx++)
+            {
+                var referenceCollection = referenceDictionary[idx];
+                var collection = coordinates[idx];
+
+                referenceCollection.Reset();
+                collection.Reset();
+
+                while (referenceCollection.MoveNext())
+                {
+                    Assert.IsTrue(collection.MoveNext());
+                    Assert.AreEqual(referenceCollection.Latitude, collection.Latitude);
+                    Assert.AreEqual(referenceCollection.Longitude, collection.Longitude);
+                }
+                Assert.IsFalse(collection.MoveNext());
+            }
+
+            // randomly remove stuff.
+            for (int idx = 0; idx < size; idx++)
+            {
+                if (OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(2) > 1)
+                {
+                    referenceDictionary[idx] = null;
+                    coordinates[idx] = null;
+                }
+            }
+
+            coordinates.Compress();
+
+            // check again.
+            for (int idx = 0; idx < size; idx++)
+            {
+                var referenceCollection = referenceDictionary[idx];
+                var collection = coordinates[idx];
+
+                if (referenceCollection == null)
+                {
+                    Assert.IsNull(collection);
+                }
+                else
+                {
+                    referenceCollection.Reset();
+                    collection.Reset();
+
+                    while (referenceCollection.MoveNext())
+                    {
+                        Assert.IsTrue(collection.MoveNext());
+                        Assert.AreEqual(referenceCollection.Latitude, collection.Latitude);
+                        Assert.AreEqual(referenceCollection.Longitude, collection.Longitude);
+                    }
+                    Assert.IsFalse(collection.MoveNext());
+                }
+            }
+
+            // generate new randoms.
+            for (int idx = 0; idx < size; idx++)
+            {
+                var currentSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(maxCollectionSize) + 1;
+                var coordinatesArray = new GeoCoordinate[currentSize];
+                while (currentSize > 0)
+                {
+                    coordinatesArray[currentSize - 1] = box.GenerateRandomIn(OsmSharp.Math.Random.StaticRandomGenerator.Get());
+                    currentSize--;
+                }
+                var coordinatesCollection = new CoordinateArrayCollection<GeoCoordinate>(coordinatesArray);
+                referenceDictionary[idx] = coordinatesCollection;
+                coordinates[idx] = coordinatesCollection;
+
+                var referenceCollection = referenceDictionary[idx];
+                var collection = coordinates[idx];
+
+                referenceCollection.Reset();
+                collection.Reset();
+
+                while (referenceCollection.MoveNext())
+                {
+                    Assert.IsTrue(collection.MoveNext());
+                    Assert.AreEqual(referenceCollection.Latitude, collection.Latitude);
+                    Assert.AreEqual(referenceCollection.Longitude, collection.Longitude);
+                }
+                Assert.IsFalse(collection.MoveNext());
+            }
+
+            coordinates.Compress();
+
+            // check again.
+            for (int idx = 0; idx < size; idx++)
+            {
+                var referenceCollection = referenceDictionary[idx];
+                var collection = coordinates[idx];
+
+                referenceCollection.Reset();
+                collection.Reset();
+
+                while (referenceCollection.MoveNext())
+                {
+                    Assert.IsTrue(collection.MoveNext());
+                    Assert.AreEqual(referenceCollection.Latitude, collection.Latitude);
+                    Assert.AreEqual(referenceCollection.Longitude, collection.Longitude);
+                }
+                Assert.IsFalse(collection.MoveNext());
+            }
+        }
+
+        /// <summary>
         /// Tests serialization.
         /// </summary>
         [Test]

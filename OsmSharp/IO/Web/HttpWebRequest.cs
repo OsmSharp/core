@@ -84,12 +84,17 @@ namespace OsmSharp.IO.Web
         /// <param name="iar"></param>
         /// <returns></returns>
         public abstract HttpWebResponse EndGetResponse(IAsyncResult iar);
+
+		/// <summary>
+		/// Abort this instance.
+		/// </summary>
+		public abstract void Abort();
     }
 
     /// <summary>
     /// A default implementation the HttpWebRequest.
     /// </summary>
-    internal class HttpWebRequestDefault : HttpWebRequest
+	internal class HttpWebRequestDefault : HttpWebRequest
     {
         /// <summary>
         /// Holds the http webrequest.
@@ -163,5 +168,13 @@ namespace OsmSharp.IO.Web
         {
             return new HttpWebResponseDefault((System.Net.HttpWebResponse)_httpWebRequest.EndGetResponse(iar));
         }
+
+		/// <summary>
+		/// Abort this instance.
+		/// </summary>
+		public override void Abort ()
+		{
+			_httpWebRequest.Abort ();
+		}
     }
 }

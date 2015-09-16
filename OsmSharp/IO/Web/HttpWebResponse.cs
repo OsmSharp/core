@@ -36,12 +36,17 @@ namespace OsmSharp.IO.Web
         /// </summary>
         /// <returns></returns>
         public abstract Stream GetResponseStream();
+
+		/// <summary>
+		/// Closes this instance.
+		/// </summary>
+		public abstract void Close();
     }
 
     /// <summary>
     /// A default implementation the HttpWebResponse.
     /// </summary>
-    internal class HttpWebResponseDefault : HttpWebResponse
+	internal class HttpWebResponseDefault : HttpWebResponse
     {
         /// <summary>
         /// Holds the http webresponse.
@@ -84,5 +89,13 @@ namespace OsmSharp.IO.Web
         {
             return _httpWebResponse.GetResponseStream();
         }
+
+		/// <summary>
+		/// Closes this instance.
+		/// </summary>
+		public override void Close ()
+		{
+			
+		}
     }
 }

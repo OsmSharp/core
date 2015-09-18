@@ -139,6 +139,7 @@
     <Compile Include="Streams\Filters\OsmStreamFilterBoundingBox.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterExclude.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterMerge.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterPoly.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterProgress.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterSort.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterTags.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Streams\Filters\OsmStreamFilterWithEvents.cs" />
     <Compile Include="Streams\OsmStreamExtensions.cs" />
     <Compile Include="Streams\OsmStreamFilter.cs" />
+    <Compile Include="Streams\OsmStreamNotSortedException.cs" />
     <Compile Include="Streams\OsmStreamSource.cs" />
     <Compile Include="Streams\OsmStreamSourceEmpty.cs" />
     <Compile Include="Streams\OsmStreamTarget.cs" />

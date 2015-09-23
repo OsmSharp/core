@@ -146,7 +146,7 @@ namespace OsmSharp.Osm.PBF
         /// <summary>
         /// Encodes the nodes into the given block.
         /// </summary>
-        public static void Encode(this PrimitiveBlock block, List<OsmGeo> osmGeos)
+        public static void Encode(this PrimitiveBlock block, Dictionary<string, int> reverseStringTable, List<OsmGeo> osmGeos)
         {
             var groupIdx = 0;
             var i = 0;
@@ -195,13 +195,13 @@ namespace OsmSharp.Osm.PBF
                     switch(groupType)
                     {
                         case OsmGeoType.Node:
-                            group.nodes.Add(Encoder.EncodeNode(block, osmGeos[i] as Osm.Node));
+                            group.nodes.Add(Encoder.EncodeNode(block, reverseStringTable, osmGeos[i] as Osm.Node));
                             break;
                         case OsmGeoType.Way:
-                            group.ways.Add(Encoder.EncodeWay(block, osmGeos[i] as Osm.Way));
+                            group.ways.Add(Encoder.EncodeWay(block, reverseStringTable, osmGeos[i] as Osm.Way));
                             break;
                         case OsmGeoType.Relation:
-                            group.relations.Add(Encoder.EncodeRelation(block, osmGeos[i] as Osm.Relation));
+                            group.relations.Add(Encoder.EncodeRelation(block, reverseStringTable, osmGeos[i] as Osm.Relation));
                             break;
                     }
                     i++;
@@ -279,42 +279,25 @@ namespace OsmSharp.Osm.PBF
         /// Encodes a string.
         /// </summary>
         /// <returns></returns>
-        public static int EncodeString(PrimitiveBlock block, string value)
+        public static int EncodeString(PrimitiveBlock block, Dictionary<string, int> reverseStringTable, string value)
         {
             if (value == null) { return 0; }
 
+            int id;
+            if (reverseStringTable.TryGetValue(value, out id))
+            {
+                return id;
+            }
+
             var bytes = System.Text.Encoding.UTF8.GetBytes(value);
-            var equals = false;
             if(block.stringtable == null)
             {
                 block.stringtable = new StringTable();
                 block.stringtable.s.Add(System.Text.Encoding.UTF8.GetBytes(string.Empty));
+                reverseStringTable.Add(string.Empty, 0);
             }
-            for(var i = 0; i < block.stringtable.s.Count; i++)
-            {
-                var current = block.stringtable.s[i];
-                equals = true;
-                if(current.Length == bytes.Length)
-                {
-                    for(var j = 0; j < current.Length; j++)
-                    {
-                        if(current[j] != bytes[j])
-                        {
-                            equals = false;
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    equals = false;
-                }
-                if(equals)
-                {
-                    return i;
-                }
-            }
-            block.stringtable.s.Add(bytes);
+            block.stringtable.s.Add(System.Text.Encoding.UTF8.GetBytes(value));
+            reverseStringTable.Add(value, block.stringtable.s.Count - 1);
             return block.stringtable.s.Count - 1;
         }
 
@@ -322,7 +305,7 @@ namespace OsmSharp.Osm.PBF
         /// Encodes an OsmSharp-node into a PBF-node.
         /// </summary>
         /// <returns></returns>
-        public static OsmSharp.Osm.PBF.Node EncodeNode(PrimitiveBlock block, Osm.Node node)
+        public static OsmSharp.Osm.PBF.Node EncodeNode(PrimitiveBlock block, Dictionary<string, int> reverseStringTable, Osm.Node node)
         {
             var pbfNode = new OsmSharp.Osm.PBF.Node();
             pbfNode.id = node.Id.Value;
@@ -331,7 +314,7 @@ namespace OsmSharp.Osm.PBF
             if (node.ChangeSetId.HasValue) { pbfNode.info.changeset = node.ChangeSetId.Value; }
             if (node.TimeStamp.HasValue) { pbfNode.info.timestamp = Encoder.EncodeTimestamp(node.TimeStamp.Value, block.date_granularity); }
             if (node.UserId.HasValue) { pbfNode.info.uid = (int)node.UserId.Value; }
-            pbfNode.info.user_sid = Encoder.EncodeString(block, node.UserName);
+            pbfNode.info.user_sid = Encoder.EncodeString(block, reverseStringTable, node.UserName);
             if (node.Version.HasValue) { pbfNode.info.version = (int)node.Version.Value; }
             pbfNode.lat = Encoder.EncodeLatLon(node.Latitude.Value, block.lat_offset, block.granularity);
             pbfNode.lon = Encoder.EncodeLatLon(node.Longitude.Value, block.lon_offset, block.granularity);
@@ -340,8 +323,8 @@ namespace OsmSharp.Osm.PBF
             {
                 foreach(var tag in node.Tags)
                 {
-                    pbfNode.keys.Add((uint)Encoder.EncodeString(block, tag.Key));
-                    pbfNode.vals.Add((uint)Encoder.EncodeString(block, tag.Value));
+                    pbfNode.keys.Add((uint)Encoder.EncodeString(block, reverseStringTable, tag.Key));
+                    pbfNode.vals.Add((uint)Encoder.EncodeString(block, reverseStringTable, tag.Value));
                 }
             }
             return pbfNode;
@@ -422,7 +405,7 @@ namespace OsmSharp.Osm.PBF
         /// Encodes an OsmSharp-way into a PBF-way.
         /// </summary>
         /// <returns></returns>
-        public static OsmSharp.Osm.PBF.Way EncodeWay(PrimitiveBlock block, Osm.Way way)
+        public static OsmSharp.Osm.PBF.Way EncodeWay(PrimitiveBlock block, Dictionary<string, int> reverseStringTable, Osm.Way way)
         {
             var pbfWay = new OsmSharp.Osm.PBF.Way();
             pbfWay.id = way.Id.Value;
@@ -433,7 +416,7 @@ namespace OsmSharp.Osm.PBF
                 pbfWay.info.timestamp = Encoder.EncodeTimestamp(way.TimeStamp.Value, block.date_granularity);
             }
             if (way.UserId.HasValue) { pbfWay.info.uid = (int)way.UserId.Value; }
-            pbfWay.info.user_sid = Encoder.EncodeString(block, way.UserName);
+            pbfWay.info.user_sid = Encoder.EncodeString(block, reverseStringTable, way.UserName);
             pbfWay.info.version = 0;
             if (way.Version.HasValue) { pbfWay.info.version = (int)way.Version.Value; }
 
@@ -441,8 +424,8 @@ namespace OsmSharp.Osm.PBF
             {
                 foreach (var tag in way.Tags)
                 {
-                    pbfWay.keys.Add((uint)Encoder.EncodeString(block, tag.Key));
-                    pbfWay.vals.Add((uint)Encoder.EncodeString(block, tag.Value));
+                    pbfWay.keys.Add((uint)Encoder.EncodeString(block, reverseStringTable, tag.Key));
+                    pbfWay.vals.Add((uint)Encoder.EncodeString(block, reverseStringTable, tag.Value));
                 }
             }
 
@@ -550,7 +533,7 @@ namespace OsmSharp.Osm.PBF
         /// Encodes an OsmSharp-relation into a PBF-relation.
         /// </summary>
         /// <returns></returns>
-        public static OsmSharp.Osm.PBF.Relation EncodeRelation(PrimitiveBlock block, Osm.Relation relation)
+        public static OsmSharp.Osm.PBF.Relation EncodeRelation(PrimitiveBlock block, Dictionary<string, int> reverseStringTable, Osm.Relation relation)
         {
             var pbfRelation = new OsmSharp.Osm.PBF.Relation();
             pbfRelation.id = relation.Id.Value;
@@ -558,7 +541,7 @@ namespace OsmSharp.Osm.PBF
             if (relation.ChangeSetId.HasValue) { pbfRelation.info.changeset = relation.ChangeSetId.Value; }
             if (relation.TimeStamp.HasValue) { pbfRelation.info.timestamp = Encoder.EncodeTimestamp(relation.TimeStamp.Value, block.date_granularity); }
             if (relation.UserId.HasValue) { pbfRelation.info.uid = (int)relation.UserId.Value; }
-            pbfRelation.info.user_sid = Encoder.EncodeString(block, relation.UserName);
+            pbfRelation.info.user_sid = Encoder.EncodeString(block, reverseStringTable, relation.UserName);
             pbfRelation.info.version = 0;
             if (relation.Version.HasValue) { pbfRelation.info.version = (int)relation.Version.Value; }
 
@@ -566,8 +549,8 @@ namespace OsmSharp.Osm.PBF
             {
                 foreach (var tag in relation.Tags)
                 {
-                    pbfRelation.keys.Add((uint)Encoder.EncodeString(block, tag.Key));
-                    pbfRelation.vals.Add((uint)Encoder.EncodeString(block, tag.Value));
+                    pbfRelation.keys.Add((uint)Encoder.EncodeString(block, reverseStringTable, tag.Key));
+                    pbfRelation.vals.Add((uint)Encoder.EncodeString(block, reverseStringTable, tag.Value));
                 }
             }
 
@@ -575,7 +558,7 @@ namespace OsmSharp.Osm.PBF
                 relation.Members.Count > 0)
             {
                 pbfRelation.memids.Add(relation.Members[0].MemberId.Value);
-                pbfRelation.roles_sid.Add(Encoder.EncodeString(block, relation.Members[0].MemberRole));
+                pbfRelation.roles_sid.Add(Encoder.EncodeString(block, reverseStringTable, relation.Members[0].MemberRole));
                 switch (relation.Members[0].MemberType.Value)
                 {
                     case OsmGeoType.Node:
@@ -592,7 +575,7 @@ namespace OsmSharp.Osm.PBF
                 {
                     pbfRelation.memids.Add(relation.Members[i].MemberId.Value - 
                         relation.Members[i - 1].MemberId.Value);
-                    pbfRelation.roles_sid.Add(Encoder.EncodeString(block, relation.Members[i].MemberRole));
+                    pbfRelation.roles_sid.Add(Encoder.EncodeString(block, reverseStringTable, relation.Members[i].MemberRole));
                     switch(relation.Members[i].MemberType.Value)
                     {
                         case OsmGeoType.Node:

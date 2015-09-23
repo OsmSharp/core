@@ -46,6 +46,7 @@ namespace OsmSharp.Osm.PBF.Streams
 
             _currentEntities = new List<Osm.OsmGeo>();
             _block = new PrimitiveBlock();
+            _reverseStringTable = new Dictionary<string, int>();
             _buffer = new MemoryStream();
 
             _runtimeTypeModel = RuntimeTypeModel.Create();
@@ -57,6 +58,7 @@ namespace OsmSharp.Osm.PBF.Streams
 
         private List<Osm.OsmGeo> _currentEntities;
         private PrimitiveBlock _block;
+        private Dictionary<string, int> _reverseStringTable;
         private MemoryStream _buffer;
 
         /// <summary>
@@ -103,8 +105,9 @@ namespace OsmSharp.Osm.PBF.Streams
 
             // encode into block.
             //_block = new PrimitiveBlock();
-            Encoder.Encode(_block, _currentEntities);
+            Encoder.Encode(_block, _reverseStringTable, _currentEntities);
             _currentEntities.Clear();
+            _reverseStringTable.Clear();
 
             // serialize.
             _buffer.SetLength(0);

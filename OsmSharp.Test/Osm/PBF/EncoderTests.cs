@@ -66,14 +66,14 @@ namespace OsmSharp.Test.Osm.PBF.Dense
         public void TestEncodeStrings()
         {
             var block = new PrimitiveBlock();
-
-            Assert.AreEqual(1, Encoder.EncodeString(block, "Ben"));
-            Assert.AreEqual(2, Encoder.EncodeString(block, "highway"));
-            Assert.AreEqual(3, Encoder.EncodeString(block, "residential"));
-            Assert.AreEqual(1, Encoder.EncodeString(block, "Ben"));
-            Assert.AreEqual(2, Encoder.EncodeString(block, "highway"));
-            Assert.AreEqual(4, Encoder.EncodeString(block, "Some other string"));
-            Assert.AreEqual(5, Encoder.EncodeString(block, "Ban"));
+            var reverseStringTable = new Dictionary<string,int>();
+            Assert.AreEqual(1, Encoder.EncodeString(block, reverseStringTable, "Ben"));
+            Assert.AreEqual(2, Encoder.EncodeString(block, reverseStringTable, "highway"));
+            Assert.AreEqual(3, Encoder.EncodeString(block, reverseStringTable, "residential"));
+            Assert.AreEqual(1, Encoder.EncodeString(block, reverseStringTable, "Ben"));
+            Assert.AreEqual(2, Encoder.EncodeString(block, reverseStringTable, "highway"));
+            Assert.AreEqual(4, Encoder.EncodeString(block, reverseStringTable, "Some other string"));
+            Assert.AreEqual(5, Encoder.EncodeString(block, reverseStringTable, "Ban"));
         }
 
         /// <summary>
@@ -134,8 +134,6 @@ namespace OsmSharp.Test.Osm.PBF.Dense
             block.granularity = 100;
             block.lat_offset = 0;
             block.lon_offset = 0;
-            block.stringtable = new StringTable();
-            block.stringtable.s.Add(System.Text.Encoding.UTF8.GetBytes(string.Empty)); // always encode empty string as '0'.
 
             var node = new OsmSharp.Osm.Node();
             node.Id = 1;
@@ -150,7 +148,7 @@ namespace OsmSharp.Test.Osm.PBF.Dense
             node.Version = 1;
             node.Visible = true;
 
-            var pbfNode = Encoder.EncodeNode(block, node);
+            var pbfNode = Encoder.EncodeNode(block, new Dictionary<string,int>(), node);
             Assert.IsNotNull(pbfNode);
             Assert.AreEqual(1, pbfNode.id);
             Assert.AreEqual(Encoder.EncodeLatLon(10, block.lat_offset, block.granularity), pbfNode.lat);
@@ -245,7 +243,7 @@ namespace OsmSharp.Test.Osm.PBF.Dense
             way.Nodes.Add(1);
             way.Nodes.Add(2);
 
-            var pbfWay = Encoder.EncodeWay(block, way);
+            var pbfWay = Encoder.EncodeWay(block, new Dictionary<string,int>(), way);
             Assert.IsNotNull(pbfWay);
             Assert.AreEqual(1, pbfWay.id);
             Assert.AreEqual(2, pbfWay.refs.Count);
@@ -360,7 +358,7 @@ namespace OsmSharp.Test.Osm.PBF.Dense
                     MemberType = OsmSharp.Osm.OsmGeoType.Relation
                 });
 
-            var pbfRelation = Encoder.EncodeRelation(block, relation);
+            var pbfRelation = Encoder.EncodeRelation(block, new Dictionary<string, int>(), relation);
             Assert.IsNotNull(pbfRelation);
             Assert.AreEqual(1, pbfRelation.id);
             Assert.AreEqual(2, pbfRelation.memids.Count);

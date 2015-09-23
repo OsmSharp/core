@@ -105,6 +105,7 @@
     <Compile Include="Osm\Streams\Complete\OsmSimpleCompleteStreamSourceTests.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterBaseTests.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterExcludeTests.cs" />
+    <Compile Include="Osm\Streams\Filters\OsmStreamFilterPolyTests.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterReference.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterSortTest.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterTagsFilterTest.cs" />

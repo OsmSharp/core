@@ -16,33 +16,22 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.IO;
 using Ionic.Zlib;
 using ProtoBuf;
 using ProtoBuf.Meta;
+using System;
+using System.IO;
 
 namespace OsmSharp.Osm.PBF
 {
     /// <summary>
     /// Reads PBF files.
     /// </summary>
-    internal class PBFReader
+    public class PBFReader
     {
-        /// <summary>
-        /// The stream containing the PBF data.
-        /// </summary>
         private readonly Stream _stream;
-
-        /// <summary>
-        /// Holds the runtime type model.
-        /// </summary>
         private readonly RuntimeTypeModel _runtimeTypeModel;
-
-        /// <summary>
-        /// Holds the types of the objects to be deserialized.
-        /// </summary>
-        private readonly Type _blockHeaderType = typeof(BlockHeader);
+        private readonly Type _blockHeaderType = typeof(BlobHeader);
         private readonly Type _blobType = typeof(Blob);
         private readonly Type _primitiveBlockType = typeof(PrimitiveBlock);
         private readonly Type _headerBlockType = typeof(HeaderBlock);
@@ -50,7 +39,6 @@ namespace OsmSharp.Osm.PBF
         /// <summary>
         /// Creates a new PBF reader.
         /// </summary>
-        /// <param name="stream"></param>
         public PBFReader(Stream stream)
         {
             _stream = stream;
@@ -68,30 +56,6 @@ namespace OsmSharp.Osm.PBF
         public void Dispose()
         {
             _stream.Dispose();
-        }
-
-        /// <summary>
-        /// Reads PFB OSM data from a stream.
-        /// </summary>
-        /// <param name="consumer">The consumer to send the data to.</param>
-        public void ReadAll(IPBFPrimitiveBlockConsumer consumer)
-        {
-            // check parameters.
-            if (consumer == null)
-            {
-                throw new ArgumentNullException("consumer");
-            }
-
-            // start processing.
-            var block = this.MoveNext();
-            while (block != null)
-            {
-                // report the next block to the consumer.
-                consumer.ProcessPrimitiveBlock(block, false, false, false);
-
-                // move to the next block.
-                block = this.MoveNext();
-            }
         }
 
         /// <summary>
@@ -118,11 +82,11 @@ namespace OsmSharp.Osm.PBF
             // read next block.
             PrimitiveBlock block = null;
             int length;
-            bool not_found_but = true;
-            while (not_found_but)
+            bool notFoundBut = true;
+            while (notFoundBut)
             { // continue if there is still data but not a primitiveblock.
-                not_found_but = false; // not found.
-                if (Serializer.TryReadLengthPrefix(_stream, PrefixStyle.Fixed32, out length))
+                notFoundBut = false; // not found.
+                if (Serializer.TryReadLengthPrefix(_stream, PrefixStyle.Fixed32BigEndian, out length))
                 {
                     // TODO: remove some of the v1 specific code.
                     // TODO: this means also to use the built-in capped streams.
@@ -132,21 +96,19 @@ namespace OsmSharp.Osm.PBF
                     // I'm just being lazy and re-using something "close enough" here
                     // note that v2 has a big-endian option, but Fixed32 assumes little-endian - we
                     // actually need the other way around (network byte order):
-                    length = IntLittleEndianToBigEndian((uint)length);
+                    // length = IntLittleEndianToBigEndian((uint)length);
 
-                    BlockHeader header;
+                    BlobHeader header;
                     // again, v2 has capped-streams built in, but I'm deliberately
                     // limiting myself to v1 features
                     using (var tmp = new LimitedStream(_stream, length))
                     {
-                        header = _runtimeTypeModel.Deserialize(tmp, null, _blockHeaderType) as BlockHeader;
-                        // header = Serializer.Deserialize<BlockHeader>(tmp);
+                        header = _runtimeTypeModel.Deserialize(tmp, null, _blockHeaderType) as BlobHeader;
                     }
                     Blob blob;
                     using (var tmp = new LimitedStream(_stream, header.datasize))
                     {
                         blob = _runtimeTypeModel.Deserialize(tmp, null, _blobType) as Blob;
-                        // blob = Serializer.Deserialize<Blob>(tmp);
                     }
 
                     // construct the source stream, compressed or not.
@@ -164,14 +126,13 @@ namespace OsmSharp.Osm.PBF
                     // use the stream to read the block.
                     using (sourceStream)
                     {
-                        if (header.type == "OSMHeader")
+                        if (header.type == Encoder.OSMHeader)
                         {
                             _runtimeTypeModel.Deserialize(sourceStream, null, _headerBlockType);
-                            // Serializer.Deserialize<HeaderBlock>(source_stream);
-                            not_found_but = true;
+                            notFoundBut = true;
                         }
 
-                        if (header.type == "OSMData")
+                        if (header.type == Encoder.OSMData)
                         {
                             block = _runtimeTypeModel.Deserialize(sourceStream, _block, _primitiveBlockType) as PrimitiveBlock;
                         }
@@ -249,7 +210,7 @@ namespace OsmSharp.Osm.PBF
         }
     }
     class ZLibStreamWrapper : InputStream
-    { 
+    {
         private ZlibStream reader; 
         public ZLibStreamWrapper(Stream stream)
         {

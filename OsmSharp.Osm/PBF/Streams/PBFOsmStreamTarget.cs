@@ -1,63 +1,190 @@
-﻿//// OsmSharp - OpenStreetMap (OSM) SDK
-//// Copyright (C) 2013 Abelshausen Ben
-//// 
-//// This file is part of OsmSharp.
-//// 
-//// OsmSharp is free software: you can redistribute it and/or modify
-//// it under the terms of the GNU General Public License as published by
-//// the Free Software Foundation, either version 2 of the License, or
-//// (at your option) any later version.
-//// 
-//// OsmSharp is distributed in the hope that it will be useful,
-//// but WITHOUT ANY WARRANTY; without even the implied warranty of
-//// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-//// GNU General Public License for more details.
-//// 
-//// You should have received a copy of the GNU General Public License
-//// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-//using System;
-//using System.Collections.Generic;
-//using System.Collections.ObjectModel;
-//using System.Linq;
-//using System.Text;
-//using OsmSharp.Osm.Data.Core.Processor;
-//using OsmSharp.Osm;
-//using OsmSharp.Osm.Xml.v0_6;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2015 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-//namespace OsmSharp.Osm.PBF.Processor
-//{
-//    /// <summary>
-//    /// A PBF data processor target.
-//    /// 
-//    /// Osmosis supports this: https://github.com/openstreetmap/osmosis/blob/master/osmosis-pbf/src/main/java/crosby/binary/osmosis/OsmosisSerializer.java
-//    /// (code is in public domain)
-//    /// </summary>
-//    public class PBFDataProcessorTarget : DataProcessorTarget
-//    {
+using OsmSharp.Osm.Streams;
+using ProtoBuf.Meta;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-//        public override void Initialize()
-//        {
-//            throw new NotImplementedException();
-//        }
+namespace OsmSharp.Osm.PBF.Streams
+{
+    /// <summary>
+    /// A PBF stream target.
+    /// </summary>
+    public class PBFOsmStreamTarget : OsmStreamTarget
+    {
+        private readonly Stream _stream;
+        private readonly RuntimeTypeModel _runtimeTypeModel;
+        private readonly Type _blobHeaderType = typeof(BlobHeader);
+        private readonly Type _blobType = typeof(Blob);
+        private readonly Type _primitiveBlockType = typeof(PrimitiveBlock);
+        private readonly Type _headerBlockType = typeof(HeaderBlock);
+        private readonly bool _compress = false;
 
-//        public override void ApplyChange(SimpleChangeSet change)
-//        {
-//            throw new NotImplementedException();
-//        }
+        /// <summary>
+        /// Creates a new PBF stream target.
+        /// </summary>
+        public PBFOsmStreamTarget(Stream stream)
+        {
+            _stream = stream;
 
-//        public override void AddNode(SimpleNode node)
-//        {
-//            throw new NotImplementedException();
-//        }
+            _currentEntities = new List<Osm.OsmGeo>();
+            _block = new PrimitiveBlock();
+            _buffer = new MemoryStream();
 
-//        public override void AddWay(SimpleWay way)
-//        {
-//            throw new NotImplementedException();
-//        }
+            _runtimeTypeModel = RuntimeTypeModel.Create();
+            _runtimeTypeModel.Add(_blobHeaderType, true);
+            _runtimeTypeModel.Add(_blobType, true);
+            _runtimeTypeModel.Add(_primitiveBlockType, true);
+            _runtimeTypeModel.Add(_headerBlockType, true);
+        }
 
-//        public override void AddRelation(SimpleRelation relation)
-//        {
-//            throw new NotImplementedException();
-//        }
-//    }
-//}
+        private List<Osm.OsmGeo> _currentEntities;
+        private PrimitiveBlock _block;
+        private MemoryStream _buffer;
+
+        /// <summary>
+        /// Initializes this target.
+        /// </summary>
+        public override void Initialize()
+        {
+            _currentEntities.Clear();
+
+            // write the mandatory header.
+            _buffer.Seek(0, SeekOrigin.Begin);
+
+            // create header block.
+            var blockHeader = new HeaderBlock();
+            blockHeader.required_features.Add("OsmSchema-V0.6");
+            blockHeader.required_features.Add("DenseNodes");
+            _runtimeTypeModel.Serialize(_buffer, blockHeader);
+            var blockHeaderData = _buffer.ToArray();
+            _buffer.SetLength(0);
+
+            // create blob.
+            var blob = new Blob();
+            blob.raw = blockHeaderData;
+            _runtimeTypeModel.Serialize(_buffer, blob);
+
+            // create blobheader.
+            var blobHeader = new BlobHeader();
+            blobHeader.datasize = (int)_buffer.Length;
+            blobHeader.indexdata = null;
+            blobHeader.type = Encoder.OSMHeader;
+            _runtimeTypeModel.SerializeWithLengthPrefix(_stream, blobHeader, _blobHeaderType, ProtoBuf.PrefixStyle.Fixed32BigEndian, 0);
+
+            // flush to stream.
+            _buffer.Seek(0, SeekOrigin.Begin);
+            _buffer.CopyTo(_stream);
+        }
+
+        /// <summary>
+        /// Flushes the current block of data.
+        /// </summary>
+        private void FlushBlock()
+        {
+            if (_currentEntities.Count == 0) { return; }
+
+            // encode into block.
+            //_block = new PrimitiveBlock();
+            Encoder.Encode(_block, _currentEntities);
+            _currentEntities.Clear();
+
+            // serialize.
+            _buffer.SetLength(0);
+            _runtimeTypeModel.Serialize(_buffer, _block);
+            var blockBytes = _buffer.ToArray();
+            _buffer.SetLength(0);
+
+            if (_compress)
+            { // compress buffer.
+                throw new NotSupportedException();
+            }
+
+            // create blob.
+            var blob = new Blob();
+            blob.raw = blockBytes;
+            _runtimeTypeModel.Serialize(_buffer, blob);
+
+            // create blobheader.
+            var blobHeader = new BlobHeader();
+            blobHeader.datasize = (int)_buffer.Length;
+            blobHeader.indexdata = null;
+            blobHeader.type = Encoder.OSMData;
+            _runtimeTypeModel.SerializeWithLengthPrefix(_stream, blobHeader, _blobHeaderType, ProtoBuf.PrefixStyle.Fixed32BigEndian, 0);
+
+            // serialize to stream.
+            _buffer.Seek(0, SeekOrigin.Begin);
+            _buffer.CopyTo(_stream);
+        }
+
+        /// <summary>
+        /// Adds a node.
+        /// </summary>
+        public override void AddNode(Osm.Node node)
+        {
+            _currentEntities.Add(node);
+            if (_currentEntities.Count > 8000)
+            {
+                this.FlushBlock();
+            }
+        }
+
+        /// <summary>
+        /// Adds a way.
+        /// </summary>
+        public override void AddWay(Osm.Way way)
+        {
+            _currentEntities.Add(way);
+            if (_currentEntities.Count > 8000)
+            {
+                this.FlushBlock();
+            }
+        }
+
+        /// <summary>
+        /// Adds a relation.
+        /// </summary>
+        public override void AddRelation(Osm.Relation relation)
+        {
+            _currentEntities.Add(relation);
+            if (_currentEntities.Count > 8000)
+            {
+                this.FlushBlock();
+            }
+        }
+
+        /// <summary>
+        /// Flushes data in this stream.
+        /// </summary>
+        public override void Flush()
+        {
+            this.FlushBlock();
+            _stream.Flush();
+        }
+
+        /// <summary>
+        /// Closes this target.
+        /// </summary>
+        public override void Close()
+        {
+            this.Flush();
+        }
+    }
+}

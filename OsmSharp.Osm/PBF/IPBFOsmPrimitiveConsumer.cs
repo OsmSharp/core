@@ -21,7 +21,7 @@ namespace OsmSharp.Osm.PBF
     /// <summary>
     /// Consumers Osm PBF primitives.
     /// </summary>
-    internal interface IPBFOsmPrimitiveConsumer
+    public interface IPBFOsmPrimitiveConsumer
     {
         /// <summary>
         /// Processes the given node using the properties in the given block.

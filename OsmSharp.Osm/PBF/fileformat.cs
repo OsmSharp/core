@@ -90,12 +90,12 @@ namespace OsmSharp.Osm.PBF
   /// 
   /// </summary>
   [global::ProtoBuf.ProtoContract(Name=@"BlockHeader")]
-  public partial class BlockHeader : global::ProtoBuf.IExtensible
+  public partial class BlobHeader : global::ProtoBuf.IExtensible
   {
     /// <summary>
     /// 
     /// </summary>
-    public BlockHeader() {}
+    public BlobHeader() {}
     
     private string _type;
     /// <summary>

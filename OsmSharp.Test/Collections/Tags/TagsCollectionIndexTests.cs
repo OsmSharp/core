@@ -205,7 +205,6 @@ namespace OsmSharp.Test.Collections.Tags
         /// <summary>
         /// Serialize/deserialize index.
         /// </summary>
-        /// <param name="index"></param>
         /// <returns></returns>
         private TagsIndex SerializeDeserialize(TagsIndex index, bool copy)
         {

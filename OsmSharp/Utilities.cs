@@ -211,14 +211,18 @@ namespace OsmSharp
         }
 
         /// <summary>
+        /// 1/1/1970
+        /// </summary>
+        public static DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        /// <summary>
         /// Converts a number of milliseconds from 1/1/1970 into a standard DateTime.
         /// </summary>
         /// <param name="milliseconds"></param>
         /// <returns></returns>
         public static DateTime FromUnixTime(this long milliseconds)
         {
-            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            return epoch.AddMilliseconds(milliseconds);
+            return Epoch.AddMilliseconds(milliseconds);
         }
 
         /// <summary>
@@ -228,8 +232,7 @@ namespace OsmSharp
         /// <returns></returns>
         public static long ToUnixTime(this DateTime date)
         {
-            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            return Convert.ToInt64((date - epoch).TotalMilliseconds);
+            return Convert.ToInt64((date - Epoch).TotalMilliseconds);
         }
 
         /// <summary>

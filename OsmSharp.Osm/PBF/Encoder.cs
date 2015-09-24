@@ -308,6 +308,13 @@ namespace OsmSharp.Osm.PBF
         {
             if (value == null) { return 0; }
 
+            if (block.stringtable == null)
+            {
+                block.stringtable = new StringTable();
+                block.stringtable.s.Add(System.Text.Encoding.UTF8.GetBytes(string.Empty));
+                reverseStringTable.Add(string.Empty, 0);
+            }
+
             int id;
             if (reverseStringTable.TryGetValue(value, out id))
             {
@@ -315,12 +322,6 @@ namespace OsmSharp.Osm.PBF
             }
 
             var bytes = System.Text.Encoding.UTF8.GetBytes(value);
-            if(block.stringtable == null)
-            {
-                block.stringtable = new StringTable();
-                block.stringtable.s.Add(System.Text.Encoding.UTF8.GetBytes(string.Empty));
-                reverseStringTable.Add(string.Empty, 0);
-            }
             block.stringtable.s.Add(System.Text.Encoding.UTF8.GetBytes(value));
             reverseStringTable.Add(value, block.stringtable.s.Count - 1);
             return block.stringtable.s.Count - 1;

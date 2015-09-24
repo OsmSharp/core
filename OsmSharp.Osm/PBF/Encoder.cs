@@ -150,6 +150,13 @@ namespace OsmSharp.Osm.PBF
         {
             var groupIdx = 0;
             var i = 0;
+            var nodeCount = 0;
+
+            if(block.stringtable != null &&
+               block.stringtable.s != null)
+            {
+                block.stringtable.s.Clear();
+            }
             while(i < osmGeos.Count)
             {
                 PrimitiveGroup group = null;
@@ -176,7 +183,7 @@ namespace OsmSharp.Osm.PBF
                         if (group.dense.lon != null) { group.dense.lon.Clear(); }
                     }
                     if (group.changesets != null) { group.changesets.Clear(); }
-                    if (group.nodes != null) { group.nodes.Clear(); }
+                    //if (group.nodes != null) { group.nodes.Clear(); }
                     if (group.ways != null) { group.ways.Clear(); }
                     if (group.relations != null) { group.relations.Clear(); }
                 }
@@ -195,7 +202,15 @@ namespace OsmSharp.Osm.PBF
                     switch(groupType)
                     {
                         case OsmGeoType.Node:
-                            group.nodes.Add(Encoder.EncodeNode(block, reverseStringTable, osmGeos[i] as Osm.Node));
+                            if(group.nodes.Count > nodeCount)
+                            { // overwrite existing.
+                                Encoder.EncodeNode(block, reverseStringTable, group.nodes[nodeCount], osmGeos[i] as Osm.Node);
+                            }
+                            else
+                            { // write new.
+                                group.nodes.Add(Encoder.EncodeNode(block, reverseStringTable, osmGeos[i] as Osm.Node));
+                            }
+                            nodeCount++;
                             break;
                         case OsmGeoType.Way:
                             group.ways.Add(Encoder.EncodeWay(block, reverseStringTable, osmGeos[i] as Osm.Way));
@@ -205,6 +220,16 @@ namespace OsmSharp.Osm.PBF
                             break;
                     }
                     i++;
+                }
+
+
+                // remove obsolete nodes.
+                if(group.nodes != null)
+                {
+                    while (nodeCount < group.nodes.Count)
+                    {
+                        group.nodes.RemoveAt(nodeCount);
+                    }
                 }
 
                 // move to the next group.
@@ -308,14 +333,53 @@ namespace OsmSharp.Osm.PBF
         public static OsmSharp.Osm.PBF.Node EncodeNode(PrimitiveBlock block, Dictionary<string, int> reverseStringTable, Osm.Node node)
         {
             var pbfNode = new OsmSharp.Osm.PBF.Node();
+            Encoder.EncodeNode(block, reverseStringTable, pbfNode, node);
+            return pbfNode;
+        }
+
+        /// <summary>
+        /// Encodes an OsmSharp-node into a PBF-node.
+        /// </summary>
+        /// <returns></returns>
+        public static OsmSharp.Osm.PBF.Node EncodeNode(PrimitiveBlock block, Dictionary<string, int> reverseStringTable,
+            OsmSharp.Osm.PBF.Node pbfNode, Osm.Node node)
+        {
             pbfNode.id = node.Id.Value;
             pbfNode.info = new Info();
             pbfNode.info.version = 0;
-            if (node.ChangeSetId.HasValue) { pbfNode.info.changeset = node.ChangeSetId.Value; }
-            if (node.TimeStamp.HasValue) { pbfNode.info.timestamp = Encoder.EncodeTimestamp(node.TimeStamp.Value, block.date_granularity); }
-            if (node.UserId.HasValue) { pbfNode.info.uid = (int)node.UserId.Value; }
+            if (node.ChangeSetId.HasValue)
+            {
+                pbfNode.info.changeset = node.ChangeSetId.Value;
+            }
+            else
+            {
+                pbfNode.info.changeset = 0;
+            }
+            if (node.TimeStamp.HasValue)
+            {
+                pbfNode.info.timestamp = Encoder.EncodeTimestamp(node.TimeStamp.Value, block.date_granularity);
+            }
+            else
+            {
+                pbfNode.info.timestamp = 0;
+            }
+            if (node.UserId.HasValue)
+            {
+                pbfNode.info.uid = (int)node.UserId.Value;
+            }
+            else
+            {
+                pbfNode.info.uid = 0;
+            }
             pbfNode.info.user_sid = Encoder.EncodeString(block, reverseStringTable, node.UserName);
-            if (node.Version.HasValue) { pbfNode.info.version = (int)node.Version.Value; }
+            if (node.Version.HasValue)
+            {
+                pbfNode.info.version = (int)node.Version.Value;
+            }
+            else
+            {
+                pbfNode.info.version = 0;
+            }
             pbfNode.lat = Encoder.EncodeLatLon(node.Latitude.Value, block.lat_offset, block.granularity);
             pbfNode.lon = Encoder.EncodeLatLon(node.Longitude.Value, block.lon_offset, block.granularity);
 
@@ -326,6 +390,11 @@ namespace OsmSharp.Osm.PBF
                     pbfNode.keys.Add((uint)Encoder.EncodeString(block, reverseStringTable, tag.Key));
                     pbfNode.vals.Add((uint)Encoder.EncodeString(block, reverseStringTable, tag.Value));
                 }
+            }
+            else
+            {
+                pbfNode.keys.Clear();
+                pbfNode.vals.Clear();
             }
             return pbfNode;
         }

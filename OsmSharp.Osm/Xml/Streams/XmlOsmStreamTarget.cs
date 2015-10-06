@@ -16,13 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Tags;
+using OsmSharp.Osm.Streams;
 using System;
 using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Osm.Streams;
 
 namespace OsmSharp.Osm.Xml.Streams
 {
@@ -32,11 +32,8 @@ namespace OsmSharp.Osm.Xml.Streams
     public class XmlOsmStreamTarget : OsmStreamTarget, IDisposable
     {
         private Stream _stream;
-
         private StreamWriter _streamWriter;
-
         private XmlWriterSettings _settings;
-
         private readonly bool _disposeStream = false;
 
         /// <summary>
@@ -54,14 +51,20 @@ namespace OsmSharp.Osm.Xml.Streams
             _settings.Indent = true;
         }
 
+        private bool _initialized = false;
+
         /// <summary>
         /// Initializes this target.
         /// </summary>
         public override void Initialize()
         {
-            _streamWriter.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            _streamWriter.WriteLine("<osm version=\"0.6\" generator=\"OsmSharp\">");
-            _streamWriter.Flush();
+            if (!_initialized)
+            {
+                _streamWriter.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                _streamWriter.WriteLine("<osm version=\"0.6\" generator=\"OsmSharp\">");
+                _streamWriter.Flush();
+                _initialized = true;
+            }
         }
 
         /// <summary>
@@ -378,6 +381,8 @@ namespace OsmSharp.Osm.Xml.Streams
             return null;
         }
 
+        private bool _closed = false;
+
         /// <summary>
         /// Closes this target.
         /// </summary>
@@ -385,8 +390,12 @@ namespace OsmSharp.Osm.Xml.Streams
         {
             base.Close();
 
-            _streamWriter.WriteLine("</osm>");
-            _streamWriter.Flush();
+            if(!_closed)
+            {
+                _streamWriter.WriteLine("</osm>");
+                _streamWriter.Flush();
+                _closed = true;
+            }
         }
 
         /// <summary>

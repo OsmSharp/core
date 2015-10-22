@@ -741,19 +741,19 @@ namespace OsmSharp
         /// Shrinks and copies the matrix and removes rows/columns with indices in the toRemove set.
         /// </summary>
         /// <returns></returns>
-        public static double[][] SchrinkAndCopyMatrix(this double[][] matrix, HashSet<int> toRemove)
+        public static T[][] SchrinkAndCopyMatrix<T>(this T[][] matrix, HashSet<int> toRemove)
         {
-            var schrunk = new double[matrix.Length - toRemove.Count][];
+            var schrunk = new T[matrix.Length - toRemove.Count][];
             var schrunkX = 0;
             for (var x = 0; x < matrix.Length; x++)
             {
                 if (!toRemove.Contains(x))
                 { // keep this element.
                     var schrunkY = 0;
-                    schrunk[schrunkX] = new double[matrix.Length - toRemove.Count];
+                    schrunk[schrunkX] = new T[matrix.Length - toRemove.Count];
                     for (var y = 0; y < matrix[x].Length; y++)
                     {
-                        if(!toRemove.Contains(y))
+                        if (!toRemove.Contains(y))
                         { // keep this element.
                             schrunk[schrunkX][schrunkY] = matrix[x][y];
                             schrunkY++;

@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,10 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using OsmSharp.Osm;
-using System.Diagnostics;
 using OsmSharp.Logging;
+using System;
 
 namespace OsmSharp.Osm.Streams.Filters
 {
@@ -30,6 +28,9 @@ namespace OsmSharp.Osm.Streams.Filters
     {
         private OsmGeoType? _lastType = OsmGeoType.Node;
         private long _lastTypeStart;
+        private long _nodeInterval = 100000;
+        private long _wayInterval = 10000;
+        private long _relationInterval = 1000;
 
         private long _node;
         private long _nodeTicks;
@@ -38,13 +39,23 @@ namespace OsmSharp.Osm.Streams.Filters
         private long _relation;
         private long _relationTicks;
 
-
         /// <summary>
         /// Creates a new progress reporting source.
         /// </summary>
         public OsmStreamFilterProgress()
         {
 
+        }
+
+        /// <summary>
+        /// Creates a new progress reporting source.
+        /// </summary>
+        public OsmStreamFilterProgress(long nodesInterval, long waysInterval,
+            long relationInterval)
+        {
+            _nodeInterval = nodesInterval;
+            _wayInterval = waysInterval;
+            _relationInterval = relationInterval;
         }
 
         /// <summary>
@@ -124,10 +135,10 @@ namespace OsmSharp.Osm.Streams.Filters
                 case OsmGeoType.Node:
                     _node++;
 
-                    if ((_node % 10000) == 0)
+                    if ((_node % _nodeInterval) == 0)
                     {
-                        TimeSpan nodeSpan = new TimeSpan(_nodeTicks + (ticksStart - _lastTypeStart));
-                        double nodePerSecond = System.Math.Round((double)_node / nodeSpan.TotalSeconds, 2);
+                        var nodeSpan = new TimeSpan(_nodeTicks + (ticksStart - _lastTypeStart));
+                        var nodePerSecond = System.Math.Round((double)_node / nodeSpan.TotalSeconds, 2);
                         OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information,
                             "Node[{0}]: {1}nodes/s", _node, nodePerSecond);
                     }
@@ -135,10 +146,10 @@ namespace OsmSharp.Osm.Streams.Filters
                 case OsmGeoType.Relation:
                     _relation++;
 
-                    if ((_relation % 1000) == 0)
+                    if ((_relation % _relationInterval) == 0)
                     {
-                        TimeSpan relationSpan = new TimeSpan(_relationTicks + (ticksStart - _lastTypeStart));
-                        double relationPerSecond = System.Math.Round((double)_relation / relationSpan.TotalSeconds, 2);
+                        var relationSpan = new TimeSpan(_relationTicks + (ticksStart - _lastTypeStart));
+                        var relationPerSecond = System.Math.Round((double)_relation / relationSpan.TotalSeconds, 2);
                         OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information, 
                             "Relation[{0}]: {1}relations/s", _relation, relationPerSecond);
                     }
@@ -146,10 +157,10 @@ namespace OsmSharp.Osm.Streams.Filters
                 case OsmGeoType.Way:
                     _way++;
 
-                    if ((_way % 10000) == 0)
+                    if ((_way % _wayInterval) == 0)
                     {
-                        TimeSpan waySpan = new TimeSpan(_wayTicks + (ticksStart - _lastTypeStart));
-                        double wayPerSecond = System.Math.Round((double)_way / waySpan.TotalSeconds, 2);
+                        var waySpan = new TimeSpan(_wayTicks + (ticksStart - _lastTypeStart));
+                        var wayPerSecond = System.Math.Round((double)_way / waySpan.TotalSeconds, 2);
                         OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information,
                             "Way[{0}]: {1}ways/s", _way, wayPerSecond);
                     }

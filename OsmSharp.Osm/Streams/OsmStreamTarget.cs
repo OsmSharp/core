@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Tags;
 using OsmSharp.Osm;
 
 namespace OsmSharp.Osm.Streams
@@ -25,6 +26,8 @@ namespace OsmSharp.Osm.Streams
     /// </summary>
     public abstract class OsmStreamTarget
     {
+        private readonly TagsCollectionBase _meta;
+
         /// <summary>
         /// Holds the source for this target.
         /// </summary>
@@ -35,7 +38,7 @@ namespace OsmSharp.Osm.Streams
         /// </summary>
         protected OsmStreamTarget()
         {
-
+            _meta = new TagsCollection();
         }
 
         /// <summary>
@@ -171,6 +174,28 @@ namespace OsmSharp.Osm.Streams
         public virtual void OnAfterPull()
         {
 
+        }
+
+        /// <summary>
+        /// Gets the meta-data.
+        /// </summary>
+        public TagsCollectionBase Meta
+        {
+            get
+            {
+                return _meta;
+            }
+        }
+
+        /// <summary>
+        /// Gets all meta-data from all sources and filters that provide this target of data.
+        /// </summary>
+        /// <returns></returns>
+        public TagsCollection GetAllMeta()
+        {
+            var tags = this.Source.GetAllMeta();
+            tags.AddOrReplace(new TagsCollection(_meta));
+            return tags;
         }
 
         /// <summary>

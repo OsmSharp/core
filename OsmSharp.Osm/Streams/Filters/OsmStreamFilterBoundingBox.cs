@@ -81,11 +81,14 @@ namespace OsmSharp.Osm.Streams.Filters
         /// <summary>
         /// Creates a new bounding box filter.
         /// </summary>
-        /// <param name="box"></param>
         public OsmStreamFilterBoundingBox(GeoCoordinateBox box)
             : base()
         {
+            if (box == null) { throw new ArgumentNullException("box"); }
+
             _box = box;
+
+            this.Meta.Add("bbox", _box.ToInvariantString());
         }
 
         /// <summary>

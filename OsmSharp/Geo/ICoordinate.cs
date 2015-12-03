@@ -16,40 +16,21 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp.Collections.Tags.Index
+namespace OsmSharp.Geo
 {
     /// <summary>
-    /// Abstracts an index containing tags.
+    /// Represents a coordinate.
     /// </summary>
-    public interface ITagsIndex
+    public interface ICoordinate
     {
         /// <summary>
-        /// Returns true if this collection is readonly.
+        /// Holds the latitude.
         /// </summary>
-        bool IsReadonly
-        {
-            get;
-        }
+        float Latitude { get; }
 
         /// <summary>
-        /// Returns the tags that belong to the given id.
+        /// Holds the longitude.
         /// </summary>
-        /// <param name="tagsId"></param>
-        /// <returns></returns>
-        TagsCollectionBase Get(uint tagsId);
-
-        /// <summary>
-        /// Adds new tags.
-        /// </summary>
-        /// <param name="tags"></param>
-        /// <returns></returns>
-        uint Add(TagsCollectionBase tags);
-
-        /// <summary>
-        /// Serializes this tags index to the given stream.
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-        long Serialize(System.IO.Stream stream);
+        float Longitude { get; }
     }
 }

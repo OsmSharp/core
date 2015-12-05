@@ -54,7 +54,11 @@ namespace OsmSharp.Collections.Tags
         /// </summary>
         public TagsCollection(params Tag[] tags)
         {
-            _tags = new List<Tag>(tags);
+            _tags = new List<Tag>();
+            if (tags != null)
+            { // allow null.
+                _tags.AddRange(tags);
+            }
         }
 
         /// <summary>
@@ -64,7 +68,10 @@ namespace OsmSharp.Collections.Tags
         public TagsCollection(IEnumerable<Tag> tags)
         {
             _tags = new List<Tag>();
-            _tags.AddRange(tags);
+            if (tags != null)
+            { // allow null.
+                _tags.AddRange(tags);
+            }
         }
 
         /// <summary>
@@ -74,8 +81,8 @@ namespace OsmSharp.Collections.Tags
         public TagsCollection(IDictionary<string, string> tags)
         {
             _tags = new List<Tag>();
-            if(tags != null)
-            {
+            if (tags != null)
+            { // allow null.
                 foreach(KeyValuePair<string, string> pair in tags)
                 {
                     _tags.Add(new Tag(pair.Key, pair.Value));

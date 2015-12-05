@@ -18,6 +18,7 @@
 
 using OsmSharp.Collections.LongIndex.LongIndex;
 using OsmSharp.Math.Geo;
+using System;
 using System.Collections.Generic;
 
 namespace OsmSharp.Osm.Streams.Filters
@@ -38,8 +39,12 @@ namespace OsmSharp.Osm.Streams.Filters
         public OsmStreamFilterPoly(OsmSharp.Geo.Geometries.LineairRing poly)
             : base()
         {
+            if (poly == null) { throw new ArgumentNullException("poly"); }
+
             _poly = poly;
             _box = new GeoCoordinateBox(poly.Coordinates);
+
+            this.Meta.Add("poly", OsmSharp.Geo.Streams.GeoJson.GeoJsonConverter.ToGeoJson(_poly));
         }
 
         private OsmGeoType _currentType = OsmGeoType.Node;

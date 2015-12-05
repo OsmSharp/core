@@ -185,5 +185,25 @@ namespace OsmSharp.Test.Osm.Streams.Filters
             Assert.AreEqual(1, list[2].Id);
             Assert.AreEqual(OsmGeoType.Relation, list[2].Type);
         }
+
+        /// <summary>
+        /// Tests gettig meta-data.
+        /// </summary>
+        [Test]
+        public void TestGetMetaData()
+        {
+            var ring = new LineairRing(new GeoCoordinate(0, -1), new GeoCoordinate(1, 1),
+                new GeoCoordinate(-1, 1), new GeoCoordinate(0, -1));
+
+            var source = (new OsmGeo[0]).ToOsmStreamSource();
+            source.Meta.Add("source", "enumeration");
+            var filter = new OsmStreamFilterPoly(ring);
+            filter.RegisterSource(source);
+
+            var meta = filter.GetAllMeta();
+
+            Assert.IsTrue(meta.ContainsKeyValue("source", "enumeration"));
+            Assert.IsTrue(meta.ContainsKeyValue("poly", OsmSharp.Geo.Streams.GeoJson.GeoJsonConverter.ToGeoJson(ring)));
+        }
     }
 }

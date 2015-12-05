@@ -16,10 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using OsmSharp.Osm;
-using System.Collections;
 using OsmSharp.Collections.Tags;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace OsmSharp.Osm.Streams
 {

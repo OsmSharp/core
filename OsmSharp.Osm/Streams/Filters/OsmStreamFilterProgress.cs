@@ -32,6 +32,7 @@ namespace OsmSharp.Osm.Streams.Filters
         private long _wayInterval = 10000;
         private long _relationInterval = 1000;
 
+        private int _pass;
         private long _node;
         private long _nodeTicks;
         private long _way;
@@ -44,7 +45,7 @@ namespace OsmSharp.Osm.Streams.Filters
         /// </summary>
         public OsmStreamFilterProgress()
         {
-
+            _pass = 1;
         }
 
         /// <summary>
@@ -138,9 +139,9 @@ namespace OsmSharp.Osm.Streams.Filters
                     if ((_node % _nodeInterval) == 0)
                     {
                         var nodeSpan = new TimeSpan(_nodeTicks + (ticksStart - _lastTypeStart));
-                        var nodePerSecond = System.Math.Round((double)_node / nodeSpan.TotalSeconds, 2);
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information,
-                            "Node[{0}]: {1}nodes/s", _node, nodePerSecond);
+                        var nodePerSecond = System.Math.Round((double)_node / nodeSpan.TotalSeconds, 0);
+                        OsmSharp.Logging.Log.TraceEvent("StreamProgress", TraceEventType.Information,
+                            "Pass {2} - Node[{0}] @ {1}/s", _node, nodePerSecond, _pass);
                     }
                     break;
                 case OsmGeoType.Relation:
@@ -150,8 +151,8 @@ namespace OsmSharp.Osm.Streams.Filters
                     {
                         var relationSpan = new TimeSpan(_relationTicks + (ticksStart - _lastTypeStart));
                         var relationPerSecond = System.Math.Round((double)_relation / relationSpan.TotalSeconds, 2);
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information, 
-                            "Relation[{0}]: {1}relations/s", _relation, relationPerSecond);
+                        OsmSharp.Logging.Log.TraceEvent("StreamProgress", TraceEventType.Information,
+                            "Pass {2} - Relation[{0}] @ {1}/s", _relation, relationPerSecond, _pass);
                     }
                     break;
                 case OsmGeoType.Way:
@@ -161,8 +162,8 @@ namespace OsmSharp.Osm.Streams.Filters
                     {
                         var waySpan = new TimeSpan(_wayTicks + (ticksStart - _lastTypeStart));
                         var wayPerSecond = System.Math.Round((double)_way / waySpan.TotalSeconds, 2);
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information,
-                            "Way[{0}]: {1}ways/s", _way, wayPerSecond);
+                        OsmSharp.Logging.Log.TraceEvent("StreamProgress", TraceEventType.Information,
+                            "Pass {2} - Way[{0}] @ {1}/s", _way, wayPerSecond, _pass);
                     }
                     break;
             }
@@ -178,6 +179,7 @@ namespace OsmSharp.Osm.Streams.Filters
             _lastTypeStart = 0;
             _lastType = null;
 
+            _pass++;
             _node = 0;
             _nodeTicks = 0;
             _way = 0;

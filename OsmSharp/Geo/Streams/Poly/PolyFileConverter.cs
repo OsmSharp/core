@@ -85,17 +85,17 @@ namespace OsmSharp.Geo.Streams.Poly
         private static LineairRing ReadRing(TextReader reader)
         {
             var first = reader.ReadLine();
-            if(first == null || END_TOKEN.Equals(first))
+            if (first == null || END_TOKEN.Equals(first))
             { // there is no ring here.
                 return null;
             }
             var ringCoordinates = new List<GeoCoordinate>();
             var line = reader.ReadLine();
-            while(line != null && !END_TOKEN.Equals(line))
+            while (line != null && !END_TOKEN.Equals(line))
             {
                 var coordinates = line.Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
                 double x, y;
-                if(!double.TryParse(coordinates[0], NumberStyles.Any, CultureInfo.InvariantCulture, out x) ||
+                if (!double.TryParse(coordinates[0], NumberStyles.Any, CultureInfo.InvariantCulture, out x) ||
                    !double.TryParse(coordinates[1], NumberStyles.Any, CultureInfo.InvariantCulture, out y))
                 {
                     throw new Exception("Could not parse coordinates in poly.");
@@ -103,7 +103,7 @@ namespace OsmSharp.Geo.Streams.Poly
                 ringCoordinates.Add(new GeoCoordinate(y, x));
                 line = reader.ReadLine();
             }
-            if(ringCoordinates.Count < 3)
+            if (ringCoordinates.Count < 3)
             {
                 throw new Exception("Could not parse poly, a minimum of three coordinates are required.");
             }
@@ -111,7 +111,7 @@ namespace OsmSharp.Geo.Streams.Poly
             { // detect centroid and discard it.
                 ringCoordinates.RemoveAt(0);
             }
-            else if(ringCoordinates[0] != ringCoordinates[ringCoordinates.Count - 1])
+            else if (ringCoordinates[0] != ringCoordinates[ringCoordinates.Count - 1])
             { // make sure the ring is closed.
                 ringCoordinates.Add(ringCoordinates[0]);
             }

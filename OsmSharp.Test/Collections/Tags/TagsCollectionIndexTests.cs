@@ -50,10 +50,10 @@ namespace OsmSharp.Test.Collections.Tags
         }
 
         /// <summary>
-        /// Tests a simple tag serialization.
+        /// Tests a tag index serialization.
         /// </summary>
         [Test]
-        public void TestTagIndexSerializaton()
+        public void TestTagIndexSerialization()
         {
             // set the seed manually.
             OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
@@ -88,7 +88,52 @@ namespace OsmSharp.Test.Collections.Tags
             }
 
             // serialize/deserialize.
-            var deserializedTagsIndex = this.SerializeDeserialize(tagsIndex);
+            var deserializedTagsIndex = this.SerializeDeserialize(tagsIndex, false);
+
+            // verify if what was added is still there.
+            this.TestTagIndexContent(deserializedTagsIndex, addedTags);
+        }
+
+        /// <summary>
+        /// Tests a tag index serialization with copy.
+        /// </summary>
+        [Test]
+        public void TestTagIndexSerializationWithCopy()
+        {
+            // set the seed manually.
+            OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
+
+            // build a tags index and keep what was added.
+            var tagsIndex = new TagsIndex(new MemoryMappedStream(new MemoryStream()));
+            var addedTags = new List<KeyValuePair<uint, TagsCollectionBase>>();
+            for (int i = 0; i < 100; i++)
+            {
+                var tagsCollection = new TagsCollection();
+                var tagCollectionSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(3) + 1;
+                for (int idx = 0; idx < tagCollectionSize; idx++)
+                {
+                    var tagValue = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(3);
+                    tagsCollection.Add(
+                        string.Format("key_{0}", tagValue),
+                        string.Format("value_{0}", tagValue));
+                }
+                var addCount = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(2) + 1;
+                for (int idx = 0; idx < addCount; idx++)
+                {
+                    var tagsId = tagsIndex.Add(tagsCollection);
+                    addedTags.Add(new KeyValuePair<uint, TagsCollectionBase>(tagsId, tagsCollection));
+
+                    var indexTags = tagsIndex.Get(tagsId);
+                    Assert.AreEqual(tagsCollection.Count, indexTags.Count);
+                    foreach (var tag in tagsCollection)
+                    {
+                        Assert.IsTrue(indexTags.ContainsKeyValue(tag.Key, tag.Value));
+                    }
+                }
+            }
+
+            // serialize/deserialize.
+            var deserializedTagsIndex = this.SerializeDeserialize(tagsIndex, true);
 
             // verify if what was added is still there.
             this.TestTagIndexContent(deserializedTagsIndex, addedTags);
@@ -160,14 +205,13 @@ namespace OsmSharp.Test.Collections.Tags
         /// <summary>
         /// Serialize/deserialize index.
         /// </summary>
-        /// <param name="index"></param>
         /// <returns></returns>
-        private TagsIndex SerializeDeserialize(TagsIndex index)
+        private TagsIndex SerializeDeserialize(TagsIndex index, bool copy)
         {
             var stream = new MemoryStream();
             index.Serialize(stream);
             stream.Seek(0, SeekOrigin.Begin);
-            return TagsIndex.Deserialize(stream);
+            return TagsIndex.Deserialize(stream, copy);
         }
     }
 }

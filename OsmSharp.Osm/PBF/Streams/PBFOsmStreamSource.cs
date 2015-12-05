@@ -16,12 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+using OsmSharp.Osm.Streams;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Osm.Streams;
 
 namespace OsmSharp.Osm.PBF.Streams
 {
@@ -30,15 +27,11 @@ namespace OsmSharp.Osm.PBF.Streams
     /// </summary>
     public class PBFOsmStreamSource : OsmStreamSource, IPBFOsmPrimitiveConsumer
     {
-        /// <summary>
-        /// Holds the source of the data.
-        /// </summary>
         private readonly Stream _stream;
 
         /// <summary>
         /// Creates a new source of PBF formated OSM data.
         /// </summary>
-        /// <param name="stream"></param>
         public PBFOsmStreamSource(Stream stream)
         {
             _stream = stream;
@@ -69,19 +62,19 @@ namespace OsmSharp.Osm.PBF.Streams
                 OsmSharp.Osm.PBF.Node node = (nextPBFPrimitive.Value as OsmSharp.Osm.PBF.Node);
                 if(node != null && !ignoreNodes)
                 { // next primitve is a node.
-                    _current = this.ConvertNode(nextPBFPrimitive.Key, node);
+                    _current = Encoder.DecodeNode(nextPBFPrimitive.Key, node);
                     return true;
                 }
                 OsmSharp.Osm.PBF.Way way = (nextPBFPrimitive.Value as OsmSharp.Osm.PBF.Way);
                 if(way != null && !ignoreWays)
                 { // next primitive is a way.
-                    _current = this.ConvertWay(nextPBFPrimitive.Key, way);
+                    _current = Encoder.DecodeWay(nextPBFPrimitive.Key, way);
                     return true;
                 }
                 OsmSharp.Osm.PBF.Relation relation = (nextPBFPrimitive.Value as OsmSharp.Osm.PBF.Relation);
                 if (relation != null && !ignoreRelations)
                 { // next primitive is a relation.
-                    _current = this.ConvertRelation(nextPBFPrimitive.Key, relation);
+                    _current = Encoder.DecodeRelation(nextPBFPrimitive.Key, relation);
                     return true;
                 }
                 nextPBFPrimitive = this.MoveToNextPrimitive(ignoreNodes, ignoreWays, ignoreRelations);
@@ -124,153 +117,6 @@ namespace OsmSharp.Osm.PBF.Streams
             }
         }
 
-        #region Primitive Conversion
-
-        /// <summary>
-        /// Converts the PBF node into an OsmSharp-node.
-        /// </summary>
-        /// <param name="block"></param>
-        /// <param name="node"></param>
-        /// <returns></returns>
-        internal OsmSharp.Osm.Node ConvertNode(PrimitiveBlock block, OsmSharp.Osm.PBF.Node node)
-        {
-            var simpleNode = new OsmSharp.Osm.Node();
-            simpleNode.ChangeSetId = node.info.changeset;
-            simpleNode.Id = node.id;
-            simpleNode.Latitude = .000000001 * ((double)block.lat_offset
-                + ((double)block.granularity * (double)node.lat));
-            simpleNode.Longitude = .000000001 * ((double)block.lon_offset
-                + ((double)block.granularity * (double)node.lon));
-            simpleNode.Tags = new TagsCollection(node.keys.Count);
-            if (node.keys.Count > 0)
-            {
-                for (int tag_idx = 0; tag_idx < node.keys.Count; tag_idx++)
-                {
-                    string key = Encoding.UTF8.GetString(block.stringtable.s[(int)node.keys[tag_idx]]);
-                    string value = Encoding.UTF8.GetString(block.stringtable.s[(int)node.vals[tag_idx]]);
-
-                    simpleNode.Tags.Add(new Tag() { Key = key, Value = value });
-                }
-            }
-            simpleNode.TimeStamp = Utilities.FromUnixTime((long)node.info.timestamp *
-                (long)block.date_granularity);
-            simpleNode.Visible = true;
-            simpleNode.Version = (uint)node.info.version;
-            simpleNode.UserId = node.info.uid;
-            simpleNode.UserName = Encoding.UTF8.GetString(block.stringtable.s[node.info.user_sid]);
-            simpleNode.Version = (ulong)node.info.version;
-            simpleNode.Visible = true;
-
-            return simpleNode;
-        }
-
-        /// <summary>
-        /// Converts a PBF way into an OsmSharp-way.
-        /// </summary>
-        /// <param name="block"></param>
-        /// <param name="way"></param>
-        /// <returns></returns>
-        internal OsmSharp.Osm.Way ConvertWay(PrimitiveBlock block, OsmSharp.Osm.PBF.Way way)
-        {
-            var simpleWay = new OsmSharp.Osm.Way();
-            simpleWay.Id = way.id;
-            simpleWay.Nodes = new List<long>(way.refs.Count);
-            long node_id = 0;
-            for (int node_idx = 0; node_idx < way.refs.Count; node_idx++)
-            {
-                node_id = node_id + way.refs[node_idx];
-                simpleWay.Nodes.Add(node_id);
-            }
-            simpleWay.Tags = new TagsCollection(way.keys.Count);
-            if (way.keys.Count > 0)
-            {
-                for (int tag_idx = 0; tag_idx < way.keys.Count; tag_idx++)
-                {
-                    string key = Encoding.UTF8.GetString(block.stringtable.s[(int)way.keys[tag_idx]]);
-                    string value = Encoding.UTF8.GetString(block.stringtable.s[(int)way.vals[tag_idx]]);
-
-                    simpleWay.Tags.Add(new Tag(key, value));
-                }
-            }
-            if (way.info != null)
-            { // add the metadata if any.
-                simpleWay.ChangeSetId = way.info.changeset;
-                simpleWay.TimeStamp = Utilities.FromUnixTime((long)way.info.timestamp *
-                    (long)block.date_granularity);
-                simpleWay.UserId = way.info.uid;
-                simpleWay.UserName = Encoding.UTF8.GetString(block.stringtable.s[way.info.user_sid]);
-                simpleWay.Version = (ulong)way.info.version;
-            }
-            simpleWay.Visible = true;
-
-            return simpleWay;
-        }
-        
-        /// <summary>
-        /// Converts a PBF way into an OsmSharp-relation.
-        /// </summary>
-        /// <param name="block"></param>
-        /// <param name="relation"></param>
-        /// <returns></returns>
-        internal OsmSharp.Osm.Relation ConvertRelation(PrimitiveBlock block, OsmSharp.Osm.PBF.Relation relation)
-        {
-            var simpleRelation = new OsmSharp.Osm.Relation();
-            simpleRelation.Id = relation.id;
-            if (relation.types.Count > 0)
-            {
-                simpleRelation.Members = new List<OsmSharp.Osm.RelationMember>();
-                long member_id = 0;
-                for (int member_idx = 0; member_idx < relation.types.Count; member_idx++)
-                {
-                    member_id = member_id + relation.memids[member_idx];
-                    string role = Encoding.UTF8.GetString(
-                        block.stringtable.s[relation.roles_sid[member_idx]]);
-                    var member = new OsmSharp.Osm.RelationMember();
-                    member.MemberId = member_id;
-                    member.MemberRole = role;
-                    switch (relation.types[member_idx])
-                    {
-                        case Relation.MemberType.NODE:
-                            member.MemberType = OsmSharp.Osm.OsmGeoType.Node;
-                            break;
-                        case Relation.MemberType.WAY:
-                            member.MemberType = OsmSharp.Osm.OsmGeoType.Way;
-                            break;
-                        case Relation.MemberType.RELATION:
-                            member.MemberType = OsmSharp.Osm.OsmGeoType.Relation;
-                            break;
-                    }
-
-                    simpleRelation.Members.Add(member);
-                }
-            }
-            simpleRelation.Tags = new TagsCollection(relation.keys.Count);
-            if (relation.keys.Count > 0)
-            {
-                for (int tag_idx = 0; tag_idx < relation.keys.Count; tag_idx++)
-                {
-                    string key = Encoding.UTF8.GetString(block.stringtable.s[(int)relation.keys[tag_idx]]);
-                    string value = Encoding.UTF8.GetString(block.stringtable.s[(int)relation.vals[tag_idx]]);
-
-                    simpleRelation.Tags.Add(new Tag(key, value));
-                }
-            }
-            if (relation.info != null)
-            { // read metadata if any.
-                simpleRelation.ChangeSetId = relation.info.changeset;
-                simpleRelation.TimeStamp = Utilities.FromUnixTime((long)relation.info.timestamp *
-                    (long)block.date_granularity);
-                simpleRelation.UserId = relation.info.uid;
-                simpleRelation.UserName = Encoding.UTF8.GetString(block.stringtable.s[relation.info.user_sid]);
-                simpleRelation.Version = (ulong)relation.info.version;
-            }
-            simpleRelation.Visible = true;
-
-            return simpleRelation;
-        }
-
-        #endregion
-
         #region PBF Blocks Reader
 
         /// <summary>
@@ -279,17 +125,11 @@ namespace OsmSharp.Osm.PBF.Streams
         private PBFReader _reader;
 
         /// <summary>
-        /// Holds the primitives decompressor.
-        /// </summary>
-        private OsmSharp.Osm.PBF.Dense.Decompressor _decompressor;
-
-        /// <summary>
         /// Initializes the PBF reader.
         /// </summary>
         private void InitializePBFReader()
         {
             _reader = new PBFReader(_stream);
-            _decompressor = new OsmSharp.Osm.PBF.Dense.Decompressor(this);
 
             this.InitializeBlockCache();
         }
@@ -304,7 +144,7 @@ namespace OsmSharp.Osm.PBF.Streams
             if (next.Value == null)
             {
                 var block = _reader.MoveNext();
-                while (block != null && !_decompressor.ProcessPrimitiveBlock(block, ignoreNodes, ignoreWays, ignoreRelations))
+                while (block != null && !PBF.Encoder.Decode(block, this, ignoreNodes, ignoreWays, ignoreRelations))
                 {
                     block = _reader.MoveNext();
                 }

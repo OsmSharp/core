@@ -18,7 +18,6 @@
 
 using OsmSharp.Collections.Tags;
 using OsmSharp.Geo.Features;
-using OsmSharp.Geo.Geometries;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Geo.Interpreter;
 

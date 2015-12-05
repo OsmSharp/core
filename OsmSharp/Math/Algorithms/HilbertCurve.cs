@@ -34,9 +34,9 @@ namespace OsmSharp.Math.Algorithms
         public static long HilbertDistance(float latitude, float longitude, long n)
         {
             // calculate x, y.
-            var x = (long)System.Math.Floor(((longitude + 180) / 360.0) * n);
+            var x = (long)((((double)longitude + 180.0) / 360.0) * n);
             if (x >= n) { x = n - 1; }
-            var y = (long)System.Math.Floor(((latitude + 90) / 180.0) * n);
+            var y = (long)((((double)latitude + 90.0) / 180.0) * n);
             if (y >= n) { y = n - 1; }
 
             // calculate hilbert value for x-y and n.

@@ -18,6 +18,7 @@
 
 using OsmSharp.Collections;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace OsmSharp.Test.Collections
 {
@@ -69,6 +70,24 @@ namespace OsmSharp.Test.Collections
 
             Assert.AreEqual(0, hugeDictionary.Count);
             Assert.AreEqual(1, hugeDictionary.CountDictionaries);
+        }
+        /// <summary>
+        /// Tests a huge dictionary.
+        /// </summary>
+        [Test]
+        public void TestHugeDictionaryEnumeration()
+        {
+            // create the huge dictionary.
+            var hugeDictionary = new HugeDictionary<long, long>(100);
+
+            for (long idx = 0; idx < 1000; idx++)
+            {
+                hugeDictionary.Add(idx, idx);
+            }
+
+            var items = new List<KeyValuePair<long, long>>(
+                hugeDictionary);
+            Assert.AreEqual(hugeDictionary.Count, items.Count);
         }
     }
 }

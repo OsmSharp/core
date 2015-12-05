@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Tags;
 using OsmSharp.Osm;
 using System.Collections.Generic;
 
@@ -66,6 +67,17 @@ namespace OsmSharp.Osm.Streams
             {
                 return _source;
             }
+        }
+
+        /// <summary>
+        /// Gets all meta-data from all sources and filters that provide this filter of data.
+        /// </summary>
+        /// <returns></returns>
+        public override TagsCollection GetAllMeta()
+        {
+            var tags = this.Source.GetAllMeta();
+            tags.AddOrReplace(new TagsCollection(this.Meta));
+            return tags;
         }
 
         /// <summary>

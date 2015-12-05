@@ -20,6 +20,7 @@ using OsmSharp.IO;
 using OsmSharp.IO.MemoryMappedFiles;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace OsmSharp.Collections.Indexes.MemoryMapped
 {
@@ -297,20 +298,29 @@ namespace OsmSharp.Collections.Indexes.MemoryMapped
         /// <summary>
         /// Deserializes an index from the given stream.
         /// </summary>
-        /// <param name="stream">The stream to read from. Reading will start at position 0.</param>
-        /// <param name="readFrom"></param>
-        /// <param name="writeTo"></param>
-        /// <param name="copy">Flag to make an in-memory copy.</param>
-        /// <param name="size">The total size in bytes of the deserialized data.</param>
         /// <returns></returns>
         public static MemoryMappedIndex<T> Deserialize(System.IO.Stream stream, MemoryMappedFile.ReadFromDelegate<T> readFrom,
             MemoryMappedFile.WriteToDelegate<T> writeTo, bool copy, out long size)
         {
-            if (copy) { throw new NotSupportedException("Deserializing a memory mapped index with copy option is not supported."); }
             stream.Seek(0, System.IO.SeekOrigin.Begin);
             var longBytes = new byte[8];
             stream.Read(longBytes, 0, 8);
             size = BitConverter.ToInt64(longBytes, 0) + 8;
+
+            if(copy)
+            {
+                var bytes = (int)size - 8;
+                var memoryStream = new MemoryStream(bytes);
+                var buffer = new byte[32768];
+                int read;
+                while ((read = stream.Read(buffer, 0, System.Math.Min(buffer.Length, bytes))) > 0)
+                {
+                    memoryStream.Write(buffer, 0, read);
+                    bytes -= read;
+                }
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                stream = memoryStream;
+            }
 
             var file = new MemoryMappedStream(new LimitedStream(stream));
             return new MemoryMappedIndex<T>(file, readFrom, writeTo, size - 8);

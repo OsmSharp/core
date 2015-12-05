@@ -521,15 +521,16 @@ namespace OsmSharp.Collections.Tags.Index
         /// <summary>
         /// Deserializes a tags index from the given stream.
         /// </summary>
-        /// <param name="stream"></param>
         /// <returns></returns>
-        public static TagsIndex Deserialize(System.IO.Stream stream)
+        public static TagsIndex Deserialize(System.IO.Stream stream, bool copy = false)
         {
             long size;
-            var tagsIndex = MemoryMappedIndex<int[]>.Deserialize(stream, MemoryMappedDelegates.ReadFromIntArray, MemoryMappedDelegates.WriteToIntArray, false, out size);
+            var tagsIndex = MemoryMappedIndex<int[]>.Deserialize(stream,
+                MemoryMappedDelegates.ReadFromIntArray, MemoryMappedDelegates.WriteToIntArray, copy, out size);
             stream.Seek(size, System.IO.SeekOrigin.Begin);
             var limitedStream = new LimitedStream(stream);
-            var stringIndex = MemoryMappedIndex<string>.Deserialize(limitedStream, MemoryMappedDelegates.ReadFromString, MemoryMappedDelegates.WriteToString, false);
+            var stringIndex = MemoryMappedIndex<string>.Deserialize(limitedStream,
+                MemoryMappedDelegates.ReadFromString, MemoryMappedDelegates.WriteToString, copy);
 
             return new TagsIndex(stringIndex, tagsIndex);
         }

@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -24,10 +24,10 @@ using OsmSharp.Osm.PBF.Streams;
 namespace OsmSharp.Test.Osm.PBF.Streams
 {
     /// <summary>
-    /// Contains tests for the PBF osm streams.
+    /// Contains tests for the PBF osm stream source.
     /// </summary>
     [TestFixture]
-    public class PBFOsmStreamsTests
+    class PBFOsmStreamSourceTests
     {
         /// <summary>
         /// A regression test on resetting a PBF osm stream.

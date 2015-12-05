@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace OsmSharp.Collections
@@ -31,18 +32,25 @@ namespace OsmSharp.Collections
         /// <summary>
         /// Holds the list of internal dictionaries.
         /// </summary>
-        private List<IDictionary<TKey, TValue>> _dictionary;
-
-        /// <summary>
-        /// Holds the maximum size of one individual dictionary.
-        /// </summary>
-        private const int _MAX_DIC_SIZE = 1000000;
+        private readonly List<IDictionary<TKey, TValue>> _dictionary;
+        private readonly int _maxDictionarySize = 1000000;
 
         /// <summary>
         /// Creates a new huge dictionary.
         /// </summary>
         public HugeDictionary()
         {
+            _dictionary = new List<IDictionary<TKey, TValue>>();
+            _dictionary.Add(new Dictionary<TKey, TValue>());
+        }
+
+        /// <summary>
+        /// Creates a new huge dictionary.
+        /// </summary>
+        public HugeDictionary(int maxDictionarySize)
+        {
+            _maxDictionarySize = maxDictionarySize;
+
             _dictionary = new List<IDictionary<TKey, TValue>>();
             _dictionary.Add(new Dictionary<TKey, TValue>());
         }
@@ -61,7 +69,7 @@ namespace OsmSharp.Collections
                 {
                     throw new System.ArgumentException("An element with the same key already exists in the System.Collections.Generic.IDictionary<TKey,TValue>.");
                 }
-                if (!added && _dictionary[idx].Count < _MAX_DIC_SIZE)
+                if (!added && _dictionary[idx].Count < _maxDictionarySize)
                 { // add the key-values.
                     _dictionary[idx].Add(key, value);
                     added = true;
@@ -193,7 +201,7 @@ namespace OsmSharp.Collections
         /// </summary>
         public void Clear()
         {
-            _dictionary = new List<IDictionary<TKey, TValue>>();
+            _dictionary.Clear();
             _dictionary.Add(new Dictionary<TKey, TValue>());
         }
 
@@ -279,7 +287,17 @@ namespace OsmSharp.Collections
         /// <returns></returns>
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            throw new NotImplementedException();
+            if(_dictionary.Count == 0)
+            {
+                return Enumerable.Empty<KeyValuePair<TKey, TValue>>().GetEnumerator();
+            }
+            IEnumerable<KeyValuePair<TKey, TValue>> enumerable = _dictionary[0];
+            for (var i = 1; i < _dictionary.Count; i++)
+            {
+                enumerable = Enumerable.Concat<KeyValuePair<TKey, TValue>>(enumerable, 
+                    _dictionary[i]);
+            }
+            return enumerable.GetEnumerator();
         }
 
         /// <summary>
@@ -288,7 +306,7 @@ namespace OsmSharp.Collections
         /// <returns></returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return this.GetEnumerator();
         }
     }
 }

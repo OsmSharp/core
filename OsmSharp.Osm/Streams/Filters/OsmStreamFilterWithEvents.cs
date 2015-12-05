@@ -45,6 +45,8 @@ namespace OsmSharp.Osm.Streams.Filters
             _param = param;
         }
 
+        private OsmGeo _current = null;
+
         /// <summary>
         /// An empty delegate.
         /// </summary>
@@ -71,9 +73,7 @@ namespace OsmSharp.Osm.Streams.Filters
         /// <summary>
         /// A delegate with a simple osm geo object as parameter.
         /// </summary>
-        /// <param name="simpleOsmGeo"></param>
-        /// <param name="param"></param>
-        public delegate void SimpleOsmGeoDelegate(OsmGeo simpleOsmGeo, object param);
+        public delegate OsmGeo SimpleOsmGeoDelegate(OsmGeo osmGeo, object param);
 
         /// <summary>
         /// Event raised when the move is made to the next object.
@@ -116,15 +116,20 @@ namespace OsmSharp.Osm.Streams.Filters
         /// <returns></returns>
         private bool DoMoveNext()
         {
-            if (this.Source.MoveNext())
+            _current = null;
+            while (_current == null)
             {
+                if(!this.Source.MoveNext())
+                { // source is finished.
+                    return false;
+                }
+                _current = this.Source.Current();
                 if (this.MovedToNextEvent != null)
                 {
-                    this.MovedToNextEvent(this.Source.Current(), _param);
+                    _current = this.MovedToNextEvent(_current, _param);
                 }
-                return true;
             }
-            return false;
+            return true;
         }
 
         /// <summary>
@@ -133,7 +138,7 @@ namespace OsmSharp.Osm.Streams.Filters
         /// <returns></returns>
         public override OsmGeo Current()
         {
-            return this.Source.Current();
+            return _current;
         }
 
         /// <summary>
@@ -141,6 +146,7 @@ namespace OsmSharp.Osm.Streams.Filters
         /// </summary>
         public override void Reset()
         {
+            _current = null;
             this.Source.Reset();
         }
 

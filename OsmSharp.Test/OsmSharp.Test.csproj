@@ -98,10 +98,14 @@
     <Compile Include="Osm\Geo\Interpreter\SimpleFeatureInterpreterTests.cs" />
     <Compile Include="Osm\Geo\Streams\OsmFeatureStreamSourceTests.cs" />
     <Compile Include="Osm\NodeTests.cs" />
-    <Compile Include="Osm\PBF\Streams\PBFDataProcessingSourceTests.cs" />
+    <Compile Include="Osm\PBF\EncoderTests.cs" />
+    <Compile Include="Osm\PBF\PrimitivesConsumerMock.cs" />
+    <Compile Include="Osm\PBF\Streams\PBFOsmStreamSourceTests.cs" />
+    <Compile Include="Osm\PBF\Streams\PBFOsmStreamTargetTests.cs" />
     <Compile Include="Osm\Streams\Complete\OsmSimpleCompleteStreamSourceTests.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterBaseTests.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterExcludeTests.cs" />
+    <Compile Include="Osm\Streams\Filters\OsmStreamFilterPolyTests.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterReference.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterSortTest.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterTagsFilterTest.cs" />

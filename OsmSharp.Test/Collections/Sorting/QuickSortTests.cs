@@ -28,10 +28,10 @@ namespace OsmSharp.Test.Collections.Sorting
     public class QuickSortTests
     {
         /// <summary>
-        /// Tests sorting a simple array.
+        /// Tests sorting an array.
         /// </summary>
         [Test]
-        public void TestSimpleList()
+        public void TestSort()
         {
             var array = new int[] { 0, 1, 2, 3, 4 };
             QuickSort.Sort((i) => 
@@ -106,6 +106,66 @@ namespace OsmSharp.Test.Collections.Sorting
             Assert.AreEqual(2, array[2]);
             Assert.AreEqual(3, array[3]);
             Assert.AreEqual(4, array[4]);
+        }
+
+        /// <summary>
+        /// Tests three way partioning.
+        /// </summary>
+        [Test]
+        public void TestThreewayPartition()
+        {
+            var array = new int[] { 1, 0, 2, 1, 4, 1 };
+
+            long lowestHighest, highestLowest;
+            QuickSort.ThreewayPartition((i) => array[i],
+                (i, j) => 
+                    {
+                        var temp = array[i];
+                        array[i] = array[j];
+                        array[j] = temp;
+                    }, 0, array.Length - 1, 0, out highestLowest, out lowestHighest);
+            Assert.AreEqual(0, highestLowest);
+            Assert.AreEqual(4, lowestHighest);
+
+            array = new int[] { 1, 0, 2, 1, 4, 1 };
+
+            QuickSort.ThreewayPartition((i) => array[i],
+                (i, j) =>
+                {
+                    var temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+                }, 0, array.Length - 1, 1, out highestLowest, out lowestHighest);
+            Assert.AreEqual(-1, highestLowest);
+            Assert.AreEqual(1, lowestHighest);
+
+            array = new int[] { 1, 2, 4, 1, 0, 2, 1, 4, 1, 4, 1, 1, 4 };
+
+            QuickSort.ThreewayPartition((i) => array[i],
+                (i, j) =>
+                {
+                    var temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+                }, 3, 8, 3, out highestLowest, out lowestHighest);
+            Assert.AreEqual(3, highestLowest);
+            Assert.AreEqual(7, lowestHighest);
+        }
+
+        /// <summary>
+        /// Tests the is sorted function.
+        /// </summary>
+        [Test]
+        public void TestIsSorted()
+        {
+            var array = new int[] { 0, 1, 2, 3, 4 };
+            Assert.IsTrue(QuickSort.IsSorted(x => array[x], 0, array.Length - 1)); 
+            array = new int[] { 2, 1, 2, 3, 4 };
+            Assert.IsFalse(QuickSort.IsSorted(x => array[x], 0, array.Length - 1));
+            array = new int[] { 0, 1, 2, 3, 1 };
+            Assert.IsFalse(QuickSort.IsSorted(x => array[x], 0, array.Length - 1));
+            array = new int[] { 0, 0, 0, 0, 0 };
+            Assert.IsTrue(QuickSort.IsSorted(x => array[x], 0, array.Length - 1));
         }
     }
 }

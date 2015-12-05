@@ -37,17 +37,36 @@ namespace OsmSharp.Collections.Sorting
                 while (stack.Count > 0)
                 {
                     var pair = stack.Pop();
-                    var pivot = QuickSort.Partition(value, swap, pair.Left, pair.Right);
-                    if (pair.Left < pivot)
+                    long lowestHighest, highestLowest;
+                    QuickSort.ThreewayPartition(value, swap, pair.Left, pair.Right, out highestLowest, out lowestHighest);
+                    if (pair.Left < highestLowest)
                     {
-                        stack.Push(new Pair(pair.Left, pivot - 1));
+                        stack.Push(new Pair(pair.Left, highestLowest));
                     }
-                    if (pivot < pair.Right)
+                    if (lowestHighest < pair.Right)
                     {
-                        stack.Push(new Pair(pivot + 1, pair.Right));
+                        stack.Push(new Pair(lowestHighest, pair.Right));
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns true if the given range is sorted.
+        /// </summary>
+        public static bool IsSorted(Func<long, long> value, long left, long right)
+        {
+            var previous = value(left);
+            for (var i = left + 1; i <= right; i++)
+            {
+                var val = value(i);
+                if(previous > val)
+                {
+                    return false;
+                }
+                previous = val;
+            }
+            return true;
         }
 
         private struct Pair
@@ -75,7 +94,7 @@ namespace OsmSharp.Collections.Sorting
                 return right;
             }
 
-            // select the middle one as the pivot value to counteract sorting.
+            // select the middle one as the pivot value.
             var pivot = (left + right) / (long)2;
             if(pivot != left)
             { // switch.
@@ -127,6 +146,61 @@ namespace OsmSharp.Collections.Sorting
                 // swith left<->right.
                 swap(left + 1, right);
             }
+        }
+
+        /// <summary>
+        /// Partitions everything between left and right in three partitions, smaller than, equal to and larger than pivot.
+        /// </summary>
+        /// <remarks>Reference : https://en.wikipedia.org/wiki/Dutch_national_flag_problem </remarks>
+        public static void ThreewayPartition(Func<long, long> value, Action<long, long> swap, long left, long right,
+            out long highestLowest, out long lowestHighest)
+        {
+            QuickSort.ThreewayPartition(value, swap, left, right, left, out highestLowest, out lowestHighest); // default, the left a pivot.
+        }
+
+        /// <summary>
+        /// Partitions everything between left and right in three partitions, smaller than, equal to and larger than pivot.
+        /// </summary>
+        /// <remarks>Reference : https://en.wikipedia.org/wiki/Dutch_national_flag_problem </remarks>
+        public static void ThreewayPartition(Func<long, long> value, Action<long, long> swap, long left, long right, long pivot,
+            out long highestLowest, out long lowestHighest)
+        {
+            if (left > right) { throw new ArgumentException("left should be smaller than or equal to right."); }
+            if (left == right)
+            { // sorting just one item results in that item being sorted already and a pivot equal to that item itself.
+                highestLowest = right;
+                lowestHighest = right;
+                return;
+            }
+
+            // get pivot value.
+            var pivotValue = value(pivot);
+
+            var i = left;
+            var j = left;
+            var n = right;
+
+            while(j <= n)
+            {
+                var valueJ = value(j);
+                if(valueJ < pivotValue)
+                {
+                    swap(i, j);
+                    i++;
+                    j++;
+                }
+                else if (valueJ > pivotValue)
+                {
+                    swap(j, n);
+                    n--;
+                }
+                else
+                {
+                    j++;
+                }
+            }
+            highestLowest = i - 1;
+            lowestHighest = n + 1;
         }
     }
 }

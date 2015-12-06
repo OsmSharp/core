@@ -49,15 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collections\Arrays\HugeArrayTests.cs" />
-    <Compile Include="Collections\Arrays\MemoryMappedHugeArrayTests.cs" />
     <Compile Include="Collections\Cache\LRUCacheTests.cs" />
-    <Compile Include="Collections\Coordinates\HugeCoordinateCollectionIndexTests.cs" />
     <Compile Include="Collections\HugeDictionaryTests.cs" />
     <Compile Include="Collections\HugeHashSetTests.cs" />
-    <Compile Include="Collections\Indexes\MemoryMapped\MemoryMappedIndexTests.cs" />
     <Compile Include="Collections\LargeBitArray32Tests.cs" />
-    <Compile Include="Collections\MemoryMapped\MemoryMappedHugeDictionaryTests.cs" />
     <Compile Include="Collections\PermutationEnumerationTests.cs" />
     <Compile Include="Collections\PriorityQueues\BinairyHeapTests.cs" />
     <Compile Include="Collections\Sorting\QuickSortTests.cs" />
@@ -67,8 +62,6 @@
     <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndexTests.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeStreamIndexTests.cs" />
     <Compile Include="Collections\StringTableTests.cs" />
-    <Compile Include="Collections\Tags\TagsCollectionIndexSerializerTests.cs" />
-    <Compile Include="Collections\Tags\TagsCollectionIndexTests.cs" />
     <Compile Include="Collections\Tags\TagsCollectionTests.cs" />
     <Compile Include="Geo\GeoCoordinateTests.cs" />
     <Compile Include="Geo\Geometries\LineairRingTests.cs" />

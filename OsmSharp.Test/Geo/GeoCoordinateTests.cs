@@ -74,28 +74,34 @@ namespace OsmSharp.Test.Geo
         [Test]
         public void TestGeoCoordinateOffsetWithDirection()
         {
-            const double startLatitude = 53.32056; // 53°19′14″N
-            const double startLongitude = 1.72972; // 001°43′47″E
-            const double distance = 1000; // 1km
-            GeoCoordinate start = new GeoCoordinate(startLatitude, startLongitude);
+            var distance = 1000; // 1km
+            var start = new GeoCoordinate(53.32056, 1.72972);
 
-            // North
-            const double endLatitudeNorth = 53.32950; // 53.3295°N
-            const double endLongitudeNorth = 1.72970; // 001.7297°E
+            var offset = start.OffsetWithDirection(distance, DirectionEnum.North);
+            Assert.AreEqual(53.32950, offset.Latitude, 0.0001);
+            Assert.AreEqual(1.72970, offset.Longitude, 0.0001);
 
-            GeoCoordinate endNorth = start.OffsetWithDirection(distance, DirectionEnum.North);
-            Assert.AreEqual(endLatitudeNorth, endNorth.Latitude, 0.0001);
-            Assert.AreEqual(endLongitudeNorth, endNorth.Longitude, 0.0001);
+            offset = start.OffsetWithDirection(distance, DirectionEnum.NorthEast);
+            Assert.AreEqual(53.32690, offset.Latitude, 0.0001);
+            Assert.AreEqual(1.74040, offset.Longitude, 0.0001);
 
-            // North East
-            const double endLatitudeNorthEast = 53.32690; // 53.3269°N
-            const double endLongitudeNorthEast = 1.74040; // 001.7404°E
+            start = new GeoCoordinate(0, 0);
 
-            GeoCoordinate endNorthEast = start.OffsetWithDirection(distance, DirectionEnum.NorthEast);
-            Assert.AreEqual(endLatitudeNorthEast, endNorthEast.Latitude, 0.0001);
-            Assert.AreEqual(endLongitudeNorthEast, endNorthEast.Longitude, 0.0001);
+            offset = start.OffsetWithDirection(distance, DirectionEnum.West);
+            Assert.AreEqual(0, offset.Latitude, 0.0001);
+            Assert.AreEqual(-0.008984, offset.Longitude, 0.0001);
 
-            // TODO: test other directions
+            offset = start.OffsetWithDirection(distance, DirectionEnum.East);
+            Assert.AreEqual(0, offset.Latitude, 0.0001);
+            Assert.AreEqual(0.008984, offset.Longitude, 0.0001);
+
+            offset = start.OffsetWithDirection(distance, DirectionEnum.North);
+            Assert.AreEqual(0.008896, offset.Latitude, 0.0001);
+            Assert.AreEqual(0, offset.Longitude, 0.0001);
+
+            offset = start.OffsetWithDirection(distance, DirectionEnum.South);
+            Assert.AreEqual(-0.008896, offset.Latitude, 0.0001);
+            Assert.AreEqual(0, offset.Longitude, 0.0001);
         }
     }
 }

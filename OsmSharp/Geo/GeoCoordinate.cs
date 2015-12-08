@@ -249,9 +249,17 @@ namespace OsmSharp.Math.Geo
                                       System.Math.Sin(newLatitude.Value));
                 
             // TODO: make this work in other hemispheres
-            Degree newLat = newLatitude;
-            Degree newLon = newLongitude;
-            return new GeoCoordinate(newLat.Value, newLon.Value);
+            var newLat = ((Degree)newLatitude).Value;
+            if(newLat > 180)
+            {
+                newLat = newLat - 360;
+            }
+            var newLon = ((Degree)newLongitude).Value;
+            if (newLon > 180)
+            {
+                newLon = newLon - 360;
+            }
+            return new GeoCoordinate(newLat, newLon);
         }
 
         /// <summary>

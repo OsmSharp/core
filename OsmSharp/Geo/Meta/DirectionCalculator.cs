@@ -82,7 +82,7 @@ namespace OsmSharp.Math.Geo.Meta
             else if (verticalAngle >= new Degree(270 + 22.5)
                  && verticalAngle < new Degree(360-22.5))
             { // south-west.
-                return DirectionEnum.NorhtWest;
+                return DirectionEnum.NorthWest;
             }
             throw new ArgumentOutOfRangeException();
         }

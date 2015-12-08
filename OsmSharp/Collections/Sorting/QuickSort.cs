@@ -37,15 +37,14 @@ namespace OsmSharp.Collections.Sorting
                 while (stack.Count > 0)
                 {
                     var pair = stack.Pop();
-                    long lowestHighest, highestLowest;
-                    QuickSort.ThreewayPartition(value, swap, pair.Left, pair.Right, out highestLowest, out lowestHighest);
-                    if (pair.Left < highestLowest)
+                    var pivot = QuickSort.Partition(value, swap, pair.Left, pair.Right);
+                    if (pair.Left < pivot)
                     {
-                        stack.Push(new Pair(pair.Left, highestLowest));
+                        stack.Push(new Pair(pair.Left, pivot - 1));
                     }
-                    if (lowestHighest < pair.Right)
+                    if (pivot < pair.Right)
                     {
-                        stack.Push(new Pair(lowestHighest, pair.Right));
+                        stack.Push(new Pair(pivot + 1, pair.Right));
                     }
                 }
             }

@@ -43,10 +43,10 @@ namespace OsmSharp.Math.Geo
         }        
         
         /// <summary>
-        /// Creates a geo coordinate.
+        /// Creates a geo coordinate from another coordinate.
         /// </summary>
-        public GeoCoordinate(OsmSharp.Math.Geo.Simple.GeoCoordinateSimple values)
-            : this(values.Latitude, values.Longitude)
+        public GeoCoordinate(ICoordinate coordinate)
+            : this(coordinate.Latitude, coordinate.Longitude)
         {
 
         }

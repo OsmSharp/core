@@ -119,6 +119,8 @@ namespace OsmSharp.Osm.Xml.v0_6
                 this.areaField = value;
             }
         }
+
+        public status status { get; set; }
     }
 
     /// <remarks/>
@@ -290,21 +292,14 @@ namespace OsmSharp.Osm.Xml.v0_6
     }
 
 
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
-    // [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    // [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
-    public partial class area
+    public class area
     {
         private double maximumField;
 
         private bool maximumFieldSpecified;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute]
         public double maximum
         {
             get
@@ -1864,7 +1859,7 @@ namespace OsmSharp.Osm.Xml.v0_6
         public osm()
         {
             this.versionField = ((double)(0.6F));
-            this.generatorField = "CGImap 0.0.2";
+            this.generatorField = "OsmSharp";
         }
 
         /// <remarks/>
@@ -2552,5 +2547,15 @@ namespace OsmSharp.Osm.Xml.v0_6
                 this.max_lonFieldSpecified = value;
             }
         }
+    }
+
+    public class status
+    {
+        [XmlAttribute]
+        public string api { get; set; }
+        [XmlAttribute]
+        public string database { get; set; }
+        [XmlAttribute]
+        public string gpx { get; set; }
     }
 }

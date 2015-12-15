@@ -118,7 +118,7 @@ namespace OsmSharp.Test.Osm.API
             TextReader reader = new StreamReader(stream);
             string osm_string = reader.ReadToEnd();
 
-            Assert.AreEqual(osm_string.Length, 399);
+            Assert.AreEqual(osm_string.Length, 395);
         }
     }
 }

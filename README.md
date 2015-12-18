@@ -68,7 +68,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Osm.PBF.Streams;
 
 var source = new PBFOsmStreamSource(
-	new FileInfo(@"D:\work\data\OSM\belgium-latest.osm.pbf").OpenRead());
+	new FileInfo(@"/path/to/belgium-latest.osm.pbf").OpenRead());
 
 var filter = new OsmSharp.Osm.Streams.Filters.OsmStreamFilterPoly(
 	new OsmSharp.Geo.Geometries.LineairRing(
@@ -79,7 +79,7 @@ var filter = new OsmSharp.Osm.Streams.Filters.OsmStreamFilterPoly(
 filter.RegisterSource(source);
 
 var target = new PBFOsmStreamTarget(
-	new FileInfo(@"D:\work\data\OSM\gent-triangle.osm.pbf").Open(FileMode.Create, FileAccess.ReadWrite));
+	new FileInfo(@"/path/to/gent-triangle.osm.pbf").Open(FileMode.Create, FileAccess.ReadWrite));
 target.RegisterSource(filter);
 target.Pull();
 ```

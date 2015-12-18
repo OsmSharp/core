@@ -38,7 +38,7 @@ Write data to an OSM-PBF file:
 // using OsmSharp.Osm;
 // using OsmSharp.Osm.PBF.Streams;
 
-using(var fileStream = new FileInfo(@"D:\work\data\OSM\albania.osm.pbf").OpenRead())
+using(var fileStream = new FileInfo(@"/path/to/my/osmfile.osm.pbf").OpenRead())
 {
 	var target = new PBFOsmStreamTarget(fileStream);
 	target.Initialize();

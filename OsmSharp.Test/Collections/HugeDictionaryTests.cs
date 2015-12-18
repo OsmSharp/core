@@ -53,17 +53,17 @@ namespace OsmSharp.Test.Collections
             Assert.AreEqual(0, hugeDictionary.Count);
             Assert.AreEqual(1, hugeDictionary.CountDictionaries);
 
-            hugeDictionary = new HugeDictionary<long, long>();
+            hugeDictionary = new HugeDictionary<long, long>(1000);
 
-            for (long idx = 0; idx < 10000000; idx++)
+            for (long idx = 0; idx < 10000; idx++)
             {
                 hugeDictionary.Add(idx, idx);
             }
 
-            Assert.AreEqual(10000000, hugeDictionary.Count);
+            Assert.AreEqual(10000, hugeDictionary.Count);
             Assert.AreEqual(10, hugeDictionary.CountDictionaries);
 
-            for (long idx = 0; idx < 10000000; idx++)
+            for (long idx = 0; idx < 10000; idx++)
             {
                 hugeDictionary.Remove(idx);
             }

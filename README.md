@@ -20,7 +20,7 @@ A common usecase is to stream and filter OSM data. To read from an OSM file and 
 ```csharp
 // using OsmSharp.Osm.PBF.Streams;
 
-using(var fileStream = new FileInfo(@"D:\work\data\OSM\albania.osm.pbf").OpenRead())
+using(var fileStream = new FileInfo(@"/path/to/some/osmfile.osm.pbf").OpenRead())
 {
   var source = new PBFOsmStreamSource(fileStream);
   foreach (var element in source)

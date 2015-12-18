@@ -1,6 +1,6 @@
-# OsmSharp
+# OsmSharp.Core
 
-OsmSharp enables you to work directly with OSM-data in .NET/Mono. Most important features are:
+OsmSharp's core enables you to work directly with OSM-data in .NET/Mono. Most important features are:
 
 - Read/Write OSM-XML.
 - Read/Write OSM-PBF.

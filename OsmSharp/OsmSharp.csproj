@@ -61,10 +61,7 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Collections\Arrays\HugeArrayBase.cs" />
-    <Compile Include="Collections\Arrays\MappedHugeArray.cs" />
     <Compile Include="Collections\Cache\LRUCache.cs" />
-    <Compile Include="Collections\Arrays\HugeArray.cs" />
     <Compile Include="Collections\HugeDictionary.cs" />
     <Compile Include="Collections\HugeHashSet.cs" />
     <Compile Include="Collections\ISet.cs" />
@@ -101,7 +98,6 @@
     <Compile Include="Collections\Tags\TagsCollectionBase.cs" />
     <Compile Include="Collections\Tags\TagsTableCollection.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Data\SQLite\SQLiteConnectionBase.cs" />
     <Compile Include="Encoding\ASCIIEncoding.cs" />
     <Compile Include="Geo\Attributes\GeometryAttribute.cs" />
     <Compile Include="Geo\Attributes\GeometryAttributeCollection.cs" />

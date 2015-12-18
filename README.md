@@ -61,4 +61,27 @@ using(var fileStream = new FileInfo(@"/path/to/my/osmfile.osm.pbf").OpenRead())
 }
 ```
 
+Filter an area and extract a smaller region:
+
+```csharp
+using OsmSharp.Math.Geo;
+using OsmSharp.Osm.PBF.Streams;
+
+var source = new PBFOsmStreamSource(
+	new FileInfo(@"D:\work\data\OSM\belgium-latest.osm.pbf").OpenRead());
+
+var filter = new OsmSharp.Osm.Streams.Filters.OsmStreamFilterPoly(
+	new OsmSharp.Geo.Geometries.LineairRing(
+		new GeoCoordinate(51.084978552372114, 3.655529022216797),
+		new GeoCoordinate(51.081851317961930, 3.812427520751953),
+		new GeoCoordinate(51.994851160022010, 3.760070800781250),
+		new GeoCoordinate(51.084978552372114, 3.655529022216797)));
+filter.RegisterSource(source);
+
+var target = new PBFOsmStreamTarget(
+	new FileInfo(@"D:\work\data\OSM\gent-triangle.osm.pbf").Open(FileMode.Create, FileAccess.ReadWrite));
+target.RegisterSource(filter);
+target.Pull();
+```
+
 

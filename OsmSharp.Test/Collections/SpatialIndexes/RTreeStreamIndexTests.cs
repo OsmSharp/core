@@ -121,7 +121,7 @@ namespace OsmSharp.Test.Collections.SpatialIndexes
         {
             // build test-data.
 			var testDataList = new List<KeyValuePair<BoxF2D, string>>();
-            const int count = 10000;
+            const int count = 1000;
             var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
             for (int idx = 0; idx < count; idx++)
             {
@@ -173,7 +173,7 @@ namespace OsmSharp.Test.Collections.SpatialIndexes
             }
 
             // generate random boxes and compare results.
-            for (int idx = 0; idx < 200; idx++)
+            for (int idx = 0; idx < 20; idx++)
             {
                 double x1 = randomGenerator.Generate(1.0);
                 double x2 = randomGenerator.Generate(1.0);

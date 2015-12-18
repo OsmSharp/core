@@ -16,6 +16,7 @@ OsmSharp's core enables you to work directly with OSM-data in .NET/Mono. Most im
 
 A common usecase is to stream and filter OSM data. To read from an OSM file and enumerate all objects just open the file as a stream source and use foreach.
 
+Read data from an OSM-PBF file:
 
 ```csharp
 // using OsmSharp.Osm.PBF.Streams;
@@ -29,4 +30,35 @@ using(var fileStream = new FileInfo(@"/path/to/some/osmfile.osm.pbf").OpenRead()
   }
 }
 ```
+
+Write data to an OSM-PBF file:
+
+```csharp
+// using OsmSharp.Collections.Tags;
+// using OsmSharp.Osm;
+// using OsmSharp.Osm.PBF.Streams;
+
+using(var fileStream = new FileInfo(@"D:\work\data\OSM\albania.osm.pbf").OpenRead())
+{
+	var target = new PBFOsmStreamTarget(fileStream);
+	target.Initialize();
+	target.AddNode(new Node()
+		{
+			Id = 1,
+			ChangeSetId = 1,
+			Latitude = 0,
+			Longitude = 0,
+			Tags = new TagsCollection(
+				Tag.Create("key", "value")),
+			TimeStamp = DateTime.Now,
+			UserId = 1424,
+			UserName = "you",
+			Version = 1,
+			Visible = true
+		});
+	target.Flush();
+	target.Close();
+}
+```
+
 

@@ -98,7 +98,6 @@
     <Compile Include="Collections\Tags\TagsCollectionBase.cs" />
     <Compile Include="Collections\Tags\TagsTableCollection.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Encoding\ASCIIEncoding.cs" />
     <Compile Include="Geo\Attributes\GeometryAttribute.cs" />
     <Compile Include="Geo\Attributes\GeometryAttributeCollection.cs" />
     <Compile Include="Geo\Attributes\IGeometryAttributesIndex.cs" />

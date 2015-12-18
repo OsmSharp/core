@@ -64,8 +64,8 @@ using(var fileStream = new FileInfo(@"/path/to/my/osmfile.osm.pbf").OpenRead())
 Filter an area and extract a smaller region:
 
 ```csharp
-using OsmSharp.Math.Geo;
-using OsmSharp.Osm.PBF.Streams;
+// using OsmSharp.Math.Geo;
+// using OsmSharp.Osm.PBF.Streams;
 
 var source = new PBFOsmStreamSource(
 	new FileInfo(@"/path/to/belgium-latest.osm.pbf").OpenRead());

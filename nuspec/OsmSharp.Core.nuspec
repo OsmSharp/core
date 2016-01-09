@@ -3,7 +3,7 @@
     <metadata>
         <id>OsmSharp.Core</id>
         <version>$version$</version>
-        <title>OsmSharp.Core - OpenStreetMap SDK for .NET/Mono</title>
+        <title>OsmSharp.Core</title>
         <authors>Ben Abelshausen</authors>
         <owners>Ben Abelshausen</owners>
         <licenseUrl>http://raw.github.com/xivk/OsmSharp/master/license.txt</licenseUrl>

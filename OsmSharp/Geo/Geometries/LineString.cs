@@ -45,6 +45,18 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Creates a new linestring.
         /// </summary>
+        public LineString(IList<ICoordinate> coordinates)
+        {
+            this.Coordinates = new List<GeoCoordinate>(coordinates.Count);
+            for(var i = 0; i < coordinates.Count; i++)
+            {
+                this.Coordinates.Add(new GeoCoordinate(coordinates[i]));
+            }
+        }
+
+        /// <summary>
+        /// Creates a new linestring.
+        /// </summary>
         public LineString(params GeoCoordinate[] coordinates)
         {
             this.Coordinates = new List<GeoCoordinate>(coordinates);
@@ -66,8 +78,6 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Returns true if this linestring is inside the given bounding box.
         /// </summary>
-        /// <param name="box"></param>
-        /// <returns></returns>
         public override bool IsInside(GeoCoordinateBox box)
         {
             for (var idx = 0; idx < this.Coordinates.Count - 1; idx++)

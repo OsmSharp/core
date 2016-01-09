@@ -37,8 +37,16 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Creates a new lineair ring.
         /// </summary>
-        /// <param name="coordinates">The coordinates.</param>
         public LineairRing(IEnumerable<GeoCoordinate> coordinates)
+            : base(coordinates)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new lineair ring.
+        /// </summary>
+        public LineairRing(IList<ICoordinate> coordinates)
             : base(coordinates)
         {
 

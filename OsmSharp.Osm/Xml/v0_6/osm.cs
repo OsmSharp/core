@@ -8,6 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System;
 using System.Xml.Serialization;
 
 // 
@@ -119,6 +120,9 @@ namespace OsmSharp.Osm.Xml.v0_6
                 this.areaField = value;
             }
         }
+
+        /// <remarks/>
+        public status status { get; set; }
     }
 
     /// <remarks/>
@@ -291,20 +295,14 @@ namespace OsmSharp.Osm.Xml.v0_6
 
 
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
-    // [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    // [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
-    public partial class area
+    public class area
     {
         private double maximumField;
 
         private bool maximumFieldSpecified;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute]
         public double maximum
         {
             get
@@ -1864,7 +1862,7 @@ namespace OsmSharp.Osm.Xml.v0_6
         public osm()
         {
             this.versionField = ((double)(0.6F));
-            this.generatorField = "CGImap 0.0.2";
+            this.generatorField = "OsmSharp";
         }
 
         /// <remarks/>
@@ -2007,6 +2005,9 @@ namespace OsmSharp.Osm.Xml.v0_6
                 this.generatorField = value;
             }
         }
+
+        /// <remarks/>
+        public user user { get; set; }
     }
 
     /// <remarks/>
@@ -2552,5 +2553,101 @@ namespace OsmSharp.Osm.Xml.v0_6
                 this.max_lonFieldSpecified = value;
             }
         }
+    }
+
+    /// <remarks/>
+    public class status
+    {
+        /// <remarks/>
+        [XmlAttribute]
+        public string api { get; set; }
+        /// <remarks/>
+        [XmlAttribute]
+        public string database { get; set; }
+        /// <remarks/>
+        [XmlAttribute]
+        public string gpx { get; set; }
+    }
+
+    /// <remarks/>
+    public class user
+    {
+        /// <remarks/>
+        [XmlAttribute]
+        public int id { get; set; }
+        /// <remarks/>
+        [XmlAttribute]
+        public string display_name { get; set; }
+        /// <remarks/>
+        [XmlAttribute]
+        public DateTime account_created { get; set; }
+        /// <remarks/>
+        public string description { get; set; }
+        /// <remarks/>
+        public img img { get; set; }
+        /// <remarks/>
+        [XmlElement("contributor-terms")]
+        public contributorterms contributorterms { get; set; }
+        /// <remarks/>
+        public role[] roles { get; set; }
+        /// <remarks/>
+        public userchangeset changesets { get; set; }
+        /// <remarks/>
+        public traces traces { get; set; }
+        /// <remarks/>
+        public block[] blocks { get; set; }
+    }
+
+    /// <remarks/>
+    public class block
+    {
+        /// <remarks/>
+        [XmlAttribute]
+        public int count { get; set; }
+        /// <remarks/>
+        [XmlAttribute]
+        public int active { get; set; }
+    }
+
+    /// <remarks/>
+    public class role
+    {
+
+    }
+
+    /// <remarks/>
+    public class userchangeset
+    {
+        /// <remarks/>
+        [XmlAttribute]
+        public int count { get; set; }
+    }
+
+    /// <remarks/>
+    public class traces
+    {
+        /// <remarks/>
+        [XmlAttribute]
+        public int count { get; set; }
+    }
+
+    /// <remarks/>
+    public class contributorterms
+    {
+        /// <remarks/>
+        [XmlAttribute]
+        public bool agreed { get; set; }
+
+        /// <remarks/>
+        [XmlAttribute]
+        public bool pd { get; set; }
+    }
+
+    /// <remarks/>
+    public class img
+    {
+        /// <remarks/>
+        [XmlAttribute]
+        public string href { get; set; }
     }
 }

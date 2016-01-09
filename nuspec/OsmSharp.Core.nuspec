@@ -20,12 +20,12 @@
         </dependencies>
     </metadata>
     <files>
-        <file src="Output\OsmSharp.Osm.dll" target="lib\portable-net40+sl4+win8+wp7\OsmSharp.Osm.dll" />
-        <file src="Output\OsmSharp.dll" target="lib\portable-net40+sl4+win8+wp7\OsmSharp.dll" />
-        <file src="Output\OsmSharp.Osm.dll" target="lib\net40\OsmSharp.Osm.dll" />
-        <file src="Output\OsmSharp.dll" target="lib\net40\OsmSharp.dll" />
-        <file src="Output\OsmSharp.Osm.dll" target="lib\net45\OsmSharp.Osm.dll" />
-        <file src="Output\OsmSharp.dll" target="lib\net45\OsmSharp.dll" />
+      <file src="Output\OsmSharp.Osm.dll" target="lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\OsmSharp.Osm.dll" />
+      <file src="Output\OsmSharp.dll" target="lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\OsmSharp.dll" />
+      <file src="Output\OsmSharp.Osm.dll" target="lib\net40\OsmSharp.Osm.dll" />
+      <file src="Output\OsmSharp.dll" target="lib\net40\OsmSharp.dll" />
+      <file src="Output\OsmSharp.Osm.dll" target="lib\net45\OsmSharp.Osm.dll" />
+      <file src="Output\OsmSharp.dll" target="lib\net45\OsmSharp.dll" />
 	    <file src="Output\OsmSharp.dll" target="lib\MonoAndroid\OsmSharp.dll" />
 	    <file src="Output\OsmSharp.Osm.dll" target="lib\MonoAndroid\OsmSharp.Osm.dll" />
 	    <file src="Output\OsmSharp.dll" target="lib\Xamarin.iOS10\OsmSharp.dll" />

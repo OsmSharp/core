@@ -54,6 +54,6 @@ namespace OsmSharp.Math.Geo.Meta
         /// <summary>
         /// Northwest.
         /// </summary>
-        NorhtWest = 315,
+        NorthWest = 315,
     }
 }

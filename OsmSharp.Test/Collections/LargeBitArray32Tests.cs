@@ -33,7 +33,7 @@ namespace OsmSharp.Test.Collections
         [Test]
         public void TestLargeBitArray32()
         {
-            var size = 32 * 10000;
+            var size = 32 * 1000;
             var referenceArray = new bool[size];
             var array = new LargeBitArray32(size);
 
@@ -41,7 +41,7 @@ namespace OsmSharp.Test.Collections
             Assert.AreEqual(referenceArray.Length, array.Length);
 
             // add random data.
-            for (int idx = 0; idx < 10000; idx++)
+            for (int idx = 0; idx < 1000; idx++)
             {
                 referenceArray[idx] = true;
                 array[idx] = true;
@@ -55,7 +55,7 @@ namespace OsmSharp.Test.Collections
             }
 
             // remove random data.
-            for (int idx = 0; idx < 10000; idx++)
+            for (int idx = 0; idx < 1000; idx++)
             {
                 referenceArray[idx] = false;
                 array[idx] = false;

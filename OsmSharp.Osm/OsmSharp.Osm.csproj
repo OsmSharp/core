@@ -153,7 +153,6 @@
     <Compile Include="Streams\OsmStreamSourceEmpty.cs" />
     <Compile Include="Streams\OsmStreamTarget.cs" />
     <Compile Include="Streams\OsmStreamTargetEmpty.cs" />
-    <Compile Include="Streams\OsmStreamTargetTags.cs" />
     <Compile Include="TagExtensions.cs" />
     <Compile Include="Tiles\Tile.cs" />
     <Compile Include="Tiles\TileDefaultsForRouting.cs" />

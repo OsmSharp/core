@@ -32,14 +32,11 @@ namespace OsmSharp.Osm.Xml.v0_6
     /// </summary>
     public static class Extensions
     {
-        #region Xml <-> OsmSharp.Osm Conversions
-
         #region Convert From Xml
 
         /// <summary>
         /// Extensions method for a bound.
         /// </summary>
-        /// <param name="bounds"></param>
         /// <returns></returns>
         public static GeoCoordinateBox ConvertFrom(this bounds bounds)
         {
@@ -55,7 +52,6 @@ namespace OsmSharp.Osm.Xml.v0_6
         /// <summary>
         /// Extensions method for a bound.
         /// </summary>
-        /// <param name="bound"></param>
         /// <returns></returns>
         public static GeoCoordinateBox ConvertFrom(this bound bound)
         {
@@ -74,34 +70,33 @@ namespace OsmSharp.Osm.Xml.v0_6
         /// <summary>
         /// Converts an Xml relation to an Osm domain model relation.
         /// </summary>
-        /// <param name="xml_obj"></param>
         /// <returns></returns>
-        public static Relation ConvertFrom(this relation xml_obj)
+        public static Relation ConvertFrom(this relation xmlRelation)
         {
             // create a new node and immidiately set the id.
-            Relation new_obj = new Relation();
-            new_obj.Id = xml_obj.id;
+            var relation = new Relation();
+            relation.Id = xmlRelation.id;
 
             // set the members
-            new_obj.Members = new List<RelationMember>(xml_obj.member.Length);
-            for (int idx = 0; idx < xml_obj.member.Length; idx++)
+            relation.Members = new List<RelationMember>(xmlRelation.member.Length);
+            for (var i = 0; i < xmlRelation.member.Length; i++)
             {
-                member member = xml_obj.member[idx];
-                RelationMember simpleMember = new RelationMember();
-                simpleMember.MemberId = member.@ref;
-                simpleMember.MemberRole = member.role;
-                if (member.refSpecified && member.typeSpecified)
+                var xmlMember = xmlRelation.member[i];
+                var member = new RelationMember();
+                member.MemberId = xmlMember.@ref;
+                member.MemberRole = xmlMember.role;
+                if (xmlMember.refSpecified && xmlMember.typeSpecified)
                 {
-                    switch (member.type)
+                    switch (xmlMember.type)
                     {
                         case memberType.node:
-                            simpleMember.MemberType = OsmGeoType.Node;
+                            member.MemberType = OsmGeoType.Node;
                             break;
                         case memberType.relation:
-                            simpleMember.MemberType = OsmGeoType.Relation;
+                            member.MemberType = OsmGeoType.Relation;
                             break;
                         case memberType.way:
-                            simpleMember.MemberType = OsmGeoType.Way;
+                            member.MemberType = OsmGeoType.Way;
                             break;
                     }
                 }
@@ -109,61 +104,60 @@ namespace OsmSharp.Osm.Xml.v0_6
                 { // way cannot be converted; member could not be created!
                     return null;
                 }
-                new_obj.Members.Add(simpleMember);
+                relation.Members.Add(member);
             }
 
             // set the tags.
-            if (xml_obj.tag != null)
+            if (xmlRelation.tag != null)
             {
-                foreach (Osm.Xml.v0_6.tag tag in xml_obj.tag)
+                foreach (var tag in xmlRelation.tag)
                 {
-                    new_obj.Tags.Add(tag.k, tag.v);
+                    relation.Tags.Add(tag.k, tag.v);
                 }
             }
 
             // set the user info.
-            if (xml_obj.uidSpecified)
+            if (xmlRelation.uidSpecified)
             {
-                new_obj.UserId = xml_obj.uid;
+                relation.UserId = xmlRelation.uid;
             }
-            new_obj.UserName = xml_obj.user;
+            relation.UserName = xmlRelation.user;
 
             // set the changeset info.
-            if (xml_obj.changesetSpecified)
+            if (xmlRelation.changesetSpecified)
             {
-                new_obj.ChangeSetId = xml_obj.changeset;
+                relation.ChangeSetId = xmlRelation.changeset;
             }
 
             // set the timestamp flag.
-            if (xml_obj.timestampSpecified)
+            if (xmlRelation.timestampSpecified)
             {
-                new_obj.TimeStamp = xml_obj.timestamp;
+                relation.TimeStamp = xmlRelation.timestamp;
             }
 
             // set the visible flag.
-            new_obj.Visible = xml_obj.visible;
-            return new_obj;
+            relation.Visible = xmlRelation.visible;
+            return relation;
         }
 
         /// <summary>
         /// Converts an Xml way to an Osm domain model way.
         /// </summary>
-        /// <param name="xml_obj"></param>
         /// <returns></returns>
-        public static Way ConvertFrom(this way xml_obj)
+        public static Way ConvertFrom(this way xmlWay)
         {
             // create a new node and immidiately set the id.
-            Way new_obj = new Way();
-            new_obj.Id = xml_obj.id;
+            var way = new Way();
+            way.Id = xmlWay.id;
 
             // set the nodes.
-            new_obj.Nodes = new List<long>(xml_obj.nd.Length);
-            for (int idx = 0; idx < xml_obj.nd.Length;idx++)
+            way.Nodes = new List<long>(xmlWay.nd.Length);
+            for (int i = 0; i < xmlWay.nd.Length;i++)
             {
-                nd node = xml_obj.nd[idx];
-                if (node.refSpecified)
+                var xmlNode = xmlWay.nd[i];
+                if (xmlNode.refSpecified)
                 {
-                    new_obj.Nodes.Add(node.@ref);
+                    way.Nodes.Add(xmlNode.@ref);
                 }
                 else
                 { // way cannot be converted; node was not found!
@@ -172,88 +166,87 @@ namespace OsmSharp.Osm.Xml.v0_6
             }
 
             // set the tags.
-            if (xml_obj.tag != null)
+            if (xmlWay.tag != null)
             {
-                foreach (Osm.Xml.v0_6.tag tag in xml_obj.tag)
+                foreach (var tag in xmlWay.tag)
                 {
-                    new_obj.Tags.Add(tag.k, tag.v);
+                    way.Tags.Add(tag.k, tag.v);
                 }
             }
 
             // set the user info.
-            if (xml_obj.uidSpecified)
+            if (xmlWay.uidSpecified)
             {
-                new_obj.UserId = xml_obj.uid;
+                way.UserId = xmlWay.uid;
             }
-            new_obj.UserName = xml_obj.user;
+            way.UserName = xmlWay.user;
 
             // set the changeset info.
-            if (xml_obj.changesetSpecified)
+            if (xmlWay.changesetSpecified)
             {
-                new_obj.ChangeSetId = xml_obj.changeset;
+                way.ChangeSetId = xmlWay.changeset;
             }
 
             // set the timestamp flag.
-            if (xml_obj.timestampSpecified)
+            if (xmlWay.timestampSpecified)
             {
-                new_obj.TimeStamp = xml_obj.timestamp;
+                way.TimeStamp = xmlWay.timestamp;
             }
 
             // set the visible flag.
-            new_obj.Visible = xml_obj.visible;
-            return new_obj;
+            way.Visible = xmlWay.visible;
+            return way;
         }
 
         /// <summary>
         /// Converts an Xml node to an Osm domain model node.
         /// </summary>
-        /// <param name="xml_obj"></param>
         /// <returns></returns>
-        public static Node ConvertFrom(this node xml_obj)
+        public static Node ConvertFrom(this node xmlNode)
         {
             // create a new node an immidiately set the id.
-            Node new_obj = new Node();
-            new_obj.Id = xml_obj.id;
+            var node = new Node();
+            node.Id = xmlNode.id;
 
             // set the long- and latitude
-            if (!xml_obj.latSpecified || !xml_obj.lonSpecified)
+            if (!xmlNode.latSpecified || !xmlNode.lonSpecified)
             {
                 throw new ArgumentNullException("Latitude and/or longitude cannot be null!");
             }
-            new_obj.Latitude = (double)xml_obj.lat;
-            new_obj.Longitude = (double)xml_obj.lon;
+            node.Latitude = (double)xmlNode.lat;
+            node.Longitude = (double)xmlNode.lon;
 
             // set the tags.
-            if (xml_obj.tag != null)
+            if (xmlNode.tag != null)
             {
-                foreach (Osm.Xml.v0_6.tag tag in xml_obj.tag)
+                foreach (var tag in xmlNode.tag)
                 {
-                    new_obj.Tags.Add(tag.k, tag.v);
+                    node.Tags.Add(tag.k, tag.v);
                 }
             }
 
             // set the user info.
-            if (xml_obj.uidSpecified)
+            if (xmlNode.uidSpecified)
             {
-                new_obj.UserId = (int)xml_obj.uid;
+                node.UserId = (int)xmlNode.uid;
             }
-            new_obj.UserName = xml_obj.user;
+            node.UserName = xmlNode.user;
 
             // set the changeset info.
-            if (xml_obj.changesetSpecified)
+            if (xmlNode.changesetSpecified)
             {
-                new_obj.ChangeSetId = (int)xml_obj.changeset;
+                node.ChangeSetId = (int)xmlNode.changeset;
             }
 
             // set the timestamp flag.
-            if (xml_obj.timestampSpecified)
+            if (xmlNode.timestampSpecified)
             {
-                new_obj.TimeStamp = xml_obj.timestamp;
+                node.TimeStamp = xmlNode.timestamp;
             }
 
             // set the visible flag.
-            new_obj.Visible = xml_obj.visible;
-            return new_obj;
+            node.Visible = xmlNode.visible;
+            return node;
         }
 
         #endregion
@@ -267,7 +260,7 @@ namespace OsmSharp.Osm.Xml.v0_6
         /// <returns></returns>
         public static bounds ConvertTo(this GeoCoordinateBox box)
         {
-            bounds b = new bounds();
+            var b = new bounds();
 
             b.maxlat = box.MaxLat;
             b.maxlatSpecified = true;
@@ -281,508 +274,256 @@ namespace OsmSharp.Osm.Xml.v0_6
             return b;
         }
 
-        ///// <summary>
-        ///// Converts an domain model changeset to and Xml changeset.
-        ///// </summary>
-        ///// <param name="changeset"></param>
-        ///// <returns></returns>
-        //public static changeset ConvertTo(this ChangeSet changeset)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        ///// <summary>
-        ///// Converts a domain model relation to an Xml relation.
-        ///// </summary>
-        ///// <param name="dom_obj"></param>
-        ///// <returns></returns>
-        //public static relation ConvertTo(this SimpleRelation dom_obj)
-        //{
-        //    relation xml_obj = new relation();
-
-        //    // set the changeset.
-        //    if (dom_obj.ChangeSetId.HasValue)
-        //    {
-        //        xml_obj.changeset = dom_obj.ChangeSetId.Value;
-        //        xml_obj.changesetSpecified = true;
-        //    }
-
-        //    // set the id.
-        //    if (dom_obj.Id.HasValue)
-        //    {
-        //        xml_obj.id = dom_obj.Id.Value;
-        //        xml_obj.idSpecified = true;
-        //    }
-        //    else
-        //    {
-        //        xml_obj.idSpecified = false;
-        //    }
-
-        //    if (dom_obj.Tags != null)
-        //    {
-        //        xml_obj.tag = new tag[dom_obj.Tags.Count];
-        //        int idx = 0;
-        //        foreach (var tag in dom_obj.Tags)
-        //        {
-        //            tag t = new tag();
-        //            t.k = tag.Key;
-        //            t.v = tag.Value;
-        //            xml_obj.tag[idx] = t;
-        //            idx++;
-        //        }
-        //    }
-
-        //    // set the timestamp.
-        //    if (dom_obj.TimeStamp.HasValue)
-        //    {
-        //        xml_obj.timestamp = dom_obj.TimeStamp.Value;
-        //        xml_obj.timestampSpecified = true;
-        //    }
-
-        //    // set the user data.
-        //    if (dom_obj.UserId.HasValue)
-        //    {
-        //        xml_obj.uid = dom_obj.UserId.Value;
-        //        xml_obj.uidSpecified = true;
-        //    }
-        //    xml_obj.user = xml_obj.user;
-
-        //    // set the version.
-        //    if (dom_obj.Version.HasValue)
-        //    {
-        //        xml_obj.version = (ulong)dom_obj.Version.Value;
-        //        xml_obj.versionSpecified = true;
-        //    }
-
-        //    // set the visible.
-        //    if (dom_obj.Visible.HasValue)
-        //    {
-        //        xml_obj.visible = dom_obj.Visible.Value;
-        //        xml_obj.visibleSpecified = true;
-        //    }
-        //    else
-        //    {
-        //        xml_obj.visibleSpecified = false;
-        //    }
-
-        //    // set the way-specific properties.
-        //    xml_obj.member = new member[dom_obj.Members.Count];
-        //    for (int idx = 0; idx < dom_obj.Members.Count; idx++)
-        //    {
-        //        RelationMember dom_member = dom_obj.Members[idx];
-        //        member m = new member();
-                
-        //        switch(dom_member.Member.Type)
-        //        {
-        //            case OsmType.Node:
-        //                m.type = memberType.node;
-        //                m.typeSpecified = true;
-        //                break;
-        //            case OsmType.Relation:
-        //                m.type = memberType.relation;
-        //                m.typeSpecified = true;
-        //                break;
-        //            case OsmType.Way:
-        //                m.type = memberType.way;
-        //                m.typeSpecified = true;
-        //                break;
-        //        }
-
-        //        m.@ref = dom_member.Member.Id;
-        //        m.refSpecified = true;
-        //        m.role = dom_member.Role;
-
-        //        xml_obj.member[idx] = m;
-        //    }
-
-        //    return xml_obj;
-        //}
-
-        ///// <summary>
-        ///// Converts a domain model way to an Xml way.
-        ///// </summary>
-        ///// <param name="dom_obj"></param>
-        ///// <returns></returns>
-        //public static way ConvertTo(this Way dom_obj)
-        //{
-        //    way xml_obj = new way();
-
-        //    // set the changeset.
-        //    if (dom_obj.ChangeSetId.HasValue)
-        //    {
-        //        xml_obj.changeset = dom_obj.ChangeSetId.Value;
-        //        xml_obj.changesetSpecified = true;
-        //    }
-
-        //    // set the id.
-        //    xml_obj.id = dom_obj.Id;
-        //    xml_obj.idSpecified = true;
-
-        //    if (dom_obj.Tags != null)
-        //    {
-        //        xml_obj.tag = new tag[dom_obj.Tags.Count];
-        //        int idx = 0;
-        //        foreach (var tag in dom_obj.Tags)
-        //        {
-        //            tag t = new tag();
-        //            t.k = tag.Key;
-        //            t.v = tag.Value;
-        //            xml_obj.tag[idx] = t;
-        //            idx++;
-        //        }
-        //    }
-
-        //    // set the timestamp.
-        //    if (dom_obj.TimeStamp.HasValue)
-        //    {
-        //        xml_obj.timestamp = dom_obj.TimeStamp.Value;
-        //        xml_obj.timestampSpecified = true;
-        //    }
-
-        //    // set the user data.
-        //    if (dom_obj.UserId.HasValue)
-        //    {
-        //        xml_obj.uid = dom_obj.UserId.Value;
-        //        xml_obj.uidSpecified = true;
-        //    }
-        //    xml_obj.user = xml_obj.user;
-
-        //    // set the version.
-        //    if (dom_obj.Version.HasValue)
-        //    {
-        //        xml_obj.version = (ulong)dom_obj.Version.Value;
-        //        xml_obj.versionSpecified = true;
-        //    }
-
-        //    // set the visible.
-        //    xml_obj.visible = dom_obj.Visible;
-        //    xml_obj.visibleSpecified = true;
-
-        //    // set the way-specific properties.
-        //    xml_obj.nd = new nd[dom_obj.Nodes.Count];
-        //    for(int idx = 0;idx < dom_obj.Nodes.Count;idx++)
-        //    {
-        //        nd n = new nd();
-        //        n.@ref =  dom_obj.Nodes[idx].Id;
-        //        n.refSpecified = true;
-        //        xml_obj.nd[idx] = n;
-        //    }
-
-        //    return xml_obj;
-        //}
-
-        ///// <summary>
-        ///// Converts an Xml node to an Osm domain model node.
-        ///// </summary>
-        ///// <param name="dom_obj"></param>
-        ///// <returns></returns>
-        //public static node ConvertTo(this Node dom_obj)
-        //{
-        //    node xml_obj = new node();
-            
-        //    // set the changeset.
-        //    if(dom_obj.ChangeSetId.HasValue)
-        //    {
-        //        xml_obj.changeset = dom_obj.ChangeSetId.Value;
-        //        xml_obj.changesetSpecified = true;
-        //    }
-
-        //    // set the id.
-        //    xml_obj.id = dom_obj.Id;
-        //    xml_obj.idSpecified = true;
-
-        //    if (dom_obj.Tags != null)
-        //    {
-        //        xml_obj.tag = new tag[dom_obj.Tags.Count];
-        //        int idx = 0;
-        //        foreach (var tag in dom_obj.Tags)
-        //        {
-        //            tag t = new tag();
-        //            t.k = tag.Key;
-        //            t.v = tag.Value;
-        //            xml_obj.tag[idx] = t;
-        //            idx++;
-        //        }
-        //    }
-
-        //    // set the timestamp.
-        //    if (dom_obj.TimeStamp.HasValue)
-        //    {
-        //        xml_obj.timestamp = dom_obj.TimeStamp.Value;
-        //        xml_obj.timestampSpecified = true;
-        //    }
-
-        //    // set the user data.
-        //    if (dom_obj.UserId.HasValue)
-        //    {
-        //        xml_obj.uid = dom_obj.UserId.Value;
-        //        xml_obj.uidSpecified = true;
-        //    }
-        //    xml_obj.user = xml_obj.user;
-
-        //    // set the version.
-        //    if (dom_obj.Version.HasValue)
-        //    {
-        //        xml_obj.version = (ulong)dom_obj.Version.Value;
-        //        xml_obj.versionSpecified = true;
-        //    }
-
-        //    // set the visible.
-        //    xml_obj.visible = dom_obj.Visible;
-        //    xml_obj.visibleSpecified = true;
-
-        //    // set the node-specific properties.
-        //    xml_obj.lat = dom_obj.Coordinate.Latitude;
-        //    xml_obj.latSpecified = true;
-        //    xml_obj.lon = dom_obj.Coordinate.Longitude;
-        //    xml_obj.lonSpecified = true;
-
-        //    return xml_obj;
-        //}
-
         /// <summary>
         /// Converts an Xml node to an Osm domain model node.
         /// </summary>
-        /// <param name="dom_obj"></param>
         /// <returns></returns>
-        public static node ConvertTo(this OsmSharp.Osm.Node dom_obj)
+        public static node ConvertTo(this OsmSharp.Osm.Node node)
         {
-            node xml_obj = new node();
+            var xmlNode = new node();
 
             // set the changeset.
-            if (dom_obj.ChangeSetId.HasValue)
+            if (node.ChangeSetId.HasValue)
             {
-                xml_obj.changeset = dom_obj.ChangeSetId.Value;
-                xml_obj.changesetSpecified = true;
+                xmlNode.changeset = node.ChangeSetId.Value;
+                xmlNode.changesetSpecified = true;
             }
 
             // set the id.
-            if (dom_obj.Id.HasValue)
+            if (node.Id.HasValue)
             {
-                xml_obj.id = dom_obj.Id.Value;
-                xml_obj.idSpecified = true;
+                xmlNode.id = node.Id.Value;
+                xmlNode.idSpecified = true;
             }
 
-            if (dom_obj.Tags != null)
+            if (node.Tags != null)
             {
-                xml_obj.tag = new tag[dom_obj.Tags.Count];
+                xmlNode.tag = new tag[node.Tags.Count];
                 int idx = 0;
-                foreach (var tag in dom_obj.Tags)
+                foreach (var tag in node.Tags)
                 {
-                    tag t = new tag();
+                    var t = new tag();
                     t.k = tag.Key;
                     t.v = tag.Value;
-                    xml_obj.tag[idx] = t;
+                    xmlNode.tag[idx] = t;
                     idx++;
                 }
             }
 
             // set the timestamp.
-            if (dom_obj.TimeStamp.HasValue)
+            if (node.TimeStamp.HasValue)
             {
-                xml_obj.timestamp = dom_obj.TimeStamp.Value;
-                xml_obj.timestampSpecified = true;
+                xmlNode.timestamp = node.TimeStamp.Value;
+                xmlNode.timestampSpecified = true;
             }
 
             // set the user data.
-            if (dom_obj.UserId.HasValue)
+            if (node.UserId.HasValue)
             {
-                xml_obj.uid = dom_obj.UserId.Value;
-                xml_obj.uidSpecified = true;
+                xmlNode.uid = node.UserId.Value;
+                xmlNode.uidSpecified = true;
             }
-            xml_obj.user = xml_obj.user;
+            xmlNode.user = xmlNode.user;
 
             // set the version.
-            if (dom_obj.Version.HasValue)
+            if (node.Version.HasValue)
             {
-                xml_obj.version = (ulong)dom_obj.Version.Value;
-                xml_obj.versionSpecified = true;
+                xmlNode.version = (ulong)node.Version.Value;
+                xmlNode.versionSpecified = true;
             }
 
             // set the visible.
-            xml_obj.visible = dom_obj.Visible.Value;
-            xml_obj.visibleSpecified = true;
+            if (node.Visible.HasValue)
+            {
+                xmlNode.visible = node.Visible.Value;
+                xmlNode.visibleSpecified = true;
+            }
 
             // set the node-specific properties.
-            xml_obj.lat = dom_obj.Latitude.Value;
-            xml_obj.latSpecified = true;
-            xml_obj.lon = dom_obj.Longitude.Value;
-            xml_obj.lonSpecified = true;
+            if (node.Latitude.HasValue)
+            {
+                xmlNode.lat = node.Latitude.Value;
+                xmlNode.latSpecified = true;
+            }
+            if (node.Longitude.HasValue)
+            {
+                xmlNode.lon = node.Longitude.Value;
+                xmlNode.lonSpecified = true;
+            }
 
-            return xml_obj;
+            return xmlNode;
         }
 
         /// <summary>
         /// Converts a domain model way to an Xml way.
         /// </summary>
-        /// <param name="dom_obj"></param>
+        /// <param name="way"></param>
         /// <returns></returns>
-        public static way ConvertTo(this OsmSharp.Osm.Way dom_obj)
+        public static way ConvertTo(this OsmSharp.Osm.Way way)
         {
-            way xml_obj = new way();
+            way xmlWay = new way();
 
             // set the changeset.
-            if (dom_obj.ChangeSetId.HasValue)
+            if (way.ChangeSetId.HasValue)
             {
-                xml_obj.changeset = dom_obj.ChangeSetId.Value;
-                xml_obj.changesetSpecified = true;
+                xmlWay.changeset = way.ChangeSetId.Value;
+                xmlWay.changesetSpecified = true;
             }
 
             // set the id.
-            if (dom_obj.Id.HasValue)
+            if (way.Id.HasValue)
             {
-                xml_obj.id = dom_obj.Id.Value;
-                xml_obj.idSpecified = true;
+                xmlWay.id = way.Id.Value;
+                xmlWay.idSpecified = true;
             }
             else
             {
-                xml_obj.idSpecified = false;
+                xmlWay.idSpecified = false;
             }
 
-            if (dom_obj.Tags != null)
+            if (way.Tags != null)
             {
-                xml_obj.tag = new tag[dom_obj.Tags.Count];
+                xmlWay.tag = new tag[way.Tags.Count];
                 int idx = 0;
-                foreach (var tag in dom_obj.Tags)
+                foreach (var tag in way.Tags)
                 {
-                    tag t = new tag();
+                    var t = new tag();
                     t.k = tag.Key;
                     t.v = tag.Value;
-                    xml_obj.tag[idx] = t;
+                    xmlWay.tag[idx] = t;
                     idx++;
                 }
             }
 
             // set the timestamp.
-            if (dom_obj.TimeStamp.HasValue)
+            if (way.TimeStamp.HasValue)
             {
-                xml_obj.timestamp = dom_obj.TimeStamp.Value;
-                xml_obj.timestampSpecified = true;
+                xmlWay.timestamp = way.TimeStamp.Value;
+                xmlWay.timestampSpecified = true;
             }
 
             // set the user data.
-            if (dom_obj.UserId.HasValue)
+            if (way.UserId.HasValue)
             {
-                xml_obj.uid = dom_obj.UserId.Value;
-                xml_obj.uidSpecified = true;
+                xmlWay.uid = way.UserId.Value;
+                xmlWay.uidSpecified = true;
             }
-            xml_obj.user = xml_obj.user;
+            xmlWay.user = xmlWay.user;
 
             // set the version.
-            if (dom_obj.Version.HasValue)
+            if (way.Version.HasValue)
             {
-                xml_obj.version = (ulong)dom_obj.Version.Value;
-                xml_obj.versionSpecified = true;
+                xmlWay.version = (ulong)way.Version.Value;
+                xmlWay.versionSpecified = true;
             }
 
             // set the visible.
-            if (dom_obj.Visible.HasValue)
+            if (way.Visible.HasValue)
             {
-                xml_obj.visible = dom_obj.Visible.Value;
-                xml_obj.visibleSpecified = true;
+                xmlWay.visible = way.Visible.Value;
+                xmlWay.visibleSpecified = true;
             }
             else
             {
-                xml_obj.visibleSpecified = false;
+                xmlWay.visibleSpecified = false;
             }
 
             // set the way-specific properties.
-            xml_obj.nd = new nd[dom_obj.Nodes.Count];
-            for (int idx = 0; idx < dom_obj.Nodes.Count; idx++)
+            xmlWay.nd = new nd[way.Nodes.Count];
+            for (int i = 0; i < way.Nodes.Count; i++)
             {
-                nd n = new nd();
-                n.@ref = dom_obj.Nodes[idx];
+                var n = new nd();
+                n.@ref = way.Nodes[i];
                 n.refSpecified = true;
-                xml_obj.nd[idx] = n;
+                xmlWay.nd[i] = n;
             }
 
-            return xml_obj;
+            return xmlWay;
         }
 
         /// <summary>
         /// Converts a domain model relation to an Xml relation.
         /// </summary>
-        /// <param name="dom_obj"></param>
         /// <returns></returns>
-        public static relation ConvertTo(this OsmSharp.Osm.Relation dom_obj)
+        public static relation ConvertTo(this OsmSharp.Osm.Relation relation)
         {
-            relation xml_obj = new relation();
+            relation xmlRelation = new relation();
 
             // set the changeset.
-            if (dom_obj.ChangeSetId.HasValue)
+            if (relation.ChangeSetId.HasValue)
             {
-                xml_obj.changeset = dom_obj.ChangeSetId.Value;
-                xml_obj.changesetSpecified = true;
+                xmlRelation.changeset = relation.ChangeSetId.Value;
+                xmlRelation.changesetSpecified = true;
             }
 
             // set the id.
-            if (dom_obj.Id.HasValue)
+            if (relation.Id.HasValue)
             {
-                xml_obj.id = dom_obj.Id.Value;
-                xml_obj.idSpecified = true;
+                xmlRelation.id = relation.Id.Value;
+                xmlRelation.idSpecified = true;
             }
             else
             {
-                xml_obj.idSpecified = false;
+                xmlRelation.idSpecified = false;
             }
 
-            if (dom_obj.Tags != null)
+            if (relation.Tags != null)
             {
-                xml_obj.tag = new tag[dom_obj.Tags.Count];
+                xmlRelation.tag = new tag[relation.Tags.Count];
                 int idx = 0;
-                foreach (var tag in dom_obj.Tags)
+                foreach (var tag in relation.Tags)
                 {
                     tag t = new tag();
                     t.k = tag.Key;
                     t.v = tag.Value;
-                    xml_obj.tag[idx] = t;
+                    xmlRelation.tag[idx] = t;
                     idx++;
                 }
             }
 
             // set the timestamp.
-            if (dom_obj.TimeStamp.HasValue)
+            if (relation.TimeStamp.HasValue)
             {
-                xml_obj.timestamp = dom_obj.TimeStamp.Value;
-                xml_obj.timestampSpecified = true;
+                xmlRelation.timestamp = relation.TimeStamp.Value;
+                xmlRelation.timestampSpecified = true;
             }
 
             // set the user data.
-            if (dom_obj.UserId.HasValue)
+            if (relation.UserId.HasValue)
             {
-                xml_obj.uid = dom_obj.UserId.Value;
-                xml_obj.uidSpecified = true;
+                xmlRelation.uid = relation.UserId.Value;
+                xmlRelation.uidSpecified = true;
             }
-            xml_obj.user = xml_obj.user;
+            xmlRelation.user = xmlRelation.user;
 
             // set the version.
-            if (dom_obj.Version.HasValue)
+            if (relation.Version.HasValue)
             {
-                xml_obj.version = (ulong)dom_obj.Version.Value;
-                xml_obj.versionSpecified = true;
+                xmlRelation.version = (ulong)relation.Version.Value;
+                xmlRelation.versionSpecified = true;
             }
 
             // set the visible.
-            if (dom_obj.Visible.HasValue)
+            if (relation.Visible.HasValue)
             {
-                xml_obj.visible = dom_obj.Visible.Value;
-                xml_obj.visibleSpecified = true;
+                xmlRelation.visible = relation.Visible.Value;
+                xmlRelation.visibleSpecified = true;
             }
             else
             {
-                xml_obj.visibleSpecified = false;
+                xmlRelation.visibleSpecified = false;
             }
 
             // set the way-specific properties.
-            xml_obj.member = new member[dom_obj.Members.Count];
-            for (int idx = 0; idx < dom_obj.Members.Count; idx++)
+            xmlRelation.member = new member[relation.Members.Count];
+            for (int i = 0; i < relation.Members.Count; i++)
             {
-                RelationMember dom_member = dom_obj.Members[idx];
-                member m = new member();
+                var member = relation.Members[i];
+                var m = new member();
 
-                if (dom_member.MemberType.HasValue)
+                if (member.MemberType.HasValue)
                 {
-                    switch (dom_member.MemberType.Value)
+                    switch (member.MemberType.Value)
                     {
                         case OsmGeoType.Node:
                             m.type = memberType.node;
@@ -803,27 +544,23 @@ namespace OsmSharp.Osm.Xml.v0_6
                     m.typeSpecified = false;
                 }
 
-                if (dom_member.MemberId.HasValue)
+                if (member.MemberId.HasValue)
                 {
-                    m.@ref = dom_member.MemberId.Value;
+                    m.@ref = member.MemberId.Value;
                     m.refSpecified = true;
                 }
                 else
                 {
                     m.refSpecified = false;
                 }
-                m.role = dom_member.MemberRole;
+                m.role = member.MemberRole;
 
-                xml_obj.member[idx] = m;
+                xmlRelation.member[i] = m;
             }
 
-            return xml_obj;
+            return xmlRelation;
         }
 
         #endregion
-
-        #endregion
-
-
     }
 }

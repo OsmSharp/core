@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Collections.Coordinates.Collections;
+using OsmSharp.Geo;
 using OsmSharp.Math.Geo.Meta;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Math.Random;
@@ -43,10 +43,10 @@ namespace OsmSharp.Math.Geo
         }        
         
         /// <summary>
-        /// Creates a geo coordinate.
+        /// Creates a geo coordinate from another coordinate.
         /// </summary>
-        public GeoCoordinate(OsmSharp.Math.Geo.Simple.GeoCoordinateSimple values)
-            : this(values.Latitude, values.Longitude)
+        public GeoCoordinate(ICoordinate coordinate)
+            : this(coordinate.Latitude, coordinate.Longitude)
         {
 
         }
@@ -249,9 +249,17 @@ namespace OsmSharp.Math.Geo
                                       System.Math.Sin(newLatitude.Value));
                 
             // TODO: make this work in other hemispheres
-            Degree newLat = newLatitude;
-            Degree newLon = newLongitude;
-            return new GeoCoordinate(newLat.Value, newLon.Value);
+            var newLat = ((Degree)newLatitude).Value;
+            if(newLat > 180)
+            {
+                newLat = newLat - 360;
+            }
+            var newLon = ((Degree)newLongitude).Value;
+            if (newLon > 180)
+            {
+                newLon = newLon - 360;
+            }
+            return new GeoCoordinate(newLat, newLon);
         }
 
         /// <summary>

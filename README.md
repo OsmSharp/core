@@ -10,7 +10,7 @@ OsmSharp's core enables you to work directly with OSM-data in .NET/Mono. Most im
 
 ### Install
 
-    PM> Install-Package OsmSharp.Core -IncludePrerelease
+    PM> Install-Package OsmSharp.Core
 
 ### Usage
 

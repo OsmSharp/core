@@ -37,14 +37,22 @@ namespace OsmSharp.Test.Osm.Xml
         [Test]
         public void TestSerialize()
         {
-            var diffResult = new OsmSharp.Osm.Xml.v0_6.diffResult();
-            diffResult.osmresult = new OsmSharp.Osm.Xml.v0_6.osmresult[]
-            {
-                new OsmSharp.Osm.Xml.v0_6.noderesult()
+            var diffResult = new OsmSharp.Osm.Xml.v0_6.diffResult()
+            { 
+                version = 0.6,
+                versionSpecified = true,
+                generator = "OsmSharp",
+                osmresult = new OsmSharp.Osm.Xml.v0_6.osmresult[]
                 {
-                    old_id = 1,
-                    new_id = 2,
-                    new_version = 2
+                    new OsmSharp.Osm.Xml.v0_6.noderesult()
+                    {
+                        old_id = 1,
+                        old_idSpecified = true,
+                        new_id = 2,
+                        new_idSpecified = true,
+                        new_version = 2,
+                        new_versionSpecified = true
+                    }
                 }
             };
 
@@ -69,7 +77,8 @@ namespace OsmSharp.Test.Osm.Xml
                 result = streamReader.ReadToEnd();
             }
 
-            Assert.AreEqual("<diffResult><node old_id=\"1\" new_id=\"2\" new_version=\"2\" /></diffResult>", result);
+            Assert.AreEqual("<diffResult generator=\"OsmSharp\" version=\"0.6\"><node old_id=\"1\" new_id=\"2\" new_version=\"2\" /></diffResult>", 
+                result);
 
             diffResult = new OsmSharp.Osm.Xml.v0_6.diffResult();
             diffResult.osmresult = new OsmSharp.Osm.Xml.v0_6.osmresult[]
@@ -77,32 +86,45 @@ namespace OsmSharp.Test.Osm.Xml
                 new OsmSharp.Osm.Xml.v0_6.noderesult()
                 {
                     old_id = 1,
+                    old_idSpecified = true,
                     new_id = 2,
-                    new_version = 2
+                    new_idSpecified = true,
+                    new_version = 2,
+                    new_versionSpecified = true
                 },
                 new OsmSharp.Osm.Xml.v0_6.wayresult()
                 {
                     old_id = 1,
-                    new_id = 2,
-                    new_version = 3
+                    old_idSpecified = true,
+                    new_idSpecified = false,
+                    new_versionSpecified = false
                 },
                 new OsmSharp.Osm.Xml.v0_6.relationresult()
                 {
                     old_id = 4,
+                    old_idSpecified = true,
                     new_id = 5,
-                    new_version = 6
+                    new_idSpecified = true,
+                    new_version = 6,
+                    new_versionSpecified = true
                 },
                 new OsmSharp.Osm.Xml.v0_6.wayresult()
                 {
                     old_id = 7,
+                    old_idSpecified = true,
                     new_id = 8,
-                    new_version = 9
+                    new_idSpecified = true,
+                    new_version = 9,
+                    new_versionSpecified = true
                 },
                 new OsmSharp.Osm.Xml.v0_6.noderesult()
                 {
                     old_id = 10,
+                    old_idSpecified = true,
                     new_id = 11,
-                    new_version = 12
+                    new_idSpecified = true,
+                    new_version = 12,
+                    new_versionSpecified = true
                 }
             };
             
@@ -120,7 +142,7 @@ namespace OsmSharp.Test.Osm.Xml
 
             Assert.AreEqual("<diffResult>" + 
                 "<node old_id=\"1\" new_id=\"2\" new_version=\"2\" />" +
-                "<way old_id=\"1\" new_id=\"2\" new_version=\"3\" />" +
+                "<way old_id=\"1\" />" +
                 "<relation old_id=\"4\" new_id=\"5\" new_version=\"6\" />" +
                 "<way old_id=\"7\" new_id=\"8\" new_version=\"9\" />" +
                 "<node old_id=\"10\" new_id=\"11\" new_version=\"12\" />" +

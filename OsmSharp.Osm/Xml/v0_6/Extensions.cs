@@ -110,6 +110,7 @@ namespace OsmSharp.Osm.Xml.v0_6
             // set the tags.
             if (xmlRelation.tag != null)
             {
+                relation.Tags = new TagsCollection();
                 foreach (var tag in xmlRelation.tag)
                 {
                     relation.Tags.Add(tag.k, tag.v);
@@ -174,6 +175,7 @@ namespace OsmSharp.Osm.Xml.v0_6
             // set the tags.
             if (xmlWay.tag != null)
             {
+                way.Tags = new TagsCollection();
                 foreach (var tag in xmlWay.tag)
                 {
                     way.Tags.Add(tag.k, tag.v);
@@ -231,6 +233,7 @@ namespace OsmSharp.Osm.Xml.v0_6
             // set the tags.
             if (xmlNode.tag != null)
             {
+                node.Tags = new TagsCollection();
                 foreach (var tag in xmlNode.tag)
                 {
                     node.Tags.Add(tag.k, tag.v);

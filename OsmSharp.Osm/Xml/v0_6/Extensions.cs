@@ -135,6 +135,12 @@ namespace OsmSharp.Osm.Xml.v0_6
                 relation.TimeStamp = xmlRelation.timestamp;
             }
 
+            // set the version flag.
+            if(xmlRelation.versionSpecified)
+            {
+                relation.Version = xmlRelation.version;
+            }
+
             // set the visible flag.
             relation.Visible = xmlRelation.visible;
             return relation;
@@ -193,6 +199,12 @@ namespace OsmSharp.Osm.Xml.v0_6
                 way.TimeStamp = xmlWay.timestamp;
             }
 
+            // set the version flag.
+            if (xmlWay.versionSpecified)
+            {
+                way.Version = xmlWay.version;
+            }
+
             // set the visible flag.
             way.Visible = xmlWay.visible;
             return way;
@@ -242,6 +254,12 @@ namespace OsmSharp.Osm.Xml.v0_6
             if (xmlNode.timestampSpecified)
             {
                 node.TimeStamp = xmlNode.timestamp;
+            }
+
+            // set the version flag.
+            if (xmlNode.versionSpecified)
+            {
+                node.Version = xmlNode.version;
             }
 
             // set the visible flag.

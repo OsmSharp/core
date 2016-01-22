@@ -214,7 +214,7 @@ namespace OsmSharp.Osm.Xml.Streams
             // set version
             if (nd.versionSpecified)
             {
-                node.Version = nd.version;
+                node.Version = (int)nd.version;
             }
 
             // set user
@@ -267,7 +267,7 @@ namespace OsmSharp.Osm.Xml.Streams
             // set version
             if (wa.versionSpecified)
             {
-                way.Version = wa.version;
+                way.Version = (int)wa.version;
             }
 
             // set user
@@ -330,7 +330,7 @@ namespace OsmSharp.Osm.Xml.Streams
             // set version
             if (re.versionSpecified)
             {
-                relation.Version = re.version;
+                relation.Version = (int)re.version;
             }
 
             // set user

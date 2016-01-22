@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using OsmSharp.Osm.Cache;
+using OsmSharp.Osm.Complete;
 
 namespace OsmSharp.Osm.Streams.Complete
 {
@@ -27,20 +28,12 @@ namespace OsmSharp.Osm.Streams.Complete
     /// </summary>
     public class OsmSimpleCompleteStreamSource : OsmCompleteStreamSource
     {
-        /// <summary>
-        /// Caches objects that are needed later to complete objects.
-        /// </summary>
-        private readonly OsmDataCache _dataCache;
-
-        /// <summary>
-        /// Holds the simple source of object.
-        /// </summary>
-        private readonly OsmStreamSource _simpleSource;
+        private readonly OsmDataCache _dataCache; // Caches objects that are needed later to complete objects.
+        private readonly OsmStreamSource _simpleSource; // Holds the simple source of object.
 
         /// <summary>
         /// Creates a new osm simple complete stream.
         /// </summary>
-        /// <param name="source"></param>
         public OsmSimpleCompleteStreamSource(OsmStreamSource source)
         {
             // create an in-memory cache by default.
@@ -58,8 +51,6 @@ namespace OsmSharp.Osm.Streams.Complete
         /// <summary>
         /// Creates a new osm simple complete stream.
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="cache"></param>
         public OsmSimpleCompleteStreamSource(OsmStreamSource source, OsmDataCache cache)
         {
             _dataCache = cache;
@@ -121,7 +112,7 @@ namespace OsmSharp.Osm.Streams.Complete
 
             while (_simpleSource.MoveNext())
             { // there is data.
-                OsmGeo currentSimple = _simpleSource.Current();
+                var currentSimple = _simpleSource.Current();
 
                 switch (currentSimple.Type)
                 {
@@ -141,7 +132,7 @@ namespace OsmSharp.Osm.Streams.Complete
                         break;
                     case OsmGeoType.Way:
                         // create complete way.
-                        _current = CompleteWay.CreateFrom(currentSimple as Way, _dataCache);
+                        _current = (currentSimple as Way).CreateComplete(_dataCache);
 
                         if (_waysToInclude.Contains(currentSimple.Id.Value))
                         { // keep the way because it is needed later on.
@@ -159,7 +150,7 @@ namespace OsmSharp.Osm.Streams.Complete
                         break;
                     case OsmGeoType.Relation:
                         // create complate relation.
-                        _current = CompleteRelation.CreateFrom(currentSimple as Relation, _dataCache);
+                        _current = (currentSimple as Relation).CreateComplete(_dataCache);
 
                         if(!_relationsToInclude.Contains(currentSimple.Id.Value))
                         { // only report relation usage when the relation can be let go.

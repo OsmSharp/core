@@ -18,6 +18,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using OsmSharp.Osm.Complete;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Geo.Attributes;
 using OsmSharp.Geo.Geometries;
@@ -40,7 +41,7 @@ namespace OsmSharp.Osm.Geo.Interpreter
         public override FeatureCollection Interpret(ICompleteOsmGeo osmObject)
         {
             // DISCLAIMER: this is a very very very simple geometry interpreter and
-            // contains hardcoded all relevant tags.
+            // contains all relevant tags hardcoded.
 
             var collection = new FeatureCollection();
             TagsCollectionBase tags;
@@ -100,13 +101,13 @@ namespace OsmSharp.Osm.Geo.Interpreter
 
                         if (isArea)
                         { // area tags leads to simple polygon
-                            var lineairRing = new Feature(new LineairRing((osmObject as CompleteWay).GetCoordinates().ToArray<GeoCoordinate>()),
+                            var lineairRing = new Feature(new LineairRing((osmObject as CompleteWay).GetCoordinates()),
                                 new SimpleGeometryAttributeCollection(tags));
                             collection.Add(lineairRing);
                         }
                         else
                         { // no area tag leads to just a line.
-                            var lineString = new Feature(new LineString((osmObject as CompleteWay).GetCoordinates().ToArray<GeoCoordinate>()),
+                            var lineString = new Feature(new LineString((osmObject as CompleteWay).GetCoordinates()),
                                 new SimpleGeometryAttributeCollection(tags));
                             collection.Add(lineString);
                         }
@@ -140,8 +141,6 @@ namespace OsmSharp.Osm.Geo.Interpreter
         /// <summary>
         /// Returns true if the given tags collection contains tags that could represents an area.
         /// </summary>
-        /// <param name="tags"></param>
-        /// <returns></returns>
         public override bool IsPotentiallyArea(TagsCollectionBase tags)
         {
             if (tags == null || tags.Count == 0) { return false; } // no tags, assume no area.
@@ -406,10 +405,6 @@ namespace OsmSharp.Osm.Geo.Interpreter
         /// <summary>
         /// Creates a new lineair ring from the given way and updates the assigned flags array.
         /// </summary>
-        /// <param name="ways"></param>
-        /// <param name="way"></param>
-        /// <param name="assignedFlags"></param>
-        /// <param name="ring"></param>
         /// <returns></returns>
         private bool AssignRing(List<KeyValuePair<bool, CompleteWay>> ways, int way, bool[] assignedFlags, out LineairRing ring)
         {

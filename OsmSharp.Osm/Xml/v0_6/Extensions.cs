@@ -139,7 +139,7 @@ namespace OsmSharp.Osm.Xml.v0_6
             // set the version flag.
             if(xmlRelation.versionSpecified)
             {
-                relation.Version = xmlRelation.version;
+                relation.Version = (int)xmlRelation.version;
             }
 
             // set the visible flag.
@@ -204,7 +204,7 @@ namespace OsmSharp.Osm.Xml.v0_6
             // set the version flag.
             if (xmlWay.versionSpecified)
             {
-                way.Version = xmlWay.version;
+                way.Version = (int)xmlWay.version;
             }
 
             // set the visible flag.
@@ -262,7 +262,7 @@ namespace OsmSharp.Osm.Xml.v0_6
             // set the version flag.
             if (xmlNode.versionSpecified)
             {
-                node.Version = xmlNode.version;
+                node.Version = (int)xmlNode.version;
             }
 
             // set the visible flag.

@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,12 +15,9 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using OsmSharp.Osm.Filters.Tags;
-using OsmSharp.Osm;
+using OsmSharp.Osm.Complete;
 
 namespace OsmSharp.Osm.Filters
 {
@@ -32,24 +29,19 @@ namespace OsmSharp.Osm.Filters
         /// <summary>
         /// Evaluates the filter against the osm object.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         public bool Evaluate(CompleteOsmGeo obj)
         {
-            return this.Evaluate(obj.ToSimple());
+            return this.Evaluate(obj.CreateSimple());
         }
 
         /// <summary>
         /// Evaluates the filter against the osm object.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         public abstract bool Evaluate(OsmGeo obj);
 
         /// <summary>
         /// Returns description of this filter.
         /// </summary>
-        /// <returns></returns>
         public abstract override string ToString();
 
         #region Operators

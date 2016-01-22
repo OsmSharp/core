@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,7 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Math.Geo;
 using System.Collections.Generic;
 
 namespace OsmSharp.Osm
@@ -31,7 +30,6 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Creates a new changeset.
         /// </summary>
-        /// <param name="id"></param>
         internal CompleteChangeSet(long id)
             :base(id)
         {
@@ -46,42 +44,6 @@ namespace OsmSharp.Osm
             get
             {
                 return _changes;
-            }
-        }
-
-        /// <summary>
-        /// Returns the list of objects that this changeset applies to.
-        /// </summary>
-        public IList<CompleteOsmGeo> Objects
-        {
-            get
-            {
-                var objs = new List<CompleteOsmGeo>();
-                foreach (var change in this.Changes)
-                {
-                    objs.Add(change.Object);
-                }
-                return objs;
-            }
-        }
-
-        /// <summary>
-        /// Returns the bounding box of this changeset.
-        /// </summary>
-        public override GeoCoordinateBox BoundingBox
-        {
-            get 
-            {
-                if (this.Objects.Count > 0)
-                {
-                    var box = this.Objects[0].BoundingBox;
-                    for (int idx = 1; idx < this.Objects.Count; idx++)
-                    {
-                        box = box + this.Objects[idx].BoundingBox;
-                    }
-                    return box;
-                }
-                return null;
             }
         }
 

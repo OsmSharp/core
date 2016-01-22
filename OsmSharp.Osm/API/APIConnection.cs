@@ -716,7 +716,7 @@ namespace OsmSharp.Osm.API
             node.TimeStamp = xml_node.timestamp;
             node.UserName = xml_node.user;
             node.UserId = xml_node.uid;
-            node.Version = xml_node.version;
+            node.Version = (int)xml_node.version;
             node.Visible = xml_node.visible;
 
             return node;
@@ -754,7 +754,7 @@ namespace OsmSharp.Osm.API
             way.TimeStamp = xml_way.timestamp;
             way.UserName = xml_way.user;
             way.UserId = xml_way.uid;
-            way.Version = xml_way.version;
+            way.Version = (int)xml_way.version;
             way.Visible = xml_way.visible;
 
             return way;
@@ -811,7 +811,7 @@ namespace OsmSharp.Osm.API
             relation.TimeStamp = xml_relation.timestamp;
             relation.UserName = xml_relation.user;
             relation.UserId = xml_relation.uid;
-            relation.Version = xml_relation.version;
+            relation.Version = (int)xml_relation.version;
             relation.Visible = xml_relation.visible;
 
             return relation;

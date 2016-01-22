@@ -28,30 +28,9 @@ namespace OsmSharp.Osm
     public interface ICompleteOsmGeo
     {
         /// <summary>
-        /// Gets the bounding box.
-        /// </summary>
-        GeoCoordinateBox BoundingBox { get; }
-
-        /// <summary>
         /// Gets or sets the changeset id.
         /// </summary>
         long? ChangeSetId { get; set; }
-
-        /// <summary>
-        /// Gets the interpreted feature collection.
-        /// </summary>
-        FeatureCollection Features { get; }
-
-        /// <summary>
-        /// Resets the current features for this object.
-        /// </summary>
-        void ResetFeatures();
-
-        /// <summary>
-        /// Converts this object to it's corresponding simple version.
-        /// </summary>
-        /// <returns></returns>
-        OsmSharp.Osm.OsmGeo ToSimple();
 
         /// <summary>
         /// Gets or sets the visible flag.

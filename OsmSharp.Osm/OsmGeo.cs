@@ -59,7 +59,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// The version.
         /// </summary>
-        public ulong? Version { get; set; }
+        public int? Version { get; set; }
 
         /// <summary>
         /// The userid.

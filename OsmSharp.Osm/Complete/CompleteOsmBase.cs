@@ -27,7 +27,7 @@ namespace OsmSharp.Osm
     /// Base class of all osm objects.
     /// 
     /// ChangeSets, Nodes, Ways and Relations.
-    /// </summary>   
+    /// </summary>
     public abstract class CompleteOsmBase : IEquatable<CompleteOsmBase>
     {
         private readonly long _id;
@@ -35,30 +35,9 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Creates a new base object.
         /// </summary>
-        /// <param name="id"></param>
         internal CompleteOsmBase(long id)
-            : this(null, id)
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new base object with a string table for the tags.
-        /// </summary>
-        /// <param name="stringTable"></param>
-        /// <param name="id"></param>
-        internal CompleteOsmBase(ObjectTable<string> stringTable, long id)
         {
             _id = id;
-
-            if (stringTable != null)
-            {
-                this.Tags = new StringTableTagsCollection(stringTable);
-            }
-            else
-            {
-                this.Tags = new TagsCollection();
-            }
         }
 
         /// <summary>
@@ -91,14 +70,6 @@ namespace OsmSharp.Osm
         }
 
         /// <summary>
-        /// Returns the bounding box for this object.
-        /// </summary>
-        public abstract GeoCoordinateBox BoundingBox
-        {
-            get;
-        }
-
-        /// <summary>
         /// Returns the type of osm data.
         /// </summary>
         public abstract CompleteOsmType Type
@@ -118,7 +89,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Gets/Sets the version.
         /// </summary>
-        public long? Version
+        public int? Version
         {
             get;
             set;
@@ -132,9 +103,6 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Returns true if a and b represent the same object.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
         public static bool operator ==(CompleteOsmBase a, CompleteOsmBase b)
         {
             // If both are null, or both are same instance, return true.
@@ -156,9 +124,6 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Returns true if a and b do not represent the same object.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
         public static bool operator !=(CompleteOsmBase a, CompleteOsmBase b)
         {
             return !(a == b);

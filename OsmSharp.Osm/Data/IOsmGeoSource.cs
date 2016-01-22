@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,18 +16,26 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace OsmSharp.Osm.Data
 {
     /// <summary>
-    /// Represents an abstract source of OsmGeo objects.
+    /// Abstract representation of a source of a snapshot of OSM-objects.
     /// </summary>
-    public interface IOsmGeoSource : INodeSource, IWaySource, IRelationSource
+    public interface IOsmGeoSource
     {
+        /// <summary>
+        /// Returns a node with the given id from this source.
+        /// </summary>
+        Node GetNode(long id);
 
+        /// <summary>
+        /// Returns a way with the given id from this source.
+        /// </summary>
+        Way GetWay(long id);
+
+        /// <summary>
+        /// Returns a relation with the given id from this source.
+        /// </summary>
+        Relation GetRelation(long id);
     }
 }

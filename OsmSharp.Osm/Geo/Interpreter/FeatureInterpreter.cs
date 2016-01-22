@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -17,14 +17,10 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Geo.Geometries;
-using OsmSharp.Osm;
 using OsmSharp.Osm.Data;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Geo.Features;
+using OsmSharp.Osm.Complete;
 
 namespace OsmSharp.Osm.Geo.Interpreter
 {
@@ -60,33 +56,26 @@ namespace OsmSharp.Osm.Geo.Interpreter
         /// <summary>
         /// Interprets an OSM-object and returns the corresponding geometry.
         /// </summary>
-        /// <param name="osmObject"></param>
-        /// <returns></returns>
         public abstract FeatureCollection Interpret(ICompleteOsmGeo osmObject);
 
         /// <summary>
         /// Returns true if the given tags collection contains potential area tags.
         /// </summary>
-        /// <param name="tags"></param>
-        /// <returns></returns>
         public abstract bool IsPotentiallyArea(TagsCollectionBase tags);
 
         /// <summary>
         /// Interprets an OSM-object and returns the correctponding geometry.
         /// </summary>
-        /// <param name="simpleOsmGeo"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public virtual FeatureCollection Interpret(OsmGeo simpleOsmGeo, IDataSourceReadOnly data)
+        public virtual FeatureCollection Interpret(OsmGeo simpleOsmGeo, IOsmGeoSource data)
         {
             switch (simpleOsmGeo.Type)
             {
                 case OsmGeoType.Node:
                     return this.Interpret(simpleOsmGeo as Node);
                 case OsmGeoType.Way:
-                    return this.Interpret(CompleteWay.CreateFrom(simpleOsmGeo as Way, data));
+                    return this.Interpret((simpleOsmGeo as Way).CreateComplete(data));
                 case OsmGeoType.Relation:
-                    return this.Interpret(CompleteRelation.CreateFrom(simpleOsmGeo as Relation, data));
+                    return this.Interpret((simpleOsmGeo as Relation).CreateComplete(data));
             }
             throw new ArgumentOutOfRangeException();
         }

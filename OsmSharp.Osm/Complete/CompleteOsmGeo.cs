@@ -43,36 +43,6 @@ namespace OsmSharp.Osm
         }
 
         /// <summary>
-        /// Creates a new OsmGeo object with a string table.
-        /// </summary>
-        /// <param name="string_table"></param>
-        /// <param name="id"></param>
-        internal CompleteOsmGeo(ObjectTable<string> string_table, long id)
-            : base(string_table, id)
-        {
-            this.Visible = true;
-            this.UserId = null;
-            this.User = null;
-        }
-
-        /// <summary>
-        /// Converts this OsmGeo object to an OsmGeoSimple object.
-        /// </summary>
-        /// <returns></returns>
-        public abstract OsmSharp.Osm.OsmGeo ToSimple();
-
-        /// <summary>
-        /// The bounding box of object.
-        /// </summary>
-        public override GeoCoordinateBox BoundingBox
-        {
-            get
-            {
-                return this.Features.Box;
-            }
-        }
-
-        /// <summary>
         /// Gets/Sets the changeset id.
         /// </summary>
         public long? ChangeSetId
@@ -84,45 +54,6 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Gets/Sets the visible flag.
         /// </summary>
-        public bool Visible { get; set; }
-
-        #region Features - Interpreter
-
-        /// <summary>
-        /// The interpreter for these objects.
-        /// </summary>
-        public static FeatureInterpreter FeatureInterperter = 
-            new SimpleFeatureInterpreter();
-
-        /// <summary>
-        /// The feature(s) this OSM-object represents.
-        /// </summary>
-        private FeatureCollection _features;
-
-        /// <summary>
-        /// Returns the feature(s) this OSM-object represents.
-        /// </summary>
-        public FeatureCollection Features
-        {
-            get
-            {
-                if (_features == null)
-                {
-                    _features = CompleteOsmGeo.FeatureInterperter.Interpret(this);
-                }
-                return _features;
-            }
-        }
-
-        /// <summary>
-        /// Make sure the geometries of this objects will be recalculated.
-        /// </summary>
-        public void ResetFeatures()
-        {
-            _features = null;
-        }
-
-        #endregion
-        
+        public bool Visible { get; set; }        
     }
 }

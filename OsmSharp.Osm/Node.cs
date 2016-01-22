@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,10 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Collections.Tags;
-using OsmSharp.Geo.Features;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Geo.Interpreter;
 
 namespace OsmSharp.Osm
 {
@@ -64,55 +61,6 @@ namespace OsmSharp.Osm
             return string.Format("Node[{0}]{1}", this.Id.Value, tags);
         }
 
-        #region Construction Methods
-
-        /// <summary>
-        /// Creates a new node.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
-        /// <returns></returns>
-        public static Node Create(long id, double latitude, double longitude)
-        {
-            Node node = new Node();
-            node.Id = id;
-            node.Latitude = latitude;
-            node.Longitude = longitude;
-            return node;
-        }
-
-        /// <summary>
-        /// Creates a new node.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="tags"></param>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
-        /// <returns></returns>
-        public static Node Create(long id, TagsCollectionBase tags, double latitude, double longitude)
-        {
-            Node node = new Node();
-            node.Id = id;
-            node.Latitude = latitude;
-            node.Longitude = longitude;
-            node.Tags = tags;
-            return node;
-        }
-
-        #endregion
-
-        /// <summary>
-        /// The bounding box of object.
-        /// </summary>
-        public GeoCoordinateBox BoundingBox
-        {
-            get
-            {
-                return this.Features.Box;
-            }
-        }
-
         /// <summary>
         /// The coordinates of this node.
         /// </summary>
@@ -122,52 +70,6 @@ namespace OsmSharp.Osm
             {
                 return new GeoCoordinate(this.Latitude.Value, this.Longitude.Value);
             }
-        }
-
-        #region Geometry - Interpreter
-
-        /// <summary>
-        /// The interpreter for these objects.
-        /// </summary>
-        public static FeatureInterpreter FeatureInterperter = new SimpleFeatureInterpreter(); // set a default feature interpreter.
-
-        /// <summary>
-        /// The feature(s) this OSM-object represents.
-        /// </summary>
-        private FeatureCollection _features;
-
-        /// <summary>
-        /// Returns the feature(s) this OSM-object represents.
-        /// </summary>
-        public FeatureCollection Features
-        {
-            get
-            {
-                if (_features == null)
-                {
-                    _features = CompleteOsmGeo.FeatureInterperter.Interpret(this);
-                }
-                return _features;
-            }
-        }
-
-        /// <summary>
-        /// Make sure the geometries of this objects will be recalculated.
-        /// </summary>
-        public void ResetFeatures()
-        {
-            _features = null;
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Returns a simple version of this object.
-        /// </summary>
-        /// <returns></returns>
-        public OsmGeo ToSimple()
-        {
-            return this;
         }
 
         /// <summary>

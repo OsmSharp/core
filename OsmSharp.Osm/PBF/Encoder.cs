@@ -275,14 +275,13 @@ namespace OsmSharp.Osm.PBF
             { // add the metadata if any.
                 node.TimeStamp = Encoder.DecodeTimestamp(pbfNode.info.timestamp, block.date_granularity);
                 node.Visible = true;
-                node.Version = (uint)pbfNode.info.version;
+                node.Version = pbfNode.info.version;
                 node.UserId = pbfNode.info.uid;
                 node.UserName = null;
                 if(block.stringtable != null)
                 {
                     node.UserName = System.Text.Encoding.UTF8.GetString(block.stringtable.s[pbfNode.info.user_sid]);
                 }
-                node.Version = (ulong)pbfNode.info.version;
             }
             node.Visible = true;
 
@@ -455,7 +454,7 @@ namespace OsmSharp.Osm.PBF
                 {
                     way.UserName = System.Text.Encoding.UTF8.GetString(block.stringtable.s[pbfWay.info.user_sid]);
                 }
-                way.Version = (ulong)pbfWay.info.version;
+                way.Version = pbfWay.info.version;
             }
             way.Visible = true;
         }
@@ -581,7 +580,7 @@ namespace OsmSharp.Osm.PBF
                 {
                     relation.UserName = System.Text.Encoding.UTF8.GetString(block.stringtable.s[pbfRelation.info.user_sid]);
                 }
-                relation.Version = (ulong)pbfRelation.info.version;
+                relation.Version = pbfRelation.info.version;
             }
             relation.Visible = true;
 

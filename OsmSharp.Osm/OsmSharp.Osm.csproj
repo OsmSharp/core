@@ -70,9 +70,6 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="API\APICapabilities.cs" />
-    <Compile Include="API\APIConnection.cs" />
-    <Compile Include="API\APIException.cs" />
     <Compile Include="Cache\OsmDataCache.cs" />
     <Compile Include="Cache\OsmDataCacheMemory.cs" />
     <Compile Include="Change.cs" />

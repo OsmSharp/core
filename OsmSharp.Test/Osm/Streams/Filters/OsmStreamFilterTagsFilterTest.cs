@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -38,13 +38,13 @@ namespace OsmSharp.Test.Osm.Streams.Filters
         public void TestFilterTagsFilterNoFiltering()
         {
             // execute
-            List<OsmGeo> filtered = this.Filter(new OsmGeo[] {
-                Node.Create(1, new TagsCollection(
-                    Tag.Create("tag1", "value1")), 0, 0),
-                Node.Create(2, new TagsCollection(
-                    Tag.Create("tag2", "value2")), 1, 0),
-                Node.Create(3, new TagsCollection(
-                    Tag.Create("tag3", "value3")), 0, 1) },
+            var filtered = this.Filter(new OsmGeo[] {
+                new Node(1, 0, 0, new TagsCollection(
+                    Tag.Create("tag1", "value1"))),
+                new Node(2, 1, 0, new TagsCollection(
+                    Tag.Create("tag2", "value2"))),
+                new Node(3, 0, 1, new TagsCollection(
+                    Tag.Create("tag3", "value3"))) },
                 ((TagsCollectionBase tags) => {}));
 
             // verify.
@@ -65,13 +65,13 @@ namespace OsmSharp.Test.Osm.Streams.Filters
         public void TestFilterTagsFilterFiltering()
         {
             // execute
-            List<OsmGeo> filtered = this.Filter(new OsmGeo[] {
-                Node.Create(1, new TagsCollection(
-                    Tag.Create("tag1", "value1")), 0, 0),
-                Node.Create(2, new TagsCollection(
-                    Tag.Create("tag2", "value2")), 1, 0),
-                Node.Create(3, new TagsCollection(
-                    Tag.Create("tag3", "value3")), 0, 1) },
+            var filtered = this.Filter(new OsmGeo[] {
+                new Node(1, 0, 0, new TagsCollection(
+                    Tag.Create("tag1", "value1"))),
+                new Node(2, 1, 0, new TagsCollection(
+                    Tag.Create("tag2", "value2"))),
+                new Node(3, 0, 1, new TagsCollection(
+                    Tag.Create("tag3", "value3"))) },
                 ((TagsCollectionBase tags) => {
                     tags.RemoveKey("tag2");
                 }));
@@ -90,12 +90,10 @@ namespace OsmSharp.Test.Osm.Streams.Filters
         /// <summary>
         /// Does the filtering.
         /// </summary>
-        /// <param name="osmGeos"></param>
-        /// <param name="filter"></param>
         private List<OsmGeo> Filter(OsmGeo[] osmGeos,
             OsmStreamFilterTagsFilter.TagsFilterDelegate filter)
         {
-            OsmStreamFilterTagsFilter tagsFilter = new OsmStreamFilterTagsFilter(filter);
+            var tagsFilter = new OsmStreamFilterTagsFilter(filter);
             tagsFilter.RegisterSource(osmGeos);
             return new List<OsmGeo>(tagsFilter);
         }

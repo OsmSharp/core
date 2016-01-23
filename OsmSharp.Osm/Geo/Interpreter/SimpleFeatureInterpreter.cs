@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -36,8 +36,6 @@ namespace OsmSharp.Osm.Geo.Interpreter
         /// <summary>
         /// Interprets an OSM-object and returns the corresponding geometry.
         /// </summary>
-        /// <param name="osmObject"></param>
-        /// <returns></returns>
         public override FeatureCollection Interpret(ICompleteOsmGeo osmObject)
         {
             // DISCLAIMER: this is a very very very simple geometry interpreter and
@@ -339,11 +337,6 @@ namespace OsmSharp.Osm.Geo.Interpreter
         /// <summary>
         /// Checks if a ring is not contained by any other unused ring.
         /// </summary>
-        /// <param name="rings"></param>
-        /// <param name="containsFlags"></param>
-        /// <param name="used"></param>
-        /// <param name="ringIdx"></param>
-        /// <returns></returns>
         private bool CheckUncontained(List<KeyValuePair<bool, LineairRing>> rings,
             bool[][] containsFlags, bool[] used, int ringIdx)
         {
@@ -360,9 +353,6 @@ namespace OsmSharp.Osm.Geo.Interpreter
         /// <summary>
         /// Tries to extract all rings from the given ways.
         /// </summary>
-        /// <param name="ways"></param>
-        /// <param name="rings"></param>
-        /// <returns></returns>
         private bool AssignRings(
             List<KeyValuePair<bool, CompleteWay>> ways, out List<KeyValuePair<bool, LineairRing>> rings)
         {
@@ -372,10 +362,6 @@ namespace OsmSharp.Osm.Geo.Interpreter
         /// <summary>
         /// Assigns rings to the unassigned ways.
         /// </summary>
-        /// <param name="ways"></param>
-        /// <param name="assignedFlags"></param>
-        /// <param name="rings"></param>
-        /// <returns></returns>
         private bool AssignRings(
             List<KeyValuePair<bool, CompleteWay>> ways, bool[] assignedFlags, out List<KeyValuePair<bool, LineairRing>> rings)
         {
@@ -443,11 +429,6 @@ namespace OsmSharp.Osm.Geo.Interpreter
         /// <summary>
         /// Completes an uncompleted ring.
         /// </summary>
-        /// <param name="ways"></param>
-        /// <param name="assignedFlags"></param>
-        /// <param name="nodes"></param>
-        /// <param name="role"></param>
-        /// <returns></returns>
         private bool CompleteRing(List<KeyValuePair<bool, CompleteWay>> ways, bool[] assignedFlags, 
             List<Node> nodes, bool? role)
         {

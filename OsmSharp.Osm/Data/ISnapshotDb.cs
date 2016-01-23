@@ -16,6 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Osm.Filters;
+using OsmSharp.Osm.Streams;
 using System.Collections.Generic;
 
 namespace OsmSharp.Osm.Data
@@ -50,6 +52,12 @@ namespace OsmSharp.Osm.Data
         void AddOrUpdate(IEnumerable<OsmGeo> osmGeos);
 
         /// <summary>
+        /// Gets all the objects in the form of an osm stream source.
+        /// </summary>
+        /// <returns></returns>
+        OsmStreamSource Get();
+
+        /// <summary>
         /// Gets an osm object of the given type and the given id.
         /// </summary>
         OsmGeo Get(OsmGeoType type, long id);
@@ -58,6 +66,12 @@ namespace OsmSharp.Osm.Data
         /// Gets all osm objects with the given types and the given id's.
         /// </summary>
         IList<OsmGeo> Get(IList<OsmGeoType> type, IList<long> id);
+
+        /// <summary>
+        /// Gets all osm objects that pass the given filter within the given bounding box.
+        /// </summary>
+        IList<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude,
+            Filter filter);
 
         /// <summary>
         /// Deletes the osm object with the given type, the given id without applying a changeset.

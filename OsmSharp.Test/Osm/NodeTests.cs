@@ -33,7 +33,7 @@ namespace OsmSharp.Test.Osm
         [Test]
         public void NodeToStringTests()
         {
-            Node testNode = Node.Create(-1, 0, 0);
+            var testNode = new Node(-1, 0, 0);
 			string description = testNode.ToString(); // 
             Assert.IsNotEmpty(description);
             description = testNode.ToString();

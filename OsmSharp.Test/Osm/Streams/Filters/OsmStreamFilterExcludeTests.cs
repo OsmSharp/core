@@ -40,15 +40,15 @@ namespace OsmSharp.Test.Osm.Streams.Filters
             // execute
             var filtered = this.Filter(
                     new OsmGeo[] {
-                Node.Create(1, new TagsCollection(
-                    Tag.Create("tag1", "value1")), 0, 0),
-                Node.Create(2, new TagsCollection(
-                    Tag.Create("tag2", "value2")), 1, 0),
-                Node.Create(3, new TagsCollection(
-                    Tag.Create("tag3", "value3")), 0, 1) }, 
+                new Node(1, 0, 0, new TagsCollection(
+                    Tag.Create("tag1", "value1"))),
+                new Node(2, 1, 0, new TagsCollection(
+                    Tag.Create("tag2", "value2"))),
+                new Node(3, 0, 1, new TagsCollection(
+                    Tag.Create("tag3", "value3"))) }, 
                     new OsmGeo[] {
-                Node.Create(1, new TagsCollection(
-                    Tag.Create("tag1", "value1")), 0, 0) });
+                new Node(1, 0, 0, new TagsCollection(
+                    Tag.Create("tag1", "value1"))) });
 
             // verify.
             Assert.IsNotNull(filtered);
@@ -62,15 +62,15 @@ namespace OsmSharp.Test.Osm.Streams.Filters
 
             filtered = this.Filter(
                     new OsmGeo[] {
-                Node.Create(1, new TagsCollection(
-                    Tag.Create("tag1", "value1")), 0, 0),
-                Node.Create(2, new TagsCollection(
-                    Tag.Create("tag2", "value2")), 1, 0),
-                Node.Create(3, new TagsCollection(
-                    Tag.Create("tag3", "value3")), 0, 1) },
+                new Node(1, 0, 0, new TagsCollection(
+                    Tag.Create("tag1", "value1"))),
+                new Node(2, 1, 0, new TagsCollection(
+                    Tag.Create("tag2", "value2"))),
+                new Node(3, 0, 1, new TagsCollection(
+                    Tag.Create("tag3", "value3"))) },
                     new OsmGeo[] {
-                Node.Create(1, new TagsCollection(
-                    Tag.Create("tag1", "value1")), 0, 0) },
+                new Node(1, 0, 0, new TagsCollection(
+                    Tag.Create("tag1", "value1"))) },
                     false, true, true);
 
             // verify.
@@ -192,8 +192,6 @@ namespace OsmSharp.Test.Osm.Streams.Filters
         /// <summary>
         /// Does the filtering.
         /// </summary>
-        /// <param name="osmGeos"></param>
-        /// <param name="toExclude"></param>
         private List<OsmGeo> Filter(OsmGeo[] osmGeos, OsmGeo[] toExclude)
         {
             return this.Filter(osmGeos, toExclude, true, true, true);
@@ -202,11 +200,6 @@ namespace OsmSharp.Test.Osm.Streams.Filters
         /// <summary>
         /// Does the filtering.
         /// </summary>
-        /// <param name="osmGeos"></param>
-        /// <param name="toExclude"></param>
-        /// <param name="excludeNodes"></param>
-        /// <param name="excludeWays"></param>
-        /// <param name="excludeRelations"></param>
         private List<OsmGeo> Filter(OsmGeo[] osmGeos, OsmGeo[] toExclude, bool excludeNodes, bool excludeWays, bool excludeRelations)
         {
             var excludeFilter = new OsmStreamFilterExclude(excludeNodes, excludeWays, excludeRelations);

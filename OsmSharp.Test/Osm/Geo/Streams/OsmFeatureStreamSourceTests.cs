@@ -21,10 +21,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Streams;
-using OsmSharp.Osm.Data.Memory;
-using OsmSharp.Osm.Geo.Interpreter;
 using System.Collections.Generic;
-using System.Linq;
 using OsmSharp.Osm.Geo.Streams;
 using OsmSharp.Geo.Features;
 

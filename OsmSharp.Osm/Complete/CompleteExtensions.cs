@@ -29,6 +29,24 @@ namespace OsmSharp.Osm.Complete
     /// </summary>
     public static class CompleteExtensions
     {
+        
+        /// <summary>
+        /// Creates a complete object.
+        /// </summary>
+        public static ICompleteOsmGeo CreateComplete(this OsmGeo simpleOsmGeo, IOsmGeoSource osmGeoSource)
+        {
+            switch(simpleOsmGeo.Type)
+            {
+                case OsmGeoType.Node:
+                    return (simpleOsmGeo as Node);
+                case OsmGeoType.Way:
+                    return (simpleOsmGeo as Way).CreateComplete(osmGeoSource);
+                case OsmGeoType.Relation:
+                    return (simpleOsmGeo as Relation).CreateComplete(osmGeoSource);
+            }
+            throw new Exception("Unknown OsmGeoType.");
+        }
+
         /// <summary>
         /// Creates a complete relation.
         /// </summary>

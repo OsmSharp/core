@@ -16,6 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+
 namespace OsmSharp.Osm.Data
 {
     /// <summary>
@@ -37,5 +39,45 @@ namespace OsmSharp.Osm.Data
         /// Returns a relation with the given id from this source.
         /// </summary>
         Relation GetRelation(long id);
+    }
+
+    /// <summary>
+    /// A osm geo source implementation for a snapshot db.
+    /// </summary>
+    internal class OsmGeoSourceSnapshotDb : IOsmGeoSource
+    {
+        private readonly ISnapshotDb _db;
+
+        /// <summary>
+        /// Creates a osm geo source.
+        /// </summary>
+        public OsmGeoSourceSnapshotDb(ISnapshotDb db)
+        {
+            _db = db;
+        }
+
+        /// <summary>
+        /// Returns the node for the given id.
+        /// </summary>
+        public Node GetNode(long id)
+        {
+            return _db.Get(OsmGeoType.Node, id) as Node;
+        }
+
+        /// <summary>
+        /// Returns the way for the given id.
+        /// </summary>
+        public Way GetWay(long id)
+        {
+            return _db.Get(OsmGeoType.Way, id) as Way;
+        }
+
+        /// <summary>
+        /// Returns the relation for the given id.
+        /// </summary>
+        public Relation GetRelation(long id)
+        {
+            return _db.Get(OsmGeoType.Relation, id) as Relation;
+        }
     }
 }

@@ -41,7 +41,7 @@ namespace OsmSharp.Test.Osm.PBF.Streams
         public void TestWriteNode()
         {
             // build source stream.
-            var sourceNode = Node.Create(1, 1.1, 1.2);
+            var sourceNode = new Node(1, 1.1, 1.2);
             var sourceObjects = new OsmGeo[] {
                 sourceNode
             };
@@ -73,7 +73,7 @@ namespace OsmSharp.Test.Osm.PBF.Streams
             }
 
             // build source stream.
-            sourceNode = Node.Create(1, 1.1, 1.2);
+            sourceNode = new Node(1, 1.1, 1.2);
             sourceNode.Tags = new TagsCollection();
             sourceNode.Tags.Add("highway", "residential");
             sourceObjects = new OsmGeo[] {
@@ -109,7 +109,7 @@ namespace OsmSharp.Test.Osm.PBF.Streams
             }
 
             // build source stream.
-            sourceNode = Node.Create(1, 1.1, 1.2);
+            sourceNode = new Node(1, 1.1, 1.2);
             sourceNode.Tags = new TagsCollection();
             sourceNode.Tags.Add("highway", "residential");
             sourceNode.ChangeSetId = 1;
@@ -434,7 +434,7 @@ namespace OsmSharp.Test.Osm.PBF.Streams
         [Test]
         public void TestWriteMix()
         {
-            var sourceNode = Node.Create(1, 1.1, 1.2);
+            var sourceNode = new Node(1, 1.1, 1.2);
             sourceNode.Tags = new TagsCollection();
             sourceNode.Tags.Add("highway", "residential");
             sourceNode.ChangeSetId = 1;

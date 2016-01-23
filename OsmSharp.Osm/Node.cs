@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Osm
@@ -26,11 +27,34 @@ namespace OsmSharp.Osm
     public class Node : OsmGeo, ICompleteOsmGeo
     {
         /// <summary>
-        /// Creates a new simple node.
+        /// Creates a new node.
         /// </summary>
         public Node()
         {
             this.Type = OsmGeoType.Node;
+        }
+
+        /// <summary>
+        /// Creates a new node.
+        /// </summary>
+        public Node(long id, double latitude, double longitude)
+            : this()
+        {
+            this.Id = id;
+            this.Latitude = latitude;
+            this.Longitude = longitude;
+        }
+
+        /// <summary>
+        /// Creates a new node.
+        /// </summary>
+        public Node(long id, double latitude, double longitude, TagsCollectionBase tags)
+            : this()
+        {
+            this.Id = id;
+            this.Latitude = latitude;
+            this.Longitude = longitude;
+            this.Tags = tags;
         }
 
         /// <summary>

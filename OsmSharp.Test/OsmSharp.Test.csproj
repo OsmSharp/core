@@ -83,11 +83,9 @@
     <Compile Include="Math\Structures\LocatedObjectIndexTest.cs" />
     <Compile Include="Math\Structures\LocatedObjectQTTests.cs" />
     <Compile Include="Math\Structures\StringTrees\StringTreeDictionaryTest.cs" />
-    <Compile Include="Osm\API\OsmApiXmlTest.cs" />
     <Compile Include="Osm\Cache\OsmDataCacheMemoryTests.cs" />
     <Compile Include="Osm\Cache\OsmDataCacheTestsBase.cs" />
     <Compile Include="Osm\ComparisonHelpers.cs" />
-    <Compile Include="Osm\Data\MemoryDataSourceTests.cs" />
     <Compile Include="Osm\Geo\Interpreter\SimpleFeatureInterpreterTests.cs" />
     <Compile Include="Osm\Geo\Streams\OsmFeatureStreamSourceTests.cs" />
     <Compile Include="Osm\NodeTests.cs" />
@@ -141,6 +139,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Osm\Data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

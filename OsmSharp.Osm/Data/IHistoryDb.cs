@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Osm.Streams;
 using System.Collections.Generic;
 
 namespace OsmSharp.Osm.Data
@@ -38,7 +39,7 @@ namespace OsmSharp.Osm.Data
         /// Clears all data.
         /// </summary>
         void Clear();
-
+        
         /// <summary>
         /// Adds the given osm object in the db exactly as given.
         /// </summary>
@@ -63,6 +64,37 @@ namespace OsmSharp.Osm.Data
         void Add(ChangeSet changeset, ChangeSetInfo info);
 
         /// <summary>
+        /// Gets all the objects in the form of an osm stream source.
+        /// </summary>
+        /// <returns></returns>
+        OsmStreamSource Get();
+
+        /// <summary>
+        /// Gets the latest version of an osm object of the given type with the given id.
+        /// </summary>
+        OsmGeo Get(OsmGeoType type, long id);
+
+        /// <summary>
+        /// Gets all latest version of osm objects with the given types and the given id's.
+        /// </summary>
+        IList<OsmGeo> Get(IList<OsmGeoType> type, IList<long> id);
+
+        /// <summary>
+        /// Gets an osm object of the given type, the given id and the given version #.
+        /// </summary>
+        OsmGeo Get(OsmGeoType type, long id, int version);
+
+        /// <summary>
+        /// Gets all osm objects with the given types, the given id's and the given version #'s.
+        /// </summary>
+        IList<OsmGeo> Get(IList<OsmGeoType> type, IList<long> id, IList<long> version);
+
+        /// <summary>
+        /// Gets all latest versions of osm objects within the given bounding box.
+        /// </summary>
+        IList<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude);
+
+        /// <summary>
         /// Opens a new changeset
         /// </summary>
         long OpenChangeset(ChangeSetInfo info);
@@ -71,5 +103,15 @@ namespace OsmSharp.Osm.Data
         /// Applies the given changeset.
         /// </summary>
         bool ApplyChangeset(long id, ChangeSet changeset);
+
+        /// <summary>
+        /// Updates the changeset with the new info.
+        /// </summary>
+        bool UpdateChangeset(ChangeSetInfo info);
+
+        /// <summary>
+        /// Closes the changeset with the given id.
+        /// </summary>
+        bool CloseChangeset(long id);
     }
 }

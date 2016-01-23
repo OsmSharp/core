@@ -89,7 +89,8 @@
     <Compile Include="Data\IHistoryDb.cs" />
     <Compile Include="Data\IOsmGeoSource.cs" />
     <Compile Include="Data\ISnapshotDb.cs" />
-    <Compile Include="Data\Memory\MemoryDataSource.cs" />
+    <Compile Include="Data\ISnapshotDbExtensions.cs" />
+    <Compile Include="Data\MemorySnapshotDb.cs" />
     <Compile Include="Filters\Filter.cs" />
     <Compile Include="Filters\FilterAny.cs" />
     <Compile Include="Filters\FilterBox.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Streams\ChangeSets\Filters\BoundingBox\IChangeSetFilterListener.cs" />
     <Compile Include="Streams\Collections\OsmCollectionStreamWriter.cs" />
     <Compile Include="Streams\Collections\OsmEnumerableStreamSource.cs" />
+    <Compile Include="Streams\Complete\OsmCompleteEnumerableStreamSource.cs" />
     <Compile Include="Streams\Complete\OsmCompleteStreamSource.cs" />
     <Compile Include="Streams\Complete\OsmCompleteStreamTarget.cs" />
     <Compile Include="Streams\Complete\OsmSimpleCompleteStreamSource.cs" />

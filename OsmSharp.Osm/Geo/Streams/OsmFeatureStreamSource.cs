@@ -29,20 +29,12 @@ namespace OsmSharp.Osm.Geo.Streams
     /// </summary>
     public class OsmFeatureStreamSource : IFeatureStreamSource
     {
-        /// <summary>
-        /// Holds the feature interpreter.
-        /// </summary>
-        private FeatureInterpreter _interpreter;
-
-        /// <summary>
-        /// Holds the OSM sourc stream.
-        /// </summary>
-        private OsmCompleteStreamSource _source;
+        private readonly FeatureInterpreter _interpreter; // keeps the feature interpreter to convert osm objects -> features.
+        private OsmCompleteStreamSource _source; // holds the osm stream source.
 
         /// <summary>
         /// Creates a new OSM feature stream source.
         /// </summary>
-        /// <param name="source">The OSM source stream.</param>
         public OsmFeatureStreamSource(OsmCompleteStreamSource source)
         {
             _source = source;
@@ -52,8 +44,6 @@ namespace OsmSharp.Osm.Geo.Streams
         /// <summary>
         /// Creates a new OSM feature stream source.
         /// </summary>
-        /// <param name="source">The OSM source stream.</param>
-        /// <param name="interpreter">The interpreter used to translate OSM-data into features.</param>
         public OsmFeatureStreamSource(OsmCompleteStreamSource source, FeatureInterpreter interpreter)
         {
             _source = source;

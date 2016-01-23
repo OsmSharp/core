@@ -44,7 +44,7 @@ namespace OsmSharp.Test.Osm.Streams.Filters
             var filter = new OsmStreamFilterPoly(ring);
             filter.RegisterSource(new OsmGeo[] {
                 Way.Create(1, 1, 2),
-                Node.Create(2, 10, 10) 
+                new Node(2, 10, 10) 
             });
             Assert.Catch<OsmStreamNotSortedException>(() =>
             {
@@ -90,8 +90,8 @@ namespace OsmSharp.Test.Osm.Streams.Filters
 
             var filter = new OsmStreamFilterPoly(ring);
             filter.RegisterSource(new OsmGeo[] {
-                Node.Create(1, 0, 0),
-                Node.Create(2, 10, 10) 
+                new Node(1, 0, 0),
+                new Node(2, 10, 10) 
             });
             var list = new List<OsmGeo>(
                filter);
@@ -111,8 +111,8 @@ namespace OsmSharp.Test.Osm.Streams.Filters
 
             var filter = new OsmStreamFilterPoly(ring);
             filter.RegisterSource(new OsmGeo[] {
-                Node.Create(1, 0, 0),
-                Node.Create(2, 10, 10),
+                new Node(1, 0, 0),
+                new Node(2, 10, 10),
                 Way.Create(1, 1, 2)
             });
             var list = new List<OsmGeo>(
@@ -136,7 +136,7 @@ namespace OsmSharp.Test.Osm.Streams.Filters
 
             var filter = new OsmStreamFilterPoly(ring);
             filter.RegisterSource(new OsmGeo[] {
-                Node.Create(1, 0, 0),
+                new Node(1, 0, 0),
                 Relation.Create(1, new RelationMember()
                 {
                     MemberId = 1,
@@ -165,7 +165,7 @@ namespace OsmSharp.Test.Osm.Streams.Filters
 
             var filter = new OsmStreamFilterPoly(ring);
             filter.RegisterSource(new OsmGeo[] {
-                Node.Create(1, 0, 0),
+                new Node(1, 0, 0),
                 Way.Create(1, 1, 2),
                 Relation.Create(1, new RelationMember()
                 {

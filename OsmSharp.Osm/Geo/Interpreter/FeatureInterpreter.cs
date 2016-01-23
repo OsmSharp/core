@@ -52,7 +52,6 @@ namespace OsmSharp.Osm.Geo.Interpreter
                 _defaultInterpreter = value;
             }
         }
-
         /// <summary>
         /// Interprets an OSM-object and returns the corresponding geometry.
         /// </summary>
@@ -62,6 +61,15 @@ namespace OsmSharp.Osm.Geo.Interpreter
         /// Returns true if the given tags collection contains potential area tags.
         /// </summary>
         public abstract bool IsPotentiallyArea(TagsCollectionBase tags);
+
+        /// <summary>
+        /// Interprets an OSM-object and returns the correctponding geometry.
+        /// </summary>
+        public FeatureCollection Interpret(OsmGeo simpleOsmGeo, ISnapshotDb snapshotDb)
+        {
+            return this.Interpret(simpleOsmGeo, snapshotDb.ToOsmGeoSource());
+        }
+
 
         /// <summary>
         /// Interprets an OSM-object and returns the correctponding geometry.

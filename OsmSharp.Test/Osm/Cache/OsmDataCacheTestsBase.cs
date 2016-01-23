@@ -35,8 +35,8 @@ namespace OsmSharp.Test.Osm.Cache
         /// <param name="cache"></param>
         public void DoOsmDataCacheTestNode(OsmDataCache cache)
         {
-            Node node = Node.Create(1, new TagsCollection(
-                Tag.Create("node", "yes")), 1, 2);
+            var node = new Node(1, 1, 2, new TagsCollection(
+                Tag.Create("node", "yes")));
 
             // test invalid stuff.
             Assert.Throws<ArgumentNullException>(() => cache.AddNode(null));
@@ -147,8 +147,8 @@ namespace OsmSharp.Test.Osm.Cache
         /// <param name="cache"></param>
         public void DoOsmDataCacheTestClear(OsmDataCache cache)
         {
-            Node node = Node.Create(1, new TagsCollection(
-                Tag.Create("node", "yes")), 1, 2);
+            Node node = new Node(1, 1, 2, new TagsCollection(
+                Tag.Create("node", "yes")));
             Way way = Way.Create(1, new TagsCollection(
                 Tag.Create("way", "yes")), 1, 2);
             Relation relation = Relation.Create(1, new TagsCollection(

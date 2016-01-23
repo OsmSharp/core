@@ -40,9 +40,9 @@ namespace OsmSharp.Test.Osm.Streams.Filters
         {
             // execute
             List<OsmGeo> filtered = this.Filter(new OsmGeo[] {
-                Node.Create(1, 0, 0),
-                Node.Create(2, 1, 0),
-                Node.Create(3, 0, 1) });
+                new Node(1, 0, 0),
+                new Node(2, 1, 0),
+                new Node(3, 0, 1) });
 
             // verify.
             Assert.IsNotNull(filtered);
@@ -63,9 +63,9 @@ namespace OsmSharp.Test.Osm.Streams.Filters
         {
             // execute
             List<OsmGeo> completeList = this.Filter(new OsmGeo[] {
-                Node.Create(1, 0, 0),
-                Node.Create(2, 1, 0),
-                Node.Create(3, 0, 1),
+                new Node(1, 0, 0),
+                new Node(2, 1, 0),
+                new Node(3, 0, 1),
                 Way.Create(1, 1, 2, 3)});
 
             // verify.
@@ -95,9 +95,9 @@ namespace OsmSharp.Test.Osm.Streams.Filters
         {
             // execute
             List<OsmGeo> completeList = this.Filter(new OsmGeo[] {
-                Node.Create(1, 0, 0),
-                Node.Create(2, 1, 0),
-                Node.Create(3, 0, 1),
+                new Node(1, 0, 0),
+                new Node(2, 1, 0),
+                new Node(3, 0, 1),
                 Way.Create(1, 1, 2, 3),
                 Relation.Create(1, 
                     RelationMember.Create(1, "way", OsmGeoType.Way))});
@@ -131,9 +131,9 @@ namespace OsmSharp.Test.Osm.Streams.Filters
         {
             // execute
             List<OsmGeo> completeList = this.Filter(new OsmGeo[] {
-                Node.Create(1, 0, 0),
-                Node.Create(2, 1, 0),
-                Node.Create(3, 0, 1),
+                new Node(1, 0, 0),
+                new Node(2, 1, 0),
+                new Node(3, 0, 1),
                 Way.Create(2, 1, 2, 3),
                 Relation.Create(1, 
                     RelationMember.Create(2, "way", OsmGeoType.Way))});

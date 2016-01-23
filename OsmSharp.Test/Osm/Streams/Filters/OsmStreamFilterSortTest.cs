@@ -39,9 +39,9 @@ namespace OsmSharp.Test.Osm.Streams.Filters
             // execute
             var filter = new OsmStreamFilterSort();
             filter.RegisterSource(new OsmGeo[] {
-                Node.Create(1, 0, 0),
-                Node.Create(2, 1, 0),
-                Node.Create(3, 0, 1),
+                new Node(1, 0, 0),
+                new Node(2, 1, 0),
+                new Node(3, 0, 1),
                 Way.Create(1, 1, 2, 3)});
             var list = new List<OsmGeo>(
                 filter);
@@ -70,10 +70,10 @@ namespace OsmSharp.Test.Osm.Streams.Filters
             // execute
             filter = new OsmStreamFilterSort();
             filter.RegisterSource(new OsmGeo[] {
-                Node.Create(1, 0, 0),
-                Node.Create(2, 1, 0),
+                new Node(1, 0, 0),
+                new Node(2, 1, 0),
                 Way.Create(1, 1, 2, 3),
-                Node.Create(3, 0, 1)});
+                new Node(3, 0, 1)});
             list = new List<OsmGeo>(
                 filter);
 
@@ -88,14 +88,14 @@ namespace OsmSharp.Test.Osm.Streams.Filters
             // execute
             filter = new OsmStreamFilterSort();
             filter.RegisterSource(new OsmGeo[] {
-                Node.Create(1, 0, 0),
-                Node.Create(2, 1, 0),
+                new Node(1, 0, 0),
+                new Node(2, 1, 0),
                 Way.Create(1, 1, 2, 3),
                 Relation.Create(1, 
                     new TagsCollection(
                         Tag.Create("type", "multipolygon")),
                     RelationMember.Create(1, "outer", OsmGeoType.Way)),
-                Node.Create(3, 0, 1)});
+                new Node(3, 0, 1)});
             list = new List<OsmGeo>(
                 filter);
 

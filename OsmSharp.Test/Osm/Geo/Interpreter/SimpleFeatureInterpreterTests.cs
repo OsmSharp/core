@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -20,7 +20,7 @@ using NUnit.Framework;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Osm;
-using OsmSharp.Osm.Data.Memory;
+using OsmSharp.Osm.Data;
 using OsmSharp.Osm.Geo.Interpreter;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,14 +66,14 @@ namespace OsmSharp.Test.Osm.Geo.Interpreter
             way.Tags.Add("area", "yes");
 
             var source = new MemoryDataSource();
-            source.AddNode(node1);
-            source.AddNode(node2);
-            source.AddNode(node3);
-            source.AddWay(way);
+            source.AddOrUpdate(node1);
+            source.AddOrUpdate(node2);
+            source.AddOrUpdate(node3);
+            source.AddOrUpdate(way);
 
             // the use of natural=water implies an area-type.
             var interpreter = new SimpleFeatureInterpreter();
-            var features = interpreter.Interpret(way, source);
+            var features = interpreter.Interpret(way, source.ToOsmGeoSource());
 
             Assert.IsNotNull(features);
             Assert.AreEqual(1, features.Count);
@@ -115,14 +115,14 @@ namespace OsmSharp.Test.Osm.Geo.Interpreter
             way.Tags.Add("natural", "water");
 
             var source = new MemoryDataSource();
-            source.AddNode(node1);
-            source.AddNode(node2);
-            source.AddNode(node3);
-            source.AddWay(way);
+            source.AddOrUpdate(node1);
+            source.AddOrUpdate(node2);
+            source.AddOrUpdate(node3);
+            source.AddOrUpdate(way);
 
             // the use of natural=water implies an area-type.
             var interpreter = new SimpleFeatureInterpreter();
-            var features = interpreter.Interpret(way, source);
+            var features = interpreter.Interpret(way, source.ToOsmGeoSource());
 
             Assert.IsNotNull(features);
             Assert.AreEqual(1, features.Count);
@@ -142,9 +142,9 @@ namespace OsmSharp.Test.Osm.Geo.Interpreter
         {
             // tests a multipolygon containing one 'outer' member.
             var source = new MemoryDataSource(
-                Node.Create(1, 0, 0),
-                Node.Create(2, 1, 0),
-                Node.Create(3, 0, 1),
+                new Node(1, 0, 0),
+                new Node(2, 1, 0),
+                new Node(3, 0, 1),
                 Way.Create(1, 1, 2, 3, 1),
                 Relation.Create(1, 
                     new TagsCollection(
@@ -170,14 +170,14 @@ namespace OsmSharp.Test.Osm.Geo.Interpreter
         public void TestRelationMultipolygonAreaOneOuterOneInner()
         {
             var source = new MemoryDataSource(
-                Node.Create(1, 0, 0),
-                Node.Create(2, 0, 1),
-                Node.Create(3, 1, 1),
-                Node.Create(4, 1, 0),
-                Node.Create(5, 0.25, 0.25),
-                Node.Create(6, 0.25, 0.40),
-                Node.Create(7, 0.40, 0.40),
-                Node.Create(8, 0.40, 0.25),
+                new Node(1, 0, 0),
+                new Node(2, 0, 1),
+                new Node(3, 1, 1),
+                new Node(4, 1, 0),
+                new Node(5, 0.25, 0.25),
+                new Node(6, 0.25, 0.40),
+                new Node(7, 0.40, 0.40),
+                new Node(8, 0.40, 0.25),
                 Way.Create(1, 1, 2, 3, 4, 1),
                 Way.Create(2, 5, 6, 7, 8, 5),
                 Relation.Create(1,
@@ -208,18 +208,18 @@ namespace OsmSharp.Test.Osm.Geo.Interpreter
         public void TestRelationMultipolygonAreaOneOuterTwoInners()
         {
             var source = new MemoryDataSource(
-                Node.Create(1, 0, 0),
-                Node.Create(2, 0, 1),
-                Node.Create(3, 1, 1),
-                Node.Create(4, 1, 0),
-                Node.Create(5, 0.25, 0.25),
-                Node.Create(6, 0.25, 0.40),
-                Node.Create(7, 0.40, 0.40),
-                Node.Create(8, 0.40, 0.25),
-                Node.Create(9, 0.60, 0.25),
-                Node.Create(10, 0.60, 0.40),
-                Node.Create(11, 0.75, 0.40),
-                Node.Create(12, 0.75, 0.25),
+                new Node(1, 0, 0),
+                new Node(2, 0, 1),
+                new Node(3, 1, 1),
+                new Node(4, 1, 0),
+                new Node(5, 0.25, 0.25),
+                new Node(6, 0.25, 0.40),
+                new Node(7, 0.40, 0.40),
+                new Node(8, 0.40, 0.25),
+                new Node(9, 0.60, 0.25),
+                new Node(10, 0.60, 0.40),
+                new Node(11, 0.75, 0.40),
+                new Node(12, 0.75, 0.25),
                 Way.Create(1, 1, 2, 3, 4, 1),
                 Way.Create(2, 5, 6, 7, 8, 5),
                 Way.Create(3, 9, 10, 11, 12, 9),
@@ -252,14 +252,14 @@ namespace OsmSharp.Test.Osm.Geo.Interpreter
         public void TestRelationMultipolygonAreaOneOuterTwoPartialInners()
         {
             var source = new MemoryDataSource(
-                Node.Create(1, 0, 0),
-                Node.Create(2, 0, 1),
-                Node.Create(3, 1, 1),
-                Node.Create(4, 1, 0),
-                Node.Create(5, 0.25, 0.25),
-                Node.Create(6, 0.25, 0.40),
-                Node.Create(7, 0.40, 0.40),
-                Node.Create(8, 0.40, 0.25),
+                new Node(1, 0, 0),
+                new Node(2, 0, 1),
+                new Node(3, 1, 1),
+                new Node(4, 1, 0),
+                new Node(5, 0.25, 0.25),
+                new Node(6, 0.25, 0.40),
+                new Node(7, 0.40, 0.40),
+                new Node(8, 0.40, 0.25),
                 Way.Create(1, 1, 2, 3, 4, 1),
                 Way.Create(2, 5, 6, 7),
                 Way.Create(3, 7, 8, 5),

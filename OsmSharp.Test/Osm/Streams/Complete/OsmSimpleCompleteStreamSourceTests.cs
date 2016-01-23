@@ -18,7 +18,7 @@
 
 using NUnit.Framework;
 using OsmSharp.Osm;
-using OsmSharp.Osm.Data.Memory;
+using OsmSharp.Osm.Data;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Osm.Streams.Complete;
 using OsmSharp.Osm.Xml.Streams;
@@ -42,9 +42,9 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         {
             // execute
             var completeList = this.PullToCompleteList(new OsmGeo[] {
-                Node.Create(1, 0, 0),
-                Node.Create(2, 1, 0),
-                Node.Create(3, 0, 1) });
+                new Node(1, 0, 0),
+                new Node(2, 1, 0),
+                new Node(3, 0, 1) });
 
             // verify.
             Assert.IsNotNull(completeList);
@@ -68,9 +68,9 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         {
             // execute
             var completeList = this.PullToCompleteList(new OsmGeo[] {
-                Node.Create(1, 0, 0),
-                Node.Create(2, 1, 0),
-                Node.Create(3, 0, 1),
+                new Node(1, 0, 0),
+                new Node(2, 1, 0),
+                new Node(3, 0, 1),
                 Way.Create(1 ,1,2,3)});
 
             // verify.
@@ -106,9 +106,9 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         {
             // execute
             var completeList = this.PullToCompleteList(new OsmGeo[] {
-                Node.Create(1, 0, 0),
-                Node.Create(2, 1, 0),
-                Node.Create(3, 0, 1),
+                new Node(1, 0, 0),
+                new Node(2, 1, 0),
+                new Node(3, 0, 1),
                 Way.Create(1 ,1,2,3),
                 Relation.Create(1, 
                     RelationMember.Create(1, "way", OsmGeoType.Way))});
@@ -148,9 +148,9 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         {
             // execute
             var completeList = this.PullToCompleteList(new OsmGeo[] {
-                Node.Create(1, 0, 0),
-                Node.Create(2, 1, 0),
-                Node.Create(3, 0, 1),
+                new Node(1, 0, 0),
+                new Node(2, 1, 0),
+                new Node(3, 0, 1),
                 Way.Create(1 ,1,2,3),
                 Relation.Create(1, 
                     RelationMember.Create(1, "way", OsmGeoType.Way)),
@@ -195,9 +195,9 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         {
             // execute
             var completeList = this.PullToCompleteList(new OsmGeo[] {
-                Node.Create(1, 0, 0),
-                Node.Create(2, 1, 0),
-                Node.Create(3, 0, 1),
+                new Node(1, 0, 0),
+                new Node(2, 1, 0),
+                new Node(3, 0, 1),
                 Way.Create(1 ,1,2,3),
                 Relation.Create(2, 
                     RelationMember.Create(1, "way", OsmGeoType.Way),
@@ -242,11 +242,11 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         {
             // execute
             var completeList = this.PullToCompleteList(new OsmGeo[] {
-                Node.Create(1, 0, 0),
-                Node.Create(2, 1, 0),
-                Node.Create(3, 0, 1),
-                Node.Create(4, 1, 1),
-                Node.Create(5, 2, 2),
+                new Node(1, 0, 0),
+                new Node(2, 1, 0),
+                new Node(3, 0, 1),
+                new Node(4, 1, 1),
+                new Node(5, 2, 2),
                 Way.Create(1, 1, 2, 3),
                 Way.Create(2, 3, 4)});
 
@@ -297,11 +297,11 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         {
             // execute
             var completeList = this.PullToCompleteList(new OsmGeo[] {
-                Node.Create(1, 0, 0),
-                Node.Create(2, 1, 0),
-                Node.Create(3, 0, 1),
-                Node.Create(4, 2, 0),
-                Node.Create(5, 0, 2),
+                new Node(1, 0, 0),
+                new Node(2, 1, 0),
+                new Node(3, 0, 1),
+                new Node(4, 2, 0),
+                new Node(5, 0, 2),
                 Way.Create(1, 1, 2, 3),
                 Way.Create(2, 1, 4, 5),
                 Way.Create(3, 3, 2, 5),
@@ -413,7 +413,7 @@ namespace OsmSharp.Test.Osm.Streams.Complete
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedResource));
 
             // fill the memory data source with source-data.
-            var referenceSource = MemoryDataSource.CreateFrom(dataProcessorSource);
+            var referenceSource = new MemoryDataSource(dataProcessorSource);
 
             // pull the complete objects.
             dataProcessorSource.Reset();
@@ -426,35 +426,10 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         /// <summary>
         /// Compares what is in the complete list against the objects in the reference source.
         /// </summary>
-        /// <param name="expected"></param>
-        /// <param name="actual"></param>
         private void Compare(MemoryDataSource expected, List<ICompleteOsmGeo> actual)
         {
-            var exectedList = new List<ICompleteOsmGeo>();
-            foreach (var node in expected.GetNodes())
-            {
-                var completeNode = node;
-                if (completeNode != null)
-                {
-                    exectedList.Add(completeNode);
-                }
-            }
-            foreach (var way in expected.GetWays())
-            {
-                var completeWay = CompleteWay.CreateFrom(way, expected);
-                if (completeWay != null)
-                {
-                    exectedList.Add(completeWay);
-                }
-            }
-            foreach (var relation in expected.GetRelations())
-            {
-                var completeRelation = CompleteRelation.CreateFrom(relation, expected);
-                if (completeRelation != null)
-                {
-                    exectedList.Add(completeRelation);
-                }
-            }
+            var exectedList = new List<ICompleteOsmGeo>(
+                expected.GetComplete());
 
             ComparisonHelpers.CompareComplete(exectedList, actual);
         }

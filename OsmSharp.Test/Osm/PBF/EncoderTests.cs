@@ -104,8 +104,8 @@ namespace OsmSharp.Test.Osm.PBF.Dense
                     user_sid = 3,
                     version = 2
                 },
-                lat = Encoder.EncodeLatLon(10.9, block.lat_offset, block.granularity),
-                lon = Encoder.EncodeLatLon(11.0, block.lat_offset, block.granularity)
+                lat = Encoder.EncodeLatLon(10.9f, block.lat_offset, block.granularity),
+                lon = Encoder.EncodeLatLon(11.0f, block.lat_offset, block.granularity)
             };
             pbfNode.keys.Add(1);
             pbfNode.vals.Add(2);
@@ -408,8 +408,8 @@ namespace OsmSharp.Test.Osm.PBF.Dense
                         user_sid = 2,
                         version = 2
                     },
-                    lat = Encoder.EncodeLatLon(10.9, block.lat_offset, block.granularity),
-                    lon = Encoder.EncodeLatLon(11.0, block.lat_offset, block.granularity)
+                    lat = Encoder.EncodeLatLon(10.9f, block.lat_offset, block.granularity),
+                    lon = Encoder.EncodeLatLon(11.0f, block.lat_offset, block.granularity)
                 };
             node.keys.Add(0);
             node.vals.Add(1);
@@ -480,16 +480,16 @@ namespace OsmSharp.Test.Osm.PBF.Dense
             primitiveGroup.dense.keys_vals.Add(0); // highway=track.
             primitiveGroup.dense.keys_vals.Add(0); // empty.
 
-            primitiveGroup.dense.lat.Add(Encoder.EncodeLatLon(10.0, block.lat_offset, block.granularity));
-            primitiveGroup.dense.lat.Add(Encoder.EncodeLatLon(11.0, block.lat_offset, block.granularity)
+            primitiveGroup.dense.lat.Add(Encoder.EncodeLatLon(10.0f, block.lat_offset, block.granularity));
+            primitiveGroup.dense.lat.Add(Encoder.EncodeLatLon(11.0f, block.lat_offset, block.granularity)
                 - primitiveGroup.dense.lat[primitiveGroup.dense.lat.Count - 1]);
-            primitiveGroup.dense.lat.Add(Encoder.EncodeLatLon(12.0, block.lat_offset, block.granularity)
+            primitiveGroup.dense.lat.Add(Encoder.EncodeLatLon(12.0f, block.lat_offset, block.granularity)
                 - primitiveGroup.dense.lat[primitiveGroup.dense.lat.Count - 1]);
 
-            primitiveGroup.dense.lon.Add(Encoder.EncodeLatLon(100.0, block.lon_offset, block.granularity));
-            primitiveGroup.dense.lon.Add(Encoder.EncodeLatLon(110.0, block.lon_offset, block.granularity)
+            primitiveGroup.dense.lon.Add(Encoder.EncodeLatLon(100.0f, block.lon_offset, block.granularity));
+            primitiveGroup.dense.lon.Add(Encoder.EncodeLatLon(110.0f, block.lon_offset, block.granularity)
                 - primitiveGroup.dense.lon[primitiveGroup.dense.lon.Count - 1]);
-            primitiveGroup.dense.lon.Add(Encoder.EncodeLatLon(120.0, block.lon_offset, block.granularity)
+            primitiveGroup.dense.lon.Add(Encoder.EncodeLatLon(120.0f, block.lon_offset, block.granularity)
                 - primitiveGroup.dense.lon[primitiveGroup.dense.lon.Count - 1]);
 
             block.primitivegroup.Add(primitiveGroup);

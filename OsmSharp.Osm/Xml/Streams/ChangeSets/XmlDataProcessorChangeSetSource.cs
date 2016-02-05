@@ -21,6 +21,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using OsmSharp.Osm.Streams.ChangeSets;
+using OsmSharp.Osm.Changesets;
 
 namespace OsmSharp.Osm.Xml.Streams.ChangeSets
 {

@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Osm.Changesets;
 using OsmSharp.Osm.Streams;
 using System.Collections.Generic;
 

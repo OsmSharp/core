@@ -227,8 +227,8 @@ namespace OsmSharp.Osm.Xml.v0_6
             {
                 throw new ArgumentNullException("Latitude and/or longitude cannot be null!");
             }
-            node.Latitude = (double)xmlNode.lat;
-            node.Longitude = (double)xmlNode.lon;
+            node.Latitude = (float)xmlNode.lat;
+            node.Longitude = (float)xmlNode.lon;
 
             // set the tags.
             if (xmlNode.tag != null)

@@ -18,6 +18,7 @@
 
 using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Osm.Changesets;
 
 namespace OsmSharp.Osm.Xml.Streams
 {
@@ -29,10 +30,10 @@ namespace OsmSharp.Osm.Xml.Streams
         internal static ChangeSet ConvertToSimple(Osm.Xml.v0_6.delete delete)
         {
             // create change set record.
-            OsmSharp.Osm.ChangeSet change_set = new OsmSharp.Osm.ChangeSet();
+            OsmSharp.Osm.Changesets.ChangeSet change_set = new OsmSharp.Osm.Changesets.ChangeSet();
 
             // create change record.
-            OsmSharp.Osm.Change change = new OsmSharp.Osm.Change();
+            OsmSharp.Osm.Changesets.Change change = new OsmSharp.Osm.Changesets.Change();
             change.Type = OsmSharp.Osm.ChangeType.Delete;
             change.OsmGeo = new List<OsmGeo>();
 
@@ -77,7 +78,7 @@ namespace OsmSharp.Osm.Xml.Streams
             ChangeSet change_set = new ChangeSet();
 
             // create change record.
-            OsmSharp.Osm.Change change = new OsmSharp.Osm.Change();
+            OsmSharp.Osm.Changesets.Change change = new OsmSharp.Osm.Changesets.Change();
             change.Type = OsmSharp.Osm.ChangeType.Modify;
             change.OsmGeo = new List<OsmGeo>();
 
@@ -121,7 +122,7 @@ namespace OsmSharp.Osm.Xml.Streams
             ChangeSet change_set = new ChangeSet();
 
             // create change record.
-            OsmSharp.Osm.Change change = new OsmSharp.Osm.Change();
+            OsmSharp.Osm.Changesets.Change change = new OsmSharp.Osm.Changesets.Change();
             change.Type = OsmSharp.Osm.ChangeType.Create;
             change.OsmGeo = new List<OsmGeo>();
 
@@ -196,13 +197,13 @@ namespace OsmSharp.Osm.Xml.Streams
             // set latitude.
             if (nd.latSpecified)
             {
-                node.Latitude = nd.lat;
+                node.Latitude = (float)nd.lat;
             }
 
             // set longitude.
             if (nd.lonSpecified)
             {
-                node.Longitude = nd.lon;
+                node.Longitude = (float)nd.lon;
             }
 
             // set uid

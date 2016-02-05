@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace OsmSharp.Osm
+namespace OsmSharp.Osm.Changesets
 {
     /// <summary>
     /// Represents info on a changeset.

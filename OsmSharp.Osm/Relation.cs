@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,18 +16,19 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OsmSharp.Collections.Tags;
+using System.Xml.Serialization;
+using System.Xml;
+using System.Xml.Schema;
 
 namespace OsmSharp.Osm
 {
     /// <summary>
     /// Represents a simple relation.
     /// </summary>
-    public class Relation : OsmGeo
+    [XmlRoot("relation")]
+    public class Relation : OsmGeo, IXmlSerializable
     {
         /// <summary>
         /// Creates new simple relation.
@@ -88,6 +89,93 @@ namespace OsmSharp.Osm
             relation.Members = new List<RelationMember>(members);
             relation.Tags = tags;
             return relation;
+        }
+
+        XmlSchema IXmlSerializable.GetSchema()
+        {
+            return null;
+        }
+
+        void IXmlSerializable.ReadXml(XmlReader reader)
+        {
+            this.Id = reader.GetAttributeInt64("id");
+            this.Version = reader.GetAttributeInt32("version");
+            this.ChangeSetId = reader.GetAttributeInt64("changeset");
+            this.TimeStamp = reader.GetAttributeDateTime("timestamp");
+            this.UserId = reader.GetAttributeInt32("uid");
+            this.UserName = reader.GetAttribute("user");
+            this.Visible = reader.GetAttributeBool("visible");
+
+            TagsCollection tags = null;
+            while (reader.Read())
+            {
+                if (reader.Name == "tag")
+                {
+                    if (tags == null)
+                    {
+                        tags = new TagsCollection();
+                    }
+                    tags.Add(new Tag()
+                    {
+                        Key = reader.GetAttribute("k"),
+                        Value = reader.GetAttribute("v")
+                    });
+                }
+                else if (reader.Name == "member")
+                {
+                    if (this.Members == null)
+                    {
+                        this.Members = new List<RelationMember>();
+                    }
+                    var member = new RelationMember();
+                    (member as IXmlSerializable).ReadXml(reader);
+                    this.Members.Add(member);
+                }
+                else
+                {
+                    if (tags != null)
+                    {
+                        this.Tags = tags;
+                    }
+                    return;
+                }
+            }
+            if (tags != null)
+            {
+                this.Tags = tags;
+            }
+        }
+
+        void IXmlSerializable.WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttribute("id", this.Id);
+            writer.WriteAttribute("user", this.UserName);
+            writer.WriteAttribute("uid", this.UserId);
+            writer.WriteAttribute("visible", this.Visible);
+            writer.WriteAttribute("version", this.Version);
+            writer.WriteAttribute("changeset", this.ChangeSetId);
+            writer.WriteAttribute("timestamp", this.TimeStamp);
+
+            if (this.Members != null)
+            {
+                for (var i = 0; i < this.Members.Count; i++)
+                {
+                    writer.WriteStartElement("member");
+                    (this.Members[i] as IXmlSerializable).WriteXml(writer);
+                    writer.WriteEndElement();
+                }
+            }
+
+            if (this.Tags != null)
+            {
+                foreach (var tag in this.Tags)
+                {
+                    writer.WriteStartElement("tag");
+                    writer.WriteAttributeString("k", tag.Key);
+                    writer.WriteAttributeString("v", tag.Value);
+                    writer.WriteEndElement();
+                }
+            }
         }
     }
 }

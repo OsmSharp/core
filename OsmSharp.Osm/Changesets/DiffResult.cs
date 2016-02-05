@@ -16,14 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace OsmSharp.Osm
+namespace OsmSharp.Osm.Changesets
 {
     /// <summary>
     /// A diff results after applying a changeset.
@@ -55,14 +54,7 @@ namespace OsmSharp.Osm
         {
             reader.MoveToContent();
 
-            var versionString = reader.GetAttribute("version");
-            double version = 0;
-            if(!string.IsNullOrWhiteSpace(versionString) &&
-               double.TryParse(versionString, NumberStyles.Any, CultureInfo.InvariantCulture, out version))
-            {
-                this.Version = version;
-            }
-
+            this.Version = reader.GetAttributeDouble("version");
             this.Generator = reader.GetAttribute("generator");
 
             List<OsmGeoResult> results = null;
@@ -92,6 +84,10 @@ namespace OsmSharp.Osm
                 }
                 else
                 {
+                    if (results != null)
+                    {
+                        this.Results = results.ToArray();
+                    }
                     return;
                 }
             }

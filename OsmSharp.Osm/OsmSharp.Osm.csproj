@@ -72,9 +72,9 @@
     </Compile>
     <Compile Include="Cache\OsmDataCache.cs" />
     <Compile Include="Cache\OsmDataCacheMemory.cs" />
-    <Compile Include="Change.cs" />
-    <Compile Include="ChangeSet.cs" />
-    <Compile Include="ChangeSetInfo.cs" />
+    <Compile Include="Changesets\Change.cs" />
+    <Compile Include="Changesets\ChangeSet.cs" />
+    <Compile Include="Changesets\ChangeSetInfo.cs" />
     <Compile Include="Complete\CompleteChange.cs" />
     <Compile Include="Complete\CompleteChangeSet.cs" />
     <Compile Include="Complete\CompleteExtensions.cs" />
@@ -93,7 +93,8 @@
     <Compile Include="Data\ISnapshotDb.cs" />
     <Compile Include="Data\ISnapshotDbExtensions.cs" />
     <Compile Include="Data\MemorySnapshotDb.cs" />
-    <Compile Include="DiffResult.cs" />
+    <Compile Include="Changesets\DiffResult.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Filters\Filter.cs" />
     <Compile Include="Filters\FilterAny.cs" />
     <Compile Include="Filters\FilterBox.cs" />

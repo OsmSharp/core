@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,18 +16,19 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OsmSharp.Collections.Tags;
+using System.Xml.Serialization;
+using System.Xml;
+using System.Xml.Schema;
 
 namespace OsmSharp.Osm
 {
     /// <summary>
     /// Represents a simple way.
     /// </summary>
-    public class Way : OsmGeo
+    [XmlRoot("way")]
+    public class Way : OsmGeo, IXmlSerializable
     {
         /// <summary>
         /// Creates a new simple way.
@@ -63,9 +64,6 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Creates a new way.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="nodes"></param>
-        /// <returns></returns>
         public static Way Create(long id, params long[] nodes)
         {
             Way way = new Way();
@@ -77,10 +75,6 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Creates a new way.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="nodes"></param>
-        /// <param name="tags"></param>
-        /// <returns></returns>
         public static Way Create(long id, TagsCollectionBase tags, params long[] nodes)
         {
             Way way = new Way();
@@ -88,6 +82,91 @@ namespace OsmSharp.Osm
             way.Nodes = new List<long>(nodes);
             way.Tags = tags;
             return way;
+        }
+
+        XmlSchema IXmlSerializable.GetSchema()
+        {
+            return null;
+        }
+
+        void IXmlSerializable.ReadXml(XmlReader reader)
+        {
+            this.Id = reader.GetAttributeInt64("id");
+            this.Version = reader.GetAttributeInt32("version");
+            this.ChangeSetId = reader.GetAttributeInt64("changeset");
+            this.TimeStamp = reader.GetAttributeDateTime("timestamp");
+            this.UserId = reader.GetAttributeInt32("uid");
+            this.UserName = reader.GetAttribute("user");
+            this.Visible = reader.GetAttributeBool("visible");
+
+            TagsCollection tags = null;
+            while (reader.Read())
+            {
+                if (reader.Name == "tag")
+                {
+                    if (tags == null)
+                    {
+                        tags = new TagsCollection();
+                    }
+                    tags.Add(new Tag()
+                    {
+                        Key = reader.GetAttribute("k"),
+                        Value = reader.GetAttribute("v")
+                    });
+                }
+                else if(reader.Name == "nd")
+                {
+                    if(this.Nodes == null)
+                    {
+                        this.Nodes = new List<long>();
+                    }
+                    this.Nodes.Add(reader.GetAttributeInt64("ref").Value);
+                }
+                else
+                {
+                    if (tags != null)
+                    {
+                        this.Tags = tags;
+                    }
+                    return;
+                }
+            }
+            if (tags != null)
+            {
+                this.Tags = tags;
+            }
+        }
+
+        void IXmlSerializable.WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttribute("id", this.Id);
+            writer.WriteAttribute("user", this.UserName);
+            writer.WriteAttribute("uid", this.UserId);
+            writer.WriteAttribute("visible", this.Visible);
+            writer.WriteAttribute("version", this.Version);
+            writer.WriteAttribute("changeset", this.ChangeSetId);
+            writer.WriteAttribute("timestamp", this.TimeStamp);
+
+            if (this.Nodes != null)
+            {
+                for (var i  = 0; i < this.Nodes.Count; i++)
+                {
+                    writer.WriteStartElement("nd");
+                    writer.WriteAttribute("ref", this.Nodes[i]);
+                    writer.WriteEndElement();
+                }
+            }
+
+            if (this.Tags != null)
+            {
+                foreach (var tag in this.Tags)
+                {
+                    writer.WriteStartElement("tag");
+                    writer.WriteAttributeString("k", tag.Key);
+                    writer.WriteAttributeString("v", tag.Value);
+                    writer.WriteEndElement();
+                }
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
+using OsmSharp.Osm.Changesets;
 
 namespace OsmSharp.Osm.Streams.ChangeSets
 {
@@ -55,6 +56,5 @@ namespace OsmSharp.Osm.Streams.ChangeSets
         /// Closes this source.
         /// </summary>
         public abstract void Close();
-
     }
 }

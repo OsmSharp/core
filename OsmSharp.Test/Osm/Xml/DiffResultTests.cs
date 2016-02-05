@@ -18,9 +18,8 @@
 
 using NUnit.Framework;
 using System.IO;
-using System.Xml;
 using System.Xml.Serialization;
-using OsmSharp.Osm;
+using OsmSharp.Osm.Changesets;
 
 namespace OsmSharp.Test.Osm.Xml
 {
@@ -51,26 +50,7 @@ namespace OsmSharp.Test.Osm.Xml
                 }
             };
 
-            var settings = new XmlWriterSettings();
-            settings.OmitXmlDeclaration = true;
-            settings.Indent = false;
-            settings.NewLineChars = string.Empty;
-            var emptyNamespace = new XmlSerializerNamespaces();
-            emptyNamespace.Add(string.Empty, string.Empty);
-
-            var serializer = new XmlSerializer(typeof(DiffResult));
-            var resultStream = new MemoryStream();
-            using (var stringWriter = XmlWriter.Create(resultStream, settings))
-            {
-                serializer.Serialize(stringWriter, diffResult, emptyNamespace);
-                resultStream.Seek(0, SeekOrigin.Begin);
-            }
-            var result = string.Empty;
-            using (var streamReader = new StreamReader(resultStream))
-            {
-                result = streamReader.ReadToEnd();
-            }
-
+            var result = diffResult.SerializeToXml();
             Assert.AreEqual("<diffResult generator=\"OsmSharp\" version=\"0.6\"><node old_id=\"1\" new_id=\"2\" new_version=\"2\" /></diffResult>",
                 result);
         }

@@ -18,13 +18,17 @@
 
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
+using System.Xml.Serialization;
+using System.Xml;
+using System.Xml.Schema;
 
 namespace OsmSharp.Osm
 {
     /// <summary>
     /// Represents a simple node.
     /// </summary>
-    public class Node : OsmGeo, ICompleteOsmGeo
+    [XmlRoot("node")]
+    public class Node : OsmGeo, ICompleteOsmGeo, IXmlSerializable
     {
         /// <summary>
         /// Creates a new node.
@@ -37,7 +41,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Creates a new node.
         /// </summary>
-        public Node(long id, double latitude, double longitude)
+        public Node(long id, float latitude, float longitude)
             : this()
         {
             this.Id = id;
@@ -48,7 +52,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Creates a new node.
         /// </summary>
-        public Node(long id, double latitude, double longitude, TagsCollectionBase tags)
+        public Node(long id, float latitude, float longitude, TagsCollectionBase tags)
             : this()
         {
             this.Id = id;
@@ -60,12 +64,12 @@ namespace OsmSharp.Osm
         /// <summary>
         /// The latitude.
         /// </summary>
-        public double? Latitude { get; set; }
+        public float? Latitude { get; set; }
 
         /// <summary>
         /// The longitude.
         /// </summary>
-        public double? Longitude { get; set; }
+        public float? Longitude { get; set; }
 
         /// <summary>
         /// Returns a description of this object.
@@ -136,7 +140,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Creates a new node.
         /// </summary>
-        public static Node Create(long id, double latitude, double longitude)
+        public static Node Create(long id, float latitude, float longitude)
         {
             return new Node(id, latitude, longitude);
         }
@@ -144,9 +148,80 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Creates a new node.
         /// </summary>
-        public static Node Create(long id, double latitude, double longitude, TagsCollectionBase tags)
+        public static Node Create(long id, float latitude, float longitude, TagsCollectionBase tags)
         {
             return new Node(id, latitude, longitude, tags);
+        }
+
+        XmlSchema IXmlSerializable.GetSchema()
+        {
+            return null;
+        }
+
+        void IXmlSerializable.ReadXml(XmlReader reader)
+        {
+            this.Id = reader.GetAttributeInt64("id");
+            this.Version = reader.GetAttributeInt32("version");
+            this.Latitude = reader.GetAttributeSingle("latitude");
+            this.Longitude = reader.GetAttributeSingle("longitude");
+            this.ChangeSetId = reader.GetAttributeInt64("changeset");
+            this.TimeStamp = reader.GetAttributeDateTime("timestamp");
+            this.UserId = reader.GetAttributeInt32("uid");
+            this.UserName = reader.GetAttribute("user");
+            this.Visible = reader.GetAttributeBool("visible");
+
+            TagsCollection tags = null;
+            while (reader.Read())
+            {
+                if (reader.Name == "tag")
+                {
+                    if (tags == null)
+                    {
+                        tags = new TagsCollection();
+                    }
+                    tags.Add(new Tag()
+                    {
+                        Key = reader.GetAttribute("k"),
+                        Value = reader.GetAttribute("v")
+                    });
+                }
+                else
+                {
+                    if (tags != null)
+                    {
+                        this.Tags = tags;
+                    }
+                    return;
+                }
+            }
+            if (tags != null)
+            {
+                this.Tags = tags;
+            }
+        }
+
+        void IXmlSerializable.WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttribute("id", this.Id);
+            writer.WriteAttribute("latitude", this.Latitude);
+            writer.WriteAttribute("longitude", this.Longitude);
+            writer.WriteAttribute("user", this.UserName);
+            writer.WriteAttribute("uid", this.UserId);
+            writer.WriteAttribute("visible", this.Visible);
+            writer.WriteAttribute("version", this.Version);
+            writer.WriteAttribute("changeset", this.ChangeSetId);
+            writer.WriteAttribute("timestamp", this.TimeStamp);
+
+            if(this.Tags != null)
+            {
+                foreach(var tag in this.Tags)
+                {
+                    writer.WriteStartElement("tag");
+                    writer.WriteAttributeString("k", tag.Key);
+                    writer.WriteAttributeString("v", tag.Value);
+                    writer.WriteEndElement();
+                }
+            }
         }
     }
 }

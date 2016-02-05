@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OsmSharp.Osm.Streams;
+using OsmSharp.Osm.Changesets;
 
 namespace OsmSharp.Osm.Data
 {

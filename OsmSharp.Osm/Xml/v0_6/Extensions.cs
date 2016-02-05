@@ -349,7 +349,7 @@ namespace OsmSharp.Osm.Xml.v0_6
             // set the version.
             if (node.Version.HasValue)
             {
-                xmlNode.version = (ulong)node.Version.Value;
+                xmlNode.version = node.Version.Value;
                 xmlNode.versionSpecified = true;
             }
 
@@ -434,7 +434,7 @@ namespace OsmSharp.Osm.Xml.v0_6
             // set the version.
             if (way.Version.HasValue)
             {
-                xmlWay.version = (ulong)way.Version.Value;
+                xmlWay.version = way.Version.Value;
                 xmlWay.versionSpecified = true;
             }
 
@@ -520,7 +520,7 @@ namespace OsmSharp.Osm.Xml.v0_6
             // set the version.
             if (relation.Version.HasValue)
             {
-                xmlRelation.version = (ulong)relation.Version.Value;
+                xmlRelation.version = relation.Version.Value;
                 xmlRelation.versionSpecified = true;
             }
 

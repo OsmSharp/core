@@ -87,8 +87,8 @@ namespace OsmSharp.Osm.Data
         /// Applies the given changeset.
         /// </summary>
         /// <param name="changeset">The changeset to apply.</param>
-        /// <param name="atomic">Then true, it's the entire changeset or nothing. When false the changeset is applied using best-effort.</param>
-        /// <returns>True when the entire changeset was applied without issues, false otherwise.</returns>
-        bool ApplyChangeset(ChangeSet changeset, bool atomic = false);
+        /// <param name="bestEffort">When false, it's the entire changeset or nothing. When true the changeset is applied using best-effort.</param>
+        /// <returns>The diff result result object containing the diff result and status information.</returns>
+        DiffResultResult ApplyChangeset(ChangeSet changeset, bool bestEffort = false);
     }
 }

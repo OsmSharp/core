@@ -80,4 +80,44 @@ namespace OsmSharp.Osm.Data
             return _db.Get(OsmGeoType.Relation, id) as Relation;
         }
     }
+
+    /// <summary>
+    /// A osm geo source implementation for a history db.
+    /// </summary>
+    internal class OsmGeoSourceHistoryDb : IOsmGeoSource
+    {
+        private readonly IHistoryDb _db;
+
+        /// <summary>
+        /// Creates a osm geo source.
+        /// </summary>
+        public OsmGeoSourceHistoryDb(IHistoryDb db)
+        {
+            _db = db;
+        }
+
+        /// <summary>
+        /// Returns the node for the given id.
+        /// </summary>
+        public Node GetNode(long id)
+        {
+            return _db.Get(OsmGeoType.Node, id) as Node;
+        }
+
+        /// <summary>
+        /// Returns the way for the given id.
+        /// </summary>
+        public Way GetWay(long id)
+        {
+            return _db.Get(OsmGeoType.Way, id) as Way;
+        }
+
+        /// <summary>
+        /// Returns the relation for the given id.
+        /// </summary>
+        public Relation GetRelation(long id)
+        {
+            return _db.Get(OsmGeoType.Relation, id) as Relation;
+        }
+    }
 }

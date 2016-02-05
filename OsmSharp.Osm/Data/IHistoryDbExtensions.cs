@@ -24,22 +24,22 @@ using System.Collections.Generic;
 namespace OsmSharp.Osm.Data
 {
     /// <summary>
-    /// Contains extensions for the snapshot db.
+    /// Contains extensions for the history db.
     /// </summary>
-    public static class ISnapshotDbExtensions
+    public static class IHistoryDbExtensions
     {
         /// <summary>
         /// Gets a osm geo source for the db.
         /// </summary>
-        public static IOsmGeoSource ToOsmGeoSource(this ISnapshotDb db)
+        public static IOsmGeoSource ToOsmGeoSource(this IHistoryDb db)
         {
-            return new OsmGeoSourceSnapshotDb(db);
+            return new OsmGeoSourceHistoryDb(db);
         }
 
         /// <summary>
         /// Gets the node with the given id.
         /// </summary>
-        public static Node GetNode(this ISnapshotDb db, long id)
+        public static Node GetNode(this IHistoryDb db, long id)
         {
             return db.Get(OsmGeoType.Node, id) as Node;
         }
@@ -47,7 +47,7 @@ namespace OsmSharp.Osm.Data
         /// <summary>
         /// Gets the way with the given id.
         /// </summary>
-        public static Way GetWay(this ISnapshotDb db, long id)
+        public static Way GetWay(this IHistoryDb db, long id)
         {
             return db.Get(OsmGeoType.Way, id) as Way;
         }
@@ -55,7 +55,7 @@ namespace OsmSharp.Osm.Data
         /// <summary>
         /// Gets the relation with the given id.
         /// </summary>
-        public static Relation GetRelation(this ISnapshotDb db, long id)
+        public static Relation GetRelation(this IHistoryDb db, long id)
         {
             return db.Get(OsmGeoType.Relation, id) as Relation;
         }
@@ -63,7 +63,7 @@ namespace OsmSharp.Osm.Data
         /// <summary>
         /// Gets all data in the form of a complete stream.
         /// </summary>
-        public static OsmCompleteStreamSource GetComplete(this ISnapshotDb db)
+        public static OsmCompleteStreamSource GetComplete(this IHistoryDb db)
         {
             var osmGeoSource = db.ToOsmGeoSource();
             return new Streams.Complete.OsmCompleteEnumerableStreamSource(
@@ -73,20 +73,9 @@ namespace OsmSharp.Osm.Data
         /// <summary>
         /// Gets all osm objects that pass the given filter within the given bounding box.
         /// </summary>
-        public static IEnumerable<OsmGeo> Get(this ISnapshotDb db, Math.Geo.GeoCoordinateBox box)
+        public static IEnumerable<OsmGeo> Get(this IHistoryDb db, Math.Geo.GeoCoordinateBox box)
         {
-            return db.Get((float)box.MinLat, (float)box.MinLon, (float)box.MaxLat, (float)box.MaxLon, 
-                null);
-        }
-
-        /// <summary>
-        /// Gets all osm objects that pass the given filter within the given bounding box.
-        /// </summary>
-        public static IEnumerable<OsmGeo> Get(this ISnapshotDb db, Math.Geo.GeoCoordinateBox box,
-            Filters.Filter filter)
-        {
-            return db.Get((float)box.MinLat, (float)box.MinLon, (float)box.MaxLat, (float)box.MaxLon,
-                filter);
+            return db.Get((float)box.MinLat, (float)box.MinLon, (float)box.MaxLat, (float)box.MaxLon);
         }
     }
 }

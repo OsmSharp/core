@@ -210,7 +210,7 @@ namespace OsmSharp.Osm.Data
         {
             foreach(var osmGeo in osmGeos)
             {
-                this.AddOrUpdate(osmGeos);
+                this.AddOrUpdate(osmGeo);
             }
         }
         
@@ -303,7 +303,7 @@ namespace OsmSharp.Osm.Data
         /// <param name="changeset">The changeset to apply.</param>
         /// <param name="atomic">Then true, it's the entire changeset or nothing. When false the changeset is applied using best-effort.</param>
         /// <returns>True when the entire changeset was applied without issues, false otherwise.</returns>
-        public bool ApplyChangeset(ChangeSet changeset, bool atomic = false)
+        public DiffResultResult ApplyChangeset(ChangeSet changeset, bool atomic = false)
         {
             throw new NotImplementedException();
         }

@@ -132,5 +132,21 @@ namespace OsmSharp.Osm
                 return CompleteOsmType.Node;
             }
         }
+
+        /// <summary>
+        /// Creates a new node.
+        /// </summary>
+        public static Node Create(long id, double latitude, double longitude)
+        {
+            return new Node(id, latitude, longitude);
+        }
+
+        /// <summary>
+        /// Creates a new node.
+        /// </summary>
+        public static Node Create(long id, double latitude, double longitude, TagsCollectionBase tags)
+        {
+            return new Node(id, latitude, longitude, tags);
+        }
     }
 }

@@ -86,11 +86,14 @@
     <Compile Include="Complete\CompleteUser.cs" />
     <Compile Include="Complete\CompleteWay.cs" />
     <Compile Include="Complete\ICompleteOsmGeo.cs" />
+    <Compile Include="Data\DiffResultResult.cs" />
     <Compile Include="Data\IHistoryDb.cs" />
+    <Compile Include="Data\IHistoryDbExtensions.cs" />
     <Compile Include="Data\IOsmGeoSource.cs" />
     <Compile Include="Data\ISnapshotDb.cs" />
     <Compile Include="Data\ISnapshotDbExtensions.cs" />
     <Compile Include="Data\MemorySnapshotDb.cs" />
+    <Compile Include="DiffResult.cs" />
     <Compile Include="Filters\Filter.cs" />
     <Compile Include="Filters\FilterAny.cs" />
     <Compile Include="Filters\FilterBox.cs" />

@@ -140,7 +140,7 @@ namespace OsmSharp.Osm.Xml.Streams
             // set version.
             if (simpleNode.Version.HasValue)
             {
-                nd.version = (ulong)simpleNode.Version.Value;
+                nd.version = simpleNode.Version.Value;
                 nd.versionSpecified = true;
             }
             
@@ -227,7 +227,7 @@ namespace OsmSharp.Osm.Xml.Streams
             // set version.
             if (simpleWay.Version.HasValue)
             {
-                wa.version = (ulong)simpleWay.Version.Value;
+                wa.version = simpleWay.Version.Value;
                 wa.versionSpecified = true;
             }
 
@@ -343,7 +343,7 @@ namespace OsmSharp.Osm.Xml.Streams
             // set version.
             if (simpleRelation.Version.HasValue)
             {
-                re.version = (ulong)simpleRelation.Version.Value;
+                re.version = simpleRelation.Version.Value;
                 re.versionSpecified = true;
             }
 

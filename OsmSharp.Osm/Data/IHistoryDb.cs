@@ -102,12 +102,15 @@ namespace OsmSharp.Osm.Data
         /// <summary>
         /// Applies the given changeset.
         /// </summary>
-        bool ApplyChangeset(long id, ChangeSet changeset);
+        /// <param name="changeset">The changeset to apply.</param>
+        /// <param name="bestEffort">When false, it's the entire changeset or nothing. When true the changeset is applied using best-effort.</param>
+        /// <returns>The diff result result object containing the diff result and status information.</returns>
+        DiffResultResult ApplyChangeset(ChangeSet changeset, bool bestEffort = false);
 
         /// <summary>
         /// Updates the changeset with the new info.
         /// </summary>
-        bool UpdateChangeset(ChangeSetInfo info);
+        bool UpdateChangesetInfo(ChangeSetInfo info);
 
         /// <summary>
         /// Closes the changeset with the given id.

@@ -369,11 +369,8 @@
     <Compile Include="IO\Xml\Sources\XmlReaderSource.cs" />
     <Compile Include="IO\Xml\Sources\XmlStreamSource.cs" />
     <Compile Include="IO\Xml\Sources\XmlStringSource.cs" />
-    <Compile Include="Logging\Log.cs" />
-    <Compile Include="Logging\SourceLevels.cs" />
+    <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\TraceEventType.cs" />
-    <Compile Include="Logging\TraceListener.cs" />
-    <Compile Include="Logging\TraceSource.cs" />
     <Compile Include="Math\Algorithms\ConvexHull.cs" />
     <Compile Include="Math\Algorithms\HilbertCurve.cs" />
     <Compile Include="Math\Algorithms\Rotation.cs" />

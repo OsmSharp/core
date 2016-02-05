@@ -63,13 +63,13 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
             var results = new HashSet<T>();
 
             // move to the start.
-            long ticksBefore = DateTime.Now.Ticks;
+            var ticksBefore = DateTime.Now.Ticks;
             _stream.Seek(0, SeekOrigin.Begin);
 
             _serializer.Search(_stream, box, results);
 
-            long ticksAfter = DateTime.Now.Ticks;
-            OsmSharp.Logging.Log.TraceEvent("RTreeStreamIndex", TraceEventType.Verbose,
+            var ticksAfter = DateTime.Now.Ticks;
+            Logger.Log("RTreeStreamIndex", TraceEventType.Verbose,
                 string.Format("Deserialized {0} objects in {1}ms.", results.Count,
                     (new TimeSpan(ticksAfter - ticksBefore).TotalMilliseconds)));
             return results;

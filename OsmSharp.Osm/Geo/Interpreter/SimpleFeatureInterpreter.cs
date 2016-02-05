@@ -33,6 +33,8 @@ namespace OsmSharp.Osm.Geo.Interpreter
     /// </summary>
     public class SimpleFeatureInterpreter : FeatureInterpreter
     {
+        private static Logger _logger = Logger.Create("SimpleFeatureInterpreter");
+
         /// <summary>
         /// Interprets an OSM-object and returns the corresponding geometry.
         /// </summary>
@@ -231,7 +233,7 @@ namespace OsmSharp.Osm.Geo.Interpreter
             List<KeyValuePair<bool, LineairRing>> rings;
             if (!this.AssignRings(ways, out rings))
             {
-                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter", TraceEventType.Error,
+                _logger.Log(TraceEventType.Error,
                     string.Format("Ring assignment failed: invalid multipolygon relation [{0}] detected!", relation.Id));
             }
             // group the rings and create a multipolygon.
@@ -247,12 +249,10 @@ namespace OsmSharp.Osm.Geo.Interpreter
         /// <summary>
         /// Groups the rings into polygons.
         /// </summary>
-        /// <param name="rings"></param>
-        /// <returns></returns>
         private Geometry GroupRings(List<KeyValuePair<bool, LineairRing>> rings)
         {
             Geometry geometry = null;
-            bool[][] containsFlags = new bool[rings.Count][]; // means [x] contains [y]
+            var containsFlags = new bool[rings.Count][]; // means [x] contains [y]
             for (int x = 0; x < rings.Count; x++)
             {
                 containsFlags[x] = new bool[rings.Count];
@@ -262,42 +262,42 @@ namespace OsmSharp.Osm.Geo.Interpreter
                         rings[x].Value.Contains(rings[y].Value);
                 }
             }
-            bool[] used = new bool[rings.Count];
+            var used = new bool[rings.Count];
             MultiPolygon multiPolygon = null;
             while (used.Contains(false))
             { // select a ring not contained by any other.
                 LineairRing outer = null;
                 int outerIdx = -1;
-                for (int idx = 0; idx < rings.Count; idx++)
+                for (var i = 0; i < rings.Count; i++)
                 {
-                    if (!used[idx] && this.CheckUncontained(rings, containsFlags, used, idx))
+                    if (!used[i] && this.CheckUncontained(rings, containsFlags, used, i))
                     { // this ring is not contained in any other used rings.
-                        if (!rings[idx].Key)
+                        if (!rings[i].Key)
                         {
-                            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter", TraceEventType.Error,
+                            _logger.Log(TraceEventType.Error,
                                 "Invalid multipolygon relation: an 'inner' ring was detected without an 'outer'.");
                         }
-                        outerIdx = idx;
-                        outer = rings[idx].Value;
-                        used[idx] = true;
+                        outerIdx = i;
+                        outer = rings[i].Value;
+                        used[i] = true;
                         break;
                     }
                 }
                 if (outer != null)
                 { // an outer ring was found, find inner rings.
-                    List<LineairRing> inners = new List<LineairRing>();
+                    var inners = new List<LineairRing>();
                     // select all rings contained by inner but not by any others.
-                    for (int idx = 0; idx < rings.Count; idx++)
+                    for (var i = 0; i < rings.Count; i++)
                     {
-                        if (!used[idx] && containsFlags[outerIdx][idx] &&
-                            this.CheckUncontained(rings, containsFlags, used, idx))
+                        if (!used[i] && containsFlags[outerIdx][i] &&
+                            this.CheckUncontained(rings, containsFlags, used, i))
                         {
-                            inners.Add(rings[idx].Value);
-                            used[idx] = true;
+                            inners.Add(rings[i].Value);
+                            used[i] = true;
                         }
                     }
 
-                    bool unused = !used.Contains(false);
+                    var unused = !used.Contains(false);
                     if (multiPolygon == null &&
                         inners.Count == 0 &&
                         unused)
@@ -308,26 +308,23 @@ namespace OsmSharp.Osm.Geo.Interpreter
                     else if (multiPolygon == null &&
                         unused)
                     { // there is just one polygon.
-                        Polygon polygon = new Polygon(
+                        var polygon = new Polygon(
                             outer, inners);
                         geometry = polygon;
                         break;
                     }
                     else
                     { // there have to be other polygons.
-                        {
-                            multiPolygon = new MultiPolygon();
-                            geometry = multiPolygon;
-                        }
-                        Polygon polygon = new Polygon(
+                        multiPolygon = new MultiPolygon();
+                        geometry = multiPolygon;
+                        var polygon = new Polygon(
                             outer, inners);
                         multiPolygon.Add(polygon);
                     }
                 }
                 else
                 { // unused rings left but they cannot be designated as 'outer'.
-                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter", TraceEventType.Error,
-                        "Invalid multipolygon relation: Unassigned rings left.");
+                    _logger.Log(TraceEventType.Error, "Invalid multipolygon relation: Unassigned rings left.");
                     break;
                 }
             }
@@ -340,9 +337,9 @@ namespace OsmSharp.Osm.Geo.Interpreter
         private bool CheckUncontained(List<KeyValuePair<bool, LineairRing>> rings,
             bool[][] containsFlags, bool[] used, int ringIdx)
         {
-            for (int idx = 0; idx < rings.Count; idx++)
+            for (int i = 0; i < rings.Count; i++)
             {
-                if (idx != ringIdx && !used[idx] && containsFlags[idx][ringIdx])
+                if (i != ringIdx && !used[i] && containsFlags[i][ringIdx])
                 { // oeps: the ring at index 'ringIdx' is contained inside another.
                     return false;
                 }
@@ -353,8 +350,7 @@ namespace OsmSharp.Osm.Geo.Interpreter
         /// <summary>
         /// Tries to extract all rings from the given ways.
         /// </summary>
-        private bool AssignRings(
-            List<KeyValuePair<bool, CompleteWay>> ways, out List<KeyValuePair<bool, LineairRing>> rings)
+        private bool AssignRings( List<KeyValuePair<bool, CompleteWay>> ways, out List<KeyValuePair<bool, LineairRing>> rings)
         {
             return this.AssignRings(ways, new bool[ways.Count], out rings);
         }
@@ -362,10 +358,10 @@ namespace OsmSharp.Osm.Geo.Interpreter
         /// <summary>
         /// Assigns rings to the unassigned ways.
         /// </summary>
-        private bool AssignRings(
-            List<KeyValuePair<bool, CompleteWay>> ways, bool[] assignedFlags, out List<KeyValuePair<bool, LineairRing>> rings)
+        private bool AssignRings( List<KeyValuePair<bool, CompleteWay>> ways, bool[] assignedFlags, 
+            out List<KeyValuePair<bool, LineairRing>> rings)
         {
-            bool assigned = false;
+            var assigned = false;
             for (int idx = 0; idx < ways.Count; idx++)
             {
                 if (!assignedFlags[idx])
@@ -403,14 +399,14 @@ namespace OsmSharp.Osm.Geo.Interpreter
             }
             else
             { // the way is open.
-                bool roleFlag = ways[way].Key;
+                var roleFlag = ways[way].Key;
 
                 // complete the ring.
-                List<Node> nodes = new List<Node>(ways[way].Value.Nodes);
+                var nodes = new List<Node>(ways[way].Value.Nodes);
                 if (this.CompleteRing(ways, assignedFlags, nodes, roleFlag))
                 { // the ring was completed!
                     coordinates = new List<GeoCoordinate>(nodes.Count);
-                    foreach (Node node in nodes)
+                    foreach (var node in nodes)
                     {
                         coordinates.Add(node.Coordinate);
                     }
@@ -436,8 +432,8 @@ namespace OsmSharp.Osm.Geo.Interpreter
             {
                 if (!assignedFlags[idx])
                 { // way not assigned.
-                    KeyValuePair<bool, CompleteWay> wayEntry = ways[idx];
-                    CompleteWay nextWay = wayEntry.Value;
+                    var wayEntry = ways[idx];
+                    var nextWay = wayEntry.Value;
                     if (!role.HasValue || wayEntry.Key == role.Value)
                     { // only try matching roles if the role has been set.
                         List<Node> nextNodes = null;

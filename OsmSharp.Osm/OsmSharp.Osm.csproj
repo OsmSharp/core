@@ -149,8 +149,8 @@
     <Compile Include="IO\Xml\OsmDocument.cs" />
     <Compile Include="IO\Xml\Streams\ChangeSets\XmlDataProcessorChangeSetSource.cs" />
     <Compile Include="IO\Xml\Streams\Replication\Replicator.cs" />
-    <Compile Include="IO\Xml\Streams\XmlOsmStreamSource.cs" />
-    <Compile Include="IO\Xml\Streams\XmlOsmStreamTarget.cs" />
+    <Compile Include="Streams\XmlOsmStreamSource.cs" />
+    <Compile Include="Streams\XmlOsmStreamTarget.cs" />
     <Compile Include="IO\Xml\Streams\XmlSimpleConverter.cs" />
     <Compile Include="IO\Xml\v0_6\Extensions.cs" />
     <Compile Include="IO\Xml\v0_6\osm.cs">

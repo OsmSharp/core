@@ -162,8 +162,8 @@ namespace OsmSharp.Osm
         {
             this.Id = reader.GetAttributeInt64("id");
             this.Version = reader.GetAttributeInt32("version");
-            this.Latitude = reader.GetAttributeSingle("latitude");
-            this.Longitude = reader.GetAttributeSingle("longitude");
+            this.Latitude = reader.GetAttributeSingle("lat");
+            this.Longitude = reader.GetAttributeSingle("lon");
             this.ChangeSetId = reader.GetAttributeInt64("changeset");
             this.TimeStamp = reader.GetAttributeDateTime("timestamp");
             this.UserId = reader.GetAttributeInt32("uid");
@@ -171,7 +171,8 @@ namespace OsmSharp.Osm
             this.Visible = reader.GetAttributeBool("visible");
 
             TagsCollection tags = null;
-            while (reader.Read())
+            while (reader.Read() &&
+                reader.MoveToContent() != XmlNodeType.None)
             {
                 if (reader.Name == "tag")
                 {
@@ -203,8 +204,8 @@ namespace OsmSharp.Osm
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
             writer.WriteAttribute("id", this.Id);
-            writer.WriteAttribute("latitude", this.Latitude);
-            writer.WriteAttribute("longitude", this.Longitude);
+            writer.WriteAttribute("lat", this.Latitude);
+            writer.WriteAttribute("lon", this.Longitude);
             writer.WriteAttribute("user", this.UserName);
             writer.WriteAttribute("uid", this.UserId);
             writer.WriteAttribute("visible", this.Visible);

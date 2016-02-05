@@ -100,7 +100,8 @@ namespace OsmSharp.Osm
             this.Visible = reader.GetAttributeBool("visible");
 
             TagsCollection tags = null;
-            while (reader.Read())
+            while (reader.Read() &&
+                reader.MoveToContent() != XmlNodeType.None)
             {
                 if (reader.Name == "tag")
                 {

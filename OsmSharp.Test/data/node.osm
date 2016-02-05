@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="CGImap 0.0.2" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+ <node id="471625991" lat="51.2704712" lon="4.8006659" user="marc12" uid="540527" visible="true" version="3" changeset="9797840" timestamp="2011-11-11T16:43:47Z">
+  <tag k="alt_name" v="Lille"/>
+  <tag k="name" v="Wechelderzande"/>
+  <tag k="traffic_sign" v="city_limit"/>
+ </node>
+</osm>

@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -20,36 +20,21 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using OsmSharp.Osm.Streams;
 using Ionic.Zlib;
 
-namespace OsmSharp.Osm.Xml.Streams
+namespace OsmSharp.Osm.Streams
 {
     /// <summary>
     /// A stream reader that reads from OSM Xml.
     /// </summary>
     public class XmlOsmStreamSource : OsmStreamSource
     {
-        private XmlReader _reader;
-
-        private XmlSerializer _serNode;
-
-        private XmlSerializer _serWay;
-
-        private XmlSerializer _serRelation;
-
-        private OsmGeo _next;
-
-        private Stream _stream;
-
         private readonly bool _gzip;
-
         private readonly bool _disposeStream = false;
 
         /// <summary>
         /// Creates a new OSM Xml processor source.
         /// </summary>
-        /// <param name="stream"></param>
         public XmlOsmStreamSource(Stream stream) :
             this(stream, false)
         {
@@ -59,13 +44,18 @@ namespace OsmSharp.Osm.Xml.Streams
         /// <summary>
         /// Creates a new OSM XML processor source.
         /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="gzip"></param>
         public XmlOsmStreamSource(Stream stream, bool gzip)
         {
             _stream = stream;
             _gzip = gzip;
         }
+
+        private Stream _stream;
+        private XmlReader _reader;
+        private XmlSerializer _serNode;
+        private XmlSerializer _serWay;
+        private XmlSerializer _serRelation;
+        private OsmGeo _next;
 
         /// <summary>
         /// Initializes this source.
@@ -73,9 +63,9 @@ namespace OsmSharp.Osm.Xml.Streams
         public override void Initialize()
         {
             _next = null;
-            _serNode = new XmlSerializer(typeof(Osm.Xml.v0_6.node));
-            _serWay = new XmlSerializer(typeof(Osm.Xml.v0_6.way));
-            _serRelation = new XmlSerializer(typeof(Osm.Xml.v0_6.relation));
+            _serNode = new XmlSerializer(typeof(Node));
+            _serWay = new XmlSerializer(typeof(Way));
+            _serRelation = new XmlSerializer(typeof(Relation));
 
             this.Reset();
         }
@@ -105,7 +95,7 @@ namespace OsmSharp.Osm.Xml.Streams
                 _stream = new GZipStream(_stream, CompressionMode.Decompress);
             }
 
-            TextReader textReader = new StreamReader(_stream, Encoding.UTF8);
+            var textReader = new StreamReader(_stream, Encoding.UTF8);
             _reader = XmlReader.Create(textReader, settings);
         }
 
@@ -123,13 +113,10 @@ namespace OsmSharp.Osm.Xml.Streams
         /// <summary>
         /// Move to the next item in the stream.
         /// </summary>
-        /// <param name="ignoreNodes">Makes this source skip all nodes.</param>
-        /// <param name="ignoreWays">Makes this source skip all ways.</param>
-        /// <param name="ignoreRelations">Makes this source skip all relations.</param>
-        /// <returns></returns>
         public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
-            while (_reader.Read())
+            while (!_reader.EOF &&
+                _reader.MoveToContent() != XmlNodeType.Whitespace)
             {
                 if (_reader.NodeType == XmlNodeType.Element && 
                     (_reader.Name == "node" && !ignoreNodes) || 
@@ -137,39 +124,42 @@ namespace OsmSharp.Osm.Xml.Streams
                     (_reader.Name == "relation" && !ignoreRelations))
                 {
                     // create a stream for only this element.
-                    string name = _reader.Name;
-                    string nextElement = _reader.ReadOuterXml();
-                    XmlReader reader = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes(nextElement)));
-                    object osmObj = null;
+                    var name = _reader.Name;
+                    //var nextElement = _reader.ReadOuterXml();
+                    //var reader = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes(nextElement)));
 
                     // select type of element.
                     switch (name)
                     {
-                         case "node":
-                             osmObj = _serNode.Deserialize(reader);
-                             if (osmObj is OsmSharp.Osm.Xml.v0_6.node)
-                             {
-                                 _next = XmlSimpleConverter.ConvertToSimple(osmObj as OsmSharp.Osm.Xml.v0_6.node);
-                                 return true;
-                             }
-                             break;
-                         case "way":
-                             osmObj = _serWay.Deserialize(reader);
-                             if (osmObj is OsmSharp.Osm.Xml.v0_6.way)
-                             {
-                                 _next = XmlSimpleConverter.ConvertToSimple(osmObj as OsmSharp.Osm.Xml.v0_6.way);
-                                 return true;
-                             }
-                             break;
-                         case "relation":
-                             osmObj = _serRelation.Deserialize(reader);
-                             if (osmObj is OsmSharp.Osm.Xml.v0_6.relation)
-                             {
-                                 _next = XmlSimpleConverter.ConvertToSimple(osmObj as OsmSharp.Osm.Xml.v0_6.relation);
-                                 return true;
-                             }
-                             break;
+                        case "node":
+                            _next = _serNode.Deserialize(_reader) as Node;
+                            if (_reader.NodeType == XmlNodeType.EndElement &&
+                                _reader.Name == "node")
+                            {
+                                _reader.Read();
+                            }
+                            return true;
+                        case "way":
+                            _next = _serWay.Deserialize(_reader) as Way;
+                            if(_reader.NodeType == XmlNodeType.EndElement &&
+                                _reader.Name =="way")
+                            {
+                                _reader.Read();
+                            }
+                            return true;
+                        case "relation":
+                            _next = _serRelation.Deserialize(_reader) as Relation;
+                            if (_reader.NodeType == XmlNodeType.EndElement &&
+                                _reader.Name == "relation")
+                            {
+                                _reader.Read();
+                            }
+                            return true;
                     }
+                }
+                else
+                { // unknown element or to be ignored, skip it.
+                    _reader.Read();
                 }
             }
             _next = null;
@@ -179,7 +169,6 @@ namespace OsmSharp.Osm.Xml.Streams
         /// <summary>
         /// Returns the current object.
         /// </summary>
-        /// <returns></returns>
         public override OsmGeo Current()
         {
             return _next;

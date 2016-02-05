@@ -137,25 +137,22 @@ namespace OsmSharp.Osm.Streams
         /// <summary>
         /// Does the pull operation until source is exhausted.
         /// </summary>
-        /// <param name="ignoreNodes">Makes the source skip all nodes.</param>
-        /// <param name="ignoreWays">Makes the source skip all ways.</param>
-        /// <param name="ignoreRelations">Makes the source skip all relations.</param>
         protected void DoPull(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
             while (_source.MoveNext(ignoreNodes, ignoreWays, ignoreRelations))
             {
-                object sourceObject = _source.Current();
-                if (sourceObject is Node)
+                var sourceObject = _source.Current();
+                switch(sourceObject.Type)
                 {
-                    this.AddNode(sourceObject as Node);
-                }
-                else if (sourceObject is Way)
-                {
-                    this.AddWay(sourceObject as Way);
-                }
-                else if (sourceObject is Relation)
-                {
-                    this.AddRelation(sourceObject as Relation);
+                    case OsmGeoType.Node:
+                        this.AddNode(sourceObject as Node);
+                        break;
+                    case OsmGeoType.Way:
+                        this.AddWay(sourceObject as Way);
+                        break;
+                    case OsmGeoType.Relation:
+                        this.AddRelation(sourceObject as Relation);
+                        break;
                 }
             }
         }

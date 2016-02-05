@@ -406,7 +406,6 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         /// <summary>
         /// Test simple to complete conversion on the given resource.
         /// </summary>
-        /// <param name="embeddedResource"></param>
         private void TestSimpleToCompleteOn(string embeddedResource)
         {
             var dataProcessorSource = new XmlOsmStreamSource(

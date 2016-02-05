@@ -23,7 +23,7 @@ using System.Xml.Serialization;
 using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 
-namespace OsmSharp.Test.Osm.Xml
+namespace OsmSharp.Test.Osm.IO.Xml
 {
     /// <summary>
     /// Contains tests for the node class.
@@ -53,7 +53,7 @@ namespace OsmSharp.Test.Osm.Xml
                 UserName = "ben",
                 UserId = 1
             };
-            Assert.AreEqual("<node id=\"1\" latitude=\"54.1\" longitude=\"12.2\" user=\"ben\" uid=\"1\" version=\"1\" />", 
+            Assert.AreEqual("<node id=\"1\" lat=\"54.1\" lon=\"12.2\" user=\"ben\" uid=\"1\" version=\"1\" />", 
                 node.SerializeToXml());
             node = new Node()
             {
@@ -68,7 +68,7 @@ namespace OsmSharp.Test.Osm.Xml
                     new Tag("amenity", "something"),
                     new Tag("key", "some_value"))
             };
-            Assert.AreEqual("<node id=\"1\" latitude=\"54.1\" longitude=\"12.2\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></node>",
+            Assert.AreEqual("<node id=\"1\" lat=\"54.1\" lon=\"12.2\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></node>",
                 node.SerializeToXml());
         }
 
@@ -86,7 +86,7 @@ namespace OsmSharp.Test.Osm.Xml
             Assert.AreEqual(1, node.Id);
 
             node = serializer.Deserialize(
-                new StringReader("<node id=\"1\" latitude=\"54.1\" longitude=\"12.2\" user=\"ben\" uid=\"1\" version=\"1\" />")) as Node;
+                new StringReader("<node id=\"1\" lat=\"54.1\" lon=\"12.2\" user=\"ben\" uid=\"1\" version=\"1\" />")) as Node;
             Assert.IsNotNull(node);
             Assert.AreEqual(1, node.Id);
             Assert.AreEqual(54.1f, node.Latitude);
@@ -96,7 +96,7 @@ namespace OsmSharp.Test.Osm.Xml
             Assert.AreEqual(1, node.Version);
 
             node = serializer.Deserialize(
-                new StringReader("<node id=\"1\" latitude=\"54.1\" longitude=\"12.2\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></node>")) as Node;
+                new StringReader("<node id=\"1\" lat=\"54.1\" lon=\"12.2\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></node>")) as Node;
             Assert.IsNotNull(node);
             Assert.AreEqual(1, node.Id);
             Assert.AreEqual(54.1f, node.Latitude);

@@ -23,7 +23,7 @@ using System.Linq;
 using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 
-namespace OsmSharp.Test.Osm.Xml
+namespace OsmSharp.Test.Osm.IO.Xml
 {
     /// <summary>
     /// Contains tests for the relation class.

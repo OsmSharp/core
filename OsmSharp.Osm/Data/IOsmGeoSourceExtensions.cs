@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,50 +15,36 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Osm;
 
-namespace OsmSharp.Osm.Filters.Tags
+namespace OsmSharp.Osm.Data
 {
     /// <summary>
-    /// Filters on the existence of a tag.
+    /// Contains extension methods for an osm-geo source.
     /// </summary>
-    internal class FilterTagExists : FilterTag
+    public static class IOsmGeoSourceExtensions
     {
         /// <summary>
-        /// The tag that needs to exist.
+        /// Gets the node with the given id.
         /// </summary>
-        private string _tag;
-
-        /// <summary>
-        /// Creates a new tag existance filter.
-        /// </summary>
-        /// <param name="tag"></param>
-        public FilterTagExists(string tag)
+        public static Node GetNode(this IOsmGeoSource db, long id)
         {
-            _tag = tag;
+            return db.Get(OsmGeoType.Node, id) as Node;
         }
 
         /// <summary>
-        /// Returns true if the object passed through the filter.
+        /// Gets the way with the given id.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Evaluate(OsmGeo obj)
+        public static Way GetWay(this IOsmGeoSource db, long id)
         {
-            return obj.Tags.ContainsKey(_tag);
+            return db.Get(OsmGeoType.Way, id) as Way;
         }
 
         /// <summary>
-        /// Returns a description of this filter.
+        /// Gets the relation with the given id.
         /// </summary>
-        /// <returns></returns>
-        public override string ToString()
+        public static Relation GetRelation(this IOsmGeoSource db, long id)
         {
-            return string.Format("hastag:key={0}", _tag);
+            return db.Get(OsmGeoType.Relation, id) as Relation;
         }
     }
 }

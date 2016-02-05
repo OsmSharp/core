@@ -20,7 +20,7 @@ using OsmSharp.Osm.Streams;
 using System.Collections.Generic;
 using System.IO;
 
-namespace OsmSharp.Osm.PBF.Streams
+namespace OsmSharp.Osm.IO.PBF.Streams
 {
     /// <summary>
     /// A source of PBF formatted OSM data.
@@ -59,19 +59,19 @@ namespace OsmSharp.Osm.PBF.Streams
             var nextPBFPrimitive = this.MoveToNextPrimitive(ignoreNodes, ignoreWays, ignoreRelations);
             while(nextPBFPrimitive.Value != null)
             {
-                OsmSharp.Osm.PBF.Node node = (nextPBFPrimitive.Value as OsmSharp.Osm.PBF.Node);
+                OsmSharp.Osm.IO.PBF.Node node = (nextPBFPrimitive.Value as OsmSharp.Osm.IO.PBF.Node);
                 if(node != null && !ignoreNodes)
                 { // next primitve is a node.
                     _current = Encoder.DecodeNode(nextPBFPrimitive.Key, node);
                     return true;
                 }
-                OsmSharp.Osm.PBF.Way way = (nextPBFPrimitive.Value as OsmSharp.Osm.PBF.Way);
+                OsmSharp.Osm.IO.PBF.Way way = (nextPBFPrimitive.Value as OsmSharp.Osm.IO.PBF.Way);
                 if(way != null && !ignoreWays)
                 { // next primitive is a way.
                     _current = Encoder.DecodeWay(nextPBFPrimitive.Key, way);
                     return true;
                 }
-                OsmSharp.Osm.PBF.Relation relation = (nextPBFPrimitive.Value as OsmSharp.Osm.PBF.Relation);
+                OsmSharp.Osm.IO.PBF.Relation relation = (nextPBFPrimitive.Value as OsmSharp.Osm.IO.PBF.Relation);
                 if (relation != null && !ignoreRelations)
                 { // next primitive is a relation.
                     _current = Encoder.DecodeRelation(nextPBFPrimitive.Key, relation);

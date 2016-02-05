@@ -29,45 +29,12 @@ namespace OsmSharp.Osm.Data
     public static class IHistoryDbExtensions
     {
         /// <summary>
-        /// Gets a osm geo source for the db.
-        /// </summary>
-        public static IOsmGeoSource ToOsmGeoSource(this IHistoryDb db)
-        {
-            return new OsmGeoSourceHistoryDb(db);
-        }
-
-        /// <summary>
-        /// Gets the node with the given id.
-        /// </summary>
-        public static Node GetNode(this IHistoryDb db, long id)
-        {
-            return db.Get(OsmGeoType.Node, id) as Node;
-        }
-
-        /// <summary>
-        /// Gets the way with the given id.
-        /// </summary>
-        public static Way GetWay(this IHistoryDb db, long id)
-        {
-            return db.Get(OsmGeoType.Way, id) as Way;
-        }
-
-        /// <summary>
-        /// Gets the relation with the given id.
-        /// </summary>
-        public static Relation GetRelation(this IHistoryDb db, long id)
-        {
-            return db.Get(OsmGeoType.Relation, id) as Relation;
-        }
-
-        /// <summary>
         /// Gets all data in the form of a complete stream.
         /// </summary>
         public static OsmCompleteStreamSource GetComplete(this IHistoryDb db)
         {
-            var osmGeoSource = db.ToOsmGeoSource();
             return new Streams.Complete.OsmCompleteEnumerableStreamSource(
-                db.Get().Select(x => x.CreateComplete(osmGeoSource)));
+                db.Get().Select(x => x.CreateComplete(db)));
         }
 
         /// <summary>

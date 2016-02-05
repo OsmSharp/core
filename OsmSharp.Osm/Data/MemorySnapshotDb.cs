@@ -17,12 +17,11 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Filters;
+using OsmSharp.Osm.Changesets;
+using OsmSharp.Osm.Streams;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OsmSharp.Osm.Streams;
-using OsmSharp.Osm.Changesets;
 
 namespace OsmSharp.Osm.Data
 {
@@ -30,7 +29,7 @@ namespace OsmSharp.Osm.Data
     /// An in-memory data repository of OSM data primitives.
     /// </summary>
     /// <remarks>This is only a not-very-efficient reference implementation.</remarks>
-    public class MemoryDataSource : ISnapshotDb
+    public class MemorySnapshotDb : ISnapshotDb
     {
         private readonly Dictionary<long, Node> _nodes;
         private readonly Dictionary<long, Way> _ways;
@@ -39,7 +38,7 @@ namespace OsmSharp.Osm.Data
         /// <summary>
         /// Creates a new memory data structure using the default geometry interpreter.
         /// </summary>
-        public MemoryDataSource()
+        public MemorySnapshotDb()
         {
             _nodes = new Dictionary<long, Node>();
             _ways = new Dictionary<long, Way>();
@@ -49,7 +48,7 @@ namespace OsmSharp.Osm.Data
         /// <summary>
         /// Creates a new memory data structure using the default geometry interpreter.
         /// </summary>
-        public MemoryDataSource(params OsmGeo[] initial)
+        public MemorySnapshotDb(params OsmGeo[] initial)
             : this(initial as IEnumerable<OsmGeo>)
         {
 
@@ -58,7 +57,7 @@ namespace OsmSharp.Osm.Data
         /// <summary>
         /// Creates a new memory data structure using the default geometry interpreter.
         /// </summary>
-        public MemoryDataSource(IEnumerable<OsmGeo> initial)
+        public MemorySnapshotDb(IEnumerable<OsmGeo> initial)
         {
             _nodes = new Dictionary<long, Node>();
             _ways = new Dictionary<long, Way>();
@@ -82,7 +81,7 @@ namespace OsmSharp.Osm.Data
         /// <summary>
         /// Returns all the objects within a given bounding box and filtered by a given filter.
         /// </summary>
-        public IList<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude, Filter filter)
+        public IList<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude)
         {
             var box = new GeoCoordinateBox(
                 new GeoCoordinate(minLatitude, minLongitude),
@@ -95,8 +94,7 @@ namespace OsmSharp.Osm.Data
 
             foreach(var node in _nodes.Values)
             {
-                if (box.Contains(node.Longitude.Value, node.Latitude.Value) &&
-                    (filter == null || filter.Evaluate(node)))
+                if (box.Contains(node.Longitude.Value, node.Latitude.Value))
                 {
                     nodesInBox.Add(node.Id.Value);
                 }
@@ -106,54 +104,48 @@ namespace OsmSharp.Osm.Data
             {
                 if (way.Nodes != null)
                 {
-                    if (filter == null || filter.Evaluate(way))
+                    for (var n = 0; n < way.Nodes.Count; n++)
                     {
-                        for (var n = 0; n < way.Nodes.Count; n++)
+                        if (nodesInBox.Contains(way.Nodes[n]))
                         {
-                            if (nodesInBox.Contains(way.Nodes[n]))
+                            waysToInclude.Add(way.Id.Value);
+                            for (var n1 = 0; n1 < way.Nodes.Count; n1++)
                             {
-                                waysToInclude.Add(way.Id.Value);
-                                for (var n1 = 0; n1 < way.Nodes.Count; n1++)
-                                {
-                                    nodesToInclude.Add(way.Nodes[n1]);
-                                }
-                                break;
+                                nodesToInclude.Add(way.Nodes[n1]);
                             }
+                            break;
                         }
                     }
                 }
             }
 
-            foreach(var relation in _relations.Values)
+            foreach (var relation in _relations.Values)
             {
-                if (filter == null || filter.Evaluate(relation))
+                if (relation.Members != null)
                 {
-                    if (relation.Members != null)
+                    for (var m = 0; m < relation.Members.Count; m++)
                     {
-                        for (var m = 0; m < relation.Members.Count; m++)
+                        var relationFound = false;
+                        var member = relation.Members[m];
+                        switch (member.MemberType.Value)
                         {
-                            var relationFound = false;
-                            var member = relation.Members[m];
-                            switch (member.MemberType.Value)
-                            {
-                                case OsmGeoType.Node:
-                                    if (nodesInBox.Contains(member.MemberId.Value))
-                                    {
-                                        relationFound = true;
-                                    }
-                                    break;
-                                case OsmGeoType.Way:
-                                    if (waysToInclude.Contains(member.MemberId.Value))
-                                    {
-                                        relationFound = true;
-                                    }
-                                    break;
-                            }
-                            if (relationFound)
-                            {
-                                relationsToInclude.Add(relation.Id.Value);
+                            case OsmGeoType.Node:
+                                if (nodesInBox.Contains(member.MemberId.Value))
+                                {
+                                    relationFound = true;
+                                }
                                 break;
-                            }
+                            case OsmGeoType.Way:
+                                if (waysToInclude.Contains(member.MemberId.Value))
+                                {
+                                    relationFound = true;
+                                }
+                                break;
+                        }
+                        if (relationFound)
+                        {
+                            relationsToInclude.Add(relation.Id.Value);
+                            break;
                         }
                     }
                 }
@@ -248,6 +240,38 @@ namespace OsmSharp.Osm.Data
         }
 
         /// <summary>
+        /// Returns true if an osm object of the given type and the given id exists.
+        /// </summary>
+        public bool Exists(OsmGeoType type, long id)
+        {
+            switch (type)
+            {
+                case OsmGeoType.Node:
+                    Node node;
+                    if (!_nodes.TryGetValue(id, out node))
+                    {
+                        return false;
+                    }
+                    return true;
+                case OsmGeoType.Way:
+                    Way way;
+                    if (!_ways.TryGetValue(id, out way))
+                    {
+                        return false;
+                    }
+                    return true;
+                case OsmGeoType.Relation:
+                    Relation relation;
+                    if (!_relations.TryGetValue(id, out relation))
+                    {
+                        return false;
+                    }
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Gets all osm objects with the given types and the given id's.
         /// </summary>
         public IList<OsmGeo> Get(IList<OsmGeoType> type, IList<long> id)
@@ -260,6 +284,23 @@ namespace OsmSharp.Osm.Data
             for (int i = 0; i < id.Count; i++)
             {
                 result.Add(this.Get(type[i], id[i]));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Returns true for osm objects with the given types and the given id's when they exist.
+        /// </summary>
+        public IList<bool> Exists(IList<OsmGeoType> type, IList<long> id)
+        {
+            if (type == null) { throw new ArgumentNullException("type"); }
+            if (id == null) { throw new ArgumentNullException("id"); }
+            if (id.Count != type.Count) { throw new ArgumentException("Type and id lists need to have the same size."); }
+
+            var result = new List<bool>();
+            for (int i = 0; i < id.Count; i++)
+            {
+                result.Add(this.Exists(type[i], id[i]));
             }
             return result;
         }

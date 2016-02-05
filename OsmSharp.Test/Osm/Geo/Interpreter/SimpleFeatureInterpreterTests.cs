@@ -65,7 +65,7 @@ namespace OsmSharp.Test.Osm.Geo.Interpreter
             way.Tags = new TagsCollection();
             way.Tags.Add("area", "yes");
 
-            var source = new MemoryDataSource();
+            var source = new MemorySnapshotDb();
             source.AddOrUpdate(node1);
             source.AddOrUpdate(node2);
             source.AddOrUpdate(node3);
@@ -73,7 +73,7 @@ namespace OsmSharp.Test.Osm.Geo.Interpreter
 
             // the use of natural=water implies an area-type.
             var interpreter = new SimpleFeatureInterpreter();
-            var features = interpreter.Interpret(way, source.ToOsmGeoSource());
+            var features = interpreter.Interpret(way, source);
 
             Assert.IsNotNull(features);
             Assert.AreEqual(1, features.Count);
@@ -114,7 +114,7 @@ namespace OsmSharp.Test.Osm.Geo.Interpreter
             way.Tags = new TagsCollection();
             way.Tags.Add("natural", "water");
 
-            var source = new MemoryDataSource();
+            var source = new MemorySnapshotDb();
             source.AddOrUpdate(node1);
             source.AddOrUpdate(node2);
             source.AddOrUpdate(node3);
@@ -122,7 +122,7 @@ namespace OsmSharp.Test.Osm.Geo.Interpreter
 
             // the use of natural=water implies an area-type.
             var interpreter = new SimpleFeatureInterpreter();
-            var features = interpreter.Interpret(way, source.ToOsmGeoSource());
+            var features = interpreter.Interpret(way, source);
 
             Assert.IsNotNull(features);
             Assert.AreEqual(1, features.Count);
@@ -141,7 +141,7 @@ namespace OsmSharp.Test.Osm.Geo.Interpreter
         public void TestRelationMultipolygonAreaOneOuter()
         {
             // tests a multipolygon containing one 'outer' member.
-            var source = new MemoryDataSource(
+            var source = new MemorySnapshotDb(
                 new Node(1, 0, 0),
                 new Node(2, 1, 0),
                 new Node(3, 0, 1),
@@ -169,7 +169,7 @@ namespace OsmSharp.Test.Osm.Geo.Interpreter
         [Test]
         public void TestRelationMultipolygonAreaOneOuterOneInner()
         {
-            var source = new MemoryDataSource(
+            var source = new MemorySnapshotDb(
                 new Node(1, 0, 0),
                 new Node(2, 0, 1),
                 new Node(3, 1, 1),
@@ -207,7 +207,7 @@ namespace OsmSharp.Test.Osm.Geo.Interpreter
         [Test]
         public void TestRelationMultipolygonAreaOneOuterTwoInners()
         {
-            var source = new MemoryDataSource(
+            var source = new MemorySnapshotDb(
                 new Node(1, 0, 0),
                 new Node(2, 0, 1),
                 new Node(3, 1, 1),
@@ -251,7 +251,7 @@ namespace OsmSharp.Test.Osm.Geo.Interpreter
         [Test]
         public void TestRelationMultipolygonAreaOneOuterTwoPartialInners()
         {
-            var source = new MemoryDataSource(
+            var source = new MemorySnapshotDb(
                 new Node(1, 0, 0),
                 new Node(2, 0, 1),
                 new Node(3, 1, 1),

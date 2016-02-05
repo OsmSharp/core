@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,10 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OsmSharp.Osm.Streams.Filters;
 
 namespace OsmSharp.Test.Osm.Streams.Filters
@@ -33,7 +29,7 @@ namespace OsmSharp.Test.Osm.Streams.Filters
         /// Creates a new stream filter reference.
         /// </summary>
         public OsmStreamFilterReference()
-            : base(new OsmSharp.Osm.Cache.OsmDataCacheMemory())
+            : base(new OsmSharp.Osm.Data.MemorySnapshotDb())
         {
 
         }
@@ -41,8 +37,6 @@ namespace OsmSharp.Test.Osm.Streams.Filters
         /// <summary>
         /// Returns true when the given osmGeo object has an uneven id.
         /// </summary>
-        /// <param name="osmGeo"></param>
-        /// <returns></returns>
         public override bool Include(OsmSharp.Osm.OsmGeo osmGeo)
         {
             return osmGeo.Id.Value % 2 == 1;

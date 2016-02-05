@@ -28,36 +28,53 @@ namespace OsmSharp.Osm.Data
     /// </summary>
     public static class ISnapshotDbExtensions
     {
+
         /// <summary>
-        /// Gets a osm geo source for the db.
+        /// Returns true if the node with the given id exists.
         /// </summary>
-        public static IOsmGeoSource ToOsmGeoSource(this ISnapshotDb db)
+        public static bool ExistsNode(this ISnapshotDb db, long id)
         {
-            return new OsmGeoSourceSnapshotDb(db);
+            return db.Exists(OsmGeoType.Node, id);
         }
 
         /// <summary>
-        /// Gets the node with the given id.
+        /// Deletes the node with the given id and returns true if it existed.
         /// </summary>
-        public static Node GetNode(this ISnapshotDb db, long id)
+        public static bool DeleteNode(this ISnapshotDb db, long id)
         {
-            return db.Get(OsmGeoType.Node, id) as Node;
+            return db.Delete(OsmGeoType.Node, id);
         }
 
         /// <summary>
-        /// Gets the way with the given id.
+        /// Returns true if the way with the given id exists.
         /// </summary>
-        public static Way GetWay(this ISnapshotDb db, long id)
+        public static bool ExistsWay(this ISnapshotDb db, long id)
         {
-            return db.Get(OsmGeoType.Way, id) as Way;
+            return db.Exists(OsmGeoType.Way, id);
         }
 
         /// <summary>
-        /// Gets the relation with the given id.
+        /// Deletes the way with the given id and returns true if it existed.
         /// </summary>
-        public static Relation GetRelation(this ISnapshotDb db, long id)
+        public static bool DeleteWay(this ISnapshotDb db, long id)
         {
-            return db.Get(OsmGeoType.Relation, id) as Relation;
+            return db.Delete(OsmGeoType.Way, id);
+        }
+
+        /// <summary>
+        /// Returns true if the relation with the given id exists.
+        /// </summary>
+        public static bool ExistsRelation(this ISnapshotDb db, long id)
+        {
+            return db.Exists(OsmGeoType.Relation, id);
+        }
+
+        /// <summary>
+        /// Deletes the relation with the given id and returns true if it existed.
+        /// </summary>
+        public static bool DeleteRelation(this ISnapshotDb db, long id)
+        {
+            return db.Delete(OsmGeoType.Relation, id);
         }
 
         /// <summary>
@@ -65,9 +82,8 @@ namespace OsmSharp.Osm.Data
         /// </summary>
         public static OsmCompleteStreamSource GetComplete(this ISnapshotDb db)
         {
-            var osmGeoSource = db.ToOsmGeoSource();
             return new Streams.Complete.OsmCompleteEnumerableStreamSource(
-                db.Get().Select(x => x.CreateComplete(osmGeoSource)));
+                db.Get().Select(x => x.CreateComplete(db)));
         }
 
         /// <summary>
@@ -75,18 +91,7 @@ namespace OsmSharp.Osm.Data
         /// </summary>
         public static IEnumerable<OsmGeo> Get(this ISnapshotDb db, Math.Geo.GeoCoordinateBox box)
         {
-            return db.Get((float)box.MinLat, (float)box.MinLon, (float)box.MaxLat, (float)box.MaxLon, 
-                null);
-        }
-
-        /// <summary>
-        /// Gets all osm objects that pass the given filter within the given bounding box.
-        /// </summary>
-        public static IEnumerable<OsmGeo> Get(this ISnapshotDb db, Math.Geo.GeoCoordinateBox box,
-            Filters.Filter filter)
-        {
-            return db.Get((float)box.MinLat, (float)box.MinLon, (float)box.MaxLat, (float)box.MaxLon,
-                filter);
+            return db.Get((float)box.MinLat, (float)box.MinLon, (float)box.MaxLat, (float)box.MaxLon);
         }
     }
 }

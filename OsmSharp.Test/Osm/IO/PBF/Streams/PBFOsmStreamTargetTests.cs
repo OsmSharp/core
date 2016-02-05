@@ -19,14 +19,14 @@
 using NUnit.Framework;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Osm;
-using OsmSharp.Osm.PBF.Streams;
+using OsmSharp.Osm.IO.PBF.Streams;
 using OsmSharp.Osm.Streams;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace OsmSharp.Test.Osm.PBF.Streams
+namespace OsmSharp.Test.Osm.IO.PBF.Streams
 {
     /// <summary>
     /// Contains tests for the PBF osm stream source.

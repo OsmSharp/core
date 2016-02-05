@@ -22,7 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace OsmSharp.Osm.PBF.Streams
+namespace OsmSharp.Osm.IO.PBF.Streams
 {
     /// <summary>
     /// A PBF stream target.

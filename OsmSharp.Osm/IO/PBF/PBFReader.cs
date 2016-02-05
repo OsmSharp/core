@@ -22,7 +22,7 @@ using ProtoBuf.Meta;
 using System;
 using System.IO;
 
-namespace OsmSharp.Osm.PBF
+namespace OsmSharp.Osm.IO.PBF
 {
     /// <summary>
     /// Reads PBF files.

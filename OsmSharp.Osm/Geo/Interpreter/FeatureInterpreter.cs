@@ -65,15 +65,6 @@ namespace OsmSharp.Osm.Geo.Interpreter
         /// <summary>
         /// Interprets an OSM-object and returns the correctponding geometry.
         /// </summary>
-        public FeatureCollection Interpret(OsmGeo simpleOsmGeo, ISnapshotDb snapshotDb)
-        {
-            return this.Interpret(simpleOsmGeo, snapshotDb.ToOsmGeoSource());
-        }
-
-
-        /// <summary>
-        /// Interprets an OSM-object and returns the correctponding geometry.
-        /// </summary>
         public virtual FeatureCollection Interpret(OsmGeo simpleOsmGeo, IOsmGeoSource data)
         {
             switch (simpleOsmGeo.Type)

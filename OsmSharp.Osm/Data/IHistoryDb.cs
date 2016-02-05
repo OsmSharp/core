@@ -34,7 +34,7 @@ namespace OsmSharp.Osm.Data
     ///    - 2. Apply changes.
     ///    - 3. Close the changeset.
     /// </summary>
-    public interface IHistoryDb
+    public interface IHistoryDb : IOsmGeoSource
     {
         /// <summary>
         /// Clears all data.
@@ -69,11 +69,6 @@ namespace OsmSharp.Osm.Data
         /// </summary>
         /// <returns></returns>
         OsmStreamSource Get();
-
-        /// <summary>
-        /// Gets the latest version of an osm object of the given type with the given id.
-        /// </summary>
-        OsmGeo Get(OsmGeoType type, long id);
 
         /// <summary>
         /// Gets all latest version of osm objects with the given types and the given id's.

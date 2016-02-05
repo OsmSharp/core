@@ -17,11 +17,11 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
-using OsmSharp.Osm.PBF;
+using OsmSharp.Osm.IO.PBF;
 using System;
 using System.Collections.Generic;
 
-namespace OsmSharp.Test.Osm.PBF.Dense
+namespace OsmSharp.Test.Osm.IO.PBF.Dense
 {
     /// <summary>
     /// Tests the PBF encoder.
@@ -114,8 +114,8 @@ namespace OsmSharp.Test.Osm.PBF.Dense
             Assert.IsNotNull(node);
             Assert.AreEqual(1, node.Id);
             Assert.AreEqual(10, node.ChangeSetId);
-            Assert.AreEqual(10.9, node.Latitude);
-            Assert.AreEqual(11.0, node.Longitude);
+            Assert.AreEqual(10.9f, node.Latitude);
+            Assert.AreEqual(11.0f, node.Longitude);
             Assert.AreEqual(Utilities.FromUnixTime(10000), node.TimeStamp);
             Assert.AreEqual(OsmSharp.Osm.OsmGeoType.Node, node.Type);
             Assert.AreEqual(100, node.UserId);

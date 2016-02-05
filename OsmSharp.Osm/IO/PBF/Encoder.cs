@@ -20,7 +20,7 @@ using OsmSharp.Collections.Tags;
 using System;
 using System.Collections.Generic;
 
-namespace OsmSharp.Osm.PBF
+namespace OsmSharp.Osm.IO.PBF
 {
     /// <summary>
     /// Encoder/decoder for OSM-PBF format.
@@ -246,7 +246,7 @@ namespace OsmSharp.Osm.PBF
         /// Converts the PBF node into an OsmSharp-node.
         /// </summary>
         /// <returns></returns>
-        public static OsmSharp.Osm.Node DecodeNode(PrimitiveBlock block, OsmSharp.Osm.PBF.Node pbfNode, OsmSharp.Osm.Node node)
+        public static OsmSharp.Osm.Node DecodeNode(PrimitiveBlock block, OsmSharp.Osm.IO.PBF.Node pbfNode, OsmSharp.Osm.Node node)
         {
             // clear old data.
             if (node.Tags != null)
@@ -292,7 +292,7 @@ namespace OsmSharp.Osm.PBF
         /// Converts the PBF node into an OsmSharp-node.
         /// </summary>
         /// <returns></returns>
-        public static OsmSharp.Osm.Node DecodeNode(PrimitiveBlock block, OsmSharp.Osm.PBF.Node pbfNode)
+        public static OsmSharp.Osm.Node DecodeNode(PrimitiveBlock block, OsmSharp.Osm.IO.PBF.Node pbfNode)
         {
             var node = new OsmSharp.Osm.Node();
             Encoder.DecodeNode(block, pbfNode, node);
@@ -330,9 +330,9 @@ namespace OsmSharp.Osm.PBF
         /// Encodes an OsmSharp-node into a PBF-node.
         /// </summary>
         /// <returns></returns>
-        public static OsmSharp.Osm.PBF.Node EncodeNode(PrimitiveBlock block, Dictionary<string, int> reverseStringTable, Osm.Node node)
+        public static OsmSharp.Osm.IO.PBF.Node EncodeNode(PrimitiveBlock block, Dictionary<string, int> reverseStringTable, Osm.Node node)
         {
-            var pbfNode = new OsmSharp.Osm.PBF.Node();
+            var pbfNode = new OsmSharp.Osm.IO.PBF.Node();
             Encoder.EncodeNode(block, reverseStringTable, pbfNode, node);
             return pbfNode;
         }
@@ -341,8 +341,8 @@ namespace OsmSharp.Osm.PBF
         /// Encodes an OsmSharp-node into a PBF-node.
         /// </summary>
         /// <returns></returns>
-        public static OsmSharp.Osm.PBF.Node EncodeNode(PrimitiveBlock block, Dictionary<string, int> reverseStringTable,
-            OsmSharp.Osm.PBF.Node pbfNode, Osm.Node node)
+        public static OsmSharp.Osm.IO.PBF.Node EncodeNode(PrimitiveBlock block, Dictionary<string, int> reverseStringTable,
+            OsmSharp.Osm.IO.PBF.Node pbfNode, Osm.Node node)
         {
             pbfNode.id = node.Id.Value;
             pbfNode.info = new Info();
@@ -402,7 +402,7 @@ namespace OsmSharp.Osm.PBF
         /// <summary>
         /// Converts a PBF-way into an OsmSharp-way.
         /// </summary>
-        public static void DecodeWay(PrimitiveBlock block, OsmSharp.Osm.PBF.Way pbfWay, OsmSharp.Osm.Way way)
+        public static void DecodeWay(PrimitiveBlock block, OsmSharp.Osm.IO.PBF.Way pbfWay, OsmSharp.Osm.Way way)
         {
             // make sure old data is gone.
             if (way.Nodes != null &&
@@ -463,7 +463,7 @@ namespace OsmSharp.Osm.PBF
         /// Converts a PBF way into an OsmSharp-way.
         /// </summary>
         /// <returns></returns>
-        public static OsmSharp.Osm.Way DecodeWay(PrimitiveBlock block, OsmSharp.Osm.PBF.Way pbfWay)
+        public static OsmSharp.Osm.Way DecodeWay(PrimitiveBlock block, OsmSharp.Osm.IO.PBF.Way pbfWay)
         {
             var way = new OsmSharp.Osm.Way();
             Encoder.DecodeWay(block, pbfWay, way);
@@ -474,9 +474,9 @@ namespace OsmSharp.Osm.PBF
         /// Encodes an OsmSharp-way into a PBF-way.
         /// </summary>
         /// <returns></returns>
-        public static OsmSharp.Osm.PBF.Way EncodeWay(PrimitiveBlock block, Dictionary<string, int> reverseStringTable, Osm.Way way)
+        public static OsmSharp.Osm.IO.PBF.Way EncodeWay(PrimitiveBlock block, Dictionary<string, int> reverseStringTable, Osm.Way way)
         {
-            var pbfWay = new OsmSharp.Osm.PBF.Way();
+            var pbfWay = new OsmSharp.Osm.IO.PBF.Way();
             pbfWay.id = way.Id.Value;
             pbfWay.info = new Info();
             if (way.ChangeSetId.HasValue) { pbfWay.info.changeset = way.ChangeSetId.Value; }
@@ -514,7 +514,7 @@ namespace OsmSharp.Osm.PBF
         /// Converts a PBF way into an OsmSharp-relation.
         /// </summary>
         /// <returns></returns>
-        public static OsmSharp.Osm.Relation DecodeRelation(PrimitiveBlock block, OsmSharp.Osm.PBF.Relation pbfRelation,
+        public static OsmSharp.Osm.Relation DecodeRelation(PrimitiveBlock block, OsmSharp.Osm.IO.PBF.Relation pbfRelation,
             OsmSharp.Osm.Relation relation)
         {
             // make sure old data is gone.
@@ -591,7 +591,7 @@ namespace OsmSharp.Osm.PBF
         /// Converts a PBF way into an OsmSharp-relation.
         /// </summary>
         /// <returns></returns>
-        public static OsmSharp.Osm.Relation DecodeRelation(PrimitiveBlock block, OsmSharp.Osm.PBF.Relation pbfRelation)
+        public static OsmSharp.Osm.Relation DecodeRelation(PrimitiveBlock block, OsmSharp.Osm.IO.PBF.Relation pbfRelation)
         {
             var relation = new OsmSharp.Osm.Relation();
             Encoder.DecodeRelation(block, pbfRelation, relation);
@@ -602,9 +602,9 @@ namespace OsmSharp.Osm.PBF
         /// Encodes an OsmSharp-relation into a PBF-relation.
         /// </summary>
         /// <returns></returns>
-        public static OsmSharp.Osm.PBF.Relation EncodeRelation(PrimitiveBlock block, Dictionary<string, int> reverseStringTable, Osm.Relation relation)
+        public static OsmSharp.Osm.IO.PBF.Relation EncodeRelation(PrimitiveBlock block, Dictionary<string, int> reverseStringTable, Osm.Relation relation)
         {
-            var pbfRelation = new OsmSharp.Osm.PBF.Relation();
+            var pbfRelation = new OsmSharp.Osm.IO.PBF.Relation();
             pbfRelation.id = relation.Id.Value;
             pbfRelation.info = new Info();
             if (relation.ChangeSetId.HasValue) { pbfRelation.info.changeset = relation.ChangeSetId.Value; }

@@ -15,46 +15,28 @@
 //// 
 //// You should have received a copy of the GNU General Public License
 //// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
 
-//namespace OsmSharp.Osm.Filters.Tags
+//using System.Collections.Generic;
+
+//namespace OsmSharp.Osm.IO.PBF.Dense
 //{
 //    /// <summary>
-//    /// Filters on the number of
+//    /// 'Decompresses' dense formatted primitives to their regular counterparts.
 //    /// </summary>
-//    internal class FilterTagCount : FilterTag
+//    public class Decompressor : IPBFPrimitiveBlockConsumer
 //    {
-//        private int _cnt;
+//        /// <summary>
+//        /// Holds the consumer of primitives.
+//        /// </summary>
+//        private IPBFOsmPrimitiveConsumer _primitivesConsumer;
 
-//        private bool _exact;
-
-//        public FilterTagCount()
+//        /// <summary>
+//        /// Creates a decompressor.
+//        /// </summary>
+//        internal Decompressor(IPBFOsmPrimitiveConsumer primitivesConsumer
+//            )
 //        {
-//            _cnt = 0;
-//            _exact = false;
-//        }
-
-//        public FilterTagCount(int cnt, bool exact)
-//        {
-//            _cnt = cnt;
-//            _exact = exact;
-//        }
-
-//        public FilterTagCount(int cnt)
-//        {
-//            _cnt = cnt;
-//        }
-        
-//        public override bool Evaluate(OsmBase obj)
-//        {
-//            if (_exact)
-//            {
-//                return obj.Tags.Count == _cnt;
-//            }
-//            return obj.Tags.Count >= _cnt;
+//            _primitivesConsumer = primitivesConsumer;
 //        }
 //    }
 //}

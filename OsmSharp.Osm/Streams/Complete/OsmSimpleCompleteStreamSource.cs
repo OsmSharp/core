@@ -18,8 +18,8 @@
 
 using System;
 using System.Collections.Generic;
-using OsmSharp.Osm.Cache;
 using OsmSharp.Osm.Complete;
+using OsmSharp.Osm.Data;
 
 namespace OsmSharp.Osm.Streams.Complete
 {
@@ -28,7 +28,7 @@ namespace OsmSharp.Osm.Streams.Complete
     /// </summary>
     public class OsmSimpleCompleteStreamSource : OsmCompleteStreamSource
     {
-        private readonly OsmDataCache _dataCache; // Caches objects that are needed later to complete objects.
+        private readonly ISnapshotDb _dataCache; // Caches objects that are needed later to complete objects.
         private readonly OsmStreamSource _simpleSource; // Holds the simple source of object.
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace OsmSharp.Osm.Streams.Complete
         public OsmSimpleCompleteStreamSource(OsmStreamSource source)
         {
             // create an in-memory cache by default.
-            _dataCache = new OsmDataCacheMemory();
+            _dataCache = new MemorySnapshotDb();
             _simpleSource = source;
 
             _nodesToInclude = new HashSet<long>();
@@ -51,7 +51,7 @@ namespace OsmSharp.Osm.Streams.Complete
         /// <summary>
         /// Creates a new osm simple complete stream.
         /// </summary>
-        public OsmSimpleCompleteStreamSource(OsmStreamSource source, OsmDataCache cache)
+        public OsmSimpleCompleteStreamSource(OsmStreamSource source, ISnapshotDb cache)
         {
             _dataCache = cache;
             _simpleSource = source;
@@ -87,21 +87,13 @@ namespace OsmSharp.Osm.Streams.Complete
 
             }
         }
-
-        /// <summary>
-        /// Flag indicating that the caching was done.
-        /// </summary>
-        private bool _cachingDone;
-
-        /// <summary>
-        /// Holds the current complete object.
-        /// </summary>
-        private ICompleteOsmGeo _current;
+        
+        private bool _cachingDone; // Flag indicating that the caching was done.
+        private ICompleteOsmGeo _current; // Holds the current complete object.
 
         /// <summary>
         /// Moves to the next object.
         /// </summary>
-        /// <returns></returns>
         public override bool MoveNext()
         {
             if (!_cachingDone)
@@ -126,7 +118,7 @@ namespace OsmSharp.Osm.Streams.Complete
                         }
                         if (_nodesToInclude.Contains(currentSimple.Id.Value))
                         { // node needs to be cached.
-                            _dataCache.AddNode(currentSimple as Node);
+                            _dataCache.AddOrUpdate(currentSimple as Node);
                             _nodesToInclude.Remove(currentSimple.Id.Value);
                         }
                         break;
@@ -136,12 +128,12 @@ namespace OsmSharp.Osm.Streams.Complete
 
                         if (_waysToInclude.Contains(currentSimple.Id.Value))
                         { // keep the way because it is needed later on.
-                            _dataCache.AddWay(currentSimple as Way);
+                            _dataCache.AddOrUpdate(currentSimple as Way);
                             _waysToInclude.Remove(currentSimple.Id.Value);
                         }
                         else
                         { // only report that the nodes have been used when the way can be let-go.
-                            Way way = currentSimple as Way;
+                            var way = currentSimple as Way;
                             if (way.Nodes != null)
                             { // report usage.
                                 way.Nodes.ForEach(x => this.ReportNodeUsage(x));
@@ -154,10 +146,10 @@ namespace OsmSharp.Osm.Streams.Complete
 
                         if(!_relationsToInclude.Contains(currentSimple.Id.Value))
                         { // only report relation usage when the relation can be let go.
-                            Relation relation = currentSimple as Relation;
+                            var relation = currentSimple as Relation;
                             if (relation.Members != null)
                             {
-                                foreach (RelationMember member in relation.Members)
+                                foreach (var member in relation.Members)
                                 {
                                     switch (member.MemberType.Value)
                                     {
@@ -183,36 +175,13 @@ namespace OsmSharp.Osm.Streams.Complete
             }
             return false;
         }
-
-        /// <summary>
-        /// An index of extra nodes to include.
-        /// </summary>
-        private readonly HashSet<long> _nodesToInclude;
-
-        /// <summary>
-        /// An index of nodes that are being used twice or more.
-        /// </summary>
-        private readonly Dictionary<long, int> _nodesUsedTwiceOrMore;
-
-        /// <summary>
-        /// An index of extra relations to include.
-        /// </summary>
-        private readonly HashSet<long> _waysToInclude;
-
-        /// <summary>
-        /// An index of ways that are being used twice or more.
-        /// </summary>
-        private readonly Dictionary<long, int> _waysUsedTwiceOrMore;
-
-        /// <summary>
-        /// An index of extra ways to include.
-        /// </summary>
-        private readonly HashSet<long> _relationsToInclude;
-
-        /// <summary>
-        /// An index of relations that are being used twice or more.
-        /// </summary>
-        private readonly Dictionary<long, int> _relationsUsedTwiceOrMore;
+        
+        private readonly HashSet<long> _nodesToInclude; // An index of extra nodes to include.
+        private readonly Dictionary<long, int> _nodesUsedTwiceOrMore; // An index of nodes that are being used twice or more.
+        private readonly HashSet<long> _waysToInclude; // An index of extra relations to include.
+        private readonly Dictionary<long, int> _waysUsedTwiceOrMore; // An index of ways that are being used twice or more.
+        private readonly HashSet<long> _relationsToInclude; // An index of extra ways to include.
+        private readonly Dictionary<long, int> _relationsUsedTwiceOrMore; // An index of relations that are being used twice or more.
 
         /// <summary>
         /// Seeks for objects that are children of other objects.
@@ -265,7 +234,7 @@ namespace OsmSharp.Osm.Streams.Complete
             {
                 if (_relationsToInclude.Contains(relation.Id.Value))
                 { // yep, cache relation!
-                    _dataCache.AddRelation(relation);
+                    _dataCache.AddOrUpdate(relation);
                 }
             }
             _simpleSource.Reset();
@@ -274,7 +243,6 @@ namespace OsmSharp.Osm.Streams.Complete
         /// <summary>
         /// Reports that the node with the given id was used.
         /// </summary>
-        /// <param name="nodeId"></param>
         private void ReportNodeUsage(long nodeId)
         {
             int nodeCount;
@@ -292,14 +260,13 @@ namespace OsmSharp.Osm.Streams.Complete
             }
             else
             { // the node was used for the last time.
-                _dataCache.RemoveNode(nodeId);
+                _dataCache.DeleteNode(nodeId);
             }
         }
 
         /// <summary>
         /// Marks the given node as child.
         /// </summary>
-        /// <param name="nodeId"></param>
         private void MarkNodeAsChild(long nodeId)
         {
             if (_nodesToInclude.Contains(nodeId))
@@ -326,7 +293,6 @@ namespace OsmSharp.Osm.Streams.Complete
         /// <summary>
         /// Reports that the way with the given id was used.
         /// </summary>
-        /// <param name="wayId"></param>
         private void ReportWayUsage(long wayId)
         {
 
@@ -345,8 +311,8 @@ namespace OsmSharp.Osm.Streams.Complete
             }
             else
             { // the way was used for the last time.
-                Way way = _dataCache.GetWay(wayId); // get the way before it is removed.
-                _dataCache.RemoveWay(wayId); // remove from cache.
+                var way = _dataCache.GetWay(wayId); // get the way before it is removed.
+                _dataCache.DeleteWay(wayId); // remove from cache.
                 if (way != null && way.Nodes != null)
                 { // report usage.
                     way.Nodes.ForEach(x => this.ReportNodeUsage(x));
@@ -357,7 +323,6 @@ namespace OsmSharp.Osm.Streams.Complete
         /// <summary>
         /// Marks the given way as child.
         /// </summary>
-        /// <param name="wayId"></param>
         private void MarkWayAsChild(long wayId)
         {
             if (_waysToInclude.Contains(wayId))
@@ -384,7 +349,6 @@ namespace OsmSharp.Osm.Streams.Complete
         /// <summary>
         /// Reports that the relation with the given id was used.
         /// </summary>
-        /// <param name="relationId"></param>
         private void ReportRelationUsage(long relationId)
         {
             int relationCount;
@@ -403,34 +367,14 @@ namespace OsmSharp.Osm.Streams.Complete
             else
             { // the relation was used for the last time.
                 Relation relation = _dataCache.GetRelation(relationId); // get relation before it is removed.
-                _dataCache.RemoveRelation(relationId); // remove relation.
+                _dataCache.DeleteRelation(relationId); // remove relation.
                 _relationsToInclude.Remove(relationId); // remove from the to-include list.
-
-                //if (relation.Members != null)
-                //{ // also report usage to the members.
-                //    foreach (RelationMember member in relation.Members)
-                //    {
-                //        switch (member.MemberType.Value)
-                //        {
-                //            case OsmGeoType.Node:
-                //                this.ReportNodeUsage(member.MemberId.Value);
-                //                break;
-                //            case OsmGeoType.Way:
-                //                this.ReportWayUsage(member.MemberId.Value);
-                //                break;
-                //            case OsmGeoType.Relation:
-                //                this.ReportRelationUsage(member.MemberId.Value);
-                //                break;
-                //        }
-                //    }
-                //}
             }
         }
 
         /// <summary>
         /// Marks the given relation as child.
         /// </summary>
-        /// <param name="relationId"></param>
         private void MarkRelationAsChild(long relationId)
         {
             if (_relationsToInclude.Contains(relationId))
@@ -457,7 +401,6 @@ namespace OsmSharp.Osm.Streams.Complete
         /// <summary>
         /// Returns the current object.
         /// </summary>
-        /// <returns></returns>
         public override ICompleteOsmGeo Current()
         {
             return _current;

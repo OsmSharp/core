@@ -60,9 +60,9 @@
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
     <None Include="packages.config" />
-    <None Include="PBF\fileformat.proto" />
-    <None Include="PBF\osmformat.proto" />
-    <None Include="Xml\v0_6\osm.xsd">
+    <None Include="IO\PBF\fileformat.proto" />
+    <None Include="IO\PBF\osmformat.proto" />
+    <None Include="IO\Xml\v0_6\osm.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
@@ -70,8 +70,6 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Cache\OsmDataCache.cs" />
-    <Compile Include="Cache\OsmDataCacheMemory.cs" />
     <Compile Include="Changesets\Change.cs" />
     <Compile Include="Changesets\ChangeSet.cs" />
     <Compile Include="Changesets\ChangeSetInfo.cs" />
@@ -90,36 +88,28 @@
     <Compile Include="Data\IHistoryDb.cs" />
     <Compile Include="Data\IHistoryDbExtensions.cs" />
     <Compile Include="Data\IOsmGeoSource.cs" />
+    <Compile Include="Data\IOsmGeoSourceExtensions.cs" />
     <Compile Include="Data\ISnapshotDb.cs" />
     <Compile Include="Data\ISnapshotDbExtensions.cs" />
     <Compile Include="Data\MemorySnapshotDb.cs" />
     <Compile Include="Changesets\DiffResult.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Filters\Filter.cs" />
-    <Compile Include="Filters\FilterAny.cs" />
-    <Compile Include="Filters\FilterBox.cs" />
-    <Compile Include="Filters\FilterCombined.cs" />
-    <Compile Include="Filters\FilterTag.cs" />
-    <Compile Include="Filters\FilterType.cs" />
-    <Compile Include="Filters\Tags\FilterTagCount.cs" />
-    <Compile Include="Filters\Tags\FilterTagExists.cs" />
-    <Compile Include="Filters\Tags\FilterTagMatch.cs" />
     <Compile Include="Geo\Interpreter\FeatureInterpreter.cs" />
     <Compile Include="Geo\Interpreter\SimpleFeatureInterpreter.cs" />
     <Compile Include="Geo\Streams\OsmFeatureStreamSource.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="OsmGeo.cs" />
     <Compile Include="OsmGeoType.cs" />
-    <Compile Include="PBF\Dense\Compressor.cs" />
-    <Compile Include="PBF\Dense\Decompressor.cs" />
-    <Compile Include="PBF\Encoder.cs" />
-    <Compile Include="PBF\fileformat.cs" />
-    <Compile Include="PBF\IPBFOsmPrimitiveConsumer.cs" />
-    <Compile Include="PBF\osmformat.cs" />
-    <Compile Include="PBF\PBFReader.cs" />
-    <Compile Include="PBF\PBFWriter.cs" />
-    <Compile Include="PBF\Streams\PBFOsmStreamSource.cs" />
-    <Compile Include="PBF\Streams\PBFOsmStreamTarget.cs" />
+    <Compile Include="IO\PBF\Dense\Compressor.cs" />
+    <Compile Include="IO\PBF\Dense\Decompressor.cs" />
+    <Compile Include="IO\PBF\Encoder.cs" />
+    <Compile Include="IO\PBF\fileformat.cs" />
+    <Compile Include="IO\PBF\IPBFOsmPrimitiveConsumer.cs" />
+    <Compile Include="IO\PBF\osmformat.cs" />
+    <Compile Include="IO\PBF\PBFReader.cs" />
+    <Compile Include="IO\PBF\PBFWriter.cs" />
+    <Compile Include="IO\PBF\Streams\PBFOsmStreamSource.cs" />
+    <Compile Include="IO\PBF\Streams\PBFOsmStreamTarget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Relation.cs" />
     <Compile Include="RelationMember.cs" />
@@ -141,7 +131,6 @@
     <Compile Include="Streams\Filters\OsmStreamFilterPoly.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterProgress.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterSort.cs" />
-    <Compile Include="Streams\Filters\OsmStreamFilterTags.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterTagsFilter.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterWithEvents.cs" />
     <Compile Include="Streams\OsmStreamExtensions.cs" />
@@ -157,15 +146,14 @@
     <Compile Include="Tiles\TileRange.cs" />
     <Compile Include="Tiles\TileRangeIndex.cs" />
     <Compile Include="Way.cs" />
-    <Compile Include="Xml\OsmDocument.cs" />
-    <Compile Include="Xml\OsmSource\OsmDataSource.cs" />
-    <Compile Include="Xml\Streams\ChangeSets\XmlDataProcessorChangeSetSource.cs" />
-    <Compile Include="Xml\Streams\Replication\Replicator.cs" />
-    <Compile Include="Xml\Streams\XmlOsmStreamSource.cs" />
-    <Compile Include="Xml\Streams\XmlOsmStreamTarget.cs" />
-    <Compile Include="Xml\Streams\XmlSimpleConverter.cs" />
-    <Compile Include="Xml\v0_6\Extensions.cs" />
-    <Compile Include="Xml\v0_6\osm.cs">
+    <Compile Include="IO\Xml\OsmDocument.cs" />
+    <Compile Include="IO\Xml\Streams\ChangeSets\XmlDataProcessorChangeSetSource.cs" />
+    <Compile Include="IO\Xml\Streams\Replication\Replicator.cs" />
+    <Compile Include="IO\Xml\Streams\XmlOsmStreamSource.cs" />
+    <Compile Include="IO\Xml\Streams\XmlOsmStreamTarget.cs" />
+    <Compile Include="IO\Xml\Streams\XmlSimpleConverter.cs" />
+    <Compile Include="IO\Xml\v0_6\Extensions.cs" />
+    <Compile Include="IO\Xml\v0_6\osm.cs">
       <DependentUpon>osm.xsd</DependentUpon>
     </Compile>
   </ItemGroup>

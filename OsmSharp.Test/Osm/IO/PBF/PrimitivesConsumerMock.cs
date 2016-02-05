@@ -16,11 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Osm.PBF;
+using OsmSharp.Osm.IO.PBF;
 using System;
 using System.Collections.Generic;
 
-namespace OsmSharp.Test.Osm.PBF
+namespace OsmSharp.Test.Osm.IO.PBF
 {
     /// <summary>
     /// A dummy primitives consumer.

@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,8 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Osm;
-using OsmSharp.Osm.Cache;
+using OsmSharp.Osm.Data;
 
 namespace OsmSharp.Osm.Streams.Complete
 {
@@ -27,17 +26,14 @@ namespace OsmSharp.Osm.Streams.Complete
     public abstract class OsmCompleteStreamTarget
     {
         /// <summary>
-        /// Holds the source for this target.
-        /// </summary>
-        private OsmCompleteStreamSource _source;
-
-        /// <summary>
         /// Creates a new target.
         /// </summary>
         protected OsmCompleteStreamTarget()
         {
 
         }
+
+        private OsmCompleteStreamSource _source; // Holds the source for this target.
 
         /// <summary>
         /// Initializes the target.
@@ -47,25 +43,21 @@ namespace OsmSharp.Osm.Streams.Complete
         /// <summary>
         /// Adds a node to the target.
         /// </summary>
-        /// <param name="node"></param>
         public abstract void AddNode(Node node);
 
         /// <summary>
         /// Adds a way to the target.
         /// </summary>
-        /// <param name="way"></param>
         public abstract void AddWay(CompleteWay way);
 
         /// <summary>
         /// Adds a relation to the target.
         /// </summary>
-        /// <param name="relation"></param>
         public abstract void AddRelation(CompleteRelation relation);
 
         /// <summary>
         /// Registers a source on this target.
         /// </summary>
-        /// <param name="source"></param>
         public void RegisterSource(OsmCompleteStreamSource source)
         {
             _source = source;
@@ -74,7 +66,6 @@ namespace OsmSharp.Osm.Streams.Complete
         /// <summary>
         /// Registers a simple source on this target.
         /// </summary>
-        /// <param name="source"></param>
         public void RegisterSource(OsmStreamSource source)
         {
             _source = new OsmSimpleCompleteStreamSource(source);
@@ -83,11 +74,9 @@ namespace OsmSharp.Osm.Streams.Complete
         /// <summary>
         /// Registers a simple source on this target with a given cache.
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="cache"></param>
-        public void RegisterSource(OsmStreamSource source, OsmDataCache cache)
+        public void RegisterSource(OsmStreamSource source, ISnapshotDb cacheDb)
         {
-            _source = new OsmSimpleCompleteStreamSource(source, cache);
+            _source = new OsmSimpleCompleteStreamSource(source, cacheDb);
         }
 
         /// <summary>
@@ -110,7 +99,7 @@ namespace OsmSharp.Osm.Streams.Complete
             this.Initialize();
             while (_source.MoveNext())
             {
-                ICompleteOsmGeo sourceObject = _source.Current();
+                var sourceObject = _source.Current();
                 if (sourceObject is Node)
                 {
                     this.AddNode(sourceObject as Node);
@@ -136,7 +125,7 @@ namespace OsmSharp.Osm.Streams.Complete
         {
             if (_source.MoveNext())
             {
-                object sourceObject = _source.Current();
+                var sourceObject = _source.Current();
                 if (sourceObject is Node)
                 {
                     this.AddNode(sourceObject as Node);

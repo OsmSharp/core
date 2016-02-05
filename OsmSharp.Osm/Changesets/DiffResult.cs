@@ -60,33 +60,41 @@ namespace OsmSharp.Osm.Changesets
             List<OsmGeoResult> results = null;
             while (reader.Read())
             {
-                if (results == null)
-                {
-                    results = new List<OsmGeoResult>();
-                }
                 if (reader.Name == "node")
                 {
+                    if (results == null)
+                    {
+                        results = new List<OsmGeoResult>();
+                    }
                     var nodeResult = new NodeResult();
                     (nodeResult as IXmlSerializable).ReadXml(reader);
                     results.Add(nodeResult);
                 }
                 else if (reader.Name == "way")
                 {
+                    if (results == null)
+                    {
+                        results = new List<OsmGeoResult>();
+                    }
                     var wayResult = new WayResult();
                     (wayResult as IXmlSerializable).ReadXml(reader);
                     results.Add(wayResult);
                 }
                 else if (reader.Name == "relation")
                 {
+                    if (results == null)
+                    {
+                        results = new List<OsmGeoResult>();
+                    }
                     var relationResult = new RelationResult();
                     (relationResult as IXmlSerializable).ReadXml(reader);
                     results.Add(relationResult);
                 }
                 else
                 {
-                    if (results != null)
+                    if (results == null)
                     {
-                        this.Results = results.ToArray();
+                        results = new List<OsmGeoResult>();
                     }
                     return;
                 }

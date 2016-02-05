@@ -17,7 +17,6 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Osm.Changesets;
-using OsmSharp.Osm.Filters;
 using OsmSharp.Osm.Streams;
 using System.Collections.Generic;
 
@@ -32,7 +31,7 @@ namespace OsmSharp.Osm.Data
     /// - Does not generate id's, objects are stored as-is.
     /// 
     /// </summary>
-    public interface ISnapshotDb
+    public interface ISnapshotDb : IOsmGeoSource
     {
         /// <summary>
         /// Clears all data.
@@ -59,9 +58,9 @@ namespace OsmSharp.Osm.Data
         OsmStreamSource Get();
 
         /// <summary>
-        /// Gets an osm object of the given type and the given id.
+        /// Returns true if an osm object of the given type and the given id exists.
         /// </summary>
-        OsmGeo Get(OsmGeoType type, long id);
+        bool Exists(OsmGeoType type, long id);
 
         /// <summary>
         /// Gets all osm objects with the given types and the given id's.
@@ -69,10 +68,14 @@ namespace OsmSharp.Osm.Data
         IList<OsmGeo> Get(IList<OsmGeoType> type, IList<long> id);
 
         /// <summary>
+        /// Gets all osm objects with the given types and the given id's.
+        /// </summary>
+        IList<bool> Exists(IList<OsmGeoType> type, IList<long> id);
+
+        /// <summary>
         /// Gets all osm objects that pass the given filter within the given bounding box.
         /// </summary>
-        IList<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude,
-            Filter filter);
+        IList<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude);
 
         /// <summary>
         /// Deletes the osm object with the given type, the given id without applying a changeset.

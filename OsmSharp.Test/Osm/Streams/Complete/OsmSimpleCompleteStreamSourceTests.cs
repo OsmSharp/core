@@ -413,7 +413,7 @@ namespace OsmSharp.Test.Osm.Streams.Complete
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedResource));
 
             // fill the memory data source with source-data.
-            var referenceSource = new MemoryDataSource(dataProcessorSource);
+            var referenceSource = new MemorySnapshotDb(dataProcessorSource);
 
             // pull the complete objects.
             dataProcessorSource.Reset();
@@ -426,7 +426,7 @@ namespace OsmSharp.Test.Osm.Streams.Complete
         /// <summary>
         /// Compares what is in the complete list against the objects in the reference source.
         /// </summary>
-        private void Compare(MemoryDataSource expected, List<ICompleteOsmGeo> actual)
+        private void Compare(MemorySnapshotDb expected, List<ICompleteOsmGeo> actual)
         {
             var exectedList = new List<ICompleteOsmGeo>(
                 expected.GetComplete());

@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Extensions.cs" />
     <Compile Include="IO\Xml\Changesets\DiffResultTests.cs" />
+    <Compile Include="IO\Xml\Changesets\OsmChangeTests.cs" />
     <Compile Include="IO\Xml\NodeTests.cs" />
     <Compile Include="IO\Xml\RelationTests.cs" />
     <Compile Include="IO\Xml\WayTests.cs" />

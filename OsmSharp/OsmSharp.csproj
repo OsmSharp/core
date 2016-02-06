@@ -69,6 +69,7 @@
     <Compile Include="Relation.cs" />
     <Compile Include="Streams\Complete\OsmCompleteEnumerableStreamSource.cs" />
     <Compile Include="Streams\Complete\OsmCompleteStreamSource.cs" />
+    <Compile Include="Streams\Complete\OsmToCompleteStreamSource.cs" />
     <Compile Include="Streams\OsmEnumerableStreamSource.cs" />
     <Compile Include="Streams\OsmStreamSource.cs" />
     <Compile Include="Streams\OsmStreamSourceEmpty.cs" />

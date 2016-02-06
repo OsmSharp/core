@@ -37,7 +37,9 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Changesets\DiffResult.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IO\Xml\Changesets\DiffResult.Xml.cs" />
     <Compile Include="IO\Xml\Node.Xml.cs" />
     <Compile Include="IO\Xml\Relation.Xml.cs" />
     <Compile Include="IO\Xml\Way.Xml.cs" />

@@ -52,8 +52,14 @@
     <Compile Include="IO\Xml\RelationTests.cs" />
     <Compile Include="IO\Xml\WayTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stream\XmlOsmStreamSourceTests.cs" />
+    <Compile Include="Stream\XmlOsmStreamTargetTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="data\xml\node.osm" />
+    <EmbeddedResource Include="data\xml\relation.osm" />
+    <EmbeddedResource Include="data\xml\way.osm" />
+    <EmbeddedResource Include="data\xml\api.osm" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

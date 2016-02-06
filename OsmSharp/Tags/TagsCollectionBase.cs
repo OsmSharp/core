@@ -84,6 +84,17 @@ namespace OsmSharp.Tags
         }
 
         /// <summary>
+        /// Adds or replaces all tags.
+        /// </summary>
+        public void AddOrReplace(IEnumerable<Tag> tags)
+        {
+            foreach (var tag in tags)
+            {
+                this.AddOrReplace(tag);
+            }
+        }
+
+        /// <summary>
         /// Returns true if the given tag exists.
         /// </summary>
         public bool ContainsKey(string key)

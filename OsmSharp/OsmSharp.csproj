@@ -37,9 +37,11 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Changesets\Changeset.cs" />
     <Compile Include="Changesets\DiffResult.cs" />
     <Compile Include="Changesets\OsmChange.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IO\Xml\Changesets\Changeset.Xml.cs" />
     <Compile Include="IO\Xml\Changesets\DiffResult.Xml.cs" />
     <Compile Include="IO\Xml\Changesets\OsmChange.Xml.cs" />
     <Compile Include="IO\Xml\Node.Xml.cs" />

@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using OsmSharp.Logging;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Xml;
@@ -113,6 +115,19 @@ namespace OsmSharp.IO.Xml
         }
 
         /// <summary>
+        /// Writes an xml serializable object as an element.
+        /// </summary>
+        public static void WriteElement(this XmlWriter writer, string name, IXmlSerializable xmlSerializable)
+        {
+            if (xmlSerializable != null)
+            {
+                writer.WriteStartElement(name);
+                xmlSerializable.WriteXml(writer);
+                writer.WriteEndElement();
+            }
+        }
+
+        /// <summary>
         /// Reads a double attribute.
         /// </summary>
         public static double? GetAttributeDouble(this XmlReader reader, string name)
@@ -140,6 +155,37 @@ namespace OsmSharp.IO.Xml
                 return value;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Gets elements using the given actions.
+        /// </summary>
+        public static void GetElements(this XmlReader  reader, params Tuple<string, Action>[] getElements)
+        {
+            var getElementsDictionary = new Dictionary<string, Action>();
+            foreach (var element in getElements)
+            {
+                getElementsDictionary.Add(element.Item1, element.Item2);
+            }
+            GetElements(reader, getElementsDictionary);
+        }
+
+        /// <summary>
+        /// Gets elements using the given actions.
+        /// </summary>
+        public static void GetElements(this XmlReader reader, Dictionary<string, Action> getElements)
+        {
+            while (reader.Read() &&
+                reader.MoveToContent() != XmlNodeType.None)
+            {
+                Action action;
+                if(!getElements.TryGetValue(reader.Name, out action))
+                {
+                    Logger.Log("XmlExtensions", TraceEventType.Verbose, "No action found for xml node with name {0}.", reader.Name);
+                    break;
+                }
+                action();
+            }
         }
 
         /// <summary>

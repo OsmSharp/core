@@ -20,23 +20,27 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Output\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\Output\OsmSharp.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\Output\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\Output\OsmSharp.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Capabilities.cs" />
+    <Compile Include="API\Osm.cs" />
     <Compile Include="Changesets\Changeset.cs" />
     <Compile Include="Changesets\DiffResult.cs" />
     <Compile Include="Changesets\OsmChange.cs" />
@@ -55,6 +59,7 @@
     <Compile Include="Db\ISnapshotDbExtensions.cs" />
     <Compile Include="Db\MemorySnapshotDb.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IO\Xml\API\Capabilities.Xml.cs" />
     <Compile Include="IO\Xml\Changesets\Changeset.Xml.cs" />
     <Compile Include="IO\Xml\Changesets\DiffResult.Xml.cs" />
     <Compile Include="IO\Xml\Changesets\OsmChange.Xml.cs" />
@@ -62,6 +67,8 @@
     <Compile Include="IO\Xml\Relation.Xml.cs" />
     <Compile Include="IO\Xml\Way.Xml.cs" />
     <Compile Include="IO\Xml\XmlExtensions.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\TraceEventType.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="OsmGeo.cs" />
     <Compile Include="OsmGeoType.cs" />

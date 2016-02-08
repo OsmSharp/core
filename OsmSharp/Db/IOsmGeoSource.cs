@@ -28,7 +28,7 @@ namespace OsmSharp.Db
     public interface IOsmGeoSource
     {
         /// <summary>
-        /// Returns a node with the given id from this source.
+        /// Returns an OsmGeo object with the given id and type from this source.
         /// </summary>
         OsmGeo Get(OsmGeoType type, long id);
     }

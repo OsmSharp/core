@@ -71,11 +71,10 @@ namespace OsmSharp.Db
         /// <summary>
         /// Gets all the objects in the form of an osm stream source.
         /// </summary>
-        /// <returns></returns>
         OsmStreamSource Get();
 
         /// <summary>
-        /// Gets all latest version of osm objects with the given types and the given id's.
+        /// Gets all latest versions of osm objects with the given types and the given id's.
         /// </summary>
         IList<OsmGeo> Get(IList<OsmGeoType> type, IList<long> id);
 
@@ -87,7 +86,7 @@ namespace OsmSharp.Db
         /// <summary>
         /// Gets all osm objects with the given types, the given id's and the given version #'s.
         /// </summary>
-        IList<OsmGeo> Get(IList<OsmGeoType> type, IList<long> id, IList<long> version);
+        IList<OsmGeo> Get(IList<OsmGeoType> type, IList<long> id, IList<int> version);
 
         /// <summary>
         /// Gets all latest versions of osm objects within the given bounding box.

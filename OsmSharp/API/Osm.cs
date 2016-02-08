@@ -20,19 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-using OsmSharp.IO.Xml;
-using System;
+using OsmSharp.Changesets;
 
 namespace OsmSharp.API
 {
     /// <summary>
     /// Represents the root-object for all API-related communication.
     /// </summary>
-    [XmlRoot("osm")]
-    public class Osm : IXmlSerializable
+    public partial class Osm
     {
         /// <summary>
         /// Gets or sets the generator.
@@ -49,31 +44,34 @@ namespace OsmSharp.API
         /// </summary>
         public Capabilities Api { get; set; }
 
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
+        /// <summary>
+        /// Gets or sets the nodes array.
+        /// </summary>
+        public Node[] Nodes { get; set; }
 
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            this.Version = reader.GetAttributeDouble("version");
-            this.Generator = reader.GetAttribute("generator");
+        /// <summary>
+        /// Gets or sets the ways array.
+        /// </summary>
+        public Way[] Ways { get; set; }
 
-            reader.GetElements(
-                new Tuple<string, Action>(
-                    "api", () =>
-                    {
-                        this.Api = new Capabilities();
-                        (this.Api as IXmlSerializable).ReadXml(reader);
-                    }));
-        }
+        /// <summary>
+        /// Gets or sets the relations array.
+        /// </summary>
+        public Relation[] Relations { get; set; }
 
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteAttribute("version", this.Version);
-            writer.WriteAttribute("generator", this.Generator);
+        /// <summary>
+        /// Gets or sets the changeset.
+        /// </summary>
+        public Changeset[] Changesets { get; set; }
 
-            writer.WriteElement("api", this.Api);
-        }
+        /// <summary>
+        /// Gets or sets the users.
+        /// </summary>
+        public User[] Users { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user.
+        /// </summary>
+        public User User { get; set; }
     }
 }

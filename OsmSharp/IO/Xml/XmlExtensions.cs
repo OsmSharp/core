@@ -128,6 +128,24 @@ namespace OsmSharp.IO.Xml
         }
 
         /// <summary>
+        /// Writes an xml serializable object as an element.
+        /// </summary>
+        public static void WriteElements(this XmlWriter writer, string name, IXmlSerializable[] xmlSerializables)
+        {
+            if (xmlSerializables != null)
+            {
+                for (var i = 0; i < xmlSerializables.Length; i++)
+                {
+                    var xmlSerializable = xmlSerializables[i];
+
+                    writer.WriteStartElement(name);
+                    xmlSerializable.WriteXml(writer);
+                    writer.WriteEndElement();
+                }
+            }
+        }
+
+        /// <summary>
         /// Reads a double attribute.
         /// </summary>
         public static double? GetAttributeDouble(this XmlReader reader, string name)

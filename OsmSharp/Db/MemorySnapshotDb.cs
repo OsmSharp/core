@@ -82,7 +82,7 @@ namespace OsmSharp.Db
         }
 
         /// <summary>
-        /// Returns all the objects within a given bounding box and filtered by a given filter.
+        /// Returns all the objects within a given bounding box.
         /// </summary>
         public IList<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude)
         {

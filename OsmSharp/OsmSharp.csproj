@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="API\Capabilities.cs" />
     <Compile Include="API\Osm.cs" />
+    <Compile Include="API\User.cs" />
     <Compile Include="Changesets\Changeset.cs" />
     <Compile Include="Changesets\DiffResult.cs" />
     <Compile Include="Changesets\OsmChange.cs" />
@@ -57,9 +58,11 @@
     <Compile Include="Db\IOsmGeoSourceExtensions.cs" />
     <Compile Include="Db\ISnapshotDb.cs" />
     <Compile Include="Db\ISnapshotDbExtensions.cs" />
+    <Compile Include="Db\MemoryHistoryDb.cs" />
     <Compile Include="Db\MemorySnapshotDb.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IO\Xml\API\Capabilities.Xml.cs" />
+    <Compile Include="IO\Xml\API\Osm.Xml.cs" />
     <Compile Include="IO\Xml\Changesets\Changeset.Xml.cs" />
     <Compile Include="IO\Xml\Changesets\DiffResult.Xml.cs" />
     <Compile Include="IO\Xml\Changesets\OsmChange.Xml.cs" />

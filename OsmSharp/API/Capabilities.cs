@@ -142,7 +142,7 @@ namespace OsmSharp.API
         /// <summary>
         /// Gets or sets the database status.
         /// </summary>
-        public string Datatabase { get; set; }
+        public string Database { get; set; }
 
         /// <summary>
         /// Gets or sets the api status.

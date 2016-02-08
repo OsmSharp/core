@@ -60,7 +60,7 @@ namespace OsmSharp.Test.IO.Xml.API
                     Status = new Status()
                     {
                         Api = "online",
-                        Datatabase = "online",
+                        Database = "online",
                         Gpx = "online"
                     },
                     Timeout = new Timeout()
@@ -105,7 +105,7 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.AreEqual(50000, capabilities.Changesets.MaximumElements);
             Assert.IsNotNull(capabilities.Status);
             Assert.AreEqual("online", capabilities.Status.Api);
-            Assert.AreEqual("online", capabilities.Status.Datatabase);
+            Assert.AreEqual("online", capabilities.Status.Database);
             Assert.AreEqual("online", capabilities.Status.Gpx);
             Assert.IsNotNull(capabilities.Timeout);
             Assert.AreEqual(300, capabilities.Timeout.Seconds);

@@ -36,9 +36,6 @@
     <DocumentationFile>..\Output\OsmSharp.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="API\Capabilities.cs" />
     <Compile Include="API\Osm.cs" />
     <Compile Include="API\User.cs" />
@@ -61,6 +58,15 @@
     <Compile Include="Db\MemoryHistoryDb.cs" />
     <Compile Include="Db\MemorySnapshotDb.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IO\PBF\Encoder.cs" />
+    <Compile Include="IO\PBF\fileformat.cs" />
+    <Compile Include="IO\PBF\IPBFOsmPrimitiveConsumer.cs" />
+    <Compile Include="IO\PBF\osmformat.cs" />
+    <Compile Include="IO\PBF\PBFExtensions.cs" />
+    <Compile Include="IO\PBF\PBFReader.cs" />
+    <Compile Include="IO\PBF\PBFWriter.cs" />
+    <Compile Include="Streams\PBFOsmStreamSource.cs" />
+    <Compile Include="Streams\PBFOsmStreamTarget.cs" />
     <Compile Include="IO\Xml\API\Capabilities.Xml.cs" />
     <Compile Include="IO\Xml\API\Osm.Xml.cs" />
     <Compile Include="IO\Xml\Changesets\Changeset.Xml.cs" />
@@ -92,6 +98,21 @@
     <Compile Include="Tags\TagsCollectionBase.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="Way.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Zlib.Portable, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zlib.Portable.1.11.0\lib\portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid\Zlib.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="IO\PBF\fileformat.proto" />
+    <None Include="IO\PBF\osmformat.proto" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

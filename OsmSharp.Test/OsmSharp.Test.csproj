@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
+    <Compile Include="IO\PBF\EncoderTests.cs" />
+    <Compile Include="IO\PBF\PrimitivesConsumerMock.cs" />
     <Compile Include="IO\Xml\API\OsmTests.cs" />
     <Compile Include="IO\Xml\Changesets\ChangesetTests.cs" />
     <Compile Include="IO\Xml\Changesets\DiffResultTests.cs" />
@@ -53,6 +55,8 @@
     <Compile Include="IO\Xml\RelationTests.cs" />
     <Compile Include="IO\Xml\WayTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stream\PBFOsmStreamSourceTests.cs" />
+    <Compile Include="Stream\PBFOsmStreamTargetTests.cs" />
     <Compile Include="Stream\XmlOsmStreamSourceTests.cs" />
     <Compile Include="Stream\XmlOsmStreamTargetTests.cs" />
   </ItemGroup>
@@ -62,6 +66,7 @@
     <EmbeddedResource Include="data\xml\way.osm" />
     <EmbeddedResource Include="data\xml\api.osm" />
     <Compile Include="IO\Xml\API\CapabilitiesTests.cs" />
+    <EmbeddedResource Include="data\pbf\api.osm.pbf" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

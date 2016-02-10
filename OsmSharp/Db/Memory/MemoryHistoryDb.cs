@@ -26,7 +26,7 @@ using OsmSharp.Changesets;
 using OsmSharp.Streams;
 using System.Linq;
 
-namespace OsmSharp.Db
+namespace OsmSharp.Db.Memory
 {
     /// <summary>
     /// An in-memory data repository of a full-history db.
@@ -34,21 +34,21 @@ namespace OsmSharp.Db
     /// <remarks>This is only a not-very-efficient reference implementation.</remarks>
     public class MemoryHistoryDb : IHistoryDb
     {
-        private readonly List<Node> _nodes;
-        private readonly List<Way> _ways;
-        private readonly List<Relation> _relations;
-        private readonly List<Tuple<Changeset, List<OsmChange>>> _changesets;
+        private readonly Dictionary<Key, Node> _nodes;
+        private readonly Dictionary<Key, Way> _ways;
+        private readonly Dictionary<Key, Relation> _relations;
+        private readonly Dictionary<long, Tuple<Changeset, List<OsmChange>>> _changesets;
 
         /// <summary>
         /// Creates a new history db.
         /// </summary>
         public MemoryHistoryDb()
         {
-            _nodes = new List<Node>();
-            _ways = new List<Way>();
-            _relations = new List<Relation>();
+            _nodes = new Dictionary<Key, Node>();
+            _ways = new Dictionary<Key, Way>();
+            _relations = new Dictionary<Key, Relation>();
 
-            _changesets = new List<Tuple<Changeset, List<OsmChange>>>();
+            _changesets = new Dictionary<long, Tuple<Changeset, List<OsmChange>>>();
         }
 
         /// <summary>
@@ -56,31 +56,24 @@ namespace OsmSharp.Db
         /// </summary>
         public void Add(OsmGeo osmGeo)
         {
+            if (!osmGeo.Id.HasValue) { throw new ArgumentException("OsmGeo object cannot be added without a valid id."); }
+            if (!osmGeo.Version.HasValue) { throw new ArgumentException("OsmGeo object cannot be added without a valid version #."); }
+
+            var key = new Key()
+            {
+                Id = osmGeo.Id.Value,
+                Version = osmGeo.Version.Value
+            };
             switch(osmGeo.Type)
             {
                 case OsmGeoType.Node:
-                    if(_nodes.Any(x => x.Id == osmGeo.Id && 
-                        x.Type == osmGeo.Type))
-                    {
-                        throw new ArgumentException("A node with the id/type already exists.");
-                    }
-                    _nodes.Add(osmGeo as Node);
+                    _nodes[key] = (osmGeo as Node);
                     return;
                 case OsmGeoType.Way:
-                    if (_ways.Any(x => x.Id == osmGeo.Id &&
-                         x.Type == osmGeo.Type))
-                    {
-                        throw new ArgumentException("A way with the id/type already exists.");
-                    }
-                    _ways.Add(osmGeo as Way);
+                    _ways[key] = (osmGeo as Way);
                     return;
                 case OsmGeoType.Relation:
-                    if (_relations.Any(x => x.Id == osmGeo.Id &&
-                         x.Type == osmGeo.Type))
-                    {
-                        throw new ArgumentException("A relation with the id/type already exists.");
-                    }
-                    _relations.Add(osmGeo as Relation);
+                    _relations[key] = (osmGeo as Relation);
                     return;
             }
         }
@@ -92,7 +85,7 @@ namespace OsmSharp.Db
         {
             foreach (var osmGeo in osmGeos)
             {
-                this.Add(osmGeos);
+                this.Add(osmGeo);
             }
         }
 
@@ -127,8 +120,8 @@ namespace OsmSharp.Db
         /// </summary>
         public bool CloseChangeset(long id)
         {
-            var existing = _changesets.FirstOrDefault(x => x.Item1.Id == id);
-            if (existing == null)
+            Tuple<Changeset, List<OsmChange>> existing;
+            if (!_changesets.TryGetValue(id, out existing))
             {
                 return false;
             }
@@ -147,9 +140,9 @@ namespace OsmSharp.Db
         public OsmStreamSource Get()
         {
             return new OsmSharp.Streams.OsmEnumerableStreamSource(
-                _nodes.Cast<OsmGeo>().Concat(
-                    _ways.Cast<OsmGeo>().Concat(
-                     _relations.Cast<OsmGeo>())));
+                _nodes.Values.Cast<OsmGeo>().Concat(
+                    _ways.Values.Cast<OsmGeo>().Concat(
+                     _relations.Values.Cast<OsmGeo>())));
         }
         
         /// <summary>
@@ -161,7 +154,7 @@ namespace OsmSharp.Db
             switch (type)
             {
                 case OsmGeoType.Node:
-                    return _nodes.FirstOrDefault(x =>
+                    return _nodes.Values.FirstOrDefault(x =>
                     {
                         if (x.Id == id &&
                             x.Version.Value > version)
@@ -172,7 +165,7 @@ namespace OsmSharp.Db
                         return false;
                     });
                 case OsmGeoType.Way:
-                    return _ways.FirstOrDefault(x =>
+                    return _ways.Values.FirstOrDefault(x =>
                     {
                         if (x.Id == id &&
                             x.Version.Value > version)
@@ -183,7 +176,7 @@ namespace OsmSharp.Db
                         return false;
                     });
                 case OsmGeoType.Relation:
-                    return _relations.FirstOrDefault(x =>
+                    return _relations.Values.FirstOrDefault(x =>
                     {
                         if (x.Id == id &&
                             x.Version.Value > version)
@@ -216,23 +209,35 @@ namespace OsmSharp.Db
         /// </summary>
         public OsmGeo Get(OsmGeoType type, long id, int version)
         {
+            var key = new Key()
+            {
+                Id = id,
+                Version = version
+            };
+
             switch (type)
             {
                 case OsmGeoType.Node:
-                    return _nodes.FirstOrDefault(x =>
+                    Node node;
+                    if (!_nodes.TryGetValue(key, out node))
                     {
-                        return x.Id == id && x.Version == version;
-                    });
+                        return null;
+                    }
+                    return node;
                 case OsmGeoType.Way:
-                    return _ways.FirstOrDefault(x =>
+                    Way way;
+                    if (!_ways.TryGetValue(key, out way))
                     {
-                        return x.Id == id && x.Version == version;
-                    });
+                        return null;
+                    }
+                    return way;
                 case OsmGeoType.Relation:
-                    return _relations.FirstOrDefault(x =>
+                    Relation relation;
+                    if (!_relations.TryGetValue(key, out relation))
                     {
-                        return x.Id == id && x.Version == version;
-                    });
+                        return null;
+                    }
+                    return relation;
             }
             throw new Exception(string.Format("Uknown OsmGeoType: {0}.",
                 type.ToInvariantString()));
@@ -272,19 +277,44 @@ namespace OsmSharp.Db
         /// </summary>
         public bool UpdateChangesetInfo(Changeset info)
         {
-            var existing = _changesets.FirstOrDefault(x => x.Item1.Id == info.Id);
-            if (existing == null)
+            Tuple<Changeset, List<OsmChange>> existing;
+            if (!_changesets.TryGetValue(info.Id.Value, out existing))
             {
                 return false;
             }
             if (existing.Item1.Open.HasValue &&
                 existing.Item1.Open.Value)
             {
-                _changesets.Remove(existing);
-                _changesets.Add(new Tuple<Changeset, List<OsmChange>>(
-                    info, existing.Item2));
+                _changesets.Remove(info.Id.Value);
+                _changesets[info.Id.Value] = new Tuple<Changeset, List<OsmChange>>(
+                    info, existing.Item2);
             }
             return false;
+        }
+
+        struct Key
+        {
+            public long Id { get; set; }
+
+            public int Version { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                if (obj is Key)
+                {
+                    var other = (Key)obj;
+
+                    return other.Id == this.Id &&
+                        other.Version == this.Version;
+                }
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return this.Id.GetHashCode() ^
+                    this.Version.GetHashCode();
+            }
         }
     }
 }

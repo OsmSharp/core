@@ -26,7 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OsmSharp.Db
+namespace OsmSharp.Db.Memory
 {
     /// <summary>
     /// An in-memory data repository of OSM data primitives.

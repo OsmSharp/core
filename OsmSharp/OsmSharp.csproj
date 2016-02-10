@@ -55,8 +55,8 @@
     <Compile Include="Db\IOsmGeoSourceExtensions.cs" />
     <Compile Include="Db\ISnapshotDb.cs" />
     <Compile Include="Db\ISnapshotDbExtensions.cs" />
-    <Compile Include="Db\MemoryHistoryDb.cs" />
-    <Compile Include="Db\MemorySnapshotDb.cs" />
+    <Compile Include="Db\Memory\MemoryHistoryDb.cs" />
+    <Compile Include="Db\Memory\MemorySnapshotDb.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IO\PBF\Encoder.cs" />
     <Compile Include="IO\PBF\fileformat.cs" />
@@ -65,6 +65,9 @@
     <Compile Include="IO\PBF\PBFExtensions.cs" />
     <Compile Include="IO\PBF\PBFReader.cs" />
     <Compile Include="IO\PBF\PBFWriter.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilter.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterDelegate.cs" />
+    <Compile Include="Streams\OsmStreamExtensions.cs" />
     <Compile Include="Streams\PBFOsmStreamSource.cs" />
     <Compile Include="Streams\PBFOsmStreamTarget.cs" />
     <Compile Include="IO\Xml\API\Capabilities.Xml.cs" />

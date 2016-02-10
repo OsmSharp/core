@@ -1,5 +1,6 @@
 ﻿using OsmSharp.Complete;
 using OsmSharp.Db;
+using OsmSharp.Db.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;

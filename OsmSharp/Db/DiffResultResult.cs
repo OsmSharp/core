@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 using OsmSharp.Changesets;
+using System;
 
 namespace OsmSharp.Db
 {
@@ -29,6 +30,46 @@ namespace OsmSharp.Db
     /// </summary>
     public class DiffResultResult
     {
+        /// <summary>
+        /// Creates a new diffresult result as en error.
+        /// </summary>
+        public DiffResultResult(string message)
+            : this(message, DiffResultStatus.UknownError)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new diffresult result as en error.
+        /// </summary>
+        public DiffResultResult(string message, DiffResultStatus status)
+        {
+            if (status == DiffResultStatus.BestEffortOK || status == DiffResultStatus.OK)
+            {
+                throw new ArgumentOutOfRangeException("Cannot create an error-result with an ok status.");
+            }
+
+            this.Message = message;
+            this.Result = null;
+            this.Status = status;
+        }
+
+        /// <summary>
+        /// Creates a new diffresult result.
+        /// </summary>
+        public DiffResultResult(DiffResult result,
+            DiffResultStatus status)
+        {
+            if (result == null) { throw new ArgumentNullException("result"); }
+            if (status != DiffResultStatus.BestEffortOK || status != DiffResultStatus.OK)
+            {
+                throw new ArgumentOutOfRangeException("Cannot create an ok-result with a non-ok status.");
+            }
+
+            this.Status = status;
+            this.Result = result;
+        }
+
         /// <summary>
         /// Gets or sets the diff result.
         /// </summary>

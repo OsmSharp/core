@@ -48,6 +48,7 @@
     <Compile Include="Complete\Extensions.cs" />
     <Compile Include="Complete\ICompleteOsmGeo.cs" />
     <Compile Include="Complete\Node.Complete.cs" />
+    <Compile Include="Db\DbException.cs" />
     <Compile Include="Db\DiffResultResult.cs" />
     <Compile Include="Db\IHistoryDb.cs" />
     <Compile Include="Db\IHistoryDbExtensions.cs" />

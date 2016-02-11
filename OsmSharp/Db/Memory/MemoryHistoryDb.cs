@@ -51,6 +51,11 @@ namespace OsmSharp.Db.Memory
             _changesets = new Dictionary<long, Tuple<Changeset, List<OsmChange>>>();
         }
 
+        private IdManager _nodeIdManager;
+        private IdManager _wayIdManager;
+        private IdManager _relationIdManager;
+        private IdManager _changesetIdManager;
+
         /// <summary>
         /// Adds osm objects in the db exactly as they are given.
         /// </summary>
@@ -64,15 +69,19 @@ namespace OsmSharp.Db.Memory
                 Id = osmGeo.Id.Value,
                 Version = osmGeo.Version.Value
             };
-            switch(osmGeo.Type)
+
+            switch (osmGeo.Type)
             {
                 case OsmGeoType.Node:
+                    _nodeIdManager.Update(osmGeo.Id.Value);
                     _nodes[key] = (osmGeo as Node);
                     return;
                 case OsmGeoType.Way:
+                    _wayIdManager.Update(osmGeo.Id.Value);
                     _ways[key] = (osmGeo as Way);
                     return;
                 case OsmGeoType.Relation:
+                    _relationIdManager.Update(osmGeo.Id.Value);
                     _relations[key] = (osmGeo as Relation);
                     return;
             }
@@ -94,7 +103,17 @@ namespace OsmSharp.Db.Memory
         /// </summary>
         public void Add(Changeset meta, OsmChange changes)
         {
-            throw new NotImplementedException();
+            if (!meta.Id.HasValue) { throw new ArgumentException("OsmGeo object cannot be added without a valid id."); }
+
+            _changesetIdManager.Update(meta.Id.Value);
+
+            Tuple<Changeset, List<OsmChange>> existing = null;
+            if (!_changesets.TryGetValue(meta.Id.Value, out existing))
+            {
+                existing = new Tuple<Changeset, List<OsmChange>>(meta, new List<OsmChange>());
+                _changesets.Add(meta.Id.Value, existing);
+            }
+            existing.Item2.Add(changes);
         }
 
         /// <summary>
@@ -102,7 +121,224 @@ namespace OsmSharp.Db.Memory
         /// </summary>
         public DiffResultResult ApplyChangeset(long id, OsmChange changeset, bool bestEffort = false)
         {
-            throw new NotImplementedException();
+            Tuple<Changeset, List<OsmChange>> value;
+            if (!_changesets.TryGetValue(id, out value))
+            {
+                throw new DbException("Cannot apply changes for a changeset that doesn't exist.");
+            }
+            if (!value.Item1.Open.HasValue ||
+                !value.Item1.Open.Value)
+            {
+                throw new DbException("Cannot apply changes for a changeset that isn't open.");
+            }
+
+            if (!bestEffort)
+            { // validate the changeset first, it's all or nothing so we need to make sure things are correct before applying.
+                throw new NotImplementedException("Changeset validation is not implemented.");
+            }
+
+            var results = new List<OsmGeoResult>();
+            var status = DiffResultStatus.OK;
+            if (changeset.Create != null)
+            {
+                foreach(var create in changeset.Create)
+                {
+                    var result = this.ApplyCreate(create);
+                    if (result == null)
+                    {
+                        if (!bestEffort)
+                        {
+                            return new DiffResultResult("Applying one of the changes failed.");
+                        }
+                        status = DiffResultStatus.BestEffortOK;
+                    }
+                    results.Add(result);
+                }
+            }
+            if (changeset.Modify != null)
+            {
+                foreach (var modify in changeset.Modify)
+                {
+                    var result = this.ApplyModify(modify);
+                    if (result == null)
+                    {
+                        if (!bestEffort)
+                        {
+                            return new DiffResultResult("Applying one of the changes failed.");
+                        }
+                        status = DiffResultStatus.BestEffortOK;
+                    }
+                    results.Add(result);
+                }
+            }
+            if (changeset.Delete != null)
+            {
+                foreach (var delete in changeset.Modify)
+                {
+                    var result = this.ApplyDelete(delete);
+                    if (result == null)
+                    {
+                        if (!bestEffort)
+                        {
+                            return new DiffResultResult("Applying one of the changes failed.");
+                        }
+                        status = DiffResultStatus.BestEffortOK;
+                    }
+                    results.Add(result);
+                }
+            }
+            return new DiffResultResult(new DiffResult()
+            {
+                Generator = "OsmSharp",
+                Version = 0.6,
+                Results = results.ToArray()
+            }, status);
+        }
+
+        /// <summary>
+        /// Applies a modification.
+        /// </summary>
+        private OsmGeoResult ApplyModify(OsmGeo osmGeo)
+        {
+            if (osmGeo == null) { throw new ArgumentNullException("osmGeo"); }
+            if (osmGeo.Id == null) { throw new ArgumentException("Object has no id."); }
+            if (osmGeo.Version == null) { throw new ArgumentException("Object has no version."); }
+
+            switch (osmGeo.Type)
+            {
+                case OsmGeoType.Node:
+                    if (!_nodes.ContainsKey(new Key(osmGeo)))
+                    {
+                        return null;
+                    }
+                    osmGeo.Version++;
+                    _nodes.Add(new Key(osmGeo), osmGeo as Node);
+                    return new NodeResult()
+                    {
+                        NewId = osmGeo.Id,
+                        OldId = osmGeo.Id,
+                        NewVersion = osmGeo.Version
+                    };
+                case OsmGeoType.Way:
+                    if (!_ways.ContainsKey(new Key(osmGeo)))
+                    {
+                        return null;
+                    }
+                    osmGeo.Version++;
+                    _ways.Add(new Key(osmGeo), osmGeo as Way);
+                    return new WayResult()
+                    {
+                        NewId = osmGeo.Id,
+                        OldId = osmGeo.Id,
+                        NewVersion = osmGeo.Version
+                    };
+                case OsmGeoType.Relation:
+                    if (!_relations.ContainsKey(new Key(osmGeo)))
+                    {
+                        return null;
+                    }
+                    osmGeo.Version++;
+                    _relations.Add(new Key(osmGeo), osmGeo as Relation);
+                    return new RelationResult()
+                    {
+                        NewId = osmGeo.Id,
+                        OldId = osmGeo.Id,
+                        NewVersion = osmGeo.Version
+                    };
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Applies a creation.
+        /// </summary>
+        private OsmGeoResult ApplyCreate(OsmGeo osmGeo)
+        {
+            if (osmGeo == null) { throw new ArgumentNullException("osmGeo"); }
+            if (osmGeo.Id != null) { throw new ArgumentException("Object already has an id."); }
+            if (osmGeo.Version != null) { throw new ArgumentException("Object already has a version."); }
+
+            osmGeo.Version = 1; // first version of this object.
+            switch (osmGeo.Type)
+            {
+                case OsmGeoType.Node:
+                    osmGeo.Id = _nodeIdManager.GetNew();
+                    _nodes.Add(new Key(osmGeo), osmGeo as Node);
+                    return new NodeResult()
+                    {
+                        OldId = null,
+                        NewId = osmGeo.Id,
+                        NewVersion = osmGeo.Version
+                    };
+                case OsmGeoType.Way:
+                    osmGeo.Id = _wayIdManager.GetNew();
+                    _ways.Add(new Key(osmGeo), osmGeo as Way);
+                    return new WayResult()
+                    {
+                        OldId = null,
+                        NewId = osmGeo.Id,
+                        NewVersion = osmGeo.Version
+                    };
+                case OsmGeoType.Relation:
+                    osmGeo.Id = _relationIdManager.GetNew();
+                    _relations.Add(new Key(osmGeo), osmGeo as Relation);
+
+                    return new RelationResult()
+                    {
+                        OldId = null,
+                        NewId = osmGeo.Id,
+                        NewVersion = osmGeo.Version
+                    };
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Applies a deletion.
+        /// </summary>
+        private OsmGeoResult ApplyDelete(OsmGeo osmGeo)
+        {
+            if (osmGeo == null) { throw new ArgumentNullException("osmGeo"); }
+            if (osmGeo.Id == null) { throw new ArgumentException("Object has no id."); }
+            if (osmGeo.Version == null) { throw new ArgumentException("Object has no version."); }
+
+            switch (osmGeo.Type)
+            {
+                case OsmGeoType.Node:
+                    if (!_nodes.Remove(new Key(osmGeo)))
+                    {
+                        return null;
+                    }
+                    return new NodeResult()
+                    {
+                        OldId = osmGeo.Id.Value,
+                        NewId = null,
+                        NewVersion = null
+                    };
+                case OsmGeoType.Way:
+                    if (!_ways.Remove(new Key(osmGeo)))
+                    {
+                        return null;
+                    }
+                    return new WayResult()
+                    {
+                        OldId = osmGeo.Id.Value,
+                        NewId = null,
+                        NewVersion = null
+                    };
+                case OsmGeoType.Relation:
+                    if (!_relations.Remove(new Key(osmGeo)))
+                    {
+                        return null;
+                    }
+                    return new RelationResult()
+                    {
+                        OldId = osmGeo.Id.Value,
+                        NewId = null,
+                        NewVersion = null
+                    };
+            }
+            return null;
         }
 
         /// <summary>
@@ -113,6 +349,8 @@ namespace OsmSharp.Db.Memory
             _nodes.Clear();
             _ways.Clear();
             _relations.Clear();
+
+            _changesets.Clear();
         }
 
         /// <summary>
@@ -140,11 +378,11 @@ namespace OsmSharp.Db.Memory
         public OsmStreamSource Get()
         {
             return new OsmSharp.Streams.OsmEnumerableStreamSource(
-                _nodes.Values.Cast<OsmGeo>().Concat(
-                    _ways.Values.Cast<OsmGeo>().Concat(
-                     _relations.Values.Cast<OsmGeo>())));
+               _nodes.Values.Cast<OsmGeo>().Concat(
+                   _ways.Values.Cast<OsmGeo>().Concat(
+                    _relations.Values.Cast<OsmGeo>())));
         }
-        
+
         /// <summary>
         /// Gets an osm object of the given type, the given id and the given version #.
         /// </summary>
@@ -257,11 +495,85 @@ namespace OsmSharp.Db.Memory
         }
 
         /// <summary>
-        /// Returns all the objects within a given bounding box and filtered by a given filter.
+        /// Gets all latest versions of osm objects within the given bounding box.
         /// </summary>
         public IList<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude)
         {
-            throw new NotImplementedException();
+            var nodesInBox = new HashSet<long>();
+            var nodesToInclude = new HashSet<long>();
+            var waysToInclude = new HashSet<long>();
+            var relationsToInclude = new HashSet<long>();
+
+            foreach (var node in _nodes.Values)
+            {
+                if (node.Longitude.HasValue && node.Latitude.HasValue && 
+                    node.Visible.HasValue && node.Visible.Value)
+                {
+                    if (Utilities.IsInside(minLatitude, minLongitude, maxLatitude, maxLongitude, node.Latitude.Value, node.Longitude.Value))
+                    {
+                        nodesInBox.Add(node.Id.Value);
+                    }
+                }
+            }
+
+            foreach (var way in _ways.Values)
+            {
+                if (way.Nodes != null &&
+                    way.Visible.HasValue && way.Visible.Value)
+                {
+                    for (var n = 0; n < way.Nodes.Length; n++)
+                    {
+                        if (nodesInBox.Contains(way.Nodes[n]))
+                        {
+                            waysToInclude.Add(way.Id.Value);
+                            for (var n1 = 0; n1 < way.Nodes.Length; n1++)
+                            {
+                                nodesToInclude.Add(way.Nodes[n1]);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            foreach (var relation in _relations.Values)
+            {
+                if (relation.Members != null &&
+                    relation.Visible.HasValue && relation.Visible.Value)
+                {
+                    for (var m = 0; m < relation.Members.Length; m++)
+                    {
+                        var relationFound = false;
+                        var member = relation.Members[m];
+                        switch (member.Type)
+                        {
+                            case OsmGeoType.Node:
+                                if (nodesInBox.Contains(member.Id))
+                                {
+                                    relationFound = true;
+                                }
+                                break;
+                            case OsmGeoType.Way:
+                                if (waysToInclude.Contains(member.Id))
+                                {
+                                    relationFound = true;
+                                }
+                                break;
+                        }
+                        if (relationFound)
+                        {
+                            relationsToInclude.Add(relation.Id.Value);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            var found = new List<OsmGeo>();
+            found.AddRange(_nodes.Values.Where(x => nodesInBox.Contains(x.Id.Value) || nodesToInclude.Contains(x.Id.Value)));
+            found.AddRange(_ways.Values.Where(x => waysToInclude.Contains(x.Id.Value)));
+            found.AddRange(_relations.Values.Where(x => relationsToInclude.Contains(x.Id.Value)));
+            return found;
         }
 
         /// <summary>
@@ -269,7 +581,14 @@ namespace OsmSharp.Db.Memory
         /// </summary>
         public long OpenChangeset(Changeset info)
         {
-            throw new NotImplementedException();
+            if (info == null) { throw new ArgumentNullException("info"); }
+            if (info.Id.HasValue) { throw new ArgumentException("Changeset already has an id."); }
+            
+            info.Id = _changesetIdManager.GetNew();
+            info.Open = true;
+            _changesets.Add(info.Id.Value, new Tuple<Changeset, List<OsmChange>>(
+                info, new List<OsmChange>()));
+            return info.Id.Value;
         }
 
         /// <summary>
@@ -294,6 +613,17 @@ namespace OsmSharp.Db.Memory
 
         struct Key
         {
+            public Key(long id, int version)
+            {
+                this.Id = id;
+                this.Version = version;
+            }
+            public Key(OsmGeo osmGeo)
+                : this(osmGeo.Id.Value, osmGeo.Version.Value)
+            {
+
+            }
+
             public long Id { get; set; }
 
             public int Version { get; set; }
@@ -314,6 +644,48 @@ namespace OsmSharp.Db.Memory
             {
                 return this.Id.GetHashCode() ^
                     this.Version.GetHashCode();
+            }
+        }
+
+        struct IdManager
+        {
+            private long? _nextId;
+            private Func<long> _getLatestId;
+
+            /// <summary>
+            /// Creates a new id manager.
+            /// </summary>
+            public IdManager(Func<long> getLatestId)
+            {
+                if (getLatestId == null) { throw new ArgumentNullException("getLatestId"); }
+
+                _getLatestId = getLatestId;
+                _nextId = null;
+            }
+
+            /// <summary>
+            /// Gets an id for a new node.
+            /// </summary>
+            public long GetNew()
+            {
+                if (!_nextId.HasValue)
+                {
+                    _nextId = _getLatestId() + 1;
+                }
+                _nextId++;
+                return _nextId.Value - 1;
+            }
+
+            /// <summary>
+            /// Updates the new node id.
+            /// </summary>
+            public void Update(long id)
+            {
+                if (_nextId.HasValue &&
+                    id >= _nextId.Value)
+                {
+                    _nextId = id + 1;
+                }
             }
         }
     }

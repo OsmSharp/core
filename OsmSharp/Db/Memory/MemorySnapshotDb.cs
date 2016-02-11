@@ -70,6 +70,17 @@ namespace OsmSharp.Db.Memory
         }
 
         /// <summary>
+        /// Returns true if this db is thread-safe.
+        /// </summary>
+        public bool IsSynchronized
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Gets all the objects in the form of an osm stream source.
         /// </summary>
         /// <returns></returns>
@@ -187,10 +198,10 @@ namespace OsmSharp.Db.Memory
                     _nodes[osmGeo.Id.Value] = osmGeo as Node;
                     break;
                 case OsmGeoType.Way:
-                    this.AddWay(osmGeo as Way);
+                    _ways[osmGeo.Id.Value] = osmGeo as Way;
                     break;
                 case OsmGeoType.Relation:
-                    this.AddRelation(osmGeo as Relation);
+                    _relations[osmGeo.Id.Value] = osmGeo as Relation;
                     break;
             }
         }
@@ -345,27 +356,11 @@ namespace OsmSharp.Db.Memory
         /// Applies the given changeset.
         /// </summary>
         /// <param name="changeset">The changeset to apply.</param>
-        /// <param name="atomic">Then true, it's the entire changeset or nothing. When false the changeset is applied using best-effort.</param>
+        /// <param name="bestEffort">When false, it's the entire changeset or nothing. When true the changeset is applied using best-effort.</param>
         /// <returns>True when the entire changeset was applied without issues, false otherwise.</returns>
-        public DiffResultResult ApplyChangeset(OsmChange changeset, bool atomic = false)
+        public DiffResultResult ApplyChangeset(OsmChange changeset, bool bestEffort = false)
         {
             throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Adds a way.
-        /// </summary>
-        private void AddWay(Way way)
-        {
-            _ways[way.Id.Value] = way;
-        }
-
-        /// <summary>
-        /// Adds a relation.
-        /// </summary>
-        private void AddRelation(Relation relation)
-        {
-            _relations[relation.Id.Value] = relation;
         }
     }
 }

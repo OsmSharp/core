@@ -26,6 +26,7 @@ using System.Xml.Serialization;
 using OsmSharp.IO.Xml;
 using System.Collections.Generic;
 using System;
+using OsmSharp.Changesets;
 
 namespace OsmSharp.API
 {
@@ -48,6 +49,7 @@ namespace OsmSharp.API
             var nodes = new List<Node>();
             var ways = new List<Way>();
             var relations = new List<Relation>();
+            var changesets = new List<Changeset>();
             reader.GetElements(
                 new Tuple<string, Action>(
                     "api", () =>
@@ -75,6 +77,13 @@ namespace OsmSharp.API
                         var relation = new Relation();
                         (relation as IXmlSerializable).ReadXml(reader);
                         relations.Add(relation);
+                    }),
+                new Tuple<string, Action>(
+                    "changeset", () =>
+                    {
+                        var changeset = new Changeset();
+                        (changeset as IXmlSerializable).ReadXml(reader);
+                        changesets.Add(changeset);
                     }));
         }
 

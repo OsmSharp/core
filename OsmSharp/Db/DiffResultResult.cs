@@ -61,7 +61,7 @@ namespace OsmSharp.Db
             DiffResultStatus status)
         {
             if (result == null) { throw new ArgumentNullException("result"); }
-            if (status != DiffResultStatus.BestEffortOK || status != DiffResultStatus.OK)
+            if (status != DiffResultStatus.BestEffortOK && status != DiffResultStatus.OK)
             {
                 throw new ArgumentOutOfRangeException("Cannot create an ok-result with a non-ok status.");
             }

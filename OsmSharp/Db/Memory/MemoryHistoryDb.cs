@@ -49,6 +49,55 @@ namespace OsmSharp.Db.Memory
             _relations = new Dictionary<Key, Relation>();
 
             _changesets = new Dictionary<long, Tuple<Changeset, List<OsmChange>>>();
+
+            _nodeIdManager = new IdManager(() =>
+            {
+                var id = 0L;
+                foreach(var node in _nodes)
+                {
+                    if (id < node.Key.Id)
+                    {
+                        id = node.Key.Id;
+                    }
+                }
+                return id;
+            });
+            _wayIdManager = new IdManager(() =>
+            {
+                var id = 0L;
+                foreach (var way in _ways)
+                {
+                    if (id < way.Key.Id)
+                    {
+                        id = way.Key.Id;
+                    }
+                }
+                return id;
+            });
+            _relationIdManager = new IdManager(() =>
+            {
+                var id = 0L;
+                foreach (var relation in _nodes)
+                {
+                    if (id < relation.Key.Id)
+                    {
+                        id = relation.Key.Id;
+                    }
+                }
+                return id;
+            });
+            _changesetIdManager = new IdManager(() =>
+            {
+                var id = 0L;
+                foreach (var changeset in _changesets)
+                {
+                    if (id < changeset.Key)
+                    {
+                        id = changeset.Key;
+                    }
+                }
+                return id;
+            });
         }
 
         private IdManager _nodeIdManager;
@@ -134,7 +183,7 @@ namespace OsmSharp.Db.Memory
 
             if (!bestEffort)
             { // validate the changeset first, it's all or nothing so we need to make sure things are correct before applying.
-                throw new NotImplementedException("Changeset validation is not implemented.");
+                // throw new NotImplementedException("Changeset validation is not implemented.");
             }
 
             var results = new List<OsmGeoResult>();
@@ -173,7 +222,7 @@ namespace OsmSharp.Db.Memory
             }
             if (changeset.Delete != null)
             {
-                foreach (var delete in changeset.Modify)
+                foreach (var delete in changeset.Delete)
                 {
                     var result = this.ApplyDelete(delete);
                     if (result == null)
@@ -302,13 +351,16 @@ namespace OsmSharp.Db.Memory
             if (osmGeo.Id == null) { throw new ArgumentException("Object has no id."); }
             if (osmGeo.Version == null) { throw new ArgumentException("Object has no version."); }
 
+            var key = new Key(osmGeo);
             switch (osmGeo.Type)
             {
                 case OsmGeoType.Node:
-                    if (!_nodes.Remove(new Key(osmGeo)))
+                    Node node;
+                    if (!_nodes.TryGetValue(new Key(osmGeo), out node))
                     {
                         return null;
                     }
+                    node.Visible = false;
                     return new NodeResult()
                     {
                         OldId = osmGeo.Id.Value,
@@ -316,10 +368,12 @@ namespace OsmSharp.Db.Memory
                         NewVersion = null
                     };
                 case OsmGeoType.Way:
-                    if (!_ways.Remove(new Key(osmGeo)))
+                    Way way;
+                    if (!_ways.TryGetValue(new Key(osmGeo), out way))
                     {
                         return null;
                     }
+                    way.Visible = false;
                     return new WayResult()
                     {
                         OldId = osmGeo.Id.Value,
@@ -327,7 +381,8 @@ namespace OsmSharp.Db.Memory
                         NewVersion = null
                     };
                 case OsmGeoType.Relation:
-                    if (!_relations.Remove(new Key(osmGeo)))
+                    Relation relation;
+                    if (!_relations.TryGetValue(new Key(osmGeo), out relation))
                     {
                         return null;
                     }
@@ -582,7 +637,7 @@ namespace OsmSharp.Db.Memory
         public long OpenChangeset(Changeset info)
         {
             if (info == null) { throw new ArgumentNullException("info"); }
-            if (info.Id.HasValue) { throw new ArgumentException("Changeset already has an id."); }
+            if (info.Id.HasValue && info.Id != 0) { throw new ArgumentException("Changeset already has an id."); }
             
             info.Id = _changesetIdManager.GetNew();
             info.Open = true;

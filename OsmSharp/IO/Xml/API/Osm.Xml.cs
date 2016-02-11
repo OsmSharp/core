@@ -46,10 +46,10 @@ namespace OsmSharp.API
             this.Version = reader.GetAttributeDouble("version");
             this.Generator = reader.GetAttribute("generator");
 
-            var nodes = new List<Node>();
-            var ways = new List<Way>();
-            var relations = new List<Relation>();
-            var changesets = new List<Changeset>();
+            List<Node> nodes = null;
+            List<Way> ways = null;
+            List<Relation> relations = null;
+            List<Changeset> changesets = null;
             reader.GetElements(
                 new Tuple<string, Action>(
                     "api", () =>
@@ -62,6 +62,10 @@ namespace OsmSharp.API
                     {
                         var node = new Node();
                         (node as IXmlSerializable).ReadXml(reader);
+                        if (nodes == null)
+                        {
+                            nodes = new List<Node>();
+                        }
                         nodes.Add(node);
                     }),
                 new Tuple<string, Action>(
@@ -69,6 +73,10 @@ namespace OsmSharp.API
                     {
                         var way = new Way();
                         (way as IXmlSerializable).ReadXml(reader);
+                        if (ways == null)
+                        {
+                            ways = new List<Way>();
+                        }
                         ways.Add(way);
                     }),
                 new Tuple<string, Action>(
@@ -76,6 +84,10 @@ namespace OsmSharp.API
                     {
                         var relation = new Relation();
                         (relation as IXmlSerializable).ReadXml(reader);
+                        if (relations == null)
+                        {
+                            relations = new List<Relation>();
+                        }
                         relations.Add(relation);
                     }),
                 new Tuple<string, Action>(
@@ -83,8 +95,29 @@ namespace OsmSharp.API
                     {
                         var changeset = new Changeset();
                         (changeset as IXmlSerializable).ReadXml(reader);
+                        if (changesets == null)
+                        {
+                            changesets = new List<Changeset>();
+                        }
                         changesets.Add(changeset);
                     }));
+
+            if (nodes != null)
+            {
+                this.Nodes = nodes.ToArray();
+            }
+            if (ways != null)
+            {
+                this.Ways = ways.ToArray();
+            }
+            if (relations != null)
+            {
+                this.Relations = relations.ToArray();
+            }
+            if (changesets != null)
+            {
+                this.Changesets = changesets.ToArray();
+            }
         }
 
         void IXmlSerializable.WriteXml(XmlWriter writer)

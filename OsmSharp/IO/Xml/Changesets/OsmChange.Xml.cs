@@ -56,10 +56,10 @@ namespace OsmSharp.Changesets
                 if (reader.Name == "create")
                 {
                     creates = new List<OsmGeo>();
-                    reader.Read();
-                    while (reader.Name == "node" ||
+                    while (reader.Read() &&
+                        (reader.Name == "node" ||
                          reader.Name == "way" ||
-                         reader.Name == "relation")
+                         reader.Name == "relation"))
                     {
                         creates.Add(OsmChange.ReadOsmGeo(reader));
                     }
@@ -67,10 +67,10 @@ namespace OsmSharp.Changesets
                 else if (reader.Name == "modify")
                 {
                     modifies = new List<OsmGeo>();
-                    reader.Read();
-                    while (reader.Name == "node" ||
+                    while (reader.Read() &&
+                        (reader.Name == "node" ||
                          reader.Name == "way" ||
-                         reader.Name == "relation")
+                         reader.Name == "relation"))
                     {
                         modifies.Add(OsmChange.ReadOsmGeo(reader));
                     }
@@ -78,10 +78,10 @@ namespace OsmSharp.Changesets
                 else if (reader.Name == "delete")
                 {
                     deletes = new List<OsmGeo>();
-                    reader.Read();
-                    while (reader.Name == "node" ||
+                    while (reader.Read() &&
+                        (reader.Name == "node" ||
                          reader.Name == "way" ||
-                         reader.Name == "relation")
+                         reader.Name == "relation"))
                     {
                         deletes.Add(OsmChange.ReadOsmGeo(reader));
                     }

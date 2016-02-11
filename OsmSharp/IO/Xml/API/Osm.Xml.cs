@@ -58,6 +58,12 @@ namespace OsmSharp.API
                         (this.Api as IXmlSerializable).ReadXml(reader);
                     }),
                 new Tuple<string, Action>(
+                    "bounds", () =>
+                    {
+                        this.Bounds = new Bounds();
+                        (this.Bounds as IXmlSerializable).ReadXml(reader);
+                    }),
+                new Tuple<string, Action>(
                     "node", () =>
                     {
                         var node = new Node();
@@ -125,6 +131,7 @@ namespace OsmSharp.API
             writer.WriteAttribute("version", this.Version);
             writer.WriteAttribute("generator", this.Generator);
 
+            writer.WriteElement("bounds", this.Bounds);
             writer.WriteElement("api", this.Api);
 
             writer.WriteElements("node", this.Nodes);

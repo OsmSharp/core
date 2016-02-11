@@ -20,63 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.Changesets;
-
 namespace OsmSharp.API
 {
     /// <summary>
-    /// Represents the root-object for all API-related communication.
+    /// Represents bounds.
     /// </summary>
-    public partial class Osm
+    public partial class Bounds
     {
         /// <summary>
-        /// Gets or sets the generator.
+        /// Gets or sets the minimum latitude.
         /// </summary>
-        public string Generator { get; set; }
+        public float? MinLatitude { get; set; }
 
         /// <summary>
-        /// Gets or sets the version #.
+        /// Gets or sets the minimum longitude.
         /// </summary>
-        public double? Version { get; set; }
+        public float? MinLongitude { get; set; }
 
         /// <summary>
-        /// Gets or sets the capabilities.
+        /// Gets or sets the maximum latitude.
         /// </summary>
-        public Capabilities Api { get; set; }
+        public float? MaxLatitude { get; set; }
 
         /// <summary>
-        /// Gets or sets the nodes array.
+        /// Gets or sets the maximum longitude.
         /// </summary>
-        public Node[] Nodes { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ways array.
-        /// </summary>
-        public Way[] Ways { get; set; }
-
-        /// <summary>
-        /// Gets or sets the relations array.
-        /// </summary>
-        public Relation[] Relations { get; set; }
-
-        /// <summary>
-        /// Gets or sets the changeset.
-        /// </summary>
-        public Changeset[] Changesets { get; set; }
-
-        /// <summary>
-        /// Gets or sets the users.
-        /// </summary>
-        public User[] Users { get; set; }
-
-        /// <summary>
-        /// Gets or sets the user.
-        /// </summary>
-        public User User { get; set; }
-
-        /// <summary>
-        /// Gets or sets the bounds.
-        /// </summary>
-        public Bounds Bounds { get; set; }
+        public float? MaxLongitude { get; set; }
     }
 }

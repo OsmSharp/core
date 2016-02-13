@@ -70,6 +70,7 @@
     <Compile Include="IO\Xml\API\Bounds.Xml.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilter.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterDelegate.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterProgress.cs" />
     <Compile Include="Streams\OsmStreamExtensions.cs" />
     <Compile Include="Streams\PBFOsmStreamSource.cs" />
     <Compile Include="Streams\PBFOsmStreamTarget.cs" />

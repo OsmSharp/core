@@ -31,15 +31,6 @@ namespace OsmSharp.Db
     /// </summary>
     public static class ISnapshotDbExtensions
     {
-
-        /// <summary>
-        /// Returns true if the node with the given id exists.
-        /// </summary>
-        public static bool ExistsNode(this ISnapshotDb db, long id)
-        {
-            return db.Exists(OsmGeoType.Node, id);
-        }
-
         /// <summary>
         /// Deletes the node with the given id and returns true if it existed.
         /// </summary>
@@ -49,27 +40,11 @@ namespace OsmSharp.Db
         }
 
         /// <summary>
-        /// Returns true if the way with the given id exists.
-        /// </summary>
-        public static bool ExistsWay(this ISnapshotDb db, long id)
-        {
-            return db.Exists(OsmGeoType.Way, id);
-        }
-
-        /// <summary>
         /// Deletes the way with the given id and returns true if it existed.
         /// </summary>
         public static bool DeleteWay(this ISnapshotDb db, long id)
         {
             return db.Delete(OsmGeoType.Way, id);
-        }
-
-        /// <summary>
-        /// Returns true if the relation with the given id exists.
-        /// </summary>
-        public static bool ExistsRelation(this ISnapshotDb db, long id)
-        {
-            return db.Exists(OsmGeoType.Relation, id);
         }
 
         /// <summary>

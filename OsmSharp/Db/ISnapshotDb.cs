@@ -62,19 +62,9 @@ namespace OsmSharp.Db
         OsmStreamSource Get();
 
         /// <summary>
-        /// Returns true if an osm object of the given type and the given id exists.
-        /// </summary>
-        bool Exists(OsmGeoType type, long id);
-
-        /// <summary>
         /// Gets all osm objects with the given types and the given id's.
         /// </summary>
         IList<OsmGeo> Get(IList<OsmGeoType> type, IList<long> id);
-
-        /// <summary>
-        /// Gets all osm objects with the given types and the given id's.
-        /// </summary>
-        IList<bool> Exists(IList<OsmGeoType> type, IList<long> id);
 
         /// <summary>
         /// Gets all osm objects that pass the given filter within the given bounding box.

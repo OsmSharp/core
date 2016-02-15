@@ -101,6 +101,7 @@
     <Compile Include="Streams\XmlOsmStreamSource.cs" />
     <Compile Include="Streams\XmlOsmStreamTarget.cs" />
     <Compile Include="Tags\Tag.cs" />
+    <Compile Include="Tags\TagExtensions.cs" />
     <Compile Include="Tags\TagsCollection.cs" />
     <Compile Include="Tags\TagsCollectionBase.cs" />
     <Compile Include="Utilities.cs" />

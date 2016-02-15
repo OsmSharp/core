@@ -33,7 +33,7 @@ namespace OsmSharp.Complete
         /// <summary>
         /// Gets or sets the id.
         /// </summary>
-        public long Id { get; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Gets or sets the changeset id.

@@ -20,23 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.IO;
+using NetTopologySuite.Features;
 
-namespace OsmSharp.Test
+namespace OsmSharp.Geo.Streams
 {
+
     /// <summary>
-    /// Contains extension methods.
+    /// Represents a streamed feature target accepting feature objects for processing.
     /// </summary>
-    public static class Extensions
+    public interface IFeatureStreamTarget
     {
         /// <summary>
-        /// Reads a string.
+        /// Intializes this target.
         /// </summary>
-        public static string ReadBeginToEnd(this MemoryStream stream)
-        {
-            stream.Seek(0, SeekOrigin.Begin);
-            var streamReader = new StreamReader(stream);
-            return streamReader.ReadToEnd();
-        }
+        /// <rremarks>Has to be called before starting to add objects.</rremarks>
+        void Initialize();
+
+        /// <summary>
+        /// Adds a feature.
+        /// </summary>
+        void Add(Feature feature);
+
+        /// <summary>
+        /// Closes this target.
+        /// </summary>
+        /// <remarks>Closes any open connections, file locks or anything related to this target.</remarks>
+        void Close();
     }
 }

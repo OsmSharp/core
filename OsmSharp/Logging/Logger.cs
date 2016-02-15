@@ -50,7 +50,7 @@ namespace OsmSharp.Logging
         /// <summary>
         /// Logs a message.
         /// </summary>
-        internal void Log(TraceEventType type, string message, params object[] args)
+        public void Log(TraceEventType type, string message, params object[] args)
         {
             if (Logger.LogAction != null)
             {
@@ -61,7 +61,7 @@ namespace OsmSharp.Logging
         /// <summary>
         /// Logs a message.
         /// </summary>
-        internal static void Log(string name, TraceEventType type, string message, params object[] args)
+        public static void Log(string name, TraceEventType type, string message, params object[] args)
         {
             if (Logger.LogAction != null)
             {

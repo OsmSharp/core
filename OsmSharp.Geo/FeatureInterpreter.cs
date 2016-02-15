@@ -20,32 +20,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.Logging
+using NetTopologySuite.Features;
+using OsmSharp.Complete;
+using OsmSharp.Db;
+using OsmSharp.Tags;
+using System;
+
+namespace OsmSharp.Geo
 {
     /// <summary>
-    /// Represents different types of trace events.
+    /// Represents a geometry interpreter to convert OSM-objects to corresponding geometries.
     /// </summary>
-    public enum TraceEventType
+    public abstract class FeatureInterpreter
     {
         /// <summary>
-        /// Critical.
+        /// Interprets an OSM-object and returns the corresponding geometry.
         /// </summary>
-        Critical,
+        public abstract FeatureCollection Interpret(ICompleteOsmGeo osmObject);
+
         /// <summary>
-        /// Error.
+        /// Returns true if the given tags collection contains potential area tags.
         /// </summary>
-        Error,
+        public abstract bool IsPotentiallyArea(TagsCollectionBase tags);
+
         /// <summary>
-        /// Warning.
+        /// Interprets an OSM-object and returns the correctponding geometry.
         /// </summary>
-        Warning,
-        /// <summary>
-        /// Verbose.
-        /// </summary>
-        Verbose,
-        /// <summary>
-        /// Information.
-        /// </summary>
-        Information
+        public virtual FeatureCollection Interpret(OsmGeo osmGeo, ISnapshotDb data)
+        {
+            switch (osmGeo.Type)
+            {
+                case OsmGeoType.Node:
+                    return this.Interpret(osmGeo as Node);
+                case OsmGeoType.Way:
+                    return this.Interpret((osmGeo as Way).CreateComplete(data));
+                case OsmGeoType.Relation:
+                    return this.Interpret((osmGeo as Relation).CreateComplete(data));
+            }
+            throw new ArgumentOutOfRangeException();
+        }
     }
 }

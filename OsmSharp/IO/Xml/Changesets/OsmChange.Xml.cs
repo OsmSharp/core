@@ -46,62 +46,48 @@ namespace OsmSharp.Changesets
 
             this.Generator = reader.GetAttribute("generator");
             this.Version = reader.GetAttributeDouble("version");
-
+            
             List<OsmGeo> creates = null;
             List<OsmGeo> modifies = null;
             List<OsmGeo> deletes = null;
-            while (reader.Read() &&
-                reader.MoveToContent() != XmlNodeType.None)
-            {
-                if (reader.Name == "create")
-                {
-                    creates = new List<OsmGeo>();
-                    while (reader.Read() &&
-                        (reader.Name == "node" ||
-                         reader.Name == "way" ||
-                         reader.Name == "relation"))
+
+            reader.GetElements(
+                new Tuple<string, Action>(
+                    "create", () =>
                     {
-                        creates.Add(OsmChange.ReadOsmGeo(reader));
-                    }
-                }
-                else if (reader.Name == "modify")
-                {
-                    modifies = new List<OsmGeo>();
-                    while (reader.Read() &&
-                        (reader.Name == "node" ||
-                         reader.Name == "way" ||
-                         reader.Name == "relation"))
+                        creates = new List<OsmGeo>();
+                        reader.Read();
+                        while ((reader.Name == "node" ||
+                             reader.Name == "way" ||
+                             reader.Name == "relation"))
+                        {
+                            creates.Add(OsmChange.ReadOsmGeo(reader));
+                        }
+                    }),
+                new Tuple<string, Action>(
+                    "modify", () =>
                     {
-                        modifies.Add(OsmChange.ReadOsmGeo(reader));
-                    }
-                }
-                else if (reader.Name == "delete")
-                {
-                    deletes = new List<OsmGeo>();
-                    while (reader.Read() &&
-                        (reader.Name == "node" ||
-                         reader.Name == "way" ||
-                         reader.Name == "relation"))
+                        modifies = new List<OsmGeo>();
+                        reader.Read();
+                        while ((reader.Name == "node" ||
+                             reader.Name == "way" ||
+                             reader.Name == "relation"))
+                        {
+                            modifies.Add(OsmChange.ReadOsmGeo(reader));
+                        }
+                    }),
+                new Tuple<string, Action>(
+                    "delete", () =>
                     {
-                        deletes.Add(OsmChange.ReadOsmGeo(reader));
-                    }
-                }
-                else
-                {
-                    if(creates != null)
-                    {
-                        this.Create = creates.ToArray();
-                    }
-                    if(modifies != null)
-                    {
-                        this.Modify = modifies.ToArray();
-                    }
-                    if(deletes != null)
-                    {
-                        this.Delete = deletes.ToArray();
-                    }
-                }
-            }
+                        deletes = new List<OsmGeo>();
+                        reader.Read();
+                        while ((reader.Name == "node" ||
+                             reader.Name == "way" ||
+                             reader.Name == "relation"))
+                        {
+                            deletes.Add(OsmChange.ReadOsmGeo(reader));
+                        }
+                    }));
 
             if (creates != null)
             {

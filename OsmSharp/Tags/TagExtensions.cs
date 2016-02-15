@@ -20,23 +20,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.IO;
+using System.Linq;
 
-namespace OsmSharp.Test
+namespace OsmSharp.Tags
 {
     /// <summary>
-    /// Contains extension methods.
+    /// Contains extensions related to tags.
     /// </summary>
-    public static class Extensions
+    public static class TagExtensions
     {
+        private static string[] BooleanTrueValues = { "yes", "true", "1" };
+        private static string[] BooleanFalseValues = { "no", "false", "0" };
+
         /// <summary>
-        /// Reads a string.
+        /// Returns true if the given key has a value that means false.
         /// </summary>
-        public static string ReadBeginToEnd(this MemoryStream stream)
+        public static bool IsFalse(this TagsCollectionBase tags, string key)
         {
-            stream.Seek(0, SeekOrigin.Begin);
-            var streamReader = new StreamReader(stream);
-            return streamReader.ReadToEnd();
+            if (tags == null || string.IsNullOrWhiteSpace(key))
+                return false;
+            string tagValue;
+            return tags.TryGetValue(key, out tagValue) &&
+                BooleanFalseValues.Contains(tagValue.ToLowerInvariant());
+        }
+
+        /// <summary>
+        /// Returns true if the given key has a value that means true.
+        /// </summary>
+        public static bool IsTrue(this TagsCollectionBase tags, string key)
+        {
+            if (tags == null || string.IsNullOrWhiteSpace(key))
+                return false;
+            
+            string tagValue;
+            return tags.TryGetValue(key, out tagValue) &&
+                BooleanTrueValues.Contains(tagValue.ToLowerInvariant());
         }
     }
 }

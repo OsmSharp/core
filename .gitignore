@@ -26,6 +26,7 @@ OutputAndroid*/
 OutputWindowsPhone*/
 *.psess
 test-results*/
+TestResults*/
 *.vsp
 .DotSettings
 *.vspx

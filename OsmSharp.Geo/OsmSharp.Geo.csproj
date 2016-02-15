@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="DefaultFeatureInterpreter.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FeatureInterpreter.cs" />

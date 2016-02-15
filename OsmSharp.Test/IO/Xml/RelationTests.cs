@@ -121,7 +121,7 @@ namespace OsmSharp.Test.IO.Xml
             Assert.AreEqual("ben", relation.UserName);
             Assert.AreEqual(1, relation.UserId);
             Assert.AreEqual(1, relation.Version);
-            Assert.AreEqual(new System.DateTime(2008, 09, 12, 21, 37, 45), relation.TimeStamp);
+            Assert.AreEqual(new System.DateTime(2008, 09, 12, 21, 37, 45), relation.TimeStamp.Value.ToUniversalTime());
             Assert.IsNotNull(relation.Tags);
             Assert.IsTrue(relation.Tags.Contains("amenity", "something"));
             Assert.IsTrue(relation.Tags.Contains("key", "some_value"));
@@ -133,7 +133,7 @@ namespace OsmSharp.Test.IO.Xml
             Assert.AreEqual("ben", relation.UserName);
             Assert.AreEqual(1, relation.UserId);
             Assert.AreEqual(1, relation.Version);
-            Assert.AreEqual(new System.DateTime(2008, 09, 12, 21, 37, 45), relation.TimeStamp);
+            Assert.AreEqual(new System.DateTime(2008, 09, 12, 21, 37, 45), relation.TimeStamp.Value.ToUniversalTime());
             Assert.IsNotNull(relation.Tags);
             Assert.IsTrue(relation.Tags.Contains("amenity", "something"));
             Assert.IsTrue(relation.Tags.Contains("key", "some_value"));

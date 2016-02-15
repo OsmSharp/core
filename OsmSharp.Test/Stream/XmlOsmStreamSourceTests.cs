@@ -61,7 +61,7 @@ namespace OsmSharp.Test.Stream
             Assert.AreEqual(true, node.Visible);
             Assert.AreEqual(3, node.Version);
             Assert.AreEqual(9797840, node.ChangeSetId);
-            Assert.AreEqual(new DateTime(2011, 11, 11, 16, 43, 47), node.TimeStamp);
+            Assert.AreEqual(new DateTime(2011, 11, 11, 16, 43, 47), node.TimeStamp.Value.ToUniversalTime());
             Assert.IsNotNull(node.Tags);
             Assert.AreEqual(3, node.Tags.Count);
             Assert.IsTrue(node.Tags.Contains("alt_name", "Lille"));
@@ -94,7 +94,7 @@ namespace OsmSharp.Test.Stream
             Assert.AreEqual(true, way.Visible);
             Assert.AreEqual(1, way.Version);
             Assert.AreEqual(6570367, way.ChangeSetId);
-            Assert.AreEqual(new DateTime(2010, 12, 06, 23, 58, 37), way.TimeStamp);
+            Assert.AreEqual(new DateTime(2010, 12, 06, 23, 58, 37), way.TimeStamp.Value.ToUniversalTime());
             Assert.IsNotNull(way.Tags);
             Assert.AreEqual(1, way.Tags.Count);
             Assert.IsTrue(way.Tags.Contains("building", "yes"));
@@ -132,7 +132,7 @@ namespace OsmSharp.Test.Stream
             Assert.AreEqual(true, relation.Visible);
             Assert.AreEqual(18, relation.Version);
             Assert.AreEqual(9797825, relation.ChangeSetId);
-            Assert.AreEqual(new DateTime(2011, 11, 11, 16, 42, 26), relation.TimeStamp);
+            Assert.AreEqual(new DateTime(2011, 11, 11, 16, 42, 26), relation.TimeStamp.Value.ToUniversalTime());
             Assert.IsNotNull(relation.Tags);
             Assert.AreEqual(4, relation.Tags.Count);
             Assert.IsTrue(relation.Tags.Contains("network", "rcn"));

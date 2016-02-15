@@ -107,7 +107,7 @@ namespace OsmSharp.Test.IO.Xml
             Assert.AreEqual("ben", node.UserName);
             Assert.AreEqual(1, node.UserId);
             Assert.AreEqual(1, node.Version);
-            Assert.AreEqual(new System.DateTime(2008, 09, 12, 21, 37, 45), node.TimeStamp);
+            Assert.AreEqual(new System.DateTime(2008, 09, 12, 21, 37, 45), node.TimeStamp.Value.ToUniversalTime());
             Assert.IsNotNull(node.Tags);
             Assert.IsTrue(node.Tags.Contains("amenity", "something"));
             Assert.IsTrue(node.Tags.Contains("key", "some_value"));

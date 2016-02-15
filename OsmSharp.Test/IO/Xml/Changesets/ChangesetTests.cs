@@ -81,7 +81,7 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             Assert.AreEqual(10, changeset.Id);
             Assert.AreEqual(123, changeset.UserId);
             Assert.AreEqual("fred", changeset.UserName);
-            Assert.AreEqual(new System.DateTime(2008, 11, 08, 19, 07, 39), changeset.CreatedAt);
+            Assert.AreEqual(new System.DateTime(2008, 11, 08, 19, 07, 39), changeset.CreatedAt.Value.ToUniversalTime());
             Assert.IsNull(changeset.ClosedAt);
             Assert.AreEqual(true, changeset.Open);
             Assert.AreEqual(7.0191821f, changeset.MinLongitude, 0.00001f);

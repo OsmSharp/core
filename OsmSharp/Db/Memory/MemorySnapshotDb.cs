@@ -95,7 +95,7 @@ namespace OsmSharp.Db.Memory
         /// <summary>
         /// Returns all the objects within a given bounding box.
         /// </summary>
-        public IList<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude)
+        public IEnumerable<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude)
         {
             var nodesInBox = new HashSet<long>();
             var nodesToInclude = new HashSet<long>();

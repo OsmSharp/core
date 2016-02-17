@@ -69,7 +69,7 @@ namespace OsmSharp.Db
         /// <summary>
         /// Gets all osm objects that pass the given filter within the given bounding box.
         /// </summary>
-        IList<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude);
+        IEnumerable<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude);
 
         /// <summary>
         /// Deletes the osm object with the given type, the given id without applying a changeset.

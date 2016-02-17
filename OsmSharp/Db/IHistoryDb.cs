@@ -91,7 +91,7 @@ namespace OsmSharp.Db
         /// <summary>
         /// Gets all latest versions of osm objects within the given bounding box.
         /// </summary>
-        IList<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude);
+        IEnumerable<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude);
 
         /// <summary>
         /// Opens a new changeset

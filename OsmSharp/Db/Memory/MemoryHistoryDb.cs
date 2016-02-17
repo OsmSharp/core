@@ -487,12 +487,12 @@ namespace OsmSharp.Db.Memory
         /// <summary>
         /// Gets all osm objects with the given types and the given id's.
         /// </summary>
-        public IList<OsmGeo> Get(IList<OsmGeoType> type, IList<long> id)
+        public IList<OsmGeo> Get(OsmGeoType type, IList<long> id)
         {
-            var osmGeos = new List<OsmGeo>(type.Count);
+            var osmGeos = new List<OsmGeo>(id.Count);
             for (var i = 0; i < osmGeos.Count; i++)
             {
-                osmGeos.Add(this.Get(type[i], id[i]));
+                osmGeos.Add(this.Get(type, id[i]));
             }
             return osmGeos;
         }
@@ -539,12 +539,12 @@ namespace OsmSharp.Db.Memory
         /// <summary>
         /// Gets all osm objects with the given types, the given id's and the given version #'s.
         /// </summary>
-        public IList<OsmGeo> Get(IList<OsmGeoType> type, IList<long> id, IList<int> version)
+        public IList<OsmGeo> Get(OsmGeoType type, IList<long> id, IList<int> version)
         {
-            var osmGeos = new List<OsmGeo>(type.Count);
+            var osmGeos = new List<OsmGeo>(id.Count);
             for (var i = 0; i < osmGeos.Count; i++)
             {
-                osmGeos.Add(this.Get(type[i], id[i], version[i]));
+                osmGeos.Add(this.Get(type, id[i], version[i]));
             }
             return osmGeos;
         }

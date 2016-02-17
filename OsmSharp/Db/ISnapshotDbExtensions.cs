@@ -22,6 +22,9 @@
 
 using OsmSharp.Complete;
 using OsmSharp.Streams.Complete;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace OsmSharp.Db
@@ -31,6 +34,23 @@ namespace OsmSharp.Db
     /// </summary>
     public static class ISnapshotDbExtensions
     {
+        /// <summary>
+        /// Gets all osm objects with the given types and the given id's.
+        /// </summary>
+        public static IList<OsmGeo> Get(this ISnapshotDb db, IList<OsmGeoType> type, IList<long> id)
+        {
+            if (type == null) { throw new ArgumentNullException("type"); }
+            if (id == null) { throw new ArgumentNullException("id"); }
+            if (id.Count != type.Count) { throw new ArgumentException("Type and id lists need to have the same size."); }
+
+            var result = new List<OsmGeo>();
+            for (int i = 0; i < id.Count; i++)
+            {
+                result.Add(db.Get(type[i], id[i]));
+            }
+            return result;
+        }
+
         /// <summary>
         /// Deletes the node with the given id and returns true if it existed.
         /// </summary>

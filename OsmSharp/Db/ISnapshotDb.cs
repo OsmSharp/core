@@ -62,9 +62,9 @@ namespace OsmSharp.Db
         OsmStreamSource Get();
 
         /// <summary>
-        /// Gets all osm objects with the given types and the given id's.
+        /// Gets all osm objects with the given type and the given id's.
         /// </summary>
-        IList<OsmGeo> Get(IList<OsmGeoType> type, IList<long> id);
+        IList<OsmGeo> Get(OsmGeoType type, IList<long> id);
 
         /// <summary>
         /// Gets all osm objects that pass the given filter within the given bounding box.

@@ -287,16 +287,14 @@ namespace OsmSharp.Db.Memory
         /// <summary>
         /// Gets all osm objects with the given types and the given id's.
         /// </summary>
-        public IList<OsmGeo> Get(IList<OsmGeoType> type, IList<long> id)
+        public IList<OsmGeo> Get(OsmGeoType type, IList<long> id)
         {
-            if (type == null) { throw new ArgumentNullException("type"); }
             if (id == null) { throw new ArgumentNullException("id"); }
-            if (id.Count != type.Count) { throw new ArgumentException("Type and id lists need to have the same size."); }
 
             var result = new List<OsmGeo>();
             for (int i = 0; i < id.Count; i++)
             {
-                result.Add(this.Get(type[i], id[i]));
+                result.Add(this.Get(type, id[i]));
             }
             return result;
         }

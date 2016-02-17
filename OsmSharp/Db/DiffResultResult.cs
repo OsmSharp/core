@@ -108,6 +108,10 @@ namespace OsmSharp.Db
         /// </summary>
         TooBig,
         /// <summary>
+        /// Changeset was not open.
+        /// </summary>
+        NotOpen,
+        /// <summary>
         /// Unknown error.
         /// </summary>
         UknownError

@@ -34,7 +34,7 @@ namespace OsmSharp.Logging
         /// <summary>
         /// Creates a new logger.
         /// </summary>
-        internal Logger(string name)
+        public Logger(string name)
         {
             _name = name;
         }
@@ -42,7 +42,7 @@ namespace OsmSharp.Logging
         /// <summary>
         /// Creates a new logger.
         /// </summary>
-        internal static Logger Create(string name)
+        public static Logger Create(string name)
         {
             return new Logger(name);
         }

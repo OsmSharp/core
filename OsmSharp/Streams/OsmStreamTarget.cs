@@ -85,7 +85,6 @@ namespace OsmSharp.Streams
         /// </summary>
         public void Pull()
         {
-            _source.Initialize();
             this.Initialize();
             if (this.OnBeforePull())
             {

@@ -73,11 +73,6 @@ namespace OsmSharp.Streams.Filters
         }
 
         /// <summary>
-        /// Initializes this filter.
-        /// </summary>
-        public abstract override void Initialize();
-
-        /// <summary>
         /// Returns the current object.
         /// </summary>
         /// <returns></returns>

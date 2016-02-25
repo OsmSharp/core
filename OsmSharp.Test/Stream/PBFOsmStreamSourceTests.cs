@@ -69,7 +69,6 @@ namespace OsmSharp.Test.Stream
             {
                 using (var reader = new PBFOsmStreamSource(fileStream))
                 {
-                    reader.Initialize();
                     var counter = 0;
                     while (reader.MoveNextWay())
                     {

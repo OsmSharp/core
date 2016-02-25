@@ -63,28 +63,7 @@ namespace OsmSharp.Streams.Filters
             _relationInterval = relationInterval;
         }
 
-        /// <summary>
-        /// Initializes this source.
-        /// </summary>
-        public override void Initialize()
-        {
-            if (this.Source == null)
-            {
-                throw new Exception("No target registered!");
-            }
-            // no intialisation this filter does the same thing every time.
-            this.Source.Initialize();
-
-            _lastTypeStart = 0;
-            _lastType = null;
-
-            _node = 0;
-            _nodeTicks = 0;
-            _way = 0;
-            _wayTicks = 0;
-            _relation = 0;
-            _relationTicks = 0;
-        }
+        private bool _initialized = false;
 
         /// <summary>
         /// Move to the next item in the stream.
@@ -95,6 +74,12 @@ namespace OsmSharp.Streams.Filters
         /// <returns></returns>
         public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
+            if (!_initialized)
+            {
+                this.Initialize();
+                _initialized = true;
+            }
+
             return this.Source.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
         }
 
@@ -104,7 +89,7 @@ namespace OsmSharp.Streams.Filters
         /// <returns></returns>
         public override OsmGeo Current()
         {
-            OsmGeo current = this.Source.Current();
+            var current = this.Source.Current();
 
             // keep the start ticks.
             long ticksStart = DateTime.Now.Ticks;
@@ -192,6 +177,23 @@ namespace OsmSharp.Streams.Filters
             _relationTicks = 0;
 
             this.Source.Reset();
+        }
+        
+        /// <summary>
+        /// Initializes this source.
+        /// </summary>
+        private void Initialize()
+        {
+            _lastTypeStart = 0;
+            _lastType = null;
+
+            _pass = 1;
+            _node = 0;
+            _nodeTicks = 0;
+            _way = 0;
+            _wayTicks = 0;
+            _relation = 0;
+            _relationTicks = 0;
         }
 
         /// <summary>

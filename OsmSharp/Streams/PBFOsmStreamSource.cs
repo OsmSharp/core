@@ -41,10 +41,12 @@ namespace OsmSharp.Streams
             _stream = stream;
         }
 
+        private bool _initialized = false;
+
         /// <summary>
         /// Initializes the current source.
         /// </summary>
-        public override void Initialize()
+        private void Initialize()
         {
             _stream.Seek(0, SeekOrigin.Begin);
 
@@ -60,6 +62,12 @@ namespace OsmSharp.Streams
         /// <returns></returns>
         public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
+            if (!_initialized)
+            {
+                this.Initialize();
+                _initialized = true;
+            }
+
             var nextPBFPrimitive = this.MoveToNextPrimitive(ignoreNodes, ignoreWays, ignoreRelations);
             while(nextPBFPrimitive.Value != null)
             {

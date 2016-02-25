@@ -20,46 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.Streams
+using System;
+
+namespace OsmSharp.Streams.Exceptions
 {
     /// <summary>
-    /// An empty stream reader.
+    /// An exception thrown when a stream is not sorted but it was expected to be.
     /// </summary>
-    public class OsmStreamSourceEmpty : OsmStreamSource
+    public class StreamNotSortedException : Exception
     {
         /// <summary>
-        /// Move to the next item in the stream.
+        /// Creates a new exception.
         /// </summary>
-        public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
-        {
-            return false;
-        }
-
-        /// <summary>
-        /// Returns the current object.
-        /// </summary>
-        public override OsmGeo Current()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Resets this source.
-        /// </summary>
-        public override void Reset()
+        public StreamNotSortedException()
         {
 
-        }
-
-        /// <summary>
-        /// Returns true if this source can be reset.
-        /// </summary>
-        public override bool CanReset
-        {
-            get
-            {
-                return true;
-            }
         }
     }
 }

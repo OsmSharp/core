@@ -197,7 +197,6 @@ namespace OsmSharp.Streams.Complete
         private void Seek()
         {
             var relations = new List<Relation>();
-            _simpleSource.Initialize();
             while (_simpleSource.MoveNext(true, false, false))
             {
                 var osmGeo = _simpleSource.Current();

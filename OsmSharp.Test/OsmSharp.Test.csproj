@@ -68,6 +68,7 @@
     <Compile Include="IO\Xml\RelationTests.cs" />
     <Compile Include="IO\Xml\WayTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stream\Filters\OsmStreamFilterMergeTests.cs" />
     <Compile Include="Stream\PBFOsmStreamSourceTests.cs" />
     <Compile Include="Stream\PBFOsmStreamTargetTests.cs" />
     <Compile Include="Stream\XmlOsmStreamSourceTests.cs" />

@@ -39,5 +39,75 @@ namespace OsmSharp
                 : obj is IFormattable ? ((IFormattable)obj).ToString(null, CultureInfo.InvariantCulture)
                 : obj.ToString();
         }
+
+        /// <summary>
+        /// Compares this OsmGeo object to another using type, id and version number. Nodes before ways, ways before relations.
+        /// </summary>
+        public static int CompareByIdVersionAndType(this OsmGeo osmGeo, OsmGeo other)
+        {
+            if (osmGeo == null) { throw new ArgumentNullException("osmGeo"); }
+            if (other == null) { throw new ArgumentNullException("other"); }
+            if (osmGeo.Id == null || osmGeo.Version == null) { throw new ArgumentException("To compare objects must have id and version set."); }
+            if (other.Id == null || other.Version == null) { throw new ArgumentException("To compare objects must have id and version set."); }
+
+            if (osmGeo.Type == other.Type)
+            {
+                if (osmGeo.Id == other.Id)
+                {
+                    return osmGeo.Version.Value.CompareTo(other.Version.Value);
+                }
+                return osmGeo.Id.Value.CompareTo(other.Id.Value);
+            }
+            switch (osmGeo.Type)
+            {
+                case OsmGeoType.Node:
+                    return -1;
+                case OsmGeoType.Way:
+                    switch (other.Type)
+                    {
+                        case OsmGeoType.Node:
+                            return 1;
+                        case OsmGeoType.Relation:
+                            return -1;
+                    }
+                    throw new Exception("Invalid OsmGeoType.");
+                case OsmGeoType.Relation:
+                    return 1;
+            }
+            throw new Exception("Invalid OsmGeoType.");
+        }
+
+        /// <summary>
+        /// Compares this OsmGeo object to another using type, and id. Nodes before ways, ways before relations.
+        /// </summary>
+        public static int CompareByIdAndType(this OsmGeo osmGeo, OsmGeo other)
+        {
+            if (osmGeo == null) { throw new ArgumentNullException("osmGeo"); }
+            if (other == null) { throw new ArgumentNullException("other"); }
+            if (osmGeo.Id == null) { throw new ArgumentException("To compare objects must have id set."); }
+            if (other.Id == null) { throw new ArgumentException("To compare objects must have id set."); }
+
+            if (osmGeo.Type == other.Type)
+            {
+                return osmGeo.Id.Value.CompareTo(other.Id.Value);
+            }
+            switch (osmGeo.Type)
+            {
+                case OsmGeoType.Node:
+                    return -1;
+                case OsmGeoType.Way:
+                    switch (other.Type)
+                    {
+                        case OsmGeoType.Node:
+                            return 1;
+                        case OsmGeoType.Relation:
+                            return -1;
+                    }
+                    throw new Exception("Invalid OsmGeoType.");
+                case OsmGeoType.Relation:
+                    return 1;
+            }
+            throw new Exception("Invalid OsmGeoType.");
+        }
     }
 }

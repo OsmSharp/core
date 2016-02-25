@@ -42,11 +42,6 @@ namespace OsmSharp.Streams
         }
 
         /// <summary>
-        /// Initializes this source.
-        /// </summary>
-        public abstract void Initialize();
-
-        /// <summary>
         /// Move to the next item in the stream.
         /// </summary>
         /// <returns></returns>
@@ -145,8 +140,6 @@ namespace OsmSharp.Streams
         /// <returns></returns>
         public IEnumerator<OsmGeo> GetEnumerator()
         {
-            this.Initialize();
-
             return this;
         }
 
@@ -156,8 +149,6 @@ namespace OsmSharp.Streams
         /// <returns></returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            this.Initialize();
-
             return this;
         }
 

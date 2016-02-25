@@ -48,11 +48,12 @@ namespace OsmSharp.Streams
         private XmlSerializer _serWay;
         private XmlSerializer _serRelation;
         private OsmGeo _next;
+        private bool _initialized;
 
         /// <summary>
         /// Initializes this source.
         /// </summary>
-        public override void Initialize()
+        private void Initialize()
         {
             _next = null;
             _serNode = new XmlSerializer(typeof(Node));
@@ -101,6 +102,12 @@ namespace OsmSharp.Streams
         /// </summary>
         public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
+            if (!_initialized)
+            {
+                this.Initialize();
+                _initialized = true;
+            }
+
             while (!_reader.EOF &&
                 _reader.MoveToContent() != XmlNodeType.Whitespace)
             {

@@ -51,24 +51,6 @@ namespace OsmSharp.Streams.Filters
         private OsmGeo _current = null;
         
         /// <summary>
-        /// Called when filter is initialized.
-        /// </summary>
-        public event Action InitializeEvent;
-
-        /// <summary>
-        /// Initializes this filter.
-        /// </summary>
-        public override void Initialize()
-        {
-            if (this.InitializeEvent != null)
-            {
-                this.InitializeEvent();
-            }
-
-            this.Source.Initialize();
-        }
-        
-        /// <summary>
         /// Called when the move is made to the next object.
         /// </summary>
         public Func<OsmGeo, object, OsmGeo> MoveToNextEvent;

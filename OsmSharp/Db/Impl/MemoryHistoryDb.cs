@@ -466,31 +466,7 @@ namespace OsmSharp.Db.Impl
         
         private static System.Comparison<OsmGeo> Sort = (x, y) =>
         {
-            if (x.Type == y.Type)
-            {
-                if (x.Id == y.Id)
-                {
-                    return x.Version.Value.CompareTo(y.Version.Value);
-                }
-                return x.Id.Value.CompareTo(y.Id.Value);
-            }
-            switch(x.Type)
-            {
-                case OsmGeoType.Node:
-                    return -1;
-                case OsmGeoType.Way:
-                    switch(y.Type)
-                    {
-                        case OsmGeoType.Node:
-                            return 1;
-                        case OsmGeoType.Relation:
-                            return -1;
-                    }
-                    throw new Exception("Invalid OsmGeoType.");
-                case OsmGeoType.Relation:
-                    return 1;
-            }
-            throw new Exception("Invalid OsmGeoType.");
+            return x.CompareByIdVersionAndType(y);
         };
 
         class Key

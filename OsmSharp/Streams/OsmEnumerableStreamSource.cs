@@ -40,15 +40,7 @@ namespace OsmSharp.Streams
         }
 
         private IEnumerator<OsmGeo> _baseObjectEnumerator; // Holds the current enumerator.
-
-        /// <summary>
-        /// Initializes this source.
-        /// </summary>
-        public override void Initialize()
-        {
-            this.Reset();
-        }
-
+        
         /// <summary>
         /// Move to the next item in the stream.
         /// </summary>

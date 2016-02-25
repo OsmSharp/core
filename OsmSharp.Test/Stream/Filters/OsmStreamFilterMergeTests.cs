@@ -194,9 +194,9 @@ namespace OsmSharp.Test.Stream.Filters
             Assert.AreEqual(1, result[0].Id);
             Assert.AreEqual(OsmGeoType.Node, result[0].Type);
             Assert.AreEqual(1, result[1].Id);
-            Assert.AreEqual(OsmGeoType.Node, result[1].Type);
+            Assert.AreEqual(OsmGeoType.Way, result[1].Type);
             Assert.AreEqual(1, result[2].Id);
-            Assert.AreEqual(OsmGeoType.Node, result[2].Type);
+            Assert.AreEqual(OsmGeoType.Relation, result[2].Type);
         }
 
         /// <summary>

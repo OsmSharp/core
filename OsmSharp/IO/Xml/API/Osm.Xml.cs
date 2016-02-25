@@ -137,6 +137,7 @@ namespace OsmSharp.API
             writer.WriteElements("node", this.Nodes);
             writer.WriteElements("way", this.Ways);
             writer.WriteElements("relation", this.Relations);
+            writer.WriteElements("changeset", this.Changesets);
         }
     }
 }

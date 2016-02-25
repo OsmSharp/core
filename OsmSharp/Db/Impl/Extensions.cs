@@ -20,34 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Linq;
-using OsmSharp.Streams.Complete;
-using OsmSharp.Complete;
-using System.Collections.Generic;
-using System;
-
-namespace OsmSharp.Db
+namespace OsmSharp.Db.Impl
 {
     /// <summary>
-    /// Contains extensions for the history db.
+    /// Contains extension methods.
     /// </summary>
-    public static class IHistoryDbExtensions
+    public static class Extensions
     {
         /// <summary>
-        /// Adds a new object to the db.
+        /// Creates a snapshot db from a snapshot db implementation.
         /// </summary>
-        public static void Add(this IHistoryDb db, OsmGeo osmGeo)
+        public static ISnapshotDb CreateSnapshotDb(this ISnapshotDbImpl dbImpl)
         {
-            db.Add(new OsmGeo[] { osmGeo });
+            return new SnapshotDb(dbImpl);
         }
 
         /// <summary>
-        /// Gets all data in the form of a complete stream.
+        /// Creates a history db from a history db implementation.
         /// </summary>
-        public static OsmCompleteStreamSource GetComplete(this IHistoryDb db)
+        public static IHistoryDb CreateHistoryDb(this IHistoryDbImpl dbImpl)
         {
-            return new Streams.Complete.OsmCompleteEnumerableStreamSource(
-                db.Get().Select(x => x.CreateComplete(db)));
+            return new HistoryDb(dbImpl);
         }
     }
 }

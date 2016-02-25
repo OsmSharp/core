@@ -22,7 +22,7 @@
 
 using OsmSharp.Complete;
 using OsmSharp.Db;
-using OsmSharp.Db.Memory;
+using OsmSharp.Db.Impl;
 using System;
 using System.Collections.Generic;
 
@@ -42,7 +42,7 @@ namespace OsmSharp.Streams.Complete
         public OsmSimpleCompleteStreamSource(OsmStreamSource source)
         {
             // create an in-memory cache by default.
-            _dataCache = new MemorySnapshotDb();
+            _dataCache = (new MemorySnapshotDb()).CreateSnapshotDb();
             _simpleSource = source;
 
             _nodesToInclude = new HashSet<long>();

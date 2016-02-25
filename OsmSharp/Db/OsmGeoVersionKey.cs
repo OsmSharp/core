@@ -20,73 +20,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-
-namespace OsmSharp.Changesets
+namespace OsmSharp.Db
 {
     /// <summary>
-    /// Represents a diff result after applying a changeset.
+    /// A unique identifier including types and version #.
     /// </summary>
-    public partial class DiffResult
+    public class OsmGeoVersionKey
     {
         /// <summary>
-        /// Gets or sets the generator.
+        /// Gets or sets the type.
         /// </summary>
-        public string Generator { get; set; }
+        public OsmGeoType Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        public long Id { get; set; }
 
         /// <summary>
         /// Gets or sets the version #.
         /// </summary>
-        public double? Version { get; set; }
+        public int Version { get; set; }
 
         /// <summary>
-        /// Gets or sets the results array.
+        /// Serves as a hashfunction.
         /// </summary>
-        public OsmGeoResult[] Results { get; set; }
-    }
-
-    /// <summary>
-    /// An osm-geo result.
-    /// </summary>
-    public abstract partial class OsmGeoResult
-    {
-        /// <summary>
-        /// Gets or sets the old id.
-        /// </summary>
-        public long? OldId { get; set; }
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode() ^
+                this.Type.GetHashCode() ^
+                this.Version.GetHashCode();
+        }
 
         /// <summary>
-        /// Gets or sets the new id.
+        /// Returns true if the given object represents the same key.
         /// </summary>
-        public long? NewId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the new version #.
-        /// </summary>
-        public int? NewVersion { get; set; }
-    }
-
-    /// <summary>
-    /// A node result.
-    /// </summary>
-    public class NodeResult : OsmGeoResult
-    {
-
-    }
-
-    /// <summary>
-    /// A way result.
-    /// </summary>
-    public class WayResult : OsmGeoResult
-    {
-
-    }
-
-    /// <summary>
-    /// A relation result.
-    /// </summary>
-    public class RelationResult : OsmGeoResult
-    {
-
+        public override bool Equals(object obj)
+        {
+            var other = (obj as OsmGeoVersionKey);
+            if (other == null)
+            {
+                return false;
+            }
+            return other.Id == this.Id &&
+                other.Type == this.Type &&
+                other.Version == this.Version;
+        }
     }
 }

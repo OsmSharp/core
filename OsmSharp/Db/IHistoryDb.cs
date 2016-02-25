@@ -21,7 +21,6 @@
 // THE SOFTWARE.
 
 using OsmSharp.Changesets;
-using OsmSharp.Streams;
 using System.Collections.Generic;
 
 namespace OsmSharp.Db
@@ -46,15 +45,6 @@ namespace OsmSharp.Db
         void Clear();
 
         /// <summary>
-        /// Adds the given osm object in the db exactly as given.
-        /// </summary>
-        /// <remarks>
-        /// - To update use ApplyChanges.
-        /// - It's not possible to add multiple objects of a given type with the same id/version# pair.
-        /// </remarks>
-        void Add(OsmGeo osmGeo);
-
-        /// <summary>
         /// Adds osm objects in the db exactly as they are given.
         /// </summary>
         /// <remarks>
@@ -69,24 +59,19 @@ namespace OsmSharp.Db
         void Add(Changeset meta, OsmChange changes);
 
         /// <summary>
-        /// Gets all the objects in the form of an osm stream source.
+        /// Gets all the visible objects.
         /// </summary>
-        OsmStreamSource Get();
+        IEnumerable<OsmGeo> Get();
 
         /// <summary>
-        /// Gets all latest versions of osm objects with the given type and the given id's.
+        /// Gets all the visible objects for the given keys.
         /// </summary>
-        IList<OsmGeo> Get(OsmGeoType type, IList<long> id);
+        IEnumerable<OsmGeo> Get(IEnumerable<OsmGeoKey> keys);
 
         /// <summary>
-        /// Gets an osm object of the given type, the given id and the given version #.
+        /// Gets all the objects for the given keys.
         /// </summary>
-        OsmGeo Get(OsmGeoType type, long id, int version);
-
-        /// <summary>
-        /// Gets all osm objects with the given type, the given id's and the given version #'s.
-        /// </summary>
-        IList<OsmGeo> Get(OsmGeoType type, IList<long> id, IList<int> version);
+        IEnumerable<OsmGeo> Get(IEnumerable<OsmGeoVersionKey> keys);
 
         /// <summary>
         /// Gets all latest versions of osm objects within the given bounding box.
@@ -94,7 +79,7 @@ namespace OsmSharp.Db
         IEnumerable<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude);
 
         /// <summary>
-        /// Opens a new changeset
+        /// Opens a new changeset.
         /// </summary>
         long OpenChangeset(Changeset info);
 
@@ -103,18 +88,27 @@ namespace OsmSharp.Db
         /// </summary>
         /// <param name="id">The id of the changeset to apply the changes for.</param>
         /// <param name="changeset">The changes to apply.</param>
-        /// <param name="bestEffort">When false, it's the entire changeset or nothing. When true the changeset is applied using best-effort.</param>
         /// <returns>The diff result result object containing the diff result and status information.</returns>
-        DiffResultResult ApplyChangeset(long id, OsmChange changeset, bool bestEffort = false);
+        DiffResultResult ApplyChangeset(long id, OsmChange changeset);
 
         /// <summary>
         /// Updates the changeset with the new info.
         /// </summary>
-        bool UpdateChangesetInfo(Changeset info);
+        void UpdateChangesetInfo(Changeset info);
 
         /// <summary>
         /// Closes the changeset with the given id.
         /// </summary>
         bool CloseChangeset(long id);
+
+        /// <summary>
+        /// Gets the changeset for the given id.
+        /// </summary>
+        Changeset GetChangeset(long id);
+
+        /// <summary>
+        /// Gets the changes for the given changeset.
+        /// </summary>
+        OsmChange GetChanges(long id);
     }
 }

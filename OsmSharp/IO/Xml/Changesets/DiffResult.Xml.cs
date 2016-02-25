@@ -26,6 +26,7 @@ using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using System;
 
 namespace OsmSharp.Changesets
 {
@@ -188,6 +189,102 @@ namespace OsmSharp.Changesets
             {
                 writer.WriteAttributeString("new_version", this.NewVersion.Value.ToInvariantString());
             }
+        }
+
+        /// <summary>
+        /// Creates a modification.
+        /// </summary>
+        public static OsmGeoResult CreateModification(OsmGeo modify, int newVersion)
+        {
+            switch(modify.Type)
+            {
+                case OsmGeoType.Node:
+                    return new NodeResult()
+                    {
+                        NewId = modify.Id,
+                        OldId = modify.Id,
+                        NewVersion = newVersion
+                    };
+                case OsmGeoType.Way:
+                    return new WayResult()
+                    {
+                        NewId = modify.Id,
+                        OldId = modify.Id,
+                        NewVersion = newVersion
+                    };
+                case OsmGeoType.Relation:
+                    return new RelationResult()
+                    {
+                        NewId = modify.Id,
+                        OldId = modify.Id,
+                        NewVersion = newVersion
+                    };
+            }
+            throw new Exception("Invalid OsmGeo type.");
+        }
+
+        /// <summary>
+        /// Creates a creation.
+        /// </summary>
+        public static OsmGeoResult CreateCreation(OsmGeo create, long newId)
+        {
+            switch (create.Type)
+            {
+                case OsmGeoType.Node:
+                    return new NodeResult()
+                    {
+                        NewId = newId,
+                        OldId = create.Id,
+                        NewVersion = 1
+                    };
+                case OsmGeoType.Way:
+                    return new WayResult()
+                    {
+                        NewId = newId,
+                        OldId = create.Id,
+                        NewVersion = 1
+                    };
+                case OsmGeoType.Relation:
+                    return new RelationResult()
+                    {
+                        NewId = newId,
+                        OldId = create.Id,
+                        NewVersion = 1
+                    };
+            }
+            throw new Exception("Invalid OsmGeo type.");
+        }
+
+        /// <summary>
+        /// Creates a deletion
+        /// </summary>
+        public static OsmGeoResult CreateDeletion(OsmGeo delete)
+        {
+            switch (delete.Type)
+            {
+                case OsmGeoType.Node:
+                    return new NodeResult()
+                    {
+                        NewId = null,
+                        OldId = delete.Id.Value,
+                        NewVersion = null
+                    };
+                case OsmGeoType.Way:
+                    return new WayResult()
+                    {
+                        NewId = null,
+                        OldId = delete.Id.Value,
+                        NewVersion = null
+                    };
+                case OsmGeoType.Relation:
+                    return new RelationResult()
+                    {
+                        NewId = null,
+                        OldId = delete.Id.Value,
+                        NewVersion = null
+                    };
+            }
+            throw new Exception("Invalid OsmGeo type.");
         }
     }
 }

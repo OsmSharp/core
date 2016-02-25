@@ -26,13 +26,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OsmSharp.Db.Memory
+namespace OsmSharp.Db.Impl
 {
     /// <summary>
     /// An in-memory data repository of OSM data primitives.
     /// </summary>
     /// <remarks>This is only a not-very-efficient reference implementation.</remarks>
-    public class MemorySnapshotDb : ISnapshotDb
+    public class MemorySnapshotDb : ISnapshotDbImpl
     {
         private readonly Dictionary<long, Node> _nodes;
         private readonly Dictionary<long, Way> _ways;
@@ -84,7 +84,7 @@ namespace OsmSharp.Db.Memory
         /// Gets all the objects in the form of an osm stream source.
         /// </summary>
         /// <returns></returns>
-        public OsmStreamSource Get()
+        public IEnumerable<OsmGeo> Get()
         {
             return new OsmSharp.Streams.OsmEnumerableStreamSource(
                 _nodes.Values.Cast<OsmGeo>().Concat(
@@ -251,67 +251,18 @@ namespace OsmSharp.Db.Memory
             }
             return null;
         }
-
-        /// <summary>
-        /// Returns true if an osm object of the given type and the given id exists.
-        /// </summary>
-        public bool Exists(OsmGeoType type, long id)
-        {
-            switch (type)
-            {
-                case OsmGeoType.Node:
-                    Node node;
-                    if (!_nodes.TryGetValue(id, out node))
-                    {
-                        return false;
-                    }
-                    return true;
-                case OsmGeoType.Way:
-                    Way way;
-                    if (!_ways.TryGetValue(id, out way))
-                    {
-                        return false;
-                    }
-                    return true;
-                case OsmGeoType.Relation:
-                    Relation relation;
-                    if (!_relations.TryGetValue(id, out relation))
-                    {
-                        return false;
-                    }
-                    return true;
-            }
-            return false;
-        }
-
+        
         /// <summary>
         /// Gets all osm objects with the given types and the given id's.
         /// </summary>
-        public IList<OsmGeo> Get(OsmGeoType type, IList<long> id)
+        public IEnumerable<OsmGeo> Get(IEnumerable<OsmGeoKey> keys)
         {
-            if (id == null) { throw new ArgumentNullException("id"); }
+            if (keys == null) { throw new ArgumentNullException("keys"); }
 
             var result = new List<OsmGeo>();
-            for (int i = 0; i < id.Count; i++)
+            foreach(var key in keys)
             {
-                result.Add(this.Get(type, id[i]));
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Returns true for osm objects with the given types and the given id's when they exist.
-        /// </summary>
-        public IList<bool> Exists(IList<OsmGeoType> type, IList<long> id)
-        {
-            if (type == null) { throw new ArgumentNullException("type"); }
-            if (id == null) { throw new ArgumentNullException("id"); }
-            if (id.Count != type.Count) { throw new ArgumentException("Type and id lists need to have the same size."); }
-
-            var result = new List<bool>();
-            for (int i = 0; i < id.Count; i++)
-            {
-                result.Add(this.Exists(type[i], id[i]));
+                result.Add(this.Get(key.Type, key.Id));
             }
             return result;
         }
@@ -336,29 +287,67 @@ namespace OsmSharp.Db.Memory
         /// <summary>
         /// Deletes all osm objects with the given types and the given id's.
         /// </summary>
-        public IList<bool> Delete(IList<OsmGeoType> type, IList<long> id)
+        public void Delete(IEnumerable<OsmGeoKey> keys)
         {
-            if (type == null) { throw new ArgumentNullException("type"); }
-            if (id == null) { throw new ArgumentNullException("id"); }
-            if (id.Count != type.Count) { throw new ArgumentException("Type and id lists need to have the same size."); }
+            if (keys == null) { throw new ArgumentNullException("keys"); }
 
-            var result = new List<bool>();
-            for (int i = 0; i < id.Count; i++)
+            foreach (var key in keys)
             {
-                result.Add(this.Delete(type[i], id[i]));
+                this.Delete(key.Type, key.Id);
             }
-            return result;
         }
 
         /// <summary>
-        /// Applies the given changeset.
+        /// Gets all ways with at least one node in the given id set.
         /// </summary>
-        /// <param name="changeset">The changeset to apply.</param>
-        /// <param name="bestEffort">When false, it's the entire changeset or nothing. When true the changeset is applied using best-effort.</param>
-        /// <returns>True when the entire changeset was applied without issues, false otherwise.</returns>
-        public DiffResultResult ApplyChangeset(OsmChange changeset, bool bestEffort = false)
+        public IEnumerable<Way> GetWays(IEnumerable<long> ids)
         {
-            throw new NotImplementedException();
+            var idset = new HashSet<long>(ids);
+
+            return _ways.Values.Where(x =>
+            {
+                if (x.Nodes == null)
+                {
+                    return false;
+                }
+
+                foreach (var node in x.Nodes)
+                {
+                    if (idset.Contains(node))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+
+        /// <summary>
+        /// Gets all relations with at least one member in the given key set.
+        /// </summary>
+        public IEnumerable<Relation> GetRelations(IEnumerable<OsmGeoKey> keys)
+        {
+            var set = new HashSet<OsmGeoKey>(keys);
+            
+            return _relations.Values.Where(x =>
+            {
+                if (x.Members == null)
+                {
+                    return false;
+                }
+
+                var key = new OsmGeoKey();
+                foreach (var member in x.Members)
+                {
+                    key.Id = member.Id;
+                    key.Type = member.Type;
+                    if (set.Contains(key))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            });
         }
     }
 }

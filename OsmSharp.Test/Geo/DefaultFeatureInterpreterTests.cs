@@ -22,11 +22,11 @@
 
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using OsmSharp.Db.Memory;
 using OsmSharp.Db;
 using OsmSharp.Geo;
 using OsmSharp.Tags;
 using System.Linq;
+using OsmSharp.Db.Impl;
 
 namespace OsmSharp.Test.Geo
 {
@@ -68,7 +68,7 @@ namespace OsmSharp.Test.Geo
             way.Tags = new TagsCollection();
             way.Tags.Add("area", "yes");
 
-            var source = new MemorySnapshotDb();
+            var source = (new MemorySnapshotDb()).CreateSnapshotDb();
             source.AddOrUpdate(node1);
             source.AddOrUpdate(node2);
             source.AddOrUpdate(node3);
@@ -116,7 +116,7 @@ namespace OsmSharp.Test.Geo
             way.Tags = new TagsCollection();
             way.Tags.Add("natural", "water");
 
-            var source = new MemorySnapshotDb();
+            var source = (new MemorySnapshotDb()).CreateSnapshotDb();
             source.AddOrUpdate(node1);
             source.AddOrUpdate(node2);
             source.AddOrUpdate(node3);
@@ -184,7 +184,7 @@ namespace OsmSharp.Test.Geo
                             Type = OsmGeoType.Way
                         }
                     }
-                });
+                }).CreateSnapshotDb();
 
             var interpreter = new DefaultFeatureInterpreter();
             var features = interpreter.Interpret(source.GetRelation(1), source);
@@ -289,7 +289,7 @@ namespace OsmSharp.Test.Geo
                             Type = OsmGeoType.Way
                         }
                     }
-                });
+                }).CreateSnapshotDb();
 
             var interpreter = new DefaultFeatureInterpreter();
             var features = interpreter.Interpret(source.GetRelation(1), source);
@@ -435,7 +435,7 @@ namespace OsmSharp.Test.Geo
                             Type = OsmGeoType.Way
                         }
                     }
-                });
+                }).CreateSnapshotDb();
 
             var interpreter = new DefaultFeatureInterpreter();
             var features = interpreter.Interpret(source.GetRelation(1), source);
@@ -557,7 +557,7 @@ namespace OsmSharp.Test.Geo
                             Type = OsmGeoType.Way
                         }
                     }
-                });
+                }).CreateSnapshotDb();
 
             var interpreter = new DefaultFeatureInterpreter();
             var features = interpreter.Interpret(source.GetRelation(1), source);

@@ -52,27 +52,55 @@ namespace OsmSharp.Db
         }
 
         /// <summary>
-        /// Deletes the node with the given id and returns true if it existed.
+        /// Deletes the object for the given key.
         /// </summary>
-        public static bool DeleteNode(this ISnapshotDb db, long id)
+        public static void Delete(this ISnapshotDb db, OsmGeoKey key)
         {
-            return db.Delete(OsmGeoType.Node, id);
+            db.Delete(new OsmGeoKey[] { key });
         }
 
         /// <summary>
-        /// Deletes the way with the given id and returns true if it existed.
+        /// Deletes the node with the given id.
         /// </summary>
-        public static bool DeleteWay(this ISnapshotDb db, long id)
+        public static void DeleteNode(this ISnapshotDb db, long id)
         {
-            return db.Delete(OsmGeoType.Way, id);
+            db.Delete(new OsmGeoKey()
+            {
+                Id = id,
+                Type = OsmGeoType.Node
+            });
         }
 
         /// <summary>
-        /// Deletes the relation with the given id and returns true if it existed.
+        /// Deletes the way with the given id.
         /// </summary>
-        public static bool DeleteRelation(this ISnapshotDb db, long id)
+        public static void DeleteWay(this ISnapshotDb db, long id)
         {
-            return db.Delete(OsmGeoType.Relation, id);
+            db.Delete(new OsmGeoKey()
+            {
+                Id = id,
+                Type = OsmGeoType.Way
+            });
+        }
+
+        /// <summary>
+        /// Deletes the relation with the given id.
+        /// </summary>
+        public static void DeleteRelation(this ISnapshotDb db, long id)
+        {
+            db.Delete(new OsmGeoKey()
+            {
+                Id = id,
+                Type = OsmGeoType.Relation
+            });
+        }
+
+        /// <summary>
+        /// Adds or objects the given object.
+        /// </summary>
+        public static void AddOrUpdate(this ISnapshotDb db, OsmGeo osmGeo)
+        {
+            db.AddOrUpdate(new OsmGeo[] { osmGeo });
         }
 
         /// <summary>

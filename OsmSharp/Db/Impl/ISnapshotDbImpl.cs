@@ -20,21 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.Changesets;
 using System.Collections.Generic;
 
-namespace OsmSharp.Db
+namespace OsmSharp.Db.Impl
 {
     /// <summary>
-    /// Abstract representation of a database to store OSM nodes, ways and relations without version and using only one object per id.
-    /// 
-    /// - Only one node per id.
-    /// - Only one way per id.
-    /// - Only one relation per id.
-    /// - Does not generate id's, objects are stored as-is.
-    /// 
+    /// Abstract representation of basic operations a snapshot db should support.
     /// </summary>
-    public interface ISnapshotDb : IOsmGeoSource
+    public interface ISnapshotDbImpl
     {
         /// <summary>
         /// Clears all data.
@@ -42,34 +35,61 @@ namespace OsmSharp.Db
         void Clear();
 
         /// <summary>
-        /// Adds or updates osm objects in the db exactly as they are given.
+        /// Adds or updates the given objects.
         /// </summary>
+        /// <remarks>
+        /// - Adds objects that don't exist yet.
+        /// - Updates objects that already exist.
+        /// </remarks>
         void AddOrUpdate(IEnumerable<OsmGeo> osmGeos);
 
         /// <summary>
-        /// Gets all the objects.
+        /// Gets all objects.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// All objects sorted by type (node, way, relation) and then id ascending.
+        /// </returns>
         IEnumerable<OsmGeo> Get();
 
         /// <summary>
         /// Gets all objects for the given keys.
         /// </summary>
+        /// <returns>
+        /// All objects for the given keys sorted by type (node, way, relation) and then id ascending.
+        /// </returns>
         IEnumerable<OsmGeo> Get(IEnumerable<OsmGeoKey> keys);
 
         /// <summary>
-        /// Gets all objects within the given bounding box.
+        /// Gets all objects in the given bounding box.
         /// </summary>
+        /// <returns>
+        /// - All nodes within bounding box.
+        /// - All ways with at least one node.
+        /// - All nodes outside of the bounding box but member of a way with at least one node.
+        /// - All relations with at least one member that is a node within the bounding box or a way with at least one node in the bounding box.
+        /// - Sorted by type (node, way, relation) and then id ascending.
+        /// </returns>
         IEnumerable<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude);
 
         /// <summary>
-        /// Deletes all osm objects with the given types and the given id's.
+        /// Deletes all objects for the given keys.
         /// </summary>
         void Delete(IEnumerable<OsmGeoKey> keys);
 
         /// <summary>
-        /// Applies the given changeset, the changeset is applied using best-effort.
+        /// Gets all ways with at least one node in the given ids.
         /// </summary>
-        void ApplyChangeset(OsmChange changeset);
+        /// <returns>
+        /// All ways with at least one node in the given id set sorted by id ascending.
+        /// </returns>
+        IEnumerable<Way> GetWays(IEnumerable<long> ids);
+
+        /// <summary>
+        /// Gets all relations with at least one member in the given keys.
+        /// </summary>
+        /// <returns>
+        /// All relations with at least one member in the given key set sorted by id ascending.
+        /// </returns>
+        IEnumerable<Relation> GetRelations(IEnumerable<OsmGeoKey> keys);
     }
 }

@@ -19,6 +19,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace OsmSharp.Collections
 {
@@ -102,7 +103,15 @@ namespace OsmSharp.Collections
         /// </summary>
         public ICollection<TKey> Keys
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                var enumerables = new IEnumerable<TKey>[_dictionary.Count];
+                for(var i = 0; i < enumerables.Length; i++)
+                {
+                    enumerables[i] = _dictionary[i].Keys;
+                }
+                return new ReadonlyEnumerableCollection<TKey>(enumerables);
+            }
         }
 
         /// <summary>
@@ -150,7 +159,15 @@ namespace OsmSharp.Collections
         /// </summary>
         public ICollection<TValue> Values
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                var enumerables = new IEnumerable<TValue>[_dictionary.Count];
+                for (var i = 0; i < enumerables.Length; i++)
+                {
+                    enumerables[i] = _dictionary[i].Values;
+                }
+                return new ReadonlyEnumerableCollection<TValue>(enumerables);
+            }
         }
 
         /// <summary>
@@ -305,6 +322,76 @@ namespace OsmSharp.Collections
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        private class ReadonlyEnumerableCollection<T> : ICollection<T>
+        {
+            private IEnumerable<T> _enumerable;
+
+            public ReadonlyEnumerableCollection(params IEnumerable<T>[] enumerables)
+            {
+                _enumerable = enumerables[0];
+                for (var i = 1; i < enumerables.Length; i++)
+                {
+                    _enumerable = Enumerable.Concat<T>(_enumerable,
+                        enumerables[i]);
+                }
+            }
+
+            int ICollection<T>.Count
+            {
+                get
+                {
+                    return _enumerable.Count();
+                }
+            }
+
+            bool ICollection<T>.IsReadOnly
+            {
+                get
+                {
+                    return true;
+                }
+            }
+
+            void ICollection<T>.Add(T item)
+            {
+                throw new InvalidOperationException("Collection is readonly.");
+            }
+
+            void ICollection<T>.Clear()
+            {
+                throw new InvalidOperationException("Collection is readonly.");
+            }
+
+            bool ICollection<T>.Contains(T item)
+            {
+                return _enumerable.Contains(item);
+            }
+
+            void ICollection<T>.CopyTo(T[] array, int arrayIndex)
+            {
+                foreach(var item in _enumerable)
+                {
+                    array[arrayIndex] = item;
+                    arrayIndex++;
+                }
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return _enumerable.GetEnumerator();
+            }
+
+            IEnumerator<T> IEnumerable<T>.GetEnumerator()
+            {
+                return _enumerable.GetEnumerator();
+            }
+
+            bool ICollection<T>.Remove(T item)
+            {
+                throw new InvalidOperationException("Collection is readonly.");
+            }
         }
     }
 }

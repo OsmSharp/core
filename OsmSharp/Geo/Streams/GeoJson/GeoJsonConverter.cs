@@ -119,7 +119,12 @@ namespace OsmSharp.Geo.Streams.GeoJson
             jsonReader.Read();
             while (jsonReader.TokenType != JsonToken.EndArray)
             {
-                features.Add(GeoJsonConverter.ReadFeature(jsonReader));
+                var feature = GeoJsonConverter.ReadFeature(jsonReader);
+                if (feature == null)
+                {
+                    return features;
+                }
+                features.Add(feature);
                 jsonReader.Read();
             }
             return features;
@@ -185,6 +190,11 @@ namespace OsmSharp.Geo.Streams.GeoJson
             GeometryAttributeCollection attributes = null;
             while (jsonReader.Read())
             {
+                if (jsonReader.TokenType == JsonToken.EndArray)
+                {
+                    return null;
+                }
+
                 if (jsonReader.TokenType == JsonToken.EndObject)
                 { // end of geometry.
                     break;

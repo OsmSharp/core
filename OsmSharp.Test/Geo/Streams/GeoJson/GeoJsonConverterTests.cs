@@ -841,5 +841,18 @@ namespace OsmSharp.Test.Geo.Streams.GeoJson
             Assert.IsInstanceOf<FeatureCollection>(featureCollection);
             Assert.AreEqual(2, featureCollection.Count);
         }
+
+        /// <summary>
+        /// Tests deserializing an empty feature collection.
+        /// </summary>
+        [Test]
+        public void TestEmptyFeatureCollection()
+        {
+            var featureCollection = ("{\"type\":\"FeatureCollection\",\"features\":[]}").ToFeatureCollection();
+
+            Assert.IsNotNull(featureCollection);
+            Assert.IsInstanceOf<FeatureCollection>(featureCollection);
+            Assert.AreEqual(0, featureCollection.Count);
+        }
     }
 }

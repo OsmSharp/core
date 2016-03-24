@@ -73,7 +73,7 @@ namespace OsmSharp.Geo.Streams.GeoJson
         /// </summary>
         /// <param name="jsonReader"></param>
         /// <returns></returns>
-        internal static FeatureCollection ReadFeatureCollection(JsonReader jsonReader)
+        public static FeatureCollection ReadFeatureCollection(JsonReader jsonReader)
         {
             var type = string.Empty;
             List<Feature> features = null;

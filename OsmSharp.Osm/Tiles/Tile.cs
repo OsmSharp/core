@@ -62,6 +62,17 @@ namespace OsmSharp.Osm.Tiles
         public int Zoom { get; private set; }
 
         /// <summary>
+        /// Gets the parent tile.
+        /// </summary>
+        public Tile Parent
+        {
+            get
+            {
+                return new Tile(this.X / 2, this.Y / 2, this.Zoom - 1);
+            }
+        }
+
+        /// <summary>
         /// Returns a hashcode for this tile position.
         /// </summary>
         /// <returns></returns>

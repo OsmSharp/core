@@ -140,6 +140,10 @@ namespace OsmSharp.Streams
         /// <returns></returns>
         public IEnumerator<OsmGeo> GetEnumerator()
         {
+            if (this.CanReset)
+            {
+                this.Reset();
+            }
             return this;
         }
 

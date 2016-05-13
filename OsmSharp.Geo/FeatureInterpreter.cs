@@ -34,6 +34,30 @@ namespace OsmSharp.Geo
     public abstract class FeatureInterpreter
     {
         /// <summary>
+        /// Holds the default geometry interpreter.
+        /// </summary>
+        private static FeatureInterpreter _defaultInterpreter;
+
+        /// <summary>
+        /// Gets/sets the default interpreter.
+        /// </summary>
+        public static FeatureInterpreter DefaultInterpreter
+        {
+            get
+            {
+                if (_defaultInterpreter == null)
+                {
+                    _defaultInterpreter = new DefaultFeatureInterpreter();
+                }
+                return _defaultInterpreter;
+            }
+            set
+            {
+                _defaultInterpreter = value;
+            }
+        }
+
+        /// <summary>
         /// Interprets an OSM-object and returns the corresponding geometry.
         /// </summary>
         public abstract FeatureCollection Interpret(ICompleteOsmGeo osmObject);

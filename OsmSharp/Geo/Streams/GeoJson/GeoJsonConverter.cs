@@ -36,8 +36,19 @@ namespace OsmSharp.Geo.Streams.GeoJson
         /// <summary>
         /// Generates GeoJson for the given feature collection.
         /// </summary>
-        /// <param name="featureCollection"></param>
         public static string ToGeoJson(this FeatureCollection featureCollection)
+        {
+            if (featureCollection == null) { throw new ArgumentNullException("featureCollection"); }
+
+            var jsonWriter = new JTokenWriter();
+            GeoJsonConverter.Write(jsonWriter, featureCollection);
+            return jsonWriter.Token.ToString();
+        }
+
+        /// <summary>
+        /// Generates GeoJson for the given feature collection.
+        /// </summary>
+        public static string ToGeoJson(this IEnumerable<Feature> featureCollection)
         {
             if (featureCollection == null) { throw new ArgumentNullException("featureCollection"); }
 
@@ -62,7 +73,7 @@ namespace OsmSharp.Geo.Streams.GeoJson
         /// </summary>
         /// <param name="jsonReader"></param>
         /// <returns></returns>
-        internal static FeatureCollection ReadFeatureCollection(JsonReader jsonReader)
+        public static FeatureCollection ReadFeatureCollection(JsonReader jsonReader)
         {
             var type = string.Empty;
             List<Feature> features = null;
@@ -108,7 +119,12 @@ namespace OsmSharp.Geo.Streams.GeoJson
             jsonReader.Read();
             while (jsonReader.TokenType != JsonToken.EndArray)
             {
-                features.Add(GeoJsonConverter.ReadFeature(jsonReader));
+                var feature = GeoJsonConverter.ReadFeature(jsonReader);
+                if (feature == null)
+                {
+                    return features;
+                }
+                features.Add(feature);
                 jsonReader.Read();
             }
             return features;
@@ -120,7 +136,7 @@ namespace OsmSharp.Geo.Streams.GeoJson
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="featureCollection"></param>
-        internal static void Write(JsonWriter writer, FeatureCollection featureCollection)
+        public static void Write(JsonWriter writer, IEnumerable<Feature> featureCollection)
         {
             if (writer == null) { throw new ArgumentNullException("writer"); }
             if (featureCollection == null) { throw new ArgumentNullException("featureCollection"); }
@@ -167,13 +183,18 @@ namespace OsmSharp.Geo.Streams.GeoJson
         /// </summary>
         /// <param name="jsonReader"></param>
         /// <returns></returns>
-        internal static Feature ReadFeature(JsonReader jsonReader)
+        public static Feature ReadFeature(JsonReader jsonReader)
         {
             var type = string.Empty;
             Geometry geometry = null;
             GeometryAttributeCollection attributes = null;
             while (jsonReader.Read())
             {
+                if (jsonReader.TokenType == JsonToken.EndArray)
+                {
+                    return null;
+                }
+
                 if (jsonReader.TokenType == JsonToken.EndObject)
                 { // end of geometry.
                     break;
@@ -247,7 +268,7 @@ namespace OsmSharp.Geo.Streams.GeoJson
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="feature"></param>
-        internal static void Write(JsonWriter writer, Feature feature)
+        public static void Write(JsonWriter writer, Feature feature)
         {
             if (writer == null) { throw new ArgumentNullException("writer"); }
             if (feature == null) { throw new ArgumentNullException("feature"); }

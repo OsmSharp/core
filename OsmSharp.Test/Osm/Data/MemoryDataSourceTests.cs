@@ -35,80 +35,73 @@ namespace OsmSharp.Test.Osm.Data
         /// Tests adding a null node.
         /// </summary>
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void TestAddNodeNull()
         {
             var dataSource = new MemoryDataSource();
-            dataSource.AddNode(null);
+            Assert.Catch<ArgumentNullException>(() => dataSource.AddNode(null));
         }
 
         /// <summary>
         /// Tests adding a null way.
         /// </summary>
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void TestAddWayNull()
         {
             var dataSource = new MemoryDataSource();
-            dataSource.AddWay(null);
+            Assert.Catch<ArgumentNullException>(() => dataSource.AddWay(null));
         }
 
         /// <summary>
         /// Tests adding a null relation.
         /// </summary>
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void TestAddRelationNull()
         {
             var dataSource = new MemoryDataSource();
-            dataSource.AddRelation(null);
+            Assert.Catch<ArgumentNullException>(() => dataSource.AddRelation(null));
         }
 
         /// <summary>
         /// Tests adding a node without an id.
         /// </summary>
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void TestAddNodeNoId()
         {
             var dataSource = new MemoryDataSource();
-            dataSource.AddNode(new Node());
+            Assert.Catch<ArgumentException>(() => dataSource.AddNode(new Node()));
         }
 
         /// <summary>
         /// Tests adding a node without valid lat/lon.
         /// </summary>
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void TestAddNodeNoLocation()
         {
-            Node node = new Node();
+            var node = new Node();
             node.Id = 1;
 
             var dataSource = new MemoryDataSource();
-            dataSource.AddNode(node);
+            Assert.Catch<ArgumentException>(() => dataSource.AddNode(node));
         }
 
         /// <summary>
         /// Tests adding a way without an id.
         /// </summary>
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void TestAddWayNoId()
         {
             var dataSource = new MemoryDataSource();
-            dataSource.AddWay(new Way());
+            Assert.Catch<ArgumentException>(() => dataSource.AddWay(new Way()));
         }
 
         /// <summary>
         /// Tests adding a relation without an id.
         /// </summary>
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void TestAddRelationNoId()
         {
             var dataSource = new MemoryDataSource();
-            dataSource.AddRelation(new Relation());
+            Assert.Catch<ArgumentException>(() => dataSource.AddRelation(new Relation()));
         }
        
         /// <summary>

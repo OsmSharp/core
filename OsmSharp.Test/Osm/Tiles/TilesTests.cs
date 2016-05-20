@@ -297,6 +297,23 @@ namespace OsmSharp.Test.Osm.Tiles
         }
 
         /// <summary>
+        /// Tests the parent calculation.
+        /// </summary>
+        [Test]
+        public void TestTileParents()
+        {
+            var tile = new Tile(112, 254, 16);
+
+            var subtiles = tile.SubTiles;
+            foreach(var subtile in subtiles)
+            {
+                Assert.AreEqual(tile.X, subtile.Parent.X);
+                Assert.AreEqual(tile.Y, subtile.Parent.Y);
+                Assert.AreEqual(tile.Zoom, subtile.Parent.Zoom);
+            }
+        }
+
+        /// <summary>
         /// Tests the overlaps function.
         /// </summary>
         [Test]

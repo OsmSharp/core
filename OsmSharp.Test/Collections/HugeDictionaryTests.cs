@@ -89,5 +89,45 @@ namespace OsmSharp.Test.Collections
                 hugeDictionary);
             Assert.AreEqual(hugeDictionary.Count, items.Count);
         }
+
+        /// <summary>
+        /// Tests the key collection.
+        /// </summary>
+        [Test]
+        public void TestKeyAndValueCollections()
+        {
+            var dic = new HugeDictionary<int, string>(5);
+            dic.Add(1, "1");
+            dic.Add(2, "2");
+            dic.Add(3, "3");
+            dic.Add(4, "4");
+            dic.Add(5, "5");
+            dic.Add(6, "6");
+            dic.Add(7, "7");
+
+            var keys = dic.Keys;
+            Assert.IsNotNull(keys);
+            Assert.IsTrue(keys.IsReadOnly);
+            Assert.AreEqual(7, keys.Count);
+            Assert.IsTrue(keys.Contains(1));
+            Assert.IsTrue(keys.Contains(2));
+            Assert.IsTrue(keys.Contains(3));
+            Assert.IsTrue(keys.Contains(4));
+            Assert.IsTrue(keys.Contains(5));
+            Assert.IsTrue(keys.Contains(6));
+            Assert.IsTrue(keys.Contains(7));
+
+            var values = dic.Values;
+            Assert.IsNotNull(values);
+            Assert.IsTrue(values.IsReadOnly);
+            Assert.AreEqual(7, values.Count);
+            Assert.IsTrue(values.Contains("1"));
+            Assert.IsTrue(values.Contains("2"));
+            Assert.IsTrue(values.Contains("3"));
+            Assert.IsTrue(values.Contains("4"));
+            Assert.IsTrue(values.Contains("5"));
+            Assert.IsTrue(values.Contains("6"));
+            Assert.IsTrue(values.Contains("7"));
+        }
     }
 }

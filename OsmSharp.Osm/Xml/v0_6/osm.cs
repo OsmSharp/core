@@ -2650,4 +2650,72 @@ namespace OsmSharp.Osm.Xml.v0_6
         [XmlAttribute]
         public string href { get; set; }
     }
+
+    /// <remarks/>
+    public class diffResult
+    {
+        /// <remarks/>
+        [XmlAttribute]
+        public string generator { get; set; }
+
+        /// <remarks/>
+        [XmlAttribute]
+        public double version { get; set; }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool versionSpecified { get; set; }
+
+    /// <remarks/>
+    [XmlElement(Type = typeof(noderesult), ElementName = "node"),
+         XmlElement(Type = typeof(wayresult), ElementName = "way"),
+         XmlElement(Type = typeof(relationresult), ElementName = "relation")]
+        public osmresult[] osmresult { get; set; } 
+    }
+
+    /// <remarks/>
+    public abstract class osmresult
+    {
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public long old_id { get; set; }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool old_idSpecified { get; set; }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public long new_id { get; set; }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool new_idSpecified { get; set; }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public int new_version { get; set; }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool new_versionSpecified { get; set; }
+    }
+
+    /// <remarks/>
+    public class noderesult : osmresult
+    {
+
+    }
+
+    /// <remarks/>
+    public class wayresult : osmresult
+    {
+
+    }
+
+    /// <remarks/>
+    public class relationresult : osmresult
+    {
+
+    }
 }

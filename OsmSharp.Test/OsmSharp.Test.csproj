@@ -32,8 +32,8 @@
     <DocumentationFile>..\Output\OsmSharp.Test.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=3.0.5813.39031, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.0.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
@@ -105,6 +105,7 @@
     <Compile Include="Osm\TagParsingTests.cs" />
     <Compile Include="Osm\Tiles\TilesTests.cs" />
     <Compile Include="Osm\Tiles\WebMercatorTests.cs" />
+    <Compile Include="Osm\Xml\DiffResultTests.cs" />
     <Compile Include="Osm\Xml\Streams\XmlDataProcessorSourceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Units\AngleUnitTests.cs" />
@@ -137,6 +138,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="data\capabilities.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

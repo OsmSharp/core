@@ -60,7 +60,7 @@ namespace OsmSharp.Geo
                         if (newCollection.Count > 0)
                         { // there is still some relevant information left.
                             collection.Add(new Feature(new Point((osmObject as Node).GetCoordinate()),
-                                osmObject.Tags.ToAttributeTable()));
+                                TagsAndIdToAttributes(osmObject)));
                         }
                         break;
                     case OsmGeoType.Way:
@@ -103,13 +103,13 @@ namespace OsmSharp.Geo
                         if (isArea)
                         { // area tags leads to simple polygon
                             var lineairRing = new Feature(new LinearRing((osmObject as CompleteWay).GetCoordinates().
-                                ToArray<Coordinate>()), tags.ToAttributeTable());
+                                ToArray<Coordinate>()), TagsAndIdToAttributes(osmObject));
                             collection.Add(lineairRing);
                         }
                         else
                         { // no area tag leads to just a line.
                             var lineString = new Feature(new LineString((osmObject as CompleteWay).GetCoordinates().
-                                ToArray<Coordinate>()), tags.ToAttributeTable());
+                                ToArray<Coordinate>()), TagsAndIdToAttributes(osmObject));
                             collection.Add(lineString);
                         }
                         break;
@@ -120,7 +120,7 @@ namespace OsmSharp.Geo
                         string typeValue;
                         if (tags.TryGetValue("type", out typeValue))
                         { // there is a type in this relation.
-                            if (typeValue == "multipolygon")
+                            if (typeValue == "multipolygon" || typeValue == "linearring")
                             { // this relation is a multipolygon.
                                 var feature = this.InterpretMultipolygonRelation(relation);
                                 if (feature != null)
@@ -128,9 +128,13 @@ namespace OsmSharp.Geo
                                     collection.Add(feature);
                                 }
                             }
-                            else if (typeValue == "boundary")
+                            else if (typeValue == "boundary" && tags.Contains("boundary", "administrative"))
                             { // this relation is a boundary.
-
+                                var feature = this.InterpretMultipolygonRelation(relation);
+                                if (feature != null)
+                                { // add the geometry.
+                                    collection.Add(feature);
+                                }
                             }
                         }
                         break;
@@ -239,7 +243,7 @@ namespace OsmSharp.Geo
             var geometry = this.GroupRings(rings);
             if (geometry != null)
             {
-                feature = new Feature(geometry, relation.Tags.ToAttributeTable());
+                feature = new Feature(geometry, TagsAndIdToAttributes(relation));
             }
             return feature;
         }
@@ -478,6 +482,14 @@ namespace OsmSharp.Geo
                 }
             }
             return false;
+        }
+
+        private static AttributesTable TagsAndIdToAttributes(ICompleteOsmGeo osmObject)
+        {
+            var attr = osmObject.Tags.ToAttributeTable();
+            attr.AddAttribute("id", osmObject.Id);
+
+            return attr;
         }
     }
 }

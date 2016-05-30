@@ -167,7 +167,7 @@ namespace OsmSharp.Geo
                 (tags.ContainsKey("shop") && !tags.IsFalse("shop")) ||
                 (tags.ContainsKey("sport") && !tags.IsFalse("sport")) ||
                 (tags.ContainsKey("tourism") && !tags.IsFalse("tourism")) ||
-                (tags.ContainsKey("waterway") && !tags.IsFalse("waterway")) ||
+                (tags.ContainsKey("waterway") && !tags.IsFalse("waterway") && !tags.Contains("waterway", "river") && !tags.Contains("waterway", "stream")) ||
                 (tags.ContainsKey("wetland") && !tags.IsFalse("wetland")) ||
                 (tags.ContainsKey("water") && !tags.IsFalse("water")) ||
                 (tags.ContainsKey("aeroway") && !tags.IsFalse("aeroway")))

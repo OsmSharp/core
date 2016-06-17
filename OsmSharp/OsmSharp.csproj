@@ -79,11 +79,16 @@
     <Compile Include="IO\PBF\PBFWriter.cs" />
     <Compile Include="IO\Xml\API\Bounds.Xml.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Streams\Collections\LargeBitArray32.cs" />
+    <Compile Include="Streams\Collections\OsmIdIndex.cs" />
+    <Compile Include="Streams\Collections\OsmIdIndexExtensions.cs" />
+    <Compile Include="Streams\Collections\SparseLargeBitArray32.cs" />
     <Compile Include="Streams\Exceptions\StreamNotSortedException.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilter.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterDelegate.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterMerge.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterProgress.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterNode.cs" />
     <Compile Include="Streams\OsmStreamExtensions.cs" />
     <Compile Include="Streams\PBFOsmStreamSource.cs" />
     <Compile Include="Streams\PBFOsmStreamTarget.cs" />

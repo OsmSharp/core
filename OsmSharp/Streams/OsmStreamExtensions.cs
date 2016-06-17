@@ -71,5 +71,46 @@ namespace OsmSharp.Streams
             };
             target.RegisterSource(filter);
         }
+
+        /// <summary>
+        /// Merges the given sources into this source.
+        /// </summary>
+        public static OsmStreamSource Progress(this OsmStreamSource source)
+        {
+            var progress = new Streams.Filters.OsmStreamFilterProgress();
+            progress.RegisterSource(source);
+            return progress;
+        }
+
+        /// <summary>
+        /// Merges the given sources into this source.
+        /// </summary>
+        public static OsmStreamSource Merge(this IEnumerable<OsmGeo> source, params OsmStreamSource[] sources)
+        {
+            return source.Merge(ConflictResolutionType.FirstStream, new OsmEnumerableStreamSource(source));
+        }
+
+        /// <summary>
+        /// Merges the given sources into this source.
+        /// </summary>
+        public static OsmStreamSource Merge(this IEnumerable<OsmGeo> source, ConflictResolutionType resolutionType, params IEnumerable<OsmGeo>[] sources)
+        {
+            var merge = new OsmStreamFilterMerge(resolutionType);
+            for(var i = 0; i < sources.Length; i++)
+            {
+                merge.RegisterSource(sources[i]);
+            }
+            return merge;
+        }
+
+        /// <summary>
+        /// Filters nodes and keeps ways/relations that are relevant.
+        /// </summary>
+        public static OsmStreamSource FilterNodes(this IEnumerable<OsmGeo> source, Func<Node, bool> filter)
+        {
+            var nodeFilter = new Filters.OsmStreamFilterNode(filter);
+            nodeFilter.RegisterSource(source);
+            return nodeFilter;
+        }
     }
 }

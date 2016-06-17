@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Collections.Generic;
 using System.Linq;
 
 namespace OsmSharp.Tags
@@ -55,6 +56,37 @@ namespace OsmSharp.Tags
             string tagValue;
             return tags.TryGetValue(key, out tagValue) &&
                 BooleanTrueValues.Contains(tagValue.ToLowerInvariant());
+        }
+
+        /// <summary>
+        /// Returns true if the tag collection contains any of the given keys.
+        /// </summary>
+        public static bool ContainsAnyKey(this TagsCollectionBase tags, IEnumerable<string> keys)
+        {
+            foreach (var tag in keys)
+            {
+                if (tags.ContainsKey(tag))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Creates a new tags collection with only the given keys.
+        /// </summary>
+        public static TagsCollectionBase KeepKeysOf(this TagsCollectionBase tags, IEnumerable<string> keys)
+        {
+            var collection = new TagsCollection();
+            foreach (var tag in tags)
+            {
+                if (keys.Contains(tag.Key))
+                {
+                    collection.Add(tag);
+                }
+            }
+            return collection;
         }
     }
 }

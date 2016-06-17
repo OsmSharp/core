@@ -41,8 +41,8 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="FeatureInterpreter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Streams\IFeatureStreamSource.cs" />
-    <Compile Include="Streams\IFeatureStreamTarget.cs" />
+    <Compile Include="Streams\Features\IFeatureStreamSource.cs" />
+    <Compile Include="Streams\Features\IFeatureStreamTarget.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="GeoAPI, Version=1.7.4.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">

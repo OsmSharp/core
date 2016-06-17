@@ -20,45 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using OsmSharp.Streams.Collections;
 using System;
 
 namespace OsmSharp.Streams.Filters
 {
     /// <summary>
-    /// A filter that use a function to filter objects.
+    /// A filter that filters nodes, meaning selects nodes based on some function and adds ways, relations depending on their nodes/membership.
     /// </summary>
-    public class OsmStreamFilterDelegate : OsmStreamFilter
+    public class OsmStreamFilterNode : OsmStreamFilter
     {
-        private readonly object _param; // Holds the parameters object sent with the events.
+        private readonly Func<Node, bool>  _selectNode;
 
         /// <summary>
-        /// Creates a new filter with events.
+        /// Creates a new spatial filter.
         /// </summary>
-        public OsmStreamFilterDelegate()
+        public OsmStreamFilterNode(Func<Node, bool> selectNode)
         {
-            _param = null;
-        }
+            _selectNode = selectNode;
 
-        /// <summary>
-        /// Creates a new filter with events.
-        /// </summary>
-        public OsmStreamFilterDelegate(object param)
-        {
-            _param = param;
+            _nodesToInclude = new OsmIdIndex();
+            _waysToInclude = new OsmIdIndex();
+            _relationsToInclude = new OsmIdIndex();
         }
 
         private OsmGeo _current = null;
+        private OsmIdIndex _nodesToInclude;
+        private OsmIdIndex _waysToInclude;
+        private OsmIdIndex _relationsToInclude;
         
-        /// <summary>
-        /// Called when the move is made to the next object.
-        /// </summary>
-        public Func<OsmGeo, object, OsmGeo> MoveToNextEvent;
-
-        /// <summary>
-        /// Called when an object was selected.
-        /// </summary>
-        public Action<OsmGeo> Selected;
-
         /// <summary>
         /// Move to the next item in the stream.
         /// </summary>
@@ -90,24 +80,36 @@ namespace OsmSharp.Streams.Filters
         /// </summary>
         private bool DoMoveNext()
         {
+            if (_selectNode == null)
+            {
+                return false;
+            }
             while (this.Source.MoveNext())
             {
                 _current = this.Source.Current();
-                if (this.MoveToNextEvent != null)
+                if (_current.Type == OsmGeoType.Node)
                 {
-                    _current = this.MoveToNextEvent(_current, _param);
-                    if (_current != null)
-                    { // when null is returned the object is to be ignored.
-                        if (this.Selected != null)
-                        {
-                            this.Selected(_current);
-                        }
+                    if (_selectNode(_current as Node))
+                    {
+                        _nodesToInclude.Add(_current.Id.Value);
                         return true;
                     }
                 }
-                else
+                else if (_current.Type == OsmGeoType.Way)
                 {
-                    return true;
+                    if ((_current as Way).HasNodeIn(_nodesToInclude))
+                    {
+                        _waysToInclude.Add(_current.Id.Value);
+                        return true;
+                    }
+                }
+                else if(_current.Type == OsmGeoType.Relation)
+                {
+                    if ((_current as Relation).HasMemberIn(_nodesToInclude, _waysToInclude, _relationsToInclude))
+                    {
+                        // _relationsToInclude.Add(_current.Id.Value); // only one level of relations included.
+                        return true;
+                    }
                 }
             }
             return false;
@@ -127,6 +129,9 @@ namespace OsmSharp.Streams.Filters
         /// </summary>
         public override void Reset()
         {
+            _nodesToInclude.Clear();
+            _waysToInclude.Clear();
+
             _current = null;
             this.Source.Reset();
         }

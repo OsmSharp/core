@@ -22,7 +22,9 @@
 
 using GeoAPI.Geometries;
 using NetTopologySuite.Features;
+using NetTopologySuite.Geometries;
 using OsmSharp.Complete;
+using OsmSharp.Streams;
 using OsmSharp.Tags;
 using System;
 using System.Collections.Generic;
@@ -106,6 +108,23 @@ namespace OsmSharp.Geo
                 list.Add(array[i]);
             }
             return list;
+        }
+
+        /// <summary>
+        /// Filters a stream of objects spatially.
+        /// </summary>
+        public static OsmStreamSource FilterSpatial(this IEnumerable<OsmGeo> source, IPolygon polygon)
+        {
+            var nodeFilter = new OsmSharp.Streams.Filters.OsmStreamFilterNode(n =>
+            {
+                if (n.Latitude == null || n.Longitude == null)
+                {
+                    return false;
+                }
+                return polygon.Within(new Point(n.Longitude.Value, n.Latitude.Value));
+            });
+            nodeFilter.RegisterSource(source);
+            return nodeFilter;
         }
     }
 }

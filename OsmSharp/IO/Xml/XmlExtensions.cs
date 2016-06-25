@@ -206,6 +206,11 @@ namespace OsmSharp.IO.Xml
                     break;
                 }
                 action();
+
+                if (reader.NodeType == XmlNodeType.EndElement)
+                {
+                    reader.Read();
+                }
             }
         }
 

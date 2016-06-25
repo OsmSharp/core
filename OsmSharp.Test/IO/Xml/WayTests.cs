@@ -144,6 +144,13 @@ namespace OsmSharp.Test.IO.Xml
             Assert.IsNotNull(osm);
             Assert.IsNotNull(osm.Ways);
             Assert.AreEqual(2, osm.Ways.Length);
+
+            osm = serializer.Deserialize(
+                new StringReader("<?xml version=\"1.0\" encoding=\"utf - 8\"?><osm version=\"0.6\"><way id=\"1\"><nd ref=\"11\" /><nd ref=\"12\" /><nd ref=\"13\" /></way><way id=\"2\"><nd ref=\"21\" /><nd ref=\"22\" /><nd ref=\"23\" /></way><way id=\"3\"><nd ref=\"31\" /><nd ref=\"32\" /><nd ref=\"33\" /></way></osm>")) as Osm;
+            
+            Assert.IsNotNull(osm);
+            Assert.IsNotNull(osm.Ways);
+            Assert.AreEqual(3, osm.Ways.Length);
         }
     }
 }

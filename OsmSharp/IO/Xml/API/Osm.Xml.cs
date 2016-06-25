@@ -56,6 +56,7 @@ namespace OsmSharp.API
                     {
                         this.Api = new Capabilities();
                         (this.Api as IXmlSerializable).ReadXml(reader);
+                        reader.Read();
                     }),
                 new Tuple<string, Action>(
                     "bounds", () =>

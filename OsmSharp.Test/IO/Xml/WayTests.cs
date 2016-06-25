@@ -25,6 +25,7 @@ using OsmSharp.Tags;
 using System.IO;
 using OsmSharp.IO.Xml;
 using System.Xml.Serialization;
+using OsmSharp.API;
 
 namespace OsmSharp.Test.IO.Xml
 {
@@ -124,6 +125,25 @@ namespace OsmSharp.Test.IO.Xml
             Assert.AreEqual(1, way.Nodes[0]);
             Assert.AreEqual(2, way.Nodes[1]);
             Assert.AreEqual(3, way.Nodes[2]);
+        }
+
+        /// <summary>
+        /// Test deserialization of multiple ways.
+        /// </summary>
+        [Test]
+        public void TestDeserializeMulti()
+        {
+            var serializer = new XmlSerializer(typeof(Osm));
+
+            var osm = serializer.Deserialize(
+                new StringReader("<osm>" +
+                                     "<way id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" />" +
+                                     "<way id=\"2\" user=\"ben\" uid=\"1\" version=\"1\" />" +
+                                 "</osm>")) as Osm;
+
+            Assert.IsNotNull(osm);
+            Assert.IsNotNull(osm.Ways);
+            Assert.AreEqual(2, osm.Ways.Length);
         }
     }
 }

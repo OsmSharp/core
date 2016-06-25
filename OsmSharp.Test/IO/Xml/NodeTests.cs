@@ -25,6 +25,7 @@ using OsmSharp.Tags;
 using OsmSharp.IO.Xml;
 using System.IO;
 using System.Xml.Serialization;
+using OsmSharp.API;
 
 namespace OsmSharp.Test.IO.Xml
 {
@@ -111,6 +112,25 @@ namespace OsmSharp.Test.IO.Xml
             Assert.IsNotNull(node.Tags);
             Assert.IsTrue(node.Tags.Contains("amenity", "something"));
             Assert.IsTrue(node.Tags.Contains("key", "some_value"));
+        }
+
+        /// <summary>
+        /// Test deserialization of multiple nodes.
+        /// </summary>
+        [Test]
+        public void TestDeserializeMulti()
+        {
+            var serializer = new XmlSerializer(typeof(Osm));
+
+            var osm = serializer.Deserialize(
+                new StringReader("<osm>" +
+                                     "<node id=\"1\" lat=\"54.1\" lon=\"12.2\" user=\"ben\" uid=\"1\" version=\"1\" />" +
+                                     "<node id=\"2\" lat=\"54.1\" lon=\"12.2\" user=\"ben\" uid=\"2\" version=\"1\" />" +
+                                 "</osm>")) as Osm;
+
+            Assert.IsNotNull(osm);
+            Assert.IsNotNull(osm.Nodes);
+            Assert.AreEqual(2, osm.Nodes.Length);
         }
     }
 }

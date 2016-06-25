@@ -26,6 +26,7 @@ using OsmSharp.IO.Xml;
 using System.IO;
 using System.Xml.Serialization;
 using System.Linq;
+using OsmSharp.API;
 
 namespace OsmSharp.Test.IO.Xml
 {
@@ -141,6 +142,25 @@ namespace OsmSharp.Test.IO.Xml
             Assert.IsTrue(relation.Members.Any(x => x.Id == 1 && x.Role == "role1" && x.Type == OsmGeoType.Node));
             Assert.IsTrue(relation.Members.Any(x => x.Id == 10 && x.Role == "role2" && x.Type == OsmGeoType.Way));
             Assert.IsTrue(relation.Members.Any(x => x.Id == 100 && x.Role == "role3" && x.Type == OsmGeoType.Relation));
+        }
+
+        /// <summary>
+        /// Test deserialization of multiple relations.
+        /// </summary>
+        [Test]
+        public void TestDeserializeMulti()
+        {
+            var serializer = new XmlSerializer(typeof(Osm));
+
+            var osm = serializer.Deserialize(
+                new StringReader("<osm>" +
+                                     "<relation id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" />" +
+                                     "<relation id=\"2\" user=\"ben\" uid=\"1\" version=\"1\" />" +
+                                 "</osm>")) as Osm;
+
+            Assert.IsNotNull(osm);
+            Assert.IsNotNull(osm.Relations);
+            Assert.AreEqual(2, osm.Relations.Length);
         }
     }
 }

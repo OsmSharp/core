@@ -47,42 +47,49 @@ namespace OsmSharp.API
                     {
                         this.Version = new Version();
                         (this.Version as IXmlSerializable).ReadXml(reader);
+                        reader.Read();
                     }),
                 new Tuple<string, Action>(
                     "area", () =>
                     {
                         this.Area = new Area();
                         (this.Area as IXmlSerializable).ReadXml(reader);
+                        reader.Read();
                     }),
                 new Tuple<string, Action>(
                     "tracepoints", () =>
                     {
                         this.Tracepoints = new Tracepoints();
                         (this.Tracepoints as IXmlSerializable).ReadXml(reader);
+                        reader.Read();
                     }),
                 new Tuple<string, Action>(
                     "waynodes", () =>
                     {
                         this.WayNodes = new WayNodes();
                         (this.WayNodes as IXmlSerializable).ReadXml(reader);
+                        reader.Read();
                     }),
                 new Tuple<string, Action>(
                     "changesets", () =>
                     {
                         this.Changesets = new Changesets();
                         (this.Changesets as IXmlSerializable).ReadXml(reader);
+                        reader.Read();
                     }),
                 new Tuple<string, Action>(
                     "timeout", () =>
                     {
                         this.Timeout = new Timeout();
                         (this.Timeout as IXmlSerializable).ReadXml(reader);
+                        reader.Read();
                     }),
                 new Tuple<string, Action>(
                     "status", () =>
                     {
                         this.Status = new Status();
                         (this.Status as IXmlSerializable).ReadXml(reader);
+                        reader.Read();
                     }));
         }
 

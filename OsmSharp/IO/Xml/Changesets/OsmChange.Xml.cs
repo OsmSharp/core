@@ -63,6 +63,7 @@ namespace OsmSharp.Changesets
                         {
                             creates.Add(OsmChange.ReadOsmGeo(reader));
                         }
+                        reader.Read();
                     }),
                 new Tuple<string, Action>(
                     "modify", () =>
@@ -75,6 +76,7 @@ namespace OsmSharp.Changesets
                         {
                             modifies.Add(OsmChange.ReadOsmGeo(reader));
                         }
+                        reader.Read();
                     }),
                 new Tuple<string, Action>(
                     "delete", () =>
@@ -87,6 +89,7 @@ namespace OsmSharp.Changesets
                         {
                             deletes.Add(OsmChange.ReadOsmGeo(reader));
                         }
+                        reader.Read();
                     }));
 
             if (creates != null)

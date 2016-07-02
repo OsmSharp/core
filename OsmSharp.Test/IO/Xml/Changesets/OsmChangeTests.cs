@@ -155,6 +155,20 @@ namespace OsmSharp.Test.IO.Xml.Changesets
 
             Assert.AreEqual(0.6, osmChange.Version);
             Assert.AreEqual("OsmSharp", osmChange.Generator);
+
+
+		 	osmChange = serializer.Deserialize(
+				new StringReader("<osmChange version=\"0.6\" generator=\"iD\"><create/><modify><node id=\"1014872736\" lon=\"4.793814787696839\" lat=\"51.26403992993145\" version=\"1470\" changeset=\"2\"/></modify><delete if-unused=\"true\"/></osmChange>")) as OsmChange;
+			Assert.IsNotNull(osmChange);
+
+			Assert.IsNull(osmChange.Create);
+			Assert.IsNotNull(osmChange.Modify);
+			Assert.AreEqual(1, osmChange.Modify.Length);
+			Assert.AreEqual(1014872736, osmChange.Modify[0].Id);
+			Assert.AreEqual(OsmGeoType.Node, osmChange.Modify[0].Type);
+			Assert.IsNull(osmChange.Delete);
+			Assert.AreEqual(0.6, osmChange.Version);
+			Assert.AreEqual("iD", osmChange.Generator);
         }
     }
 }

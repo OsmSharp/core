@@ -55,6 +55,11 @@ namespace OsmSharp.Changesets
                 new Tuple<string, Action>(
                     "create", () =>
                     {
+						if (reader.IsEmptyElement)
+						{
+							reader.Read();
+							return;
+						}
                         creates = new List<OsmGeo>();
                         reader.Read();
                         while ((reader.Name == "node" ||
@@ -68,6 +73,11 @@ namespace OsmSharp.Changesets
                 new Tuple<string, Action>(
                     "modify", () =>
                     {
+						if (reader.IsEmptyElement)
+						{
+							reader.Read();
+							return;
+						}
                         modifies = new List<OsmGeo>();
                         reader.Read();
                         while ((reader.Name == "node" ||
@@ -81,6 +91,11 @@ namespace OsmSharp.Changesets
                 new Tuple<string, Action>(
                     "delete", () =>
                     {
+						if (reader.IsEmptyElement)
+						{
+							reader.Read();
+							return;
+						}
                         deletes = new List<OsmGeo>();
                         reader.Read();
                         while ((reader.Name == "node" ||

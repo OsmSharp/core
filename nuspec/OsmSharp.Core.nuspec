@@ -16,7 +16,6 @@
         <tags>osm, openstreetmap, routing, rendering, xamarin, mapping</tags>
         <dependencies>
             <dependency id="protobuf-net" version="2.0.0.668" />
-            <dependency id="Zlib.Portable" version="1.11.0" />
         </dependencies>
     </metadata>
     <files>

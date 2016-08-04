@@ -24,6 +24,8 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using OsmSharp.Complete;
+using OsmSharp.Geo.Streams;
+using OsmSharp.Geo.Streams.Features.Interpreted;
 using OsmSharp.Streams;
 using OsmSharp.Tags;
 using System;
@@ -125,6 +127,14 @@ namespace OsmSharp.Geo
             });
             nodeFilter.RegisterSource(source);
             return nodeFilter;
+        }
+
+        /// <summary>
+        /// Converts the given source into a feature source.
+        /// </summary>
+        public static IFeatureStreamSource ToFeatureSource(this IEnumerable<OsmGeo> source)
+        {
+            return new InterpretedFeatureStreamSource(source.ToComplete(), new DefaultFeatureInterpreter());
         }
     }
 }

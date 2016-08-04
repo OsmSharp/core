@@ -78,7 +78,6 @@ namespace OsmSharp.Geo
                             (tags.ContainsKey("natural") && !tags.IsFalse("natural")) ||
                             (tags.ContainsKey("office") && !tags.IsFalse("office")) ||
                             (tags.ContainsKey("place") && !tags.IsFalse("place")) ||
-                            (tags.ContainsKey("power") && !tags.IsFalse("power")) ||
                             (tags.ContainsKey("public_transport") && !tags.IsFalse("public_transport")) ||
                             (tags.ContainsKey("shop") && !tags.IsFalse("shop")) ||
                             (tags.ContainsKey("sport") && !tags.IsFalse("sport")) ||
@@ -100,17 +99,38 @@ namespace OsmSharp.Geo
                             isArea = false;
                         }
 
-                        if (isArea)
-                        { // area tags leads to simple polygon
-                            var lineairRing = new Feature(new LinearRing((osmObject as CompleteWay).GetCoordinates().
-                                ToArray<Coordinate>()), TagsAndIdToAttributes(osmObject));
-                            collection.Add(lineairRing);
+                        // check for a closed line if area.
+                        var coordinates = (osmObject as CompleteWay).GetCoordinates();
+                        if (isArea && coordinates.Count > 1 &&
+                            !coordinates[0].Equals2D(coordinates[coordinates.Count - 1]))
+                        { // not an area, first and last coordinate do not match.
+                            OsmSharp.Logging.Logger.Log("DefaultFeatureInterpreter", TraceEventType.Warning, "{0} is supposed to be an area but first and last coordinates do not match.",
+                                osmObject.ToInvariantString());
+                        }
+                        else if (!isArea && coordinates.Count < 2)
+                        {// not a linestring, needs at least two coordinates.
+                            OsmSharp.Logging.Logger.Log("DefaultFeatureInterpreter", TraceEventType.Warning, "{0} is supposed to be a linestring but has less than two coordinates.",
+                                osmObject.ToInvariantString());
+                        }
+                        else if (isArea && coordinates.Count < 3)
+                        {// not a linearring, needs at least three coordinates.
+                            OsmSharp.Logging.Logger.Log("DefaultFeatureInterpreter", TraceEventType.Warning, "{0} is supposed to be a linearring but has less than three coordinates.",
+                                osmObject.ToInvariantString());
                         }
                         else
-                        { // no area tag leads to just a line.
-                            var lineString = new Feature(new LineString((osmObject as CompleteWay).GetCoordinates().
-                                ToArray<Coordinate>()), TagsAndIdToAttributes(osmObject));
-                            collection.Add(lineString);
+                        {
+                            if (isArea)
+                            { // area tags leads to simple polygon
+                                var lineairRing = new Feature(new LinearRing(coordinates.
+                                    ToArray<Coordinate>()), TagsAndIdToAttributes(osmObject));
+                                collection.Add(lineairRing);
+                            }
+                            else
+                            { // no area tag leads to just a line.
+                                var lineString = new Feature(new LineString(coordinates.
+                                    ToArray<Coordinate>()), TagsAndIdToAttributes(osmObject));
+                                collection.Add(lineString);
+                            }
                         }
                         break;
                     case OsmGeoType.Relation:

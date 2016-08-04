@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using OsmSharp.Db;
 using OsmSharp.Streams.Filters;
 using System;
 using System.Collections.Generic;
@@ -111,6 +112,34 @@ namespace OsmSharp.Streams
             var nodeFilter = new Filters.OsmStreamFilterNode(filter);
             nodeFilter.RegisterSource(source);
             return nodeFilter;
+        }
+
+        /// <summary>
+        /// Converts the given source to a complete stream.
+        /// </summary>
+        public static Complete.OsmCompleteStreamSource ToComplete(this IEnumerable<OsmGeo> source)
+        {
+            return new OsmSharp.Streams.Complete.OsmSimpleCompleteStreamSource(
+                    new OsmSharp.Streams.OsmEnumerableStreamSource(source));
+        }
+
+        /// <summary>
+        /// Converts the given source to a complete stream.
+        /// </summary>
+        public static Complete.OsmCompleteStreamSource ToComplete(this IEnumerable<OsmGeo> source, ISnapshotDb cache)
+        {
+            return new OsmSharp.Streams.Complete.OsmSimpleCompleteStreamSource(
+                    new OsmSharp.Streams.OsmEnumerableStreamSource(source), cache);
+        }
+
+        /// <summary>
+        /// Shows progress when consuming the returned stream.
+        /// </summary>
+        public static OsmStreamSource ShowProgress(this IEnumerable<OsmGeo> source)
+        {
+            var progress = new Filters.OsmStreamFilterProgress();
+            progress.RegisterSource(source);
+            return progress;
         }
     }
 }

@@ -20,48 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using GeoAPI.Geometries;
-using NetTopologySuite.Features;
-using System.Collections.Generic;
+using System.IO;
+using System.Net;
 
-namespace OsmSharp.Geo.Streams
+namespace Sample.CompleteStream.Staging
 {
     /// <summary>
-    /// Represents a streamed source of features.
+    /// Contains code to download test files.
     /// </summary>
-    public interface IFeatureStreamSource : IEnumerator<IFeature>, IEnumerable<IFeature>
+    public static class Download
     {
         /// <summary>
-        /// Intializes this source.
+        /// Downloads a file if it doesn't exist yet.
         /// </summary>
-        /// <rremarks>Has to be called before starting read objects.</rremarks>
-        void Initialize();
-
-        /// <summary>
-        /// Returns true if this source can be reset.
-        /// </summary>
-        /// <returns></returns>
-        /// <remarks>Some sources cannot be reset, live feeds of objects for example.</remarks>
-        bool CanReset();
-
-        /// <summary>
-        /// Closes this target.
-        /// </summary>
-        /// <remarks>Closes any open connections, file locks or anything related to this source.</remarks>
-        void Close();
-
-        /// <summary>
-        /// Returns true if this source is bounded.
-        /// </summary>
-        bool HasBounds
+        public static void ToFile(string url, string filename)
         {
-            get;
+            if (!File.Exists(filename))
+            {
+                var client = new WebClient();
+                client.DownloadFile(url, filename);
+            }
         }
-
-        /// <summary>
-        /// Returns the bounds of this source.
-        /// </summary>
-        /// <returns></returns>
-        Envelope GetBounds();
     }
 }

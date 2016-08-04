@@ -58,16 +58,9 @@ namespace Ionic.Zlib
     /// This implementation always uses the DEFLATE compression method, a preset dictionary,
     /// and 15 window bits by default.
     /// </para>
-    ///
-    /// <para>
-    /// This class is similar to <see cref="DeflateStream"/>, except that it adds the
-    /// RFC1950 header and trailer bytes to a compressed stream when compressing, or expects
-    /// the RFC1950 header and trailer bytes when decompressing.  It is also similar to the
-    /// <see cref="GZipStream"/>.
-    /// </para>
+    /// 
     /// </remarks>
     /// <seealso cref="DeflateStream" />
-    /// <seealso cref="GZipStream" />
     public class ZlibStream : System.IO.Stream
     {
         internal ZlibBaseStream _baseStream;
@@ -621,7 +614,6 @@ namespace Ionic.Zlib
         ///
         /// <seealso cref="ZlibStream.UncompressString(byte[])"/>
         /// <seealso cref="ZlibStream.CompressBuffer(byte[])"/>
-        /// <seealso cref="GZipStream.CompressString(string)"/>
         ///
         /// <param name="s">
         ///   A string to compress.  The string will first be encoded

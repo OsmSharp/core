@@ -1,5 +1,7 @@
 # OsmSharp.Core
 
+![Build status](http://build.osmsharp.com/app/rest/builds/buildType:(id:OsmSharp_CoreDevelop)/statusIcon)
+
 OsmSharp's core enables you to work directly with OSM-data in .NET/Mono. Most important features are:
 
 - Read/Write OSM-XML.

@@ -16,7 +16,7 @@ OsmSharp's core enables you to work directly with OSM-data in .NET/Mono. Most im
 
 ### Usage
 
-**WARNING: All this documentation applies to v2 while the latest stable release is v1.3.5!**
+**WARNING: All this documentation applies to v2 while the latest stable release is v1.3.5! Install the prerelease version.**
 
 A common usecase is to stream and filter OSM data. To read from an OSM file and enumerate all objects just open the file as a stream source and use foreach.
 

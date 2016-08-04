@@ -73,11 +73,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Geo\OsmSharp.Geo.csproj">
+    <ProjectReference Include="..\..\OsmSharp.Geo\OsmSharp.Geo.csproj">
       <Project>{64125517-dcd0-4690-b2d3-341a5768be9e}</Project>
       <Name>OsmSharp.Geo</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
+    <ProjectReference Include="..\..\OsmSharp\OsmSharp.csproj">
       <Project>{d012b6e6-9f78-40fd-8a33-6a2a35df2a8c}</Project>
       <Name>OsmSharp</Name>
     </ProjectReference>

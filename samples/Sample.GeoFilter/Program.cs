@@ -32,15 +32,18 @@ namespace Sample.GeoFilter
         {
             Staging.ToFile("ftp://ftp.osmsharp.com/data/OSM/planet/europe/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf");
             var polygon = Staging.LoadPolygon();
-
+            
             using (var fileStreamSource = File.OpenRead("luxembourg-latest.osm.pbf"))
-            using (var fileStreamTarget = File.OpenWrite("polygon.osm"))
+            using (var fileStreamTarget = File.Open("polygon.osm", FileMode.Create))
             {
                 // create source stream.
-                var source = new PBFOsmStreamSource(fileStreamSource); 
+                var source = new PBFOsmStreamSource(fileStreamSource);
 
-                // filter by keeping everything inside the given polygon.
+                // OPTION1: filter by keeping everything inside the given polygon.
                 var filtered = source.FilterSpatial(polygon);
+
+                // OPTION2: filter by bounding box.
+                // var filtered = source.FilterBox(6.238002777099609f, 49.72076145492323f, 6.272850036621093f, 49.69928180928878f);
 
                 // write to output xml
                 var target = new XmlOsmStreamTarget(fileStreamTarget);

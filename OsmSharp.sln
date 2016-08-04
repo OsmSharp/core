@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.GeometryStream", "sa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.CompleteStream", "samples\Sample.CompleteStream\Sample.CompleteStream.csproj", "{AC182A8A-4341-4673-AD91-CA099ABBA7EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.GeoFilter", "Sample.GeoFilter\Sample.GeoFilter.csproj", "{7B122809-C213-4875-8FDE-9823440F0A0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.GeoFilter", "samples\Sample.GeoFilter\Sample.GeoFilter.csproj", "{7B122809-C213-4875-8FDE-9823440F0A0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -115,6 +115,18 @@ namespace OsmSharp.Streams
         }
 
         /// <summary>
+        /// Filters nodes using a bounding box and keeps ways/relations that are relevant.
+        /// </summary>
+        public static OsmStreamSource FilterBox(this IEnumerable<OsmGeo> source, float left, float top, float right, float bottom)
+        {
+            return source.FilterNodes(x =>
+            { // TODO: take into account the 180/-180 thing.
+                return x.Longitude.Value >= left && x.Longitude < right &&
+                    x.Latitude.Value >= bottom && x.Latitude < top;
+            });
+        }
+
+        /// <summary>
         /// Converts the given source to a complete stream.
         /// </summary>
         public static Complete.OsmCompleteStreamSource ToComplete(this IEnumerable<OsmGeo> source)

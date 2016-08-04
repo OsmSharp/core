@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.GeometryStream", "sa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.CompleteStream", "samples\Sample.CompleteStream\Sample.CompleteStream.csproj", "{AC182A8A-4341-4673-AD91-CA099ABBA7EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.GeoFilter", "Sample.GeoFilter\Sample.GeoFilter.csproj", "{7B122809-C213-4875-8FDE-9823440F0A0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{AC182A8A-4341-4673-AD91-CA099ABBA7EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC182A8A-4341-4673-AD91-CA099ABBA7EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC182A8A-4341-4673-AD91-CA099ABBA7EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B122809-C213-4875-8FDE-9823440F0A0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B122809-C213-4875-8FDE-9823440F0A0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B122809-C213-4875-8FDE-9823440F0A0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B122809-C213-4875-8FDE-9823440F0A0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +61,7 @@ Global
 		{BC76FEEF-703E-45F1-9295-F1F39E794341} = {475D2F68-178D-45BA-8F81-8B3912937C51}
 		{CD14F3AC-DD57-4A4C-9D5F-3725D199CAC5} = {475D2F68-178D-45BA-8F81-8B3912937C51}
 		{AC182A8A-4341-4673-AD91-CA099ABBA7EE} = {475D2F68-178D-45BA-8F81-8B3912937C51}
+		{7B122809-C213-4875-8FDE-9823440F0A0A} = {475D2F68-178D-45BA-8F81-8B3912937C51}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = OsmSharp.WinForms.UI.Sample\OsmSharp.WinForms.UI.Sample.csproj

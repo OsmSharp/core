@@ -123,7 +123,7 @@ namespace OsmSharp.Geo
                 {
                     return false;
                 }
-                return polygon.Within(new Point(n.Longitude.Value, n.Latitude.Value));
+                return polygon.Contains(new Point(n.Longitude.Value, n.Latitude.Value));
             });
             nodeFilter.RegisterSource(source);
             return nodeFilter;

@@ -31,6 +31,6 @@
       <file src="Output\OsmSharp.dll" target="lib\net45\OsmSharp.dll" />
 	    <file src="Output\OsmSharp.dll" target="lib\MonoAndroid\OsmSharp.dll" />
 	    <file src="Output\OsmSharp.dll" target="lib\Xamarin.iOS10\OsmSharp.dll" />
-	    <file src="Output\NetCore\OsmSharp.dll" target="lib\netstandard1.3\OsmSharp.dll" />
+	    <file src="OsmSharp.NetCore\bin\Release\netstandard1.3\OsmSharp.NetCore.dll" target="lib\netstandard1.3\OsmSharp.dll" />
     </files>
 </package>

@@ -13,10 +13,16 @@ OsmSharp's core enables you to work directly with OSM-data in .NET/Mono. Most im
 ### Install
 
     PM> Install-Package OsmSharp.Core -IncludePrerelease
+    
+There's also a package to use [NTS](https://github.com/NetTopologySuite/) together with OsmSharp to convert OSM-data to features/geometries.
+
+    PM> Install-Package OsmSharp.Geo -IncludePrerelease
 
 ### Usage
 
 **WARNING: All this documentation applies to v2 while the latest stable release is v1.3.5! Install the prerelease version.**
+
+This readme contains some basic examples, for more documentation and samples check the [wiki](https://github.com/OsmSharp/core/wiki).
 
 A common usecase is to stream and filter OSM data. To read from an OSM file and enumerate all objects just open the file as a stream source and use foreach.
 

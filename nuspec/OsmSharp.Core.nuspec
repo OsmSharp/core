@@ -6,9 +6,9 @@
         <title>OsmSharp.Core</title>
         <authors>Ben Abelshausen</authors>
         <owners>Ben Abelshausen</owners>
-        <licenseUrl>http://raw.github.com/xivk/OsmSharp/master/license.txt</licenseUrl>
+        <licenseUrl>https://raw.githubusercontent.com/OsmSharp/core/develop/LICENSE.md</licenseUrl>
         <projectUrl>http://www.osmsharp.com/</projectUrl>
-        <iconUrl>http://osmsharp.com/sites/default/files/osmsharp_logo64.png</iconUrl>
+	<iconUrl>http://www.osmsharp.com/logos/osmsharp_logo64.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>OsmSharp an OpenStreetMap (OSM) library for .NET.</description>
         <summary>OsmSharp an OpenStreetMap (OSM) library for .NET to read/write/process/work with OSM-data.</summary>

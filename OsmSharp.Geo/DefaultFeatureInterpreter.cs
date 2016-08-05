@@ -279,7 +279,7 @@ namespace OsmSharp.Geo
             {
                 var xPolygon = new Polygon(rings[x].Value);
                 containsFlags[x] = new bool[rings.Count];
-                for (var y = 0; y < x; y++)
+                for (var y = 0; y < rings.Count; y++)
                 {
                     var yPolygon = new Polygon(rings[y].Value);
                     containsFlags[x][y] =

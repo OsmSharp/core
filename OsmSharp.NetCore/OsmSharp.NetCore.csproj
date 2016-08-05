@@ -1,0 +1,347 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D4172DA9-F7C8-4BEA-AE60-2A6A313D25F1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OsmSharp.NetCore</RootNamespace>
+    <AssemblyName>OsmSharp</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETCORE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .NET Framework is automatically included -->
+    <None Include="..\OsmSharp\IO\PBF\fileformat.proto">
+      <Link>IO\PBF\fileformat.proto</Link>
+    </None>
+    <None Include="..\OsmSharp\IO\PBF\osmformat.proto">
+      <Link>IO\PBF\osmformat.proto</Link>
+    </None>
+    <None Include="project.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\OsmSharp\API\Bounds.cs">
+      <Link>API\Bounds.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\API\Capabilities.cs">
+      <Link>API\Capabilities.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\API\Osm.cs">
+      <Link>API\Osm.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\API\User.cs">
+      <Link>API\User.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Changesets\Changeset.cs">
+      <Link>Changesets\Changeset.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Changesets\DiffResult.cs">
+      <Link>Changesets\DiffResult.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Changesets\OsmChange.cs">
+      <Link>Changesets\OsmChange.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Complete\CompleteOsmGeo.cs">
+      <Link>Complete\CompleteOsmGeo.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Complete\CompleteRelation.cs">
+      <Link>Complete\CompleteRelation.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Complete\CompleteWay.cs">
+      <Link>Complete\CompleteWay.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Complete\Extensions.cs">
+      <Link>Complete\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Complete\ICompleteOsmGeo.cs">
+      <Link>Complete\ICompleteOsmGeo.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Complete\Node.Complete.cs">
+      <Link>Complete\Node.Complete.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Db\DbException.cs">
+      <Link>Db\DbException.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Db\DiffResultResult.cs">
+      <Link>Db\DiffResultResult.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Db\HistoryDb.cs">
+      <Link>Db\HistoryDb.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Db\IHistoryDb.cs">
+      <Link>Db\IHistoryDb.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Db\IHistoryDbExtensions.cs">
+      <Link>Db\IHistoryDbExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Db\Impl\Extensions.cs">
+      <Link>Db\Impl\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Db\Impl\IHistoryDbImpl.cs">
+      <Link>Db\Impl\IHistoryDbImpl.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Db\Impl\ISnapshotDbImpl.cs">
+      <Link>Db\Impl\ISnapshotDbImpl.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Db\Impl\MemoryHistoryDb.cs">
+      <Link>Db\Impl\MemoryHistoryDb.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Db\Impl\MemorySnapshotDb.cs">
+      <Link>Db\Impl\MemorySnapshotDb.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Db\IOsmGeoSource.cs">
+      <Link>Db\IOsmGeoSource.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Db\IOsmGeoSourceExtensions.cs">
+      <Link>Db\IOsmGeoSourceExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Db\ISnapshotDb.cs">
+      <Link>Db\ISnapshotDb.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Db\ISnapshotDbExtensions.cs">
+      <Link>Db\ISnapshotDbExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Db\OsmGeoKey.cs">
+      <Link>Db\OsmGeoKey.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Db\OsmGeoVersionKey.cs">
+      <Link>Db\OsmGeoVersionKey.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Db\SnapshotDb.cs">
+      <Link>Db\SnapshotDb.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Extensions.cs">
+      <Link>Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\PBF\Encoder.cs">
+      <Link>IO\PBF\Encoder.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\PBF\fileformat.cs">
+      <Link>IO\PBF\fileformat.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\PBF\IPBFOsmPrimitiveConsumer.cs">
+      <Link>IO\PBF\IPBFOsmPrimitiveConsumer.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\PBF\osmformat.cs">
+      <Link>IO\PBF\osmformat.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\PBF\PBFExtensions.cs">
+      <Link>IO\PBF\PBFExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\PBF\PBFReader.cs">
+      <Link>IO\PBF\PBFReader.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\PBF\PBFWriter.cs">
+      <Link>IO\PBF\PBFWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Xml\API\Bounds.Xml.cs">
+      <Link>IO\Xml\API\Bounds.Xml.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Xml\API\Capabilities.Xml.cs">
+      <Link>IO\Xml\API\Capabilities.Xml.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Xml\API\Osm.Xml.cs">
+      <Link>IO\Xml\API\Osm.Xml.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Xml\Changesets\Changeset.Xml.cs">
+      <Link>IO\Xml\Changesets\Changeset.Xml.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Xml\Changesets\DiffResult.Xml.cs">
+      <Link>IO\Xml\Changesets\DiffResult.Xml.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Xml\Changesets\OsmChange.Xml.cs">
+      <Link>IO\Xml\Changesets\OsmChange.Xml.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Xml\Node.Xml.cs">
+      <Link>IO\Xml\Node.Xml.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Xml\Relation.Xml.cs">
+      <Link>IO\Xml\Relation.Xml.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Xml\Way.Xml.cs">
+      <Link>IO\Xml\Way.Xml.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Xml\XmlExtensions.cs">
+      <Link>IO\Xml\XmlExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Zlib\CRC32.cs">
+      <Link>IO\Zlib\CRC32.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Zlib\Deflate.cs">
+      <Link>IO\Zlib\Deflate.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Zlib\DeflateStream.cs">
+      <Link>IO\Zlib\DeflateStream.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Zlib\GZipStream.cs">
+      <Link>IO\Zlib\GZipStream.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Zlib\Inflate.cs">
+      <Link>IO\Zlib\Inflate.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Zlib\InfTree.cs">
+      <Link>IO\Zlib\InfTree.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Zlib\ParallelDeflateOutputStream.cs">
+      <Link>IO\Zlib\ParallelDeflateOutputStream.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Zlib\Tree.cs">
+      <Link>IO\Zlib\Tree.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Zlib\Zlib.cs">
+      <Link>IO\Zlib\Zlib.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Zlib\ZlibBaseStream.cs">
+      <Link>IO\Zlib\ZlibBaseStream.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Zlib\ZlibCodec.cs">
+      <Link>IO\Zlib\ZlibCodec.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Zlib\ZlibConstants.cs">
+      <Link>IO\Zlib\ZlibConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\IO\Zlib\ZlibStream.cs">
+      <Link>IO\Zlib\ZlibStream.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Logging\Logger.cs">
+      <Link>Logging\Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Logging\TraceEventType.cs">
+      <Link>Logging\TraceEventType.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Node.cs">
+      <Link>Node.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\OsmGeo.cs">
+      <Link>OsmGeo.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\OsmGeoType.cs">
+      <Link>OsmGeoType.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Relation.cs">
+      <Link>Relation.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\Collections\LargeBitArray32.cs">
+      <Link>Streams\Collections\LargeBitArray32.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\Collections\OsmIdIndex.cs">
+      <Link>Streams\Collections\OsmIdIndex.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\Collections\OsmIdIndexExtensions.cs">
+      <Link>Streams\Collections\OsmIdIndexExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\Collections\SparseLargeBitArray32.cs">
+      <Link>Streams\Collections\SparseLargeBitArray32.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\Complete\OsmCompleteEnumerableStreamSource.cs">
+      <Link>Streams\Complete\OsmCompleteEnumerableStreamSource.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\Complete\OsmCompleteStreamSource.cs">
+      <Link>Streams\Complete\OsmCompleteStreamSource.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\Complete\OsmToCompleteStreamSource.cs">
+      <Link>Streams\Complete\OsmToCompleteStreamSource.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\Exceptions\StreamNotSortedException.cs">
+      <Link>Streams\Exceptions\StreamNotSortedException.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\Filters\OsmStreamFilter.cs">
+      <Link>Streams\Filters\OsmStreamFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\Filters\OsmStreamFilterDelegate.cs">
+      <Link>Streams\Filters\OsmStreamFilterDelegate.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\Filters\OsmStreamFilterMerge.cs">
+      <Link>Streams\Filters\OsmStreamFilterMerge.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\Filters\OsmStreamFilterNode.cs">
+      <Link>Streams\Filters\OsmStreamFilterNode.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\Filters\OsmStreamFilterProgress.cs">
+      <Link>Streams\Filters\OsmStreamFilterProgress.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\OsmEnumerableStreamSource.cs">
+      <Link>Streams\OsmEnumerableStreamSource.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\OsmStreamExtensions.cs">
+      <Link>Streams\OsmStreamExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\OsmStreamSource.cs">
+      <Link>Streams\OsmStreamSource.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\OsmStreamSourceEmpty.cs">
+      <Link>Streams\OsmStreamSourceEmpty.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\OsmStreamTarget.cs">
+      <Link>Streams\OsmStreamTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\OsmStreamTargetEmpty.cs">
+      <Link>Streams\OsmStreamTargetEmpty.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\PBFOsmStreamSource.cs">
+      <Link>Streams\PBFOsmStreamSource.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\PBFOsmStreamTarget.cs">
+      <Link>Streams\PBFOsmStreamTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\XmlOsmStreamSource.cs">
+      <Link>Streams\XmlOsmStreamSource.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Streams\XmlOsmStreamTarget.cs">
+      <Link>Streams\XmlOsmStreamTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Tags\Tag.cs">
+      <Link>Tags\Tag.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Tags\TagExtensions.cs">
+      <Link>Tags\TagExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Tags\TagsCollection.cs">
+      <Link>Tags\TagsCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Tags\TagsCollectionBase.cs">
+      <Link>Tags\TagsCollectionBase.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Utilities.cs">
+      <Link>Utilities.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp\Way.cs">
+      <Link>Way.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

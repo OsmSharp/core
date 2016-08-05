@@ -26,9 +26,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Ionic.Zlib;
 using System.IO;
+using System.Threading.Tasks;
 
 
 namespace Ionic.Zlib
@@ -628,10 +630,14 @@ namespace Ionic.Zlib
                                 workitem.ordinal,
                                 workitem.inputBytesAvailable );
 
+#if NETCORE
+                    var localWorkItem = workitem;
+                    Task.Factory.StartNew(() => _DeflateOne(localWorkItem));
+#else
                     if (!ThreadPool.QueueUserWorkItem( _DeflateOne, workitem ))
                         throw new Exception("Cannot enqueue workitem");
-
-                    _currentlyFilling = -1; // will get a new buffer next time
+#endif
+                        _currentlyFilling = -1; // will get a new buffer next time
                 }
                 else
                     _currentlyFilling = ix;
@@ -1193,7 +1199,7 @@ namespace Ionic.Zlib
             {
                 lock(_outputLock)
                 {
-                    int tid = Thread.CurrentThread.GetHashCode();
+                    int tid = TaskScheduler.Current.Id; ;
                 }
             }
         }

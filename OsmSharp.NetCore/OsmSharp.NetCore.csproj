@@ -209,9 +209,6 @@
     <Compile Include="..\OsmSharp\IO\Zlib\InfTree.cs">
       <Link>IO\Zlib\InfTree.cs</Link>
     </Compile>
-    <Compile Include="..\OsmSharp\IO\Zlib\ParallelDeflateOutputStream.cs">
-      <Link>IO\Zlib\ParallelDeflateOutputStream.cs</Link>
-    </Compile>
     <Compile Include="..\OsmSharp\IO\Zlib\Tree.cs">
       <Link>IO\Zlib\Tree.cs</Link>
     </Compile>

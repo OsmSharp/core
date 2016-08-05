@@ -84,7 +84,6 @@
     <Compile Include="IO\Zlib\GZipStream.cs" />
     <Compile Include="IO\Zlib\Inflate.cs" />
     <Compile Include="IO\Zlib\InfTree.cs" />
-    <Compile Include="IO\Zlib\ParallelDeflateOutputStream.cs" />
     <Compile Include="IO\Zlib\Tree.cs" />
     <Compile Include="IO\Zlib\Zlib.cs" />
     <Compile Include="IO\Zlib\ZlibBaseStream.cs" />

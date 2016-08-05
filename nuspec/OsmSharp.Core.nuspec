@@ -15,7 +15,12 @@
         <copyright>Ben Abelshausen</copyright>
         <tags>osm, openstreetmap</tags>
         <dependencies>
+          <group>
             <dependency id="protobuf-net" version="2.0.0.668" />
+          </group>
+          <group targetFramework="netstandard1.3">
+            <dependency id="protobuf-net" version="2.1.0" />
+          </group>
         </dependencies>
     </metadata>
     <files>
@@ -24,5 +29,6 @@
       <file src="Output\OsmSharp.dll" target="lib\net45\OsmSharp.dll" />
 	    <file src="Output\OsmSharp.dll" target="lib\MonoAndroid\OsmSharp.dll" />
 	    <file src="Output\OsmSharp.dll" target="lib\Xamarin.iOS10\OsmSharp.dll" />
+	    <file src="Output\NetCore\OsmSharp.dll" target="lib\netstandard1.3\OsmSharp.dll" />
     </files>
 </package>

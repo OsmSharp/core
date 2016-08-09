@@ -35,14 +35,14 @@ namespace Sample.GeometryStream
     class Program
     {
         static void Main(string[] args)
-        {            
+        {
             // let's show you what's going on.
             OsmSharp.Logging.Logger.LogAction = (origin, level, message, parameters) =>
             {
                 Console.WriteLine(string.Format("[{0}] {1} - {2}", origin, level, message));
             };
 
-            Download.ToFile("ftp://ftp.osmsharp.com/data/OSM/planet/europe/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf");
+            Download.ToFile("http://files.itinero.tech/data/OSM/planet/europe/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf").Wait();
 
             using (var fileStream = File.OpenRead("luxembourg-latest.osm.pbf"))
             {

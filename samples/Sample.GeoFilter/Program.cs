@@ -31,6 +31,7 @@ namespace Sample.GeoFilter
         static void Main(string[] args)
         {
             Staging.ToFile("ftp://ftp.osmsharp.com/data/OSM/planet/europe/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf");
+
             var polygon = Staging.LoadPolygon();
             
             using (var fileStreamSource = File.OpenRead("luxembourg-latest.osm.pbf"))

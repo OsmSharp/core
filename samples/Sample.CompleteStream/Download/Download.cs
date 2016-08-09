@@ -21,7 +21,8 @@
 // THE SOFTWARE.
 
 using System.IO;
-using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Sample.CompleteStream.Staging
 {
@@ -33,12 +34,16 @@ namespace Sample.CompleteStream.Staging
         /// <summary>
         /// Downloads a file if it doesn't exist yet.
         /// </summary>
-        public static void ToFile(string url, string filename)
+        public static async Task ToFile(string url, string filename)
         {
             if (!File.Exists(filename))
             {
-                var client = new WebClient();
-                client.DownloadFile(url, filename);
+                var client = new HttpClient();
+                using (var stream = await client.GetStreamAsync(url))
+                using (var outputStream = File.OpenWrite(filename))
+                {
+                    stream.CopyTo(outputStream);
+                }
             }
         }
     }

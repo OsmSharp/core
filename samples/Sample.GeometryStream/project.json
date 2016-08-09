@@ -1,0 +1,28 @@
+﻿{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "emitEntryPoint": true
+  },
+
+  "dependencies": {
+    "GeoAPI": "1.7.4",
+    "NetTopologySuite": "1.14.0",
+    "NetTopologySuite.IO.GeoJSON": "1.14.0",
+    "Newtonsoft.Json": "9.0.1",
+    "OsmSharp": "1.0.0-*",
+    "OsmSharp.Geo": "1.0.0-*"
+  },
+
+  "frameworks": {
+    "net4.5.1": {
+      "frameworkAssemblies": {
+        "System.Xml": ""
+      },
+      "buildOptions": {
+        "embed": [
+          "polygon.geojson"
+        ]
+      }
+    }
+  }
+}

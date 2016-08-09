@@ -33,6 +33,7 @@ TestResults*/
 *.vspx
 *.patch
 *.osm.pbf
+.vs*/
 
 packages/*
 !packages/repositories.config

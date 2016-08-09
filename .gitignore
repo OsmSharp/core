@@ -32,6 +32,7 @@ TestResults*/
 .DotSettings
 *.vspx
 *.patch
+*.osm.pbf
 
 packages/*
 !packages/repositories.config

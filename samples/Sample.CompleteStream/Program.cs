@@ -32,7 +32,7 @@ namespace Sample.CompleteStream
     {
         static void Main(string[] args)
         {
-            Download.ToFile("ftp://ftp.osmsharp.com/data/OSM/planet/europe/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf");
+            Download.ToFile("http://files.itinero.tech/data/OSM/planet/europe/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf").Wait();
 
             using (var fileStream = File.OpenRead("luxembourg-latest.osm.pbf"))
             {

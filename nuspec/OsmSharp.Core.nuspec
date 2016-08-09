@@ -8,7 +8,7 @@
         <owners>Ben Abelshausen</owners>
         <licenseUrl>https://raw.githubusercontent.com/OsmSharp/core/develop/LICENSE.md</licenseUrl>
         <projectUrl>http://www.osmsharp.com/</projectUrl>
-	<iconUrl>http://www.osmsharp.com/logos/osmsharp_logo64.png</iconUrl>
+	      <iconUrl>http://www.osmsharp.com/logos/osmsharp_logo64.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>OsmSharp an OpenStreetMap (OSM) library for .NET.</description>
         <summary>OsmSharp an OpenStreetMap (OSM) library for .NET to read/write/process/work with OSM-data.</summary>
@@ -26,11 +26,9 @@
         </dependencies>
     </metadata>
     <files>
-      <file src="Output\OsmSharp.dll" target="lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\OsmSharp.dll" />
-      <file src="Output\OsmSharp.dll" target="lib\net40\OsmSharp.dll" />
-      <file src="Output\OsmSharp.dll" target="lib\net45\OsmSharp.dll" />
-	    <file src="Output\OsmSharp.dll" target="lib\MonoAndroid\OsmSharp.dll" />
-	    <file src="Output\OsmSharp.dll" target="lib\Xamarin.iOS10\OsmSharp.dll" />
-	    <file src="OsmSharp.NetCore\bin\Release\netstandard1.3\OsmSharp.NetCore.dll" target="lib\netstandard1.3\OsmSharp.dll" />
+      <file src="src\OsmSharp\bin\Release\portable40-net403+sl5+win8+wp8\OsmSharp.dll" target="lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\OsmSharp.dll" />
+      <file src="src\OsmSharp\bin\Release\net40\OsmSharp.dll" target="lib\net40\OsmSharp.dll" />
+      <file src="src\OsmSharp\bin\Release\net45\OsmSharp.dll" target="lib\net45\OsmSharp.dll" />
+	    <file src="src\OsmSharp\bin\Release\netstandard1.3\OsmSharp.dll" target="lib\netstandard1.3\OsmSharp.dll" />
     </files>
 </package>

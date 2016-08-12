@@ -28,6 +28,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Sample.GeoFilter", "samples
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Sample.GeometryStream", "samples\Sample.GeometryStream\Sample.GeometryStream.xproj", "{85B18641-FDE4-481D-9E12-A0AB127F40CD}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Sample.GeometryStream.Shape", "samples\Sample.GeometryStream.Shape\Sample.GeometryStream.Shape.xproj", "{8DB2208C-C826-4B27-AF96-EAA68FAC7085}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{85B18641-FDE4-481D-9E12-A0AB127F40CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85B18641-FDE4-481D-9E12-A0AB127F40CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85B18641-FDE4-481D-9E12-A0AB127F40CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DB2208C-C826-4B27-AF96-EAA68FAC7085}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DB2208C-C826-4B27-AF96-EAA68FAC7085}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DB2208C-C826-4B27-AF96-EAA68FAC7085}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DB2208C-C826-4B27-AF96-EAA68FAC7085}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,5 +80,6 @@ Global
 		{BF282E5D-A93F-4CBE-93A8-C12F39098EE9} = {DE53B04B-2B18-4A55-A8D5-3D8BC864F59A}
 		{856E2A0E-C200-46A0-800B-AB9E6DCEB648} = {DE53B04B-2B18-4A55-A8D5-3D8BC864F59A}
 		{85B18641-FDE4-481D-9E12-A0AB127F40CD} = {DE53B04B-2B18-4A55-A8D5-3D8BC864F59A}
+		{8DB2208C-C826-4B27-AF96-EAA68FAC7085} = {DE53B04B-2B18-4A55-A8D5-3D8BC864F59A}
 	EndGlobalSection
 EndGlobal

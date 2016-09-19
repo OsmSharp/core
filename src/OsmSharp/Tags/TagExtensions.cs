@@ -79,9 +79,13 @@ namespace OsmSharp.Tags
         public static TagsCollectionBase KeepKeysOf(this TagsCollectionBase tags, IEnumerable<string> keys)
         {
             var collection = new TagsCollection();
+            if (tags == null || keys == null)
+            {
+                return collection;
+            }
             foreach (var tag in tags)
             {
-                if (keys.Contains(tag.Key))
+                if (keys != null && keys.Contains(tag.Key))
                 {
                     collection.Add(tag);
                 }

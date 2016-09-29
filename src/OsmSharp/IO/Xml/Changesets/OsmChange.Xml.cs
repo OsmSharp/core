@@ -67,6 +67,12 @@ namespace OsmSharp.Changesets
                              reader.Name == "relation"))
                         {
                             creates.Add(OsmChange.ReadOsmGeo(reader));
+                            if (reader.NodeType == XmlNodeType.EndElement && (reader.Name == "node" ||
+                                 reader.Name == "way" ||
+                                 reader.Name == "relation"))
+                            {
+                                reader.Read();
+                            }
                         }
                         reader.Read();
                     }),
@@ -85,6 +91,12 @@ namespace OsmSharp.Changesets
                              reader.Name == "relation"))
                         {
                             modifies.Add(OsmChange.ReadOsmGeo(reader));
+                            if (reader.NodeType == XmlNodeType.EndElement && (reader.Name == "node" ||
+                                 reader.Name == "way" ||
+                                 reader.Name == "relation"))
+                            {
+                                reader.Read();
+                            }
                         }
                         reader.Read();
                     }),
@@ -103,6 +115,12 @@ namespace OsmSharp.Changesets
                              reader.Name == "relation"))
                         {
                             deletes.Add(OsmChange.ReadOsmGeo(reader));
+                            if (reader.NodeType == XmlNodeType.EndElement && (reader.Name == "node" ||
+                                 reader.Name == "way" ||
+                                 reader.Name == "relation"))
+                            {
+                                reader.Read();
+                            }
                         }
                         reader.Read();
                     }));

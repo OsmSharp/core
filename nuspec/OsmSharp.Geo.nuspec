@@ -15,7 +15,7 @@
         <copyright>Ben Abelshausen</copyright>
         <tags>osm, openstreetmap, mapping, nts</tags>
         <dependencies>
-          <dependency id="OsmSharp.Core" version="[2,3)" />
+          <dependency id="OsmSharp" version="[5,6)" />
           <dependency id="GeoAPI" version="[1.7.4,2)" />
           <dependency id="NetTopologySuite" version="[1.14,2)" />
         </dependencies>

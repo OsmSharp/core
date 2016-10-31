@@ -276,10 +276,56 @@ namespace OsmSharp.Db
                         Id = x.Id.Value,
                         Type = x.Type
                     }));
+
                 foreach(var modify in changeset.Modify)
                 {
                     results.Add(OsmGeoResult.CreateModification(
                         modify, modify.Version.Value + 1));
+
+                    switch (modify.Type)
+                    {
+                        case OsmGeoType.Way:
+                            var way = modify as Way;
+                            for (var i = 0; i < way.Nodes.Length; i++)
+                            {
+                                long newNodeId;
+                                if (nodeTransforms.TryGetValue(way.Nodes[i], out newNodeId))
+                                {
+                                    way.Nodes[i] = newNodeId;
+                                }
+                            }
+                            break;
+                        case OsmGeoType.Relation:
+                            var relation = modify as Relation;
+                            for (var i = 0; i < relation.Members.Length; i++)
+                            {
+                                long newMemberId;
+                                var member = relation.Members[i];
+                                switch (member.Type)
+                                {
+                                    case OsmGeoType.Node:
+                                        if (nodeTransforms.TryGetValue(member.Id, out newMemberId))
+                                        {
+                                            member.Id = newMemberId;
+                                        }
+                                        break;
+                                    case OsmGeoType.Way:
+                                        if (wayTransforms.TryGetValue(member.Id, out newMemberId))
+                                        {
+                                            member.Id = newMemberId;
+                                        }
+                                        break;
+                                    case OsmGeoType.Relation:
+                                        if (relationTransforms.TryGetValue(member.Id, out newMemberId))
+                                        {
+                                            member.Id = newMemberId;
+                                        }
+                                        break;
+                                }
+                                relation.Members[i] = member;
+                            }
+                            break;
+                    }
 
                     modify.Version = modify.Version + 1;
                     modify.TimeStamp = DateTime.Now.ToUniversalTime();

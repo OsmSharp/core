@@ -388,42 +388,23 @@ namespace OsmSharp.Db.Impl
         /// </summary>
         public OsmGeo Get(OsmGeoType type, long id)
         {
-            var version = -1;
             switch (type)
             {
                 case OsmGeoType.Node:
-                    return _nodes.Values.FirstOrDefault(x =>
+                    return _nodes.Values.Where(x =>
                     {
-                        if (x.Id == id &&
-                            x.Version.Value > version)
-                        {
-                            version = x.Version.Value;
-                            return true;
-                        }
-                        return false;
-                    });
+                        return x.Id == id;
+                    }).OrderBy(x => -x.Version).FirstOrDefault();
                 case OsmGeoType.Way:
-                    return _ways.Values.FirstOrDefault(x =>
+                    return _ways.Values.Where(x =>
                     {
-                        if (x.Id == id &&
-                            x.Version.Value > version)
-                        {
-                            version = x.Version.Value;
-                            return true;
-                        }
-                        return false;
-                    });
+                        return x.Id == id;
+                    }).OrderBy(x => -x.Version).FirstOrDefault();
                 case OsmGeoType.Relation:
-                    return _relations.Values.FirstOrDefault(x =>
+                    return _relations.Values.Where(x =>
                     {
-                        if (x.Id == id &&
-                            x.Version.Value > version)
-                        {
-                            version = x.Version.Value;
-                            return true;
-                        }
-                        return false;
-                    });
+                        return x.Id == id;
+                    }).OrderBy(x => -x.Version).FirstOrDefault();
             }
             throw new Exception(string.Format("Uknown OsmGeoType: {0}.",
                 type.ToInvariantString()));

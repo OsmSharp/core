@@ -198,6 +198,75 @@ namespace OsmSharp.Db
             if (changeset == null) { throw new ArgumentNullException("changeset"); }
 
             var results = new List<OsmGeoResult>();
+            var nodeTransforms = new Dictionary<long, long>();
+            var wayTransforms = new Dictionary<long, long>();
+            var relationTransforms = new Dictionary<long, long>();
+            
+            if (changeset.Create != null)
+            {
+                foreach (var create in changeset.Create)
+                {
+                    var newId = this.GetNextId(create.Type);
+                    switch(create.Type)
+                    {
+                        case OsmGeoType.Node:
+                            nodeTransforms.Add(create.Id.Value, newId);
+                            break;
+                        case OsmGeoType.Way:
+                            var way = create as Way;
+                            for (var i = 0; i < way.Nodes.Length; i++)
+                            {
+                                long newNodeId;
+                                if (nodeTransforms.TryGetValue(way.Nodes[i], out newNodeId))
+                                {
+                                    way.Nodes[i] = newNodeId;
+                                }
+                            }
+                            wayTransforms.Add(create.Id.Value, newId);
+                            break;
+                        case OsmGeoType.Relation:
+                            var relation = create as Relation;
+                            for (var i = 0; i < relation.Members.Length; i++)
+                            {
+                                long newMemberId;
+                                var member = relation.Members[i];
+                                switch(member.Type)
+                                {
+                                    case OsmGeoType.Node:
+                                        if (nodeTransforms.TryGetValue(member.Id, out newMemberId))
+                                        {
+                                            member.Id = newMemberId;
+                                        }
+                                        break;
+                                    case OsmGeoType.Way:
+                                        if (wayTransforms.TryGetValue(member.Id, out newMemberId))
+                                        {
+                                            member.Id = newMemberId;
+                                        }
+                                        break;
+                                    case OsmGeoType.Relation:
+                                        if (relationTransforms.TryGetValue(member.Id, out newMemberId))
+                                        {
+                                            member.Id = newMemberId;
+                                        }
+                                        break;
+                                }
+                                relation.Members[i] = member;
+                            }
+                            relationTransforms.Add(create.Id.Value, newId);
+                            break;
+                    }
+
+                    results.Add(OsmGeoResult.CreateCreation(
+                        create, newId));
+                    create.Id = newId;
+                    create.Version = 1;
+                    create.TimeStamp = DateTime.Now.ToUniversalTime();
+                    create.Visible = true;
+                }
+
+                this.Add(changeset.Create);
+            }
 
             if (changeset.Modify != null)
             {
@@ -232,22 +301,6 @@ namespace OsmSharp.Db
                         Id = x.Id.Value,
                         Type = x.Type
                     }));
-            }
-
-            if (changeset.Create != null)
-            {
-                foreach(var create in changeset.Create)
-                {
-                    var newId = this.GetNextId(create.Type);
-                    results.Add(OsmGeoResult.CreateCreation(
-                        create, newId));
-                    create.Id = newId;
-                    create.Version = 1;
-                    create.TimeStamp = DateTime.Now.ToUniversalTime();
-                    create.Visible = true;
-                }
-
-                this.Add(changeset.Create);
             }
 
             return new DiffResultResult(new DiffResult()

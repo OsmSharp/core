@@ -40,12 +40,12 @@ namespace OsmSharp
         /// <summary>
         /// The latitude.
         /// </summary>
-        public float? Latitude { get; set; }
+        public double? Latitude { get; set; }
 
         /// <summary>
         /// The longitude.
         /// </summary>
-        public float? Longitude { get; set; }
+        public double? Longitude { get; set; }
 
         /// <summary>
         /// Returns a description of this object.

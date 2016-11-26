@@ -35,13 +35,13 @@ namespace Sample.GeoFilter
             var polygon = Staging.LoadPolygon();
             
             using (var fileStreamSource = File.OpenRead("luxembourg-latest.osm.pbf"))
-            using (var fileStreamTarget = File.Open("polygon.osm", FileMode.Create))
+            using (var fileStreamTarget = File.Open("polygon_complete.osm", FileMode.Create))
             {
                 // create source stream.
                 var source = new PBFOsmStreamSource(fileStreamSource);
 
                 // OPTION1: filter by keeping everything inside the given polygon.
-                var filtered = source.FilterSpatial(polygon);
+                var filtered = source.FilterSpatial(polygon, true);
 
                 // OPTION2: filter by bounding box.
                 // var filtered = source.FilterBox(6.238002777099609f, 49.72076145492323f, 6.272850036621093f, 49.69928180928878f);

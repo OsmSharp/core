@@ -107,9 +107,9 @@ namespace OsmSharp.Streams
         /// <summary>
         /// Filters nodes and keeps ways/relations that are relevant.
         /// </summary>
-        public static OsmStreamSource FilterNodes(this IEnumerable<OsmGeo> source, Func<Node, bool> filter)
+        public static OsmStreamSource FilterNodes(this IEnumerable<OsmGeo> source, Func<Node, bool> filter, bool completeWays = false)
         {
-            var nodeFilter = new Filters.OsmStreamFilterNode(filter);
+            var nodeFilter = new Filters.OsmStreamFilterNode(filter, completeWays);
             nodeFilter.RegisterSource(source);
             return nodeFilter;
         }
@@ -117,13 +117,14 @@ namespace OsmSharp.Streams
         /// <summary>
         /// Filters nodes using a bounding box and keeps ways/relations that are relevant.
         /// </summary>
-        public static OsmStreamSource FilterBox(this IEnumerable<OsmGeo> source, float left, float top, float right, float bottom)
+        public static OsmStreamSource FilterBox(this IEnumerable<OsmGeo> source, float left, float top, float right, float bottom,
+            bool completeWays = false)
         {
             return source.FilterNodes(x =>
             { // TODO: take into account the 180/-180 thing.
                 return x.Longitude.Value >= left && x.Longitude < right &&
                     x.Latitude.Value >= bottom && x.Latitude < top;
-            });
+            }, completeWays);
         }
 
         /// <summary>

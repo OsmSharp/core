@@ -31,29 +31,79 @@ namespace OsmSharp.Streams.Filters
     public class OsmStreamFilterNode : OsmStreamFilter
     {
         private readonly Func<Node, bool>  _selectNode;
+        private readonly bool _completeWays;
 
         /// <summary>
         /// Creates a new spatial filter.
         /// </summary>
-        public OsmStreamFilterNode(Func<Node, bool> selectNode)
+        public OsmStreamFilterNode(Func<Node, bool> selectNode, bool completeWays = false)
         {
             _selectNode = selectNode;
+            _completeWays = completeWays;
 
             _nodesToInclude = new OsmIdIndex();
+            _extraNodesToInclude = new OsmIdIndex();
             _waysToInclude = new OsmIdIndex();
             _relationsToInclude = new OsmIdIndex();
         }
 
         private OsmGeo _current = null;
         private OsmIdIndex _nodesToInclude;
+        private OsmIdIndex _extraNodesToInclude;
         private OsmIdIndex _waysToInclude;
         private OsmIdIndex _relationsToInclude;
+
+        private int _pass = 0;
         
         /// <summary>
         /// Move to the next item in the stream.
         /// </summary>
         public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
+            if (_completeWays && _pass == 0)
+            {
+                _pass = 1;
+                if (!this.Source.CanReset)
+                {
+                    throw new NotSupportedException("Complete ways option is unsupported, cannot reset source stream.");
+                }
+                //if (!this.Source.IsSorted)
+                //{
+                //    throw new NotSupportedException("Complete ways option is unsupported, source stream is not sorted.");
+                //}
+                while (this.Source.MoveNext())
+                {
+                    var current = this.Source.Current();
+                    switch(current.Type)
+                    {
+                        case OsmGeoType.Node:
+                            if (_selectNode(current as Node))
+                            {
+                                _nodesToInclude.Add(current.Id.Value);
+                            }
+                            break;
+                        case OsmGeoType.Way:
+                            var way = (current as Way);
+                            if (way.HasNodeIn(_nodesToInclude))
+                            {
+                                _waysToInclude.Add(current.Id.Value);
+                                var nodes = (current as Way).Nodes;
+                                for (var n = 0; n < nodes.Length; n++)
+                                {
+                                    _extraNodesToInclude.Add(nodes[n]);
+                                }
+                            }
+                            break;
+                    }
+
+                    if (current.Type == OsmGeoType.Relation)
+                    {
+                        break;
+                    }
+                }
+                this.Source.Reset();
+            }
+
             while (this.DoMoveNext())
             {
                 if (this.Current().Type == OsmGeoType.Node &&
@@ -84,31 +134,63 @@ namespace OsmSharp.Streams.Filters
             {
                 return false;
             }
-            while (this.Source.MoveNext())
+            if (_completeWays)
             {
-                _current = this.Source.Current();
-                if (_current.Type == OsmGeoType.Node)
+                while(this.Source.MoveNext())
                 {
-                    if (_selectNode(_current as Node))
+                    _current = this.Source.Current();
+                    switch(_current.Type)
                     {
-                        _nodesToInclude.Add(_current.Id.Value);
-                        return true;
+                        case OsmGeoType.Node:
+                            if (_nodesToInclude.Contains(_current.Id.Value) || 
+                                _extraNodesToInclude.Contains(_current.Id.Value))
+                            {
+                                return true;
+                            }
+                            break;
+                        case OsmGeoType.Way:
+                            if (_waysToInclude.Contains(_current.Id.Value))
+                            {
+                                return true;
+                            }
+                            break;
+                        case OsmGeoType.Relation:
+                            if ((_current as Relation).HasMemberIn(_nodesToInclude, _waysToInclude, _relationsToInclude))
+                            {
+                                return true;
+                            }
+                            break;
                     }
                 }
-                else if (_current.Type == OsmGeoType.Way)
+            }
+            else
+            {
+                while (this.Source.MoveNext())
                 {
-                    if ((_current as Way).HasNodeIn(_nodesToInclude))
+                    _current = this.Source.Current();
+                    if (_current.Type == OsmGeoType.Node)
                     {
-                        _waysToInclude.Add(_current.Id.Value);
-                        return true;
+                        if (_selectNode(_current as Node))
+                        {
+                            _nodesToInclude.Add(_current.Id.Value);
+                            return true;
+                        }
                     }
-                }
-                else if(_current.Type == OsmGeoType.Relation)
-                {
-                    if ((_current as Relation).HasMemberIn(_nodesToInclude, _waysToInclude, _relationsToInclude))
+                    else if (_current.Type == OsmGeoType.Way)
                     {
-                        // _relationsToInclude.Add(_current.Id.Value); // only one level of relations included.
-                        return true;
+                        if ((_current as Way).HasNodeIn(_nodesToInclude))
+                        {
+                            _waysToInclude.Add(_current.Id.Value);
+                            return true;
+                        }
+                    }
+                    else if (_current.Type == OsmGeoType.Relation)
+                    {
+                        if ((_current as Relation).HasMemberIn(_nodesToInclude, _waysToInclude, _relationsToInclude))
+                        {
+                            _relationsToInclude.Add(_current.Id.Value); // only one level of relations included.
+                            return true;
+                        }
                     }
                 }
             }
@@ -130,9 +212,12 @@ namespace OsmSharp.Streams.Filters
         public override void Reset()
         {
             _nodesToInclude.Clear();
+            _relationsToInclude.Clear();
+            _extraNodesToInclude.Clear();
             _waysToInclude.Clear();
 
             _current = null;
+            _pass = 0;
             this.Source.Reset();
         }
 

@@ -115,7 +115,7 @@ namespace OsmSharp.Geo
         /// <summary>
         /// Filters a stream of objects spatially.
         /// </summary>
-        public static OsmStreamSource FilterSpatial(this IEnumerable<OsmGeo> source, IPolygon polygon)
+        public static OsmStreamSource FilterSpatial(this IEnumerable<OsmGeo> source, IPolygon polygon, bool completeWays = false)
         {
             var nodeFilter = new OsmSharp.Streams.Filters.OsmStreamFilterNode(n =>
             {
@@ -124,7 +124,7 @@ namespace OsmSharp.Geo
                     return false;
                 }
                 return polygon.Contains(new Point(n.Longitude.Value, n.Latitude.Value));
-            });
+            }, completeWays);
             nodeFilter.RegisterSource(source);
             return nodeFilter;
         }

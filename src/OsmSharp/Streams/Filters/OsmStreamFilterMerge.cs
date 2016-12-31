@@ -70,6 +70,7 @@ namespace OsmSharp.Streams.Filters
 
             _source1Status = null;
             _source2Status = null;
+            _current = null;
         }
 
         /// <summary>
@@ -103,6 +104,10 @@ namespace OsmSharp.Streams.Filters
             {
                 _source1 = source;
                 return;
+            }
+            if (_source2 != null)
+            {
+                throw new ArgumentException("Merge filter can only handle two streams, to merge in a third use a second merge filter.");
             }
             _source2 = source;
         }

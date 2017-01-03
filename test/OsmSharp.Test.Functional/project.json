@@ -1,0 +1,16 @@
+﻿{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "emitEntryPoint": true
+  },
+
+  "dependencies": {
+    "OsmSharp": "1.0.0-*",
+    "OsmSharp.Geo": "1.0.0-*"
+  },
+
+  "frameworks": {
+    "net4.5": {
+    }
+  }
+}

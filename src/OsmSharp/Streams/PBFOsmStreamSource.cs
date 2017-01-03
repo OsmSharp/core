@@ -1,6 +1,6 @@
 ﻿// The MIT License (MIT)
 
-// Copyright (c) 2016 Ben Abelshausen
+// Copyright (c) 2017 Ben Abelshausen
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -129,11 +129,10 @@ namespace OsmSharp.Streams
         }
 
         #region PBF Blocks Reader
-
-        /// <summary>
-        /// Holds the PBF reader.
-        /// </summary>
+        
         private PBFReader _reader;
+        private long _firstWayPosition = -1;
+        private long _firstRelationPosition = -1;
 
         /// <summary>
         /// Initializes the PBF reader.
@@ -153,11 +152,48 @@ namespace OsmSharp.Streams
         {
             var next = this.DeQueuePrimitive();
             if (next.Value == null)
-            {
+            { // decode another block.
+                // move to first way/relation position if they are known and nodes and or ways are to be skipped.
+                if (_firstWayPosition != -1 && ignoreNodes && !ignoreWays)
+                { // if nodes have to be ignored, there was already a first pass and ways are not to be ignored jump to the first way.
+                    if (_stream.Position <= _firstWayPosition)
+                    { // only just to the first way if that hasn't happened yet.
+                        _stream.Seek(_firstWayPosition, SeekOrigin.Begin);
+                    }
+                }
+                if (_firstRelationPosition != -1 && ignoreNodes && ignoreWays && !ignoreRelations)
+                { // if nodes and ways have to be ignored, there was already a first pass and ways are not be ignored jump to the first relation.
+                    if (_stream.Position < _firstRelationPosition)
+                    { // only just to the first relation if that hasn't happened yet.
+                        _stream.Seek(_firstRelationPosition, SeekOrigin.Begin);
+                    }
+                }
+
+                // just to the next block.
+                var beforeBlockPosition = _stream.Position;
                 var block = _reader.MoveNext();
-                while (block != null && !Encoder.Decode(block, this, ignoreNodes, ignoreWays, ignoreRelations))
+                bool hasNodes = false, hasWays = false, hasRelations = false;
+                while (block != null && !Encoder.Decode(block, this, ignoreNodes, ignoreWays, ignoreRelations,
+                    out hasNodes, out hasWays, out hasRelations))
                 {
+                    if (hasWays && _firstWayPosition == -1)
+                    {
+                        _firstWayPosition = beforeBlockPosition;
+                    }
+                    if (hasRelations && _firstRelationPosition == -1)
+                    {
+                        _firstRelationPosition = beforeBlockPosition;
+                    }
+                    beforeBlockPosition = _stream.Position;
                     block = _reader.MoveNext();
+                }
+                if (hasWays && _firstWayPosition == -1)
+                {
+                    _firstWayPosition = beforeBlockPosition;
+                }
+                if (hasRelations && _firstRelationPosition == -1)
+                {
+                    _firstRelationPosition = beforeBlockPosition;
                 }
                 next = this.DeQueuePrimitive();
             }

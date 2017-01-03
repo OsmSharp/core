@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2016 Abelshausen Ben
+// Copyright (C) 2017 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -41,100 +41,120 @@ namespace OsmSharp.IO.PBF
         /// Decodes the block.
         /// </summary>
         public static bool Decode(this PrimitiveBlock block, IPBFOsmPrimitiveConsumer primitivesConsumer, 
-            bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
+            bool ignoreNodes, bool ignoreWays, bool ignoreRelations, out bool hasNodes, out bool hasWays, out bool hasRelations)
         {
             var success = false;
+            hasNodes = false;
+            hasWays = false;
+            hasRelations = false;
 
             if (block.primitivegroup != null)
             {
                 foreach (var primitivegroup in block.primitivegroup)
                 {
-                    if (!ignoreNodes && primitivegroup.dense != null)
+                    if (primitivegroup.dense != null && primitivegroup.dense.id.Count > 0)
                     {
-                        int keyValsIdx = 0;
-                        long currentId = 0;
-                        long currentLat = 0;
-                        long currentLon = 0;
-                        long currentChangeset = 0;
-                        long currentTimestamp = 0;
-                        int currentUid = 0;
-                        int currentUserSid = 0;
-                        int currentVersion = 0;
-
-                        for (int idx = 0; idx < primitivegroup.dense.id.Count; idx++)
+                        hasNodes = true;
+                        if (!ignoreNodes)
                         {
-                            // do the delta decoding stuff.
-                            currentId = currentId +
-                                primitivegroup.dense.id[idx];
-                            currentLat = currentLat +
-                                primitivegroup.dense.lat[idx];
-                            currentLon = currentLon +
-                                primitivegroup.dense.lon[idx];
-                            if (primitivegroup.dense.denseinfo != null)
-                            { // add all the metadata.
-                                currentChangeset = currentChangeset +
-                                    primitivegroup.dense.denseinfo.changeset[idx];
-                                currentTimestamp = currentTimestamp +
-                                    primitivegroup.dense.denseinfo.timestamp[idx];
-                                currentUid = currentUid +
-                                    primitivegroup.dense.denseinfo.uid[idx];
-                                currentUserSid = currentUserSid +
-                                    primitivegroup.dense.denseinfo.user_sid[idx];
-                                currentVersion = currentVersion +
-                                    primitivegroup.dense.denseinfo.version[idx];
-                            }
+                            int keyValsIdx = 0;
+                            long currentId = 0;
+                            long currentLat = 0;
+                            long currentLon = 0;
+                            long currentChangeset = 0;
+                            long currentTimestamp = 0;
+                            int currentUid = 0;
+                            int currentUserSid = 0;
+                            int currentVersion = 0;
 
-                            var node = new Node();
-                            node.id = currentId;
-                            node.info = new Info();
-                            node.info.changeset = currentChangeset;
-                            node.info.timestamp = (int)currentTimestamp;
-                            node.info.uid = currentUid;
-                            node.info.user_sid = currentUserSid;
-                            node.info.version = currentVersion;
-                            node.lat = currentLat;
-                            node.lon = currentLon;
-
-                            // get the keys/vals.
-                            var keyVals = primitivegroup.dense.keys_vals;
-                            while (keyVals.Count > keyValsIdx &&
-                                keyVals[keyValsIdx] != 0)
+                            for (int idx = 0; idx < primitivegroup.dense.id.Count; idx++)
                             {
-                                node.keys.Add((uint)keyVals[keyValsIdx]);
-                                keyValsIdx++;
-                                node.vals.Add((uint)keyVals[keyValsIdx]);
-                                keyValsIdx++;
-                            }
-                            keyValsIdx++;
+                                // do the delta decoding stuff.
+                                currentId = currentId +
+                                    primitivegroup.dense.id[idx];
+                                currentLat = currentLat +
+                                    primitivegroup.dense.lat[idx];
+                                currentLon = currentLon +
+                                    primitivegroup.dense.lon[idx];
+                                if (primitivegroup.dense.denseinfo != null)
+                                { // add all the metadata.
+                                    currentChangeset = currentChangeset +
+                                        primitivegroup.dense.denseinfo.changeset[idx];
+                                    currentTimestamp = currentTimestamp +
+                                        primitivegroup.dense.denseinfo.timestamp[idx];
+                                    currentUid = currentUid +
+                                        primitivegroup.dense.denseinfo.uid[idx];
+                                    currentUserSid = currentUserSid +
+                                        primitivegroup.dense.denseinfo.user_sid[idx];
+                                    currentVersion = currentVersion +
+                                        primitivegroup.dense.denseinfo.version[idx];
+                                }
 
-                            success = true;
-                            primitivesConsumer.ProcessNode(block, node);
+                                var node = new Node();
+                                node.id = currentId;
+                                node.info = new Info();
+                                node.info.changeset = currentChangeset;
+                                node.info.timestamp = (int)currentTimestamp;
+                                node.info.uid = currentUid;
+                                node.info.user_sid = currentUserSid;
+                                node.info.version = currentVersion;
+                                node.lat = currentLat;
+                                node.lon = currentLon;
+
+                                // get the keys/vals.
+                                var keyVals = primitivegroup.dense.keys_vals;
+                                while (keyVals.Count > keyValsIdx &&
+                                    keyVals[keyValsIdx] != 0)
+                                {
+                                    node.keys.Add((uint)keyVals[keyValsIdx]);
+                                    keyValsIdx++;
+                                    node.vals.Add((uint)keyVals[keyValsIdx]);
+                                    keyValsIdx++;
+                                }
+                                keyValsIdx++;
+
+                                success = true;
+                                hasNodes = true;
+                                primitivesConsumer.ProcessNode(block, node);
+                            }
                         }
                     }
                     else
                     {
-                        if (!ignoreNodes && primitivegroup.nodes != null)
+                        if (primitivegroup.nodes != null && primitivegroup.nodes.Count > 0)
                         {
-                            foreach (var node in primitivegroup.nodes)
+                            hasNodes = true;
+                            if (!ignoreNodes)
                             {
-                                success = true;
-                                primitivesConsumer.ProcessNode(block, node);
+                                foreach (var node in primitivegroup.nodes)
+                                {
+                                    success = true;
+                                    primitivesConsumer.ProcessNode(block, node);
+                                }
                             }
                         }
-                        if (!ignoreWays && primitivegroup.ways != null)
+                        if (primitivegroup.ways != null && primitivegroup.ways.Count > 0)
                         {
-                            foreach (var way in primitivegroup.ways)
+                            hasWays = true;
+                            if (!ignoreWays)
                             {
-                                success = true;
-                                primitivesConsumer.ProcessWay(block, way);
+                                foreach (var way in primitivegroup.ways)
+                                {
+                                    success = true;
+                                    primitivesConsumer.ProcessWay(block, way);
+                                }
                             }
                         }
-                        if (!ignoreRelations && primitivegroup.relations != null)
+                        if (primitivegroup.relations != null && primitivegroup.relations.Count > 0)
                         {
-                            foreach (var relation in primitivegroup.relations)
+                            hasRelations = true;
+                            if (!ignoreRelations)
                             {
-                                success = true;
-                                primitivesConsumer.ProcessRelation(block, relation);
+                                foreach (var relation in primitivegroup.relations)
+                                {
+                                    success = true;
+                                    primitivesConsumer.ProcessRelation(block, relation);
+                                }
                             }
                         }
                     }

@@ -1,5 +1,7 @@
 # OsmSharp.Core
 
+![Build status](http://build.osmsharp.com/app/rest/builds/buildType:(id:OsmSharp_CoreDevelop)/statusIcon)
+
 OsmSharp's core enables you to work directly with OSM-data in .NET/Mono. Most important features are:
 
 - Read/Write OSM-XML.
@@ -10,9 +12,17 @@ OsmSharp's core enables you to work directly with OSM-data in .NET/Mono. Most im
 
 ### Install
 
-    PM> Install-Package OsmSharp.Core
+    PM> Install-Package OsmSharp.Core -IncludePrerelease
+    
+There's also a package to use [NTS](https://github.com/NetTopologySuite/) together with OsmSharp to convert OSM-data to features/geometries.
+
+    PM> Install-Package OsmSharp.Geo -IncludePrerelease
 
 ### Usage
+
+**WARNING: All this documentation applies to v2 while the latest stable release is v1.3.5! Install the prerelease version.**
+
+This readme contains some basic examples, for more documentation and samples check the [wiki](https://github.com/OsmSharp/core/wiki).
 
 A common usecase is to stream and filter OSM data. To read from an OSM file and enumerate all objects just open the file as a stream source and use foreach.
 
@@ -68,18 +78,13 @@ Filter an area and extract a smaller region:
 // using OsmSharp.Osm.PBF.Streams;
 
 var source = new PBFOsmStreamSource(
-	new FileInfo(@"/path/to/belgium-latest.osm.pbf").OpenRead());
+	new FileInfo(@"/path/to/file.osm.pbf").OpenRead());
 
-var filter = new OsmSharp.Osm.Streams.Filters.OsmStreamFilterPoly(
-	new OsmSharp.Geo.Geometries.LineairRing(
-		new GeoCoordinate(51.084978552372114, 3.655529022216797),
-		new GeoCoordinate(51.081851317961930, 3.812427520751953),
-		new GeoCoordinate(51.994851160022010, 3.760070800781250),
-		new GeoCoordinate(51.084978552372114, 3.655529022216797)));
-filter.RegisterSource(source);
+var filtered = source.FilterBox(6.238002777099609f, 49.72076145492323f, 
+	6.272850036621093f, 49.69928180928878f); // left, top, right, bottom
 
 var target = new PBFOsmStreamTarget(
-	new FileInfo(@"/path/to/gent-triangle.osm.pbf").Open(FileMode.Create, FileAccess.ReadWrite));
+	new FileInfo(@"/path/to/filterede.osm.pbf").Open(FileMode.Create, FileAccess.ReadWrite));
 target.RegisterSource(filter);
 target.Pull();
 ```

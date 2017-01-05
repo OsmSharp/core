@@ -24,12 +24,17 @@ Core/OsmSharp.UnitTests/test-results*/
 Output*/
 OutputAndroid*/
 OutputWindowsPhone*/
+.vs*/
 *.psess
 test-results*/
+TestResults*/
 *.vsp
 .DotSettings
 *.vspx
 *.patch
+*.osm.pbf
+TestResult.xml
+.vs*/
 
 packages/*
 !packages/repositories.config

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>OsmSharp</id>
+        <version>$version$</version>
+        <title>OsmSharp</title>
+        <authors>Ben Abelshausen</authors>
+        <owners>Ben Abelshausen</owners>
+        <licenseUrl>https://raw.githubusercontent.com/OsmSharp/core/develop/LICENSE.md</licenseUrl>
+        <projectUrl>http://www.osmsharp.com/</projectUrl>
+	      <iconUrl>http://www.osmsharp.com/logos/osmsharp_logo64.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>An OpenStreetMap (OSM) library for .NET.</description>
+        <summary>An OpenStreetMap (OSM) library for .NET to read/write/process/work with OSM-data.</summary>
+        <copyright>Ben Abelshausen</copyright>
+        <tags>osm, openstreetmap</tags>
+        <dependencies>
+          <group>
+            <dependency id="protobuf-net" version="2.0.0.668" />
+          </group>
+          <group targetFramework="netstandard1.3">
+            <dependency id="Microsoft.NETCore.Portable.Compatibility" version="1.0.1" />
+            <dependency id="NETStandard.Library" version="1.6.0" />
+            <dependency id="protobuf-net" version="2.1.0" />
+          </group>
+        </dependencies>
+    </metadata>
+    <files>
+      <file src="src\OsmSharp\bin\Release\portable40-net403+sl5+win8+wp8\OsmSharp.dll" target="lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\OsmSharp.dll" />
+      <file src="src\OsmSharp\bin\Release\net40\OsmSharp.dll" target="lib\net40\OsmSharp.dll" />
+      <file src="src\OsmSharp\bin\Release\net45\OsmSharp.dll" target="lib\net45\OsmSharp.dll" />
+	  <file src="src\OsmSharp\bin\Release\netstandard1.3\OsmSharp.dll" target="lib\netstandard1.3\OsmSharp.dll" />
+    </files>
+</package>

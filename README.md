@@ -1,6 +1,13 @@
-# OsmSharp.Core
+# OsmSharp
 
 ![Build status](http://build.osmsharp.com/app/rest/builds/buildType:(id:OsmSharp_CoreDevelop)/statusIcon)
+
+[![NuGet](https://img.shields.io/nuget/v/OsmSharp.svg?style=flat)](http://www.nuget.org/profiles/OsmSharp)
+[![NuGet](https://img.shields.io/nuget/vpre/OsmSharp.svg?style=flat)](http://www.nuget.org/profiles/OsmSharp)
+
+[![Visit our website](https://img.shields.io/badge/website-osmsharp.com-020031.svg) ](http://www.osmsharp.com/)
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/OsmSharp/core/blob/develop/LICENSE.md)
+
 
 OsmSharp's core enables you to work directly with OSM-data in .NET/Mono. Most important features are:
 
@@ -12,7 +19,7 @@ OsmSharp's core enables you to work directly with OSM-data in .NET/Mono. Most im
 
 ### Install
 
-    PM> Install-Package OsmSharp.Core -IncludePrerelease
+    PM> Install-Package OsmSharp -IncludePrerelease
     
 There's also a package to use [NTS](https://github.com/NetTopologySuite/) together with OsmSharp to convert OSM-data to features/geometries.
 
@@ -20,7 +27,7 @@ There's also a package to use [NTS](https://github.com/NetTopologySuite/) togeth
 
 ### Usage
 
-**WARNING: All this documentation applies to v2 while the latest stable release is v1.3.5! Install the prerelease version.**
+**WARNING: All this documentation applies to v5! Install the prerelease version.**
 
 This readme contains some basic examples, for more documentation and samples check the [wiki](https://github.com/OsmSharp/core/wiki).
 
@@ -90,3 +97,5 @@ target.Pull();
 ```
 
 
+### Licensing
+The OsmSharp project is licensed under the [MIT license](https://github.com/OsmSharp/core/blob/develop/LICENSE.md).

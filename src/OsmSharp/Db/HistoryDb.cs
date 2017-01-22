@@ -174,7 +174,7 @@ namespace OsmSharp.Db
         /// <summary>
         /// Gets all visible objects within the given bounding box.
         /// </summary>
-        public IEnumerable<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude)
+        public IEnumerable<OsmGeo> Get(double minLatitude, double minLongitude, double maxLatitude, double maxLongitude)
         {
             return _db.Get(minLatitude, minLongitude, maxLatitude, maxLongitude);
         }
@@ -353,7 +353,7 @@ namespace OsmSharp.Db
             {
                 Results = results.ToArray(),
                 Generator = "OsmSharp",
-                Version = 0.6f
+                Version = 0.6
             }, DiffResultStatus.BestEffortOK);
         }
 

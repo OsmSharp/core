@@ -47,10 +47,10 @@ namespace OsmSharp.Changesets
             this.CreatedAt = reader.GetAttributeDateTime("created_at");
             this.ClosedAt = reader.GetAttributeDateTime("closed_at");
             this.Open = reader.GetAttributeBool("open");
-            this.MinLongitude = reader.GetAttributeSingle("min_lon");
-            this.MinLatitude = reader.GetAttributeSingle("min_lat");
-            this.MaxLongitude = reader.GetAttributeSingle("max_lon");
-            this.MaxLatitude = reader.GetAttributeSingle("max_lat");
+            this.MinLongitude = reader.GetAttributeDouble("min_lon");
+            this.MinLatitude = reader.GetAttributeDouble("min_lat");
+            this.MaxLongitude = reader.GetAttributeDouble("max_lon");
+            this.MaxLatitude = reader.GetAttributeDouble("max_lat");
 
             TagsCollection tags = null;
             while (reader.Read() &&

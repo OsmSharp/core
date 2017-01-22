@@ -13,8 +13,8 @@ using (var fileStream = File.OpenRead("path/to/file.osm.pbf"))
   var source = new PBFOsmStreamSource(fileStream); 
   
   // filter by keeping everything inside the given polygon.
-  var filtered = source.FilterBox(6.238002777099609f, 49.72076145492323f, 
-    6.272850036621093f, 49.69928180928878f);
+  var filtered = source.FilterBox(6.238002777099609, 49.72076145492323, 
+    6.272850036621093, 49.69928180928878);
   ...
 }
 ```

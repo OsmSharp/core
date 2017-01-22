@@ -76,7 +76,7 @@ namespace OsmSharp.Db
         /// <summary>
         /// Gets all latest versions of osm objects within the given bounding box.
         /// </summary>
-        IEnumerable<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude);
+        IEnumerable<OsmGeo> Get(double minLatitude, double minLongitude, double maxLatitude, double maxLongitude);
 
         /// <summary>
         /// Opens a new changeset.

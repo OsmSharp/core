@@ -57,6 +57,9 @@ namespace OsmSharp.Test.IO.PBF
             Assert.AreEqual(0, Encoder.DecodeLatLon(0, 0, 100));
             Assert.AreEqual(180, Encoder.DecodeLatLon(1800000000, 0, 100));
             Assert.AreEqual(-180, Encoder.DecodeLatLon(-1800000000, 0, 100));
+
+            Assert.AreEqual(19.0471020, Encoder.DecodeLatLon(190471020, 0, 100), .000000001);
+            Assert.AreEqual(47.5135549, Encoder.DecodeLatLon(475135549, 0, 100), .000000001);
         }
 
         /// <summary>
@@ -104,8 +107,8 @@ namespace OsmSharp.Test.IO.PBF
                     user_sid = 3,
                     version = 2
                 },
-                lat = Encoder.EncodeLatLon(10.9f, block.lat_offset, block.granularity),
-                lon = Encoder.EncodeLatLon(11.0f, block.lat_offset, block.granularity)
+                lat = Encoder.EncodeLatLon(10.9, block.lat_offset, block.granularity),
+                lon = Encoder.EncodeLatLon(11.0, block.lat_offset, block.granularity)
             };
             pbfNode.keys.Add(1);
             pbfNode.vals.Add(2);
@@ -114,8 +117,8 @@ namespace OsmSharp.Test.IO.PBF
             Assert.IsNotNull(node);
             Assert.AreEqual(1, node.Id);
             Assert.AreEqual(10, node.ChangeSetId);
-            Assert.AreEqual(10.9f, node.Latitude);
-            Assert.AreEqual(11.0f, node.Longitude);
+            Assert.AreEqual(10.9, node.Latitude);
+            Assert.AreEqual(11.0, node.Longitude);
             Assert.AreEqual(PBFExtensions.FromUnixTime(10000), node.TimeStamp);
             Assert.AreEqual(OsmSharp.OsmGeoType.Node, node.Type);
             Assert.AreEqual(100, node.UserId);
@@ -408,8 +411,8 @@ namespace OsmSharp.Test.IO.PBF
                     user_sid = 2,
                     version = 2
                 },
-                lat = Encoder.EncodeLatLon(10.9f, block.lat_offset, block.granularity),
-                lon = Encoder.EncodeLatLon(11.0f, block.lat_offset, block.granularity)
+                lat = Encoder.EncodeLatLon(10.9, block.lat_offset, block.granularity),
+                lon = Encoder.EncodeLatLon(11.0, block.lat_offset, block.granularity)
             };
             node.keys.Add(0);
             node.vals.Add(1);
@@ -480,16 +483,16 @@ namespace OsmSharp.Test.IO.PBF
             primitiveGroup.dense.keys_vals.Add(0); // highway=track.
             primitiveGroup.dense.keys_vals.Add(0); // empty.
 
-            primitiveGroup.dense.lat.Add(Encoder.EncodeLatLon(10.0f, block.lat_offset, block.granularity));
-            primitiveGroup.dense.lat.Add(Encoder.EncodeLatLon(11.0f, block.lat_offset, block.granularity)
+            primitiveGroup.dense.lat.Add(Encoder.EncodeLatLon(10.0, block.lat_offset, block.granularity));
+            primitiveGroup.dense.lat.Add(Encoder.EncodeLatLon(11.0, block.lat_offset, block.granularity)
                 - primitiveGroup.dense.lat[primitiveGroup.dense.lat.Count - 1]);
-            primitiveGroup.dense.lat.Add(Encoder.EncodeLatLon(12.0f, block.lat_offset, block.granularity)
+            primitiveGroup.dense.lat.Add(Encoder.EncodeLatLon(12.0, block.lat_offset, block.granularity)
                 - primitiveGroup.dense.lat[primitiveGroup.dense.lat.Count - 1]);
 
-            primitiveGroup.dense.lon.Add(Encoder.EncodeLatLon(100.0f, block.lon_offset, block.granularity));
-            primitiveGroup.dense.lon.Add(Encoder.EncodeLatLon(110.0f, block.lon_offset, block.granularity)
+            primitiveGroup.dense.lon.Add(Encoder.EncodeLatLon(100.0, block.lon_offset, block.granularity));
+            primitiveGroup.dense.lon.Add(Encoder.EncodeLatLon(110.0, block.lon_offset, block.granularity)
                 - primitiveGroup.dense.lon[primitiveGroup.dense.lon.Count - 1]);
-            primitiveGroup.dense.lon.Add(Encoder.EncodeLatLon(120.0f, block.lon_offset, block.granularity)
+            primitiveGroup.dense.lon.Add(Encoder.EncodeLatLon(120.0, block.lon_offset, block.granularity)
                 - primitiveGroup.dense.lon[primitiveGroup.dense.lon.Count - 1]);
 
             block.primitivegroup.Add(primitiveGroup);

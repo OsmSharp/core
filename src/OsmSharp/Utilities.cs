@@ -30,8 +30,8 @@ namespace OsmSharp
         /// <summary>
         /// Returns true if the given coordinate is inside the box.
         /// </summary>
-        public static bool IsInside(float boxLat1, float boxLon1, float boxLat2, float boxLon2, 
-            float lat, float lon)
+        public static bool IsInside(double boxLat1, double boxLon1, double boxLat2, double boxLon2,
+            double lat, double lon)
         {
             if (boxLat1 > boxLat2)
             {

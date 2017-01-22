@@ -52,8 +52,8 @@ namespace OsmSharp.Test.IO.Xml
             {
                 Id = 1,
                 Version = 1,
-                Latitude = 54.10f,
-                Longitude = 12.2f,
+                Latitude = 54.10,
+                Longitude = 12.2,
                 UserName = "ben",
                 UserId = 1
             };
@@ -63,8 +63,8 @@ namespace OsmSharp.Test.IO.Xml
             {
                 Id = 1,
                 Version = 1,
-                Latitude = 54.10f,
-                Longitude = 12.2f,
+                Latitude = 54.10,
+                Longitude = 12.2,
                 UserName = "ben",
                 UserId = 1,
                 TimeStamp = new System.DateTime(2008, 09, 12, 21, 37, 45),
@@ -93,8 +93,8 @@ namespace OsmSharp.Test.IO.Xml
                 new StringReader("<node id=\"1\" lat=\"54.1\" lon=\"12.2\" user=\"ben\" uid=\"1\" version=\"1\" />")) as Node;
             Assert.IsNotNull(node);
             Assert.AreEqual(1, node.Id);
-            Assert.AreEqual(54.1f, node.Latitude);
-            Assert.AreEqual(12.2f, node.Longitude);
+            Assert.AreEqual(54.1, node.Latitude);
+            Assert.AreEqual(12.2, node.Longitude);
             Assert.AreEqual("ben", node.UserName);
             Assert.AreEqual(1, node.UserId);
             Assert.AreEqual(1, node.Version);
@@ -103,8 +103,8 @@ namespace OsmSharp.Test.IO.Xml
                 new StringReader("<node id=\"1\" lat=\"54.1\" lon=\"12.2\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></node>")) as Node;
             Assert.IsNotNull(node);
             Assert.AreEqual(1, node.Id);
-            Assert.AreEqual(54.1f, node.Latitude);
-            Assert.AreEqual(12.2f, node.Longitude);
+            Assert.AreEqual(54.1, node.Latitude);
+            Assert.AreEqual(12.2, node.Longitude);
             Assert.AreEqual("ben", node.UserName);
             Assert.AreEqual(1, node.UserId);
             Assert.AreEqual(1, node.Version);

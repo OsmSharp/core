@@ -44,7 +44,7 @@ namespace Sample.GeoFilter
                 var filtered = source.FilterSpatial(polygon, true);
 
                 // OPTION2: filter by bounding box.
-                // var filtered = source.FilterBox(6.238002777099609f, 49.72076145492323f, 6.272850036621093f, 49.69928180928878f);
+                // var filtered = source.FilterBox(6.238002777099609, 49.72076145492323, 6.272850036621093, 49.69928180928878);
 
                 // write to output xml
                 var target = new XmlOsmStreamTarget(fileStreamTarget);

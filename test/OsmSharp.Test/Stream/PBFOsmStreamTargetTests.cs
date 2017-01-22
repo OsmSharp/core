@@ -46,8 +46,8 @@ namespace OsmSharp.Test.Stream
             var sourceNode = new Node()
             {
                 Id = 1,
-                Latitude = 1.1f,
-                Longitude = 1.2f
+                Latitude = 1.1,
+                Longitude = 1.2
             };
             var sourceObjects = new OsmGeo[] {
                 sourceNode
@@ -74,16 +74,16 @@ namespace OsmSharp.Test.Stream
                 Assert.AreEqual(0, resultObjects[0].Version);
 
                 var resultNode = resultObjects[0] as Node;
-                Assert.AreEqual(sourceNode.Latitude.Value, resultNode.Latitude.Value, .0001f);
-                Assert.AreEqual(sourceNode.Longitude.Value, resultNode.Longitude.Value, .0001f);
+                Assert.AreEqual(sourceNode.Latitude.Value, resultNode.Latitude.Value, .000000001);
+                Assert.AreEqual(sourceNode.Longitude.Value, resultNode.Longitude.Value, .000000001);
             }
 
             // build source stream.
             sourceNode = new Node()
             {
                 Id = 1,
-                Latitude = 1.1f,
-                Longitude = 1.2f
+                Latitude = 1.1,
+                Longitude = 1.2
             };
             sourceNode.Tags = new TagsCollection();
             sourceNode.Tags.Add("highway", "residential");
@@ -114,16 +114,16 @@ namespace OsmSharp.Test.Stream
                 Assert.IsTrue(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()));
 
                 var resultNode = resultObjects[0] as Node;
-                Assert.AreEqual(sourceNode.Latitude.Value, resultNode.Latitude.Value, .0001f);
-                Assert.AreEqual(sourceNode.Longitude.Value, resultNode.Longitude.Value, .0001f);
+                Assert.AreEqual(sourceNode.Latitude.Value, resultNode.Latitude.Value, .000000001);
+                Assert.AreEqual(sourceNode.Longitude.Value, resultNode.Longitude.Value, .000000001);
             }
 
             // build source stream.
             sourceNode = new Node()
             {
                 Id = 1,
-                Latitude = 1.1f,
-                Longitude = 1.2f
+                Latitude = 1.1,
+                Longitude = 1.2
             };
             sourceNode.Tags = new TagsCollection();
             sourceNode.Tags.Add("highway", "residential");
@@ -160,8 +160,8 @@ namespace OsmSharp.Test.Stream
                 Assert.IsTrue(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()));
 
                 var resultNode = resultObjects[0] as Node;
-                Assert.AreEqual(sourceNode.Latitude.Value, resultNode.Latitude.Value, .0001f);
-                Assert.AreEqual(sourceNode.Longitude.Value, resultNode.Longitude.Value, .0001f);
+                Assert.AreEqual(sourceNode.Latitude.Value, resultNode.Latitude.Value, .000000001);
+                Assert.AreEqual(sourceNode.Longitude.Value, resultNode.Longitude.Value, .000000001);
             }
         }
 
@@ -486,8 +486,8 @@ namespace OsmSharp.Test.Stream
             var sourceNode = new Node()
             {
                 Id = 1,
-                Latitude = 1.1f,
-                Longitude = 1.2f
+                Latitude = 1.1,
+                Longitude = 1.2
             };
             sourceNode.Tags = new TagsCollection();
             sourceNode.Tags.Add("highway", "residential");
@@ -569,8 +569,8 @@ namespace OsmSharp.Test.Stream
                 Assert.IsTrue(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()));
 
                 var resultNode = resultObjects[0] as Node;
-                Assert.AreEqual(sourceNode.Latitude.Value, resultNode.Latitude.Value, .0001f);
-                Assert.AreEqual(sourceNode.Longitude.Value, resultNode.Longitude.Value, .0001f);
+                Assert.AreEqual(sourceNode.Latitude.Value, resultNode.Latitude.Value, .000000001);
+                Assert.AreEqual(sourceNode.Longitude.Value, resultNode.Longitude.Value, .000000001);
 
                 Assert.AreEqual(sourceObjects[1].Id, resultObjects[1].Id);
                 Assert.AreEqual(sourceObjects[1].ChangeSetId, resultObjects[1].ChangeSetId);

@@ -69,7 +69,7 @@ namespace OsmSharp.Db.Impl
         /// - All non-archived relations with at least one member that is a node within the bounding box or a way with at least one node in the bounding box.
         /// - Sorted by type (node, way, relation) and then id ascending.
         /// </returns>
-        IEnumerable<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude);
+        IEnumerable<OsmGeo> Get(double minLatitude, double minLongitude, double maxLatitude, double maxLongitude);
 
         /// <summary>
         /// Archives all the objects with the given keys.

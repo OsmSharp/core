@@ -192,7 +192,7 @@ namespace OsmSharp.Db.Impl
         /// <summary>
         /// Gets all visbible objects within the given bounding box.
         /// </summary>
-        public IEnumerable<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude)
+        public IEnumerable<OsmGeo> Get(double minLatitude, double minLongitude, double maxLatitude, double maxLongitude)
         {
             var nodesInBox = new HashSet<long>();
             var nodesToInclude = new HashSet<long>();

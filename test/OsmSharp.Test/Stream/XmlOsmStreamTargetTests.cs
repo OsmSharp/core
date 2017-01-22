@@ -124,20 +124,20 @@ namespace OsmSharp.Test.Stream
                 new Node()
                 {
                     Id = 1,
-                    Latitude = 1.0f,
-                    Longitude = 1.1f
+                    Latitude = 1.0,
+                    Longitude = 1.1
                 },
                 new Node()
                 {
                     Id = 2,
-                    Latitude = 2.0f,
-                    Longitude = 2.1f
+                    Latitude = 2.0,
+                    Longitude = 2.1
                 },
                 new Node()
                 {
                     Id = 3,
-                    Latitude = 3.0f,
-                    Longitude = 3.1f
+                    Latitude = 3.0,
+                    Longitude = 3.1
                 },
                 new Way()
                 {

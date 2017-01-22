@@ -232,26 +232,26 @@ namespace OsmSharp.Test.Geo
                 new Node()
                 {
                     Id = 5,
-                    Latitude = 0.25f,
-                    Longitude = 0.25f
+                    Latitude = 0.25,
+                    Longitude = 0.25
                 },
                 new Node()
                 {
                     Id = 6,
-                    Latitude = 0.25f,
-                    Longitude = 0.40f
+                    Latitude = 0.25,
+                    Longitude = 0.40
                 },
                 new Node()
                 {
                     Id = 7,
-                    Latitude = 0.40f,
-                    Longitude = 0.40f
+                    Latitude = 0.40,
+                    Longitude = 0.40
                 },
                 new Node()
                 {
                     Id = 8,
-                    Latitude = 0.40f,
-                    Longitude = 0.25f
+                    Latitude = 0.40,
+                    Longitude = 0.25
                 },
                 new Way()
                 {
@@ -340,50 +340,50 @@ namespace OsmSharp.Test.Geo
                 new Node()
                 {
                     Id = 5,
-                    Latitude = 0.25f,
-                    Longitude = 0.25f
+                    Latitude = 0.25,
+                    Longitude = 0.25
                 },
                 new Node()
                 {
                     Id = 6,
-                    Latitude = 0.25f,
-                    Longitude = 0.40f
+                    Latitude = 0.25,
+                    Longitude = 0.40
                 },
                 new Node()
                 {
                     Id = 7,
-                    Latitude = 0.40f,
-                    Longitude = 0.40f
+                    Latitude = 0.40,
+                    Longitude = 0.40
                 },
                 new Node()
                 {
                     Id = 8,
-                    Latitude = 0.40f,
-                    Longitude = 0.25f
+                    Latitude = 0.40,
+                    Longitude = 0.25
                 },
                 new Node()
                 {
                     Id = 9,
-                    Latitude = 0.60f,
-                    Longitude = 0.25f
+                    Latitude = 0.60,
+                    Longitude = 0.25
                 },
                 new Node()
                 {
                     Id = 10,
-                    Latitude = 0.60f,
-                    Longitude = 0.40f
+                    Latitude = 0.60,
+                    Longitude = 0.40
                 },
                 new Node()
                 {
                     Id = 11,
-                    Latitude = 0.75f,
-                    Longitude = 0.40f
+                    Latitude = 0.75,
+                    Longitude = 0.40
                 },
                 new Node()
                 {
                     Id = 12,
-                    Latitude = 0.75f,
-                    Longitude = 0.25f
+                    Latitude = 0.75,
+                    Longitude = 0.25
                 },
                 new Way()
                 {
@@ -486,26 +486,26 @@ namespace OsmSharp.Test.Geo
                 new Node()
                 {
                     Id = 5,
-                    Latitude = 0.25f,
-                    Longitude = 0.25f
+                    Latitude = 0.25,
+                    Longitude = 0.25
                 },
                 new Node()
                 {
                     Id = 6,
-                    Latitude = 0.25f,
-                    Longitude = 0.40f
+                    Latitude = 0.25,
+                    Longitude = 0.40
                 },
                 new Node()
                 {
                     Id = 7,
-                    Latitude = 0.40f,
-                    Longitude = 0.40f
+                    Latitude = 0.40,
+                    Longitude = 0.40
                 },
                 new Node()
                 {
                     Id = 8,
-                    Latitude = 0.40f,
-                    Longitude = 0.25f
+                    Latitude = 0.40,
+                    Longitude = 0.25
                 },
                 new Way()
                 {

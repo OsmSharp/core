@@ -68,21 +68,21 @@ namespace OsmSharp.Changesets
         /// <summary>
         /// Gets or sets the minimum latitude.
         /// </summary>
-        public float? MinLatitude { get; set; }
+        public double? MinLatitude { get; set; }
 
         /// <summary>
         /// Gets or sets the minimum longitude.
         /// </summary>
-        public float? MinLongitude { get; set; }
+        public double? MinLongitude { get; set; }
 
         /// <summary>
         /// Gets or sets the maximum latitude.
         /// </summary>
-        public float? MaxLatitude { get; set; }
+        public double? MaxLatitude { get; set; }
 
         /// <summary>
         /// Gets or sets the maximum longitude.
         /// </summary>
-        public float? MaxLongitude { get; set; }
+        public double? MaxLongitude { get; set; }
     }
 }

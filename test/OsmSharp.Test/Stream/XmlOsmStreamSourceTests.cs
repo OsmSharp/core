@@ -54,8 +54,8 @@ namespace OsmSharp.Test.Stream
             Assert.IsInstanceOf<Node>(result[0]);
             var node = result[0] as Node;
             Assert.AreEqual(471625991, node.Id);
-            Assert.AreEqual(51.2704712f, node.Latitude);
-            Assert.AreEqual(4.8006659f, node.Longitude);
+            Assert.AreEqual(51.2704712, node.Latitude);
+            Assert.AreEqual(4.8006659, node.Longitude);
             Assert.AreEqual("marc12", node.UserName);
             Assert.AreEqual(540527, node.UserId);
             Assert.AreEqual(true, node.Visible);

@@ -44,10 +44,10 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             var changeset = new Changeset()
             {
                 Id = 10,
-                MinLatitude = 49.2785426f,
-                MinLongitude = 7.0191821f,
-                MaxLatitude = 49.2793101f,
-                MaxLongitude = 7.0197485f,
+                MinLatitude = 49.2785426,
+                MinLongitude = 7.0191821,
+                MaxLatitude = 49.2793101,
+                MaxLongitude = 7.0197485,
                 Open = true,
                 CreatedAt = new System.DateTime(2008, 11, 08, 19, 07, 39),
                 UserId = 123,
@@ -84,10 +84,10 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             Assert.AreEqual(new System.DateTime(2008, 11, 08, 19, 07, 39), changeset.CreatedAt.Value.ToUniversalTime());
             Assert.IsNull(changeset.ClosedAt);
             Assert.AreEqual(true, changeset.Open);
-            Assert.AreEqual(7.0191821f, changeset.MinLongitude, 0.00001f);
-            Assert.AreEqual(49.2785426f, changeset.MinLatitude, 0.00001f);
-            Assert.AreEqual(7.0197485f, changeset.MaxLongitude, 0.00001f);
-            Assert.AreEqual(49.27931011f, changeset.MaxLatitude, 0.00001f);
+            Assert.AreEqual(7.0191821, changeset.MinLongitude, .000000001);
+            Assert.AreEqual(49.2785426, changeset.MinLatitude, .000000001);
+            Assert.AreEqual(7.0197485, changeset.MaxLongitude, .000000001);
+            Assert.AreEqual(49.27931011, changeset.MaxLatitude, .000000001);
 
             Assert.IsNotNull(changeset.Tags);
             Assert.AreEqual(2, changeset.Tags.Count);

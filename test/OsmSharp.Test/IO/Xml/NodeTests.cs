@@ -57,7 +57,7 @@ namespace OsmSharp.Test.IO.Xml
                 UserName = "ben",
                 UserId = 1
             };
-            Assert.AreEqual("<node id=\"1\" lat=\"54.1\" lon=\"12.2\" user=\"ben\" uid=\"1\" version=\"1\" />",
+            Assert.AreEqual("<node id=\"1\" lat=\"54.0999984741211\" lon=\"12.1999998092651\" user=\"ben\" uid=\"1\" version=\"1\" />",
                 node.SerializeToXml());
             node = new Node()
             {
@@ -72,7 +72,7 @@ namespace OsmSharp.Test.IO.Xml
                     new Tag("amenity", "something"),
                     new Tag("key", "some_value"))
             };
-            Assert.AreEqual("<node id=\"1\" lat=\"54.1\" lon=\"12.2\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></node>",
+            Assert.AreEqual("<node id=\"1\" lat=\"54.0999984741211\" lon=\"12.1999998092651\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></node>",
                 node.SerializeToXml());
         }
 

@@ -104,8 +104,8 @@ namespace OsmSharp.Test.IO.PBF
                     user_sid = 3,
                     version = 2
                 },
-                lat = Encoder.EncodeLatLon(10.9f, block.lat_offset, block.granularity),
-                lon = Encoder.EncodeLatLon(11.0f, block.lat_offset, block.granularity)
+                lat = Encoder.EncodeLatLon(10.9, block.lat_offset, block.granularity),
+                lon = Encoder.EncodeLatLon(11.0, block.lat_offset, block.granularity)
             };
             pbfNode.keys.Add(1);
             pbfNode.vals.Add(2);
@@ -114,8 +114,8 @@ namespace OsmSharp.Test.IO.PBF
             Assert.IsNotNull(node);
             Assert.AreEqual(1, node.Id);
             Assert.AreEqual(10, node.ChangeSetId);
-            Assert.AreEqual(10.9f, node.Latitude);
-            Assert.AreEqual(11.0f, node.Longitude);
+            Assert.AreEqual(10.9, node.Latitude);
+            Assert.AreEqual(11.0, node.Longitude);
             Assert.AreEqual(PBFExtensions.FromUnixTime(10000), node.TimeStamp);
             Assert.AreEqual(OsmSharp.OsmGeoType.Node, node.Type);
             Assert.AreEqual(100, node.UserId);

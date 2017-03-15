@@ -27,7 +27,7 @@ namespace OsmSharp.API
     /// <summary>
     /// Represents a user.
     /// </summary>
-    public class User
+    public partial class User
     {
         /// <summary>
         /// Gets or sets the id.
@@ -88,12 +88,19 @@ namespace OsmSharp.API
         /// Gets or sets the home location.
         /// </summary>
         public Home Home { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user's languages
+        /// </summary>
+        public string[] Languages { get; set; }
+
+        public Messages Messages { get; set; }
     }
     
     /// <summary>
     /// Represents a home location.
     /// </summary>
-    public class Home
+    public partial class Home
     {
         /// <summary>
         /// Gets or sets the latitude.
@@ -114,7 +121,7 @@ namespace OsmSharp.API
     /// <summary>
     /// Represent a block.
     /// </summary>
-    public class Block
+    public partial class Block
     {
         /// <summary>
         /// Gets or sets the count.
@@ -133,5 +140,24 @@ namespace OsmSharp.API
     public class Role
     {
 
+    }
+
+    /// <summary>
+    /// Represents messages
+    /// </summary>
+    public partial class Messages
+    {
+        /// <summary>
+        /// Gets or sets the total received messages count
+        /// </summary>
+        public int Received { get; set; }
+        /// <summary>
+        /// Gets or sets the unread received messages count
+        /// </summary>
+        public int Unread { get; set; }
+        /// <summary>
+        /// Gets or sets the sent messages count
+        /// </summary>
+        public int Sent { get; set; }
     }
 }

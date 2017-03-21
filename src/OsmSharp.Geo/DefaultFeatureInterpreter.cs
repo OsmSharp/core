@@ -66,6 +66,11 @@ namespace OsmSharp.Geo
                     case OsmGeoType.Way:
                         tags = osmObject.Tags;
 
+                        if (tags == null)
+                        {
+                            return collection;
+                        }
+
                         bool isArea = false;
                         if ((tags.ContainsKey("building") && !tags.IsFalse("building")) ||
                             (tags.ContainsKey("landuse") && !tags.IsFalse("landuse")) ||
@@ -136,6 +141,11 @@ namespace OsmSharp.Geo
                     case OsmGeoType.Relation:
                         var relation = (osmObject as CompleteRelation);
                         tags = relation.Tags;
+
+                        if (tags == null)
+                        {
+                            return collection;
+                        }
 
                         string typeValue;
                         if (tags.TryGetValue("type", out typeValue))

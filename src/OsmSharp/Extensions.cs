@@ -56,6 +56,10 @@ namespace OsmSharp
                 {
                     return osmGeo.Version.Value.CompareTo(other.Version.Value);
                 }
+                if (osmGeo.Id < 0 && other.Id < 0)
+                {
+                    return other.Id.Value.CompareTo(osmGeo.Id.Value);
+                }
                 return osmGeo.Id.Value.CompareTo(other.Id.Value);
             }
             switch (osmGeo.Type)
@@ -89,6 +93,10 @@ namespace OsmSharp
 
             if (osmGeo.Type == other.Type)
             {
+                if (osmGeo.Id < 0 && other.Id < 0)
+                {
+                    return other.Id.Value.CompareTo(osmGeo.Id.Value);
+                }
                 return osmGeo.Id.Value.CompareTo(other.Id.Value);
             }
             switch (osmGeo.Type)

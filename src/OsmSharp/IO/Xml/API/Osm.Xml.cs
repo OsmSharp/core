@@ -107,6 +107,12 @@ namespace OsmSharp.API
                             changesets = new List<Changeset>();
                         }
                         changesets.Add(changeset);
+                    }),
+                new Tuple<string, Action>(
+                    "user", () =>
+                    {
+                        this.User = new User();
+                        (this.User as IXmlSerializable).ReadXml(reader);
                     }));
 
             if (nodes != null)
@@ -132,6 +138,7 @@ namespace OsmSharp.API
             writer.WriteAttribute("version", this.Version);
             writer.WriteAttribute("generator", this.Generator);
 
+            writer.WriteElement("user", this.User);
             writer.WriteElement("bounds", this.Bounds);
             writer.WriteElement("api", this.Api);
 

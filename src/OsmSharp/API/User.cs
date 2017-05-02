@@ -94,6 +94,9 @@ namespace OsmSharp.API
         /// </summary>
         public string[] Languages { get; set; }
 
+        /// <summary>
+        /// Gets or sets the messages.
+        /// </summary>
         public Messages Messages { get; set; }
     }
     

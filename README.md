@@ -19,11 +19,11 @@ OsmSharp's core enables you to work directly with OSM-data in .NET/Mono. Most im
 
 ### Install
 
-    PM> Install-Package OsmSharp -IncludePrerelease
+    PM> Install-Package OsmSharp
     
 There's also a package to use [NTS](https://github.com/NetTopologySuite/) together with OsmSharp to convert OSM-data to features/geometries.
 
-    PM> Install-Package OsmSharp.Geo -IncludePrerelease
+    PM> Install-Package OsmSharp.Geo
 
 ### Usage
 

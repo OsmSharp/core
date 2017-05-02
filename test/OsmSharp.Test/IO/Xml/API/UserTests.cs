@@ -97,7 +97,7 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.IsNotNull(osm.User);
             Assert.AreEqual(111, osm.User.Id);
             Assert.AreEqual("Test", osm.User.DisplayName);
-            Assert.AreEqual(new DateTime(2000, 1, 1, 1, 0, 0), osm.User.AccountCreated);
+            Assert.AreEqual(new DateTime(2000, 1, 1, 0, 0, 0), osm.User.AccountCreated);
             Assert.AreEqual("Hello", osm.User.Description);
             Assert.IsTrue(osm.User.ContributorTermsAgreed);
             Assert.IsFalse(osm.User.ContributorTermsPublicDomain);

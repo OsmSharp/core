@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net451</TargetFramework>
+    <AssemblyName>OsmSharp.Test</AssemblyName>
+    <PackageId>OsmSharp.Test</PackageId>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\OsmSharp\OsmSharp.csproj" />
+    <ProjectReference Include="..\..\src\OsmSharp.Geo\OsmSharp.Geo.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-preview-20170106-08" />
+    <PackageReference Include="NUnit" Version="3.4.1" />
+    <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.14.0" />
+    <PackageReference Include="NetTopologySuite" Version="1.14.0" />
+    <PackageReference Include="GeoAPI" Version="1.7.4" />
+    <PackageReference Include="dotnet-test-nunit" Version="3.4.0-beta-2" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
+    <EmbeddedResource Include="data\pbf\*.pbf;data\xml\*.osm" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
+    <Reference Include="System.Xml" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+</Project>

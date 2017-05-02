@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net40;net45;portable40-net403+sl5+win8+wp8</TargetFrameworks>
+    <AssemblyName>OsmSharp.Geo</AssemblyName>
+    <PackageId>OsmSharp.Geo</PackageId>
+    <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OsmSharp\OsmSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GeoAPI" Version="1.7.4" />
+    <PackageReference Include="NetTopologySuite" Version="1.14.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
+    <Reference Include="System.Xml" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <Reference Include="System.Xml" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' ">
+    <DefineConstants>$(DefineConstants);NET40</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
+    <Compile Include="..\..\SharedAssemblyVersion.cs" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <DefineConstants>$(DefineConstants);NET45</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <Compile Include="..\..\SharedAssemblyVersion.cs" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'portable40-net403+sl5+win8+wp8' ">
+    <DefineConstants>$(DefineConstants);PORTABLE147</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'portable40-net403+sl5+win8+wp8' ">
+    <Compile Include="..\..\SharedAssemblyVersion.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'portable40-net403+sl5+win8+wp8' ">
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Serialization" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'portable40-net403+sl5+win8+wp8'">
+    <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile147</TargetFrameworkProfile>
+  </PropertyGroup>
+
+</Project>

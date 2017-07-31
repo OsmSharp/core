@@ -1,6 +1,6 @@
 ﻿// The MIT License (MIT)
 
-// Copyright (c) 2016 Ben Abelshausen
+// Copyright (c) 2017 Ben Abelshausen
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,68 +20,63 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.Changesets;
+using System;
 
 namespace OsmSharp.API
 {
     /// <summary>
-    /// Represents the root-object for all API-related communication.
+    /// Represents a GPX file.
     /// </summary>
-    public partial class Osm
+    public partial class GpxFile
     {
         /// <summary>
-        /// Gets or sets the generator.
+        /// Gets or sets the id.
         /// </summary>
-        public string Generator { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the version #.
+        /// Gets or sets the name.
         /// </summary>
-        public double? Version { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the capabilities.
+        /// Gets or sets the latitude.
         /// </summary>
-        public Capabilities Api { get; set; }
+        public double? Lat { get; set; }
 
         /// <summary>
-        /// Gets or sets the nodes array.
+        /// Gets or sets the longitude.
         /// </summary>
-        public Node[] Nodes { get; set; }
+        public double? Lon { get; set; }
 
         /// <summary>
-        /// Gets or sets the ways array.
+        /// Gets or sets the user name.
         /// </summary>
-        public Way[] Ways { get; set; }
+        public string User { get; set; }
 
         /// <summary>
-        /// Gets or sets the relations array.
+        /// Gets or sets the visibility.
         /// </summary>
-        public Relation[] Relations { get; set; }
+        public string Visibility { get; set; }
 
         /// <summary>
-        /// Gets or sets the changeset.
+        /// Gets or sets the description.
         /// </summary>
-        public Changeset[] Changesets { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
-        /// Gets or sets the users.
+        /// Gets or sets the pending approval.
         /// </summary>
-        public User[] Users { get; set; }
+        public bool Pending { get; set; }
 
         /// <summary>
-        /// Gets or sets the user.
+        /// Gets or sets the tags.
         /// </summary>
-        public User User { get; set; }
+        public string[] Tags { get; set; }
 
         /// <summary>
-        /// Gets or sets the bounds.
+        /// Gets or sets the timestamp.
         /// </summary>
-        public Bounds Bounds { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the GPX files.
-        /// </summary>
-        public GpxFile[] GpxFiles { get; set; }
+        public DateTime TimeStamp { get; set; }
     }
 }

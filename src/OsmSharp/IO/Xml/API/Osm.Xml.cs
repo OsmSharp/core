@@ -50,6 +50,7 @@ namespace OsmSharp.API
             List<Way> ways = null;
             List<Relation> relations = null;
             List<Changeset> changesets = null;
+            List<GpxFile> gpxFiles = null;
             reader.GetElements(
                 new Tuple<string, Action>(
                     "api", () =>
@@ -113,6 +114,17 @@ namespace OsmSharp.API
                     {
                         this.User = new User();
                         (this.User as IXmlSerializable).ReadXml(reader);
+                    }),
+                new Tuple<string, Action>(
+                    "gpx_file", () =>
+                    {
+                        var gpxFile = new GpxFile();
+                        (gpxFile as IXmlSerializable).ReadXml(reader);
+                        if (gpxFiles == null)
+                        {
+                            gpxFiles = new List<GpxFile>();
+                        }
+                        gpxFiles.Add(gpxFile);
                     }));
 
             if (nodes != null)
@@ -131,6 +143,10 @@ namespace OsmSharp.API
             {
                 this.Changesets = changesets.ToArray();
             }
+            if (gpxFiles != null)
+            {
+                this.GpxFiles = gpxFiles.ToArray();
+            }
         }
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
@@ -146,6 +162,8 @@ namespace OsmSharp.API
             writer.WriteElements("way", this.Ways);
             writer.WriteElements("relation", this.Relations);
             writer.WriteElements("changeset", this.Changesets);
+
+            writer.WriteElements("gpx_file", this.GpxFiles);
         }
     }
 }

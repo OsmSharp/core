@@ -71,11 +71,11 @@ namespace OsmSharp.API
             writer.WriteAttributeString("name", this.Name);
             if (this.Lat.HasValue)
             {
-                writer.WriteAttributeString("lat", this.Lat.Value.ToString());
+                writer.WriteAttributeString("lat", this.Lat.Value.ToInvariantString());
             }
             if (this.Lon.HasValue)
             {
-                writer.WriteAttributeString("lon", this.Lon.Value.ToString());
+                writer.WriteAttributeString("lon", this.Lon.Value.ToInvariantString());
             }
             writer.WriteAttributeString("user", this.User);
             writer.WriteAttributeString("visibility", this.Visibility);

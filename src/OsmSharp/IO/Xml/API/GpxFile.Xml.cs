@@ -80,7 +80,7 @@ namespace OsmSharp.API
             writer.WriteAttributeString("user", this.User);
             writer.WriteAttributeString("visibility", this.Visibility);
             writer.WriteAttributeString("pending", this.Pending.ToString());
-            writer.WriteAttributeString("timestamp", this.TimeStamp.ToUniversalTime().ToString("s") + "Z");
+            writer.WriteAttribute("timestamp", this.TimeStamp);
             writer.WriteElementString("description", this.Description);
             foreach (string tag in this.Tags)
             {

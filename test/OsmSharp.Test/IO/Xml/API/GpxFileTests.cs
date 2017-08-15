@@ -53,7 +53,7 @@ namespace OsmSharp.Test.IO.Xml.API
                         User = "User",
                         Visibility = "private",
                         Pending = false,
-                        TimeStamp = new DateTime(1947, 11, 29, 12, 0, 0),
+                        TimeStamp = new DateTime(1947, 11, 29, 12, 0, 0, DateTimeKind.Utc),
                         Description = "Description",
                         Tags = new [] {"tag1", "tag2"},
                     }
@@ -62,7 +62,7 @@ namespace OsmSharp.Test.IO.Xml.API
             var osmString = osm.SerializeToXml();
 
             Assert.AreEqual(
-                "<osm version=\"0.6\" generator=\"OpenStreetMap server\"><gpx_file id=\"1\" name=\"Name\" lat=\"1.1\" lon=\"2.2\" user=\"User\" visibility=\"private\" pending=\"False\" timestamp=\"1947-11-29T10:00:00Z\"><description>Description</description><tag>tag1</tag><tag>tag2</tag></gpx_file></osm>",
+                "<osm version=\"0.6\" generator=\"OpenStreetMap server\"><gpx_file id=\"1\" name=\"Name\" lat=\"1.1\" lon=\"2.2\" user=\"User\" visibility=\"private\" pending=\"False\" timestamp=\"1947-11-29T12:00:00Z\"><description>Description</description><tag>tag1</tag><tag>tag2</tag></gpx_file></osm>",
                 osmString);
         }
 

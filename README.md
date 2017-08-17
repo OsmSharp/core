@@ -27,8 +27,6 @@ There's also a package to use [NTS](https://github.com/NetTopologySuite/) togeth
 
 ### Usage
 
-**WARNING: All this documentation applies to v5! Install the prerelease version.**
-
 This readme contains some basic examples, for more documentation and samples check the [wiki](https://github.com/OsmSharp/core/wiki).
 
 A common usecase is to stream and filter OSM data. To read from an OSM file and enumerate all objects just open the file as a stream source and use foreach.

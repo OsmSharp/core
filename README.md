@@ -90,10 +90,12 @@ var source = new PBFOsmStreamSource(
 var filtered = source.FilterBox(6.238002777099609f, 49.72076145492323f, 
 	6.272850036621093f, 49.69928180928878f); // left, top, right, bottom
 
-var target = new PBFOsmStreamTarget(
-	new FileInfo(@"/path/to/filterede.osm.pbf").Open(FileMode.Create, FileAccess.ReadWrite));
-target.RegisterSource(filter);
-target.Pull();
+using (var stream = new FileInfo(@"/path/to/filterede.osm.pbf").Open(FileMode.Create, FileAccess.ReadWrite))
+{
+   var target = new PBFOsmStreamTarget(stream);
+   target.RegisterSource(filter);
+   target.Pull();
+}
 ```
 
 

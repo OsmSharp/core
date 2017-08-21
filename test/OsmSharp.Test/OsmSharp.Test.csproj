@@ -21,7 +21,8 @@
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.14.0" />
     <PackageReference Include="NetTopologySuite" Version="1.14.0" />
     <PackageReference Include="GeoAPI" Version="1.7.4" />
-    <PackageReference Include="NUnit" Version="3.6.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="NUnit" Version="3.7.1" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">

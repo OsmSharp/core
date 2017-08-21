@@ -1,6 +1,6 @@
 ﻿// The MIT License (MIT)
 
-// Copyright (c) 2016 Ben Abelshausen
+// Copyright (c) 2017 Ben Abelshausen
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -49,6 +49,44 @@ namespace OsmSharp.Complete
         /// Gets the relation members.
         /// </summary>
         public CompleteRelationMember[] Members { get; set; }
+
+        /// <summary>
+        /// Converts this relation into it's simple counterpart.
+        /// </summary>
+        /// <returns></returns>
+        public override OsmGeo ToSimple()
+        {
+            var relation = new Relation();
+            relation.Id = this.Id;
+            relation.ChangeSetId = this.ChangeSetId;
+            relation.Tags = this.Tags;
+            relation.TimeStamp = this.TimeStamp;
+            relation.UserId = this.UserId;
+            relation.UserName = this.UserName;
+            relation.Version = this.Version;
+            relation.Visible = this.Visible;
+
+            if (this.Members != null)
+            {
+                relation.Members = new RelationMember[this.Members.Length];
+                for (var i = 0; i < relation.Members.Length; i++)
+                {
+                    var member = this.Members[i];
+                    if (member == null)
+                    {
+                        continue;
+                    }
+
+                    var simpleMember = new RelationMember();
+                    simpleMember.Id = member.Member.Id;
+                    simpleMember.Role = member.Role;
+                    simpleMember.Type = member.Member.Type;
+
+                    relation.Members[i] = simpleMember;
+                }
+            }
+            return relation;
+        }
 
         /// <summary>
         /// Returns a description of this object.

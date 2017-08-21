@@ -80,7 +80,7 @@ namespace OsmSharp.Complete
                 completeWay.Nodes = nodes.ToArray();
             }
             completeWay.TimeStamp = way.TimeStamp;
-            completeWay.User = way.UserName;
+            completeWay.UserName = way.UserName;
             completeWay.UserId = way.UserId;
             completeWay.Version = way.Version;
             completeWay.Visible = way.Visible;
@@ -169,7 +169,7 @@ namespace OsmSharp.Complete
                 completeRelation.Members = relationMembers.ToArray();
             }
             completeRelation.TimeStamp = relation.TimeStamp;
-            completeRelation.User = relation.UserName;
+            completeRelation.UserName = relation.UserName;
             completeRelation.UserId = relation.UserId;
             completeRelation.Version = relation.Version;
             completeRelation.Visible = relation.Visible;

@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using OsmSharp.IO.Xml;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -69,6 +70,11 @@ namespace OsmSharp.Streams
         public string Generator { get; set; } = "OsmSharp";
 
         /// <summary>
+        /// Gets or sets the bounds.
+        /// </summary>
+        public API.Bounds Bounds { get; set; }
+
+        /// <summary>
         /// Initializes this target.
         /// </summary>
         public override void Initialize()
@@ -99,6 +105,11 @@ namespace OsmSharp.Streams
 
                         _writer.WriteAttributeString(pair.Item1, pair.Item2);
                     }
+                }
+
+                if (this.Bounds != null)
+                {
+                    _writer.WriteRaw(this.Bounds.SerializeToXml());
                 }
 
                 _initialized = true;

@@ -20,13 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace OsmSharp.Db
 {
     /// <summary>
     /// A unique identifier including types.
     /// </summary>
-    public class OsmGeoKey
+    public struct OsmGeoKey : IEquatable<OsmGeoKey>
     {
+        /// <summary>
+        /// Creates a version key.
+        /// </summary>
+        public OsmGeoKey(OsmGeoType type, long id)
+        {
+            this.Type = type;
+            this.Id = id;
+        }
+
+        /// <summary>
+        /// Creates a version key for the given object.
+        /// </summary>
+        public OsmGeoKey(OsmGeo osmGeo)
+        {
+            this.Type = osmGeo.Type;
+            this.Id = osmGeo.Id.Value;
+        }
+
         /// <summary>
         /// Gets or sets the type.
         /// </summary>
@@ -49,15 +69,18 @@ namespace OsmSharp.Db
         /// <summary>
         /// Returns true if the given object represents the same key.
         /// </summary>
+        public bool Equals(OsmGeoKey other)
+        {
+            return this.Type == other.Type && this.Id == other.Id;
+        }
+
+        /// <summary>
+        /// Returns true if the given object represents the same key.
+        /// </summary>
         public override bool Equals(object obj)
         {
-            var other = (obj as OsmGeoKey);
-            if (other == null)
-            {
-                return false;
-            }
-            return other.Id == this.Id &&
-                other.Type == this.Type;
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is OsmGeo && Equals((OsmGeo)obj);
         }
     }
 }

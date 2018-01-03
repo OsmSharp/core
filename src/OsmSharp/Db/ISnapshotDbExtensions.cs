@@ -64,11 +64,7 @@ namespace OsmSharp.Db
         /// </summary>
         public static void DeleteNode(this ISnapshotDb db, long id)
         {
-            db.Delete(new OsmGeoKey()
-            {
-                Id = id,
-                Type = OsmGeoType.Node
-            });
+            db.Delete(new OsmGeoKey(OsmGeoType.Node, id));
         }
 
         /// <summary>
@@ -76,11 +72,7 @@ namespace OsmSharp.Db
         /// </summary>
         public static void DeleteWay(this ISnapshotDb db, long id)
         {
-            db.Delete(new OsmGeoKey()
-            {
-                Id = id,
-                Type = OsmGeoType.Way
-            });
+            db.Delete(new OsmGeoKey(OsmGeoType.Way, id));
         }
 
         /// <summary>
@@ -88,11 +80,7 @@ namespace OsmSharp.Db
         /// </summary>
         public static void DeleteRelation(this ISnapshotDb db, long id)
         {
-            db.Delete(new OsmGeoKey()
-            {
-                Id = id,
-                Type = OsmGeoType.Relation
-            });
+            db.Delete(new OsmGeoKey(OsmGeoType.Relation, id));
         }
 
         /// <summary>

@@ -32,6 +32,7 @@ namespace OsmSharp.Streams
     public class PBFOsmStreamSource : OsmStreamSource, IPBFOsmPrimitiveConsumer
     {
         private readonly Stream _stream;
+        private readonly long _initialPosition;
 
         /// <summary>
         /// Creates a new source of PBF formated OSM data.
@@ -39,6 +40,7 @@ namespace OsmSharp.Streams
         public PBFOsmStreamSource(Stream stream)
         {
             _stream = stream;
+            _initialPosition = _stream.Position;
         }
 
         private bool _initialized = false;
@@ -48,8 +50,6 @@ namespace OsmSharp.Streams
         /// </summary>
         private void Initialize()
         {
-            _stream.Seek(0, SeekOrigin.Begin);
-
             this.InitializePBFReader();
         }
 
@@ -114,7 +114,7 @@ namespace OsmSharp.Streams
         {
             _current = null;
             if (_cachedPrimitives != null) { _cachedPrimitives.Clear(); }
-            _stream.Seek(0, SeekOrigin.Begin);
+            _stream.Seek(_initialPosition, SeekOrigin.Begin);
         }
 
         /// <summary>

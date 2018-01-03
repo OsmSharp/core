@@ -24,6 +24,7 @@ using NUnit.Framework;
 using OsmSharp.Streams;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 
 namespace OsmSharp.Test.Stream
@@ -219,6 +220,92 @@ namespace OsmSharp.Test.Stream
                 // pull the data again.
                 target.Pull();
             }
+        }
+
+        /// <summary>
+        /// Reads a real OSM-XML file.
+        /// </summary>
+        [Test]
+        public void ReadRealXML()
+        {
+            using (var fileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                "OsmSharp.Test.data.xml.wechel.osm"))
+            {
+                var wechel = new List<OsmGeo>();
+                using (var reader = new XmlOsmStreamSource(fileStream))
+                {
+                    wechel.AddRange(reader);
+                }
+
+                Assert.AreEqual(13978, wechel.Count);
+            }
+        }
+
+        /// <summary>
+        /// Tests reading an actual OSM-PBF file from a non-seekable stream.
+        /// </summary>
+        [Test]
+        public void ReadRealXMLNonSeekable()
+        {
+            using (var fileStream = new NonSeekableStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                "OsmSharp.Test.data.xml.wechel.osm")))
+            {
+                var wechel = new List<OsmGeo>();
+                using (var reader = new XmlOsmStreamSource(fileStream))
+                {
+                    wechel.AddRange(reader);
+                }
+
+                Assert.AreEqual(13978, wechel.Count);
+            }
+        }
+
+        /// <summary>
+        /// Tests reading an actual OSM-PBF file from a non-seekable stream.
+        /// </summary>
+        [Test]
+        public void ReadRealXMLNotAtBeginning()
+        {
+            var offsetMemoryStream = new MemoryStream();
+            offsetMemoryStream.Write(new byte[235], 0, 235);
+            using (var fileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                "OsmSharp.Test.data.xml.wechel.osm"))
+            {
+                fileStream.CopyTo(offsetMemoryStream);
+            }
+            offsetMemoryStream.Seek(235, SeekOrigin.Begin);
+
+            var wechel = new List<OsmGeo>();
+            using (var reader = new XmlOsmStreamSource(offsetMemoryStream))
+            {
+                wechel.AddRange(reader);
+            }
+
+            Assert.AreEqual(13978, wechel.Count);
+        }
+
+        /// <summary>
+        /// Tests reading an actual OSM-XML file from a non-seekable stream.
+        /// </summary>
+        [Test]
+        public void ReadRealXMLNonSeekableNotAtBeginning()
+        {
+            var offsetMemoryStream = new MemoryStream();
+            offsetMemoryStream.Write(new byte[235], 0, 235);
+            using (var fileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                "OsmSharp.Test.data.xml.wechel.osm"))
+            {
+                fileStream.CopyTo(offsetMemoryStream);
+            }
+            offsetMemoryStream.Seek(235, SeekOrigin.Begin);
+
+            var wechel = new List<OsmGeo>();
+            using (var reader = new XmlOsmStreamSource(new NonSeekableStream(offsetMemoryStream)))
+            {
+                wechel.AddRange(reader);
+            }
+
+            Assert.AreEqual(13978, wechel.Count);
         }
     }
 }

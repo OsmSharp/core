@@ -63,12 +63,12 @@
 
 using System;
 
-namespace Ionic.Zlib
+namespace OsmSharp.Ionic.Zlib
 {
     /// <summary>
     /// A bunch of constants used in the Zlib interface.
     /// </summary>
-    public static class ZlibConstants
+    internal static class ZlibConstants
     {
         /// <summary>
         /// The maximum number of window bits for the Deflate algorithm.

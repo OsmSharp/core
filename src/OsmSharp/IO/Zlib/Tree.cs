@@ -63,9 +63,9 @@
 
 using System;
 
-namespace Ionic.Zlib
+namespace OsmSharp.Ionic.Zlib
 {
-    sealed class Tree
+    internal sealed class Tree
     {
         private static readonly int HEAP_SIZE = (2 * InternalConstants.L_CODES + 1);
                 

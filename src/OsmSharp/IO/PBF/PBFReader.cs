@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using Ionic.Zlib;
+using OsmSharp.Ionic.Zlib;
 using ProtoBuf;
 using ProtoBuf.Meta;
 using System;

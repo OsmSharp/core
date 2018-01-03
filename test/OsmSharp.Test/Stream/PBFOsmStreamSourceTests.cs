@@ -89,7 +89,7 @@ namespace OsmSharp.Test.Stream
         [Test]
         public void ReadRealPBF()
         {
-            using (var fileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
+            using (var fileStream = this.GetType().Assembly.GetManifestResourceStream(
                 "OsmSharp.Test.data.pbf.wechel.osm.pbf"))
             {
                 var wechel = new List<OsmGeo>();

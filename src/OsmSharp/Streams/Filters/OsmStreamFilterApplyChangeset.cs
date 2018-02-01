@@ -100,6 +100,14 @@ namespace OsmSharp.Streams.Filters
         /// </summary>
         public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
+            if (_mergedSource == null)
+            {
+                var mergedSource = new OsmStreamFilterMerge();
+                mergedSource.RegisterSource(this.Source);
+                mergedSource.RegisterSource(_creations);
+                _mergedSource = mergedSource;
+            }
+
             OsmGeo modified;
             while (_mergedSource.MoveNext(ignoreNodes, ignoreWays, ignoreRelations))
             {
@@ -130,10 +138,7 @@ namespace OsmSharp.Streams.Filters
         {
             this.Source.Reset();
 
-            var mergedSource = new OsmStreamFilterMerge();
-            mergedSource.RegisterSource(this.Source);
-            mergedSource.RegisterSource(_creations);
-            _mergedSource = mergedSource;
+            _mergedSource = null;
         }
     }
 }

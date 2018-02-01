@@ -24,7 +24,6 @@ Core/OsmSharp.UnitTests/test-results*/
 Output*/
 OutputAndroid*/
 OutputWindowsPhone*/
-.vs*/
 *.psess
 test-results*/
 TestResults*/
@@ -34,7 +33,6 @@ TestResults*/
 *.patch
 *.osm.pbf
 TestResult.xml
-.vs*/
 
 packages/*
 !packages/repositories.config

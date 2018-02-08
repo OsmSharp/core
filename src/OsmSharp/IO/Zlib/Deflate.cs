@@ -69,7 +69,7 @@
 
 using System;
 
-namespace Ionic.Zlib
+namespace OsmSharp.Ionic.Zlib
 {
 
     internal enum BlockState

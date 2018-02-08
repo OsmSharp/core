@@ -67,7 +67,7 @@
 using System;
 using Interop=System.Runtime.InteropServices;
 
-namespace Ionic.Zlib
+namespace OsmSharp.Ionic.Zlib
 {
     /// <summary>
     /// Encoder and Decoder for ZLIB and DEFLATE (IETF RFC1950 and RFC1951).
@@ -79,7 +79,7 @@ namespace Ionic.Zlib
     /// href="http://www.ietf.org/rfc/rfc1950.txt">RFC 1950 - ZLIB</see> and <see
     /// href="http://www.ietf.org/rfc/rfc1951.txt">RFC 1951 - DEFLATE</see>.
     /// </remarks>
-    sealed public class ZlibCodec
+    sealed internal class ZlibCodec
     {
         /// <summary>
         /// The buffer from which data is taken.

@@ -28,7 +28,7 @@
 using System;
 using System.IO;
 
-namespace Ionic.Zlib
+namespace OsmSharp.Ionic.Zlib
 {
 
     /// <summary>
@@ -61,7 +61,7 @@ namespace Ionic.Zlib
     /// 
     /// </remarks>
     /// <seealso cref="DeflateStream" />
-    public class ZlibStream : System.IO.Stream
+    internal class ZlibStream : System.IO.Stream
     {
         internal ZlibBaseStream _baseStream;
         bool _disposed;

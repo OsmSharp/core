@@ -51,6 +51,31 @@ namespace OsmSharp.Complete
         public Node[] Nodes { get; set; }
 
         /// <summary>
+        /// Converts this way into it's simple counterpart.
+        /// </summary>
+        /// <returns></returns>
+        public override OsmGeo ToSimple()
+        {
+            var way = new Way();
+            way.Id = this.Id;
+            way.ChangeSetId = this.ChangeSetId;
+            way.Tags = this.Tags;
+            way.TimeStamp = this.TimeStamp;
+            way.UserId = this.UserId;
+            way.UserName = this.UserName;
+            way.Version = this.Version;
+            way.Visible = this.Visible;
+
+            way.Nodes = new long[this.Nodes.Length];
+            for (var i = 0; i < this.Nodes.Length; i++)
+            {
+                way.Nodes[i] = this.Nodes[i].Id.Value;
+            }
+
+            return way;
+        }
+
+        /// <summary>
         /// Returns a description of this object.
         /// </summary>
         public override string ToString()

@@ -148,11 +148,7 @@ namespace OsmSharp.Db
         /// </summary>
         public OsmGeo Get(OsmGeoType type, long id)
         {
-            return _db.Get(new OsmGeoKey[] { new OsmGeoKey()
-            {
-                Id = id,
-                Type = type
-            }}).FirstOrDefault();
+            return _db.Get(new OsmGeoKey[] { new OsmGeoKey(type, id) }).FirstOrDefault();
         }
 
         /// <summary>
@@ -271,11 +267,7 @@ namespace OsmSharp.Db
             if (changeset.Modify != null)
             {
                 _db.Archive(changeset.Modify.Select(x =>
-                    new OsmGeoKey()
-                    {
-                        Id = x.Id.Value,
-                        Type = x.Type
-                    }));
+                    new OsmGeoKey(x.Type, x.Id.Value)));
 
                 foreach(var modify in changeset.Modify)
                 {
@@ -342,11 +334,7 @@ namespace OsmSharp.Db
                         delete));
                 }
                 _db.Archive(changeset.Delete.Select(x =>
-                    new OsmGeoKey()
-                    {
-                        Id = x.Id.Value,
-                        Type = x.Type
-                    }));
+                    new OsmGeoKey(x.Type, x.Id.Value)));
             }
 
             return new DiffResultResult(new DiffResult()

@@ -22,6 +22,8 @@
 
 using NUnit.Framework;
 using OsmSharp.Streams;
+using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 
 namespace OsmSharp.Test.Stream
@@ -79,6 +81,92 @@ namespace OsmSharp.Test.Stream
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Tests reading an actual OSM-PBF file.
+        /// </summary>
+        [Test]
+        public void ReadRealPBF()
+        {
+            using (var fileStream = this.GetType().Assembly.GetManifestResourceStream(
+                "OsmSharp.Test.data.pbf.wechel.osm.pbf"))
+            {
+                var wechel = new List<OsmGeo>();
+                using (var reader = new PBFOsmStreamSource(fileStream))
+                {
+                    wechel.AddRange(reader);
+                }
+
+                Assert.AreEqual(13978, wechel.Count);
+            }
+        }
+
+        /// <summary>
+        /// Tests reading an actual OSM-PBF file from a non-seekable stream.
+        /// </summary>
+        [Test]
+        public void ReadRealPBFNonSeekable()
+        {
+            using (var fileStream = new NonSeekableStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                "OsmSharp.Test.data.pbf.wechel.osm.pbf")))
+            {
+                var wechel = new List<OsmGeo>();
+                using (var reader = new PBFOsmStreamSource(fileStream))
+                {
+                    wechel.AddRange(reader);
+                }
+
+                Assert.AreEqual(13978, wechel.Count);
+            }
+        }
+
+        /// <summary>
+        /// Tests reading an actual OSM-PBF file from a non-seekable stream.
+        /// </summary>
+        [Test]
+        public void ReadRealPBFNotAtBeginning()
+        {
+            var offsetMemoryStream = new MemoryStream();
+            offsetMemoryStream.Write(new byte[235], 0, 235);
+            using (var fileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                "OsmSharp.Test.data.pbf.wechel.osm.pbf"))
+            {
+                fileStream.CopyTo(offsetMemoryStream);
+            }
+            offsetMemoryStream.Seek(235, SeekOrigin.Begin);
+
+            var wechel = new List<OsmGeo>();
+            using (var reader = new PBFOsmStreamSource(offsetMemoryStream))
+            {
+                wechel.AddRange(reader);
+            }
+
+            Assert.AreEqual(13978, wechel.Count);
+        }
+
+        /// <summary>
+        /// Tests reading an actual OSM-PBF file from a non-seekable stream.
+        /// </summary>
+        [Test]
+        public void ReadRealPBFNonSeekableNotAtBeginning()
+        {
+            var offsetMemoryStream = new MemoryStream();
+            offsetMemoryStream.Write(new byte[235], 0, 235);
+            using (var fileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                "OsmSharp.Test.data.pbf.wechel.osm.pbf"))
+            {
+                fileStream.CopyTo(offsetMemoryStream);
+            }
+            offsetMemoryStream.Seek(235, SeekOrigin.Begin);
+
+            var wechel = new List<OsmGeo>();
+            using (var reader = new PBFOsmStreamSource(new NonSeekableStream(offsetMemoryStream)))
+            {
+                wechel.AddRange(reader);
+            }
+
+            Assert.AreEqual(13978, wechel.Count);
         }
     }
 }

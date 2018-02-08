@@ -44,7 +44,7 @@ namespace OsmSharp.IO.Xml
         {
             if (value.HasValue)
             {
-                writer.WriteAttributeString(name, value.Value.ToString(DATE_FORMAT));
+                writer.WriteAttributeString(name, value.Value.ToString(DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -267,7 +267,7 @@ namespace OsmSharp.IO.Xml
             var valueString = reader.GetAttribute(name);
             DateTime value;
             if (!string.IsNullOrWhiteSpace(valueString) &&
-               DateTime.TryParse(valueString, out value))
+               DateTime.TryParse(valueString, System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out value))
             {
                 return value;
             }

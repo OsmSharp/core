@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using OsmSharp.Changesets;
 using OsmSharp.Db;
 using OsmSharp.Streams.Filters;
 using System;
@@ -153,6 +154,16 @@ namespace OsmSharp.Streams
             var progress = new Filters.OsmStreamFilterProgress();
             progress.RegisterSource(source);
             return progress;
+        }
+
+        /// <summary>
+        /// Applies the given changes to the given stream.
+        /// </summary>
+        public static OsmStreamSource ApplyChanges(this IEnumerable<OsmGeo> source, params OsmChange[] osmChange)
+        {
+            var filter = new OsmStreamFilterApplyChangeset(osmChange);
+            filter.RegisterSource(source);
+            return filter;
         }
     }
 }

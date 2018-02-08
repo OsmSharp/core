@@ -58,7 +58,7 @@ namespace OsmSharp.Complete
         /// <summary>
         /// The user that created this object
         /// </summary>
-        public string User { get; set; }
+        public string UserName { get; set; }
 
         /// <summary>
         /// The user id.
@@ -69,6 +69,12 @@ namespace OsmSharp.Complete
         /// Gets the osm geo type.
         /// </summary>
         public abstract OsmGeoType Type { get; }
+
+        /// <summary>
+        /// Gets the simple equivalent.
+        /// </summary>
+        /// <returns></returns>
+        public abstract OsmGeo ToSimple();
 
         /// <summary>
         /// Gets or sets the tags.

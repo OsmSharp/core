@@ -34,6 +34,7 @@ namespace OsmSharp.Streams
     {
         private readonly bool _disposeStream = false;
         private readonly Stream _stream;
+        private readonly long _initialPosition;
 
         /// <summary>
         /// Creates a new OSM XML processor source.
@@ -41,6 +42,7 @@ namespace OsmSharp.Streams
         public XmlOsmStreamSource(Stream stream)
         {
             _stream = stream;
+            _initialPosition = _stream.Position;
         }
 
         private XmlReader _reader;
@@ -79,7 +81,7 @@ namespace OsmSharp.Streams
             // seek to the beginning of the stream.
             if (_stream.CanSeek)
             { // if a non-seekable stream is given resetting is disabled.
-                _stream.Seek(0, SeekOrigin.Begin);
+                _stream.Seek(_initialPosition, SeekOrigin.Begin);
             }
 
             var textReader = new StreamReader(_stream, Encoding.UTF8);

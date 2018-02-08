@@ -81,11 +81,7 @@ namespace OsmSharp.Db
         /// </summary>
         public OsmGeo Get(OsmGeoType type, long id)
         {
-            var res = this.Get(new OsmGeoKey[] { new OsmGeoKey()
-            {
-                Id = id,
-                Type = type
-            }});
+            var res = this.Get(new OsmGeoKey[] { new OsmGeoKey(type, id) });
 
             return res.FirstOrDefault();
         }
@@ -115,11 +111,7 @@ namespace OsmSharp.Db
 
             if (changeset.Delete != null)
             {
-                this.Delete(changeset.Delete.Select(x => new OsmGeoKey()
-                {
-                    Id = x.Id.Value,
-                    Type = x.Type
-                }));
+                this.Delete(changeset.Delete.Select(x => new OsmGeoKey(x.Type, x.Id.Value)));
             }
             
             if (changeset.Modify != null)

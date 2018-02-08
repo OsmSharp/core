@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using OsmSharp.IO.Xml;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
@@ -63,6 +65,16 @@ namespace OsmSharp.Streams
         private bool _initialized = false;
 
         /// <summary>
+        /// Gets or sets the generator.
+        /// </summary>
+        public string Generator { get; set; } = "OsmSharp";
+
+        /// <summary>
+        /// Gets or sets the bounds.
+        /// </summary>
+        public API.Bounds Bounds { get; set; }
+
+        /// <summary>
         /// Initializes this target.
         /// </summary>
         public override void Initialize()
@@ -70,11 +82,44 @@ namespace OsmSharp.Streams
             if (!_initialized)
             {
                 _writer.WriteRaw("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                _writer.WriteRaw("<osm version=\"0.6\" generator=\"OsmSharp\">");
+                _writer.WriteStartElement("osm");
+                _writer.WriteAttributeString("version", "0.6");
+                if (string.IsNullOrWhiteSpace(this.Generator))
+                {
+                    _writer.WriteAttributeString("generator", "OsmSharp");
+                }
+                else
+                {
+                    _writer.WriteAttributeString("generator", this.Generator);
+                }
+
+                if (this.ExtraRootAttributes.Count > 0)
+                {
+                    foreach (var pair in this.ExtraRootAttributes)
+                    {
+                        if (string.IsNullOrWhiteSpace(pair.Item1) &&
+                            string.IsNullOrWhiteSpace(pair.Item2))
+                        {
+                            continue;
+                        }
+
+                        _writer.WriteAttributeString(pair.Item1, pair.Item2);
+                    }
+                }
+
+                if (this.Bounds != null)
+                {
+                    _writer.WriteRaw(this.Bounds.SerializeToXml());
+                }
 
                 _initialized = true;
             }
         }
+
+        /// <summary>
+        /// Gets or sets a list of extra root attributes.
+        /// </summary>
+        public List<Tuple<string, string>> ExtraRootAttributes { get; private set; } = new List<Tuple<string, string>>();
 
         /// <summary>
         /// Adds a node to the xml output stream.

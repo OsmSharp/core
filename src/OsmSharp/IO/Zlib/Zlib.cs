@@ -91,7 +91,7 @@
 using System;
 using Interop=System.Runtime.InteropServices;
 
-namespace Ionic.Zlib
+namespace OsmSharp.Ionic.Zlib
 {
 
     /// <summary>
@@ -100,7 +100,7 @@ namespace Ionic.Zlib
     /// <remarks>
     /// The different FlushType values are useful when using a Deflate in a streaming application.
     /// </remarks>
-    public enum FlushType
+    internal enum FlushType
     {
         /// <summary>No flush at all.</summary>
         None = 0,
@@ -140,7 +140,7 @@ namespace Ionic.Zlib
     /// <summary>
     /// The compression level to be used when using a DeflateStream or ZlibStream with CompressionMode.Compress.
     /// </summary>
-    public enum CompressionLevel
+    internal enum CompressionLevel
     {
         /// <summary>
         /// None means that the data will be simply stored, with no change at all.
@@ -219,7 +219,7 @@ namespace Ionic.Zlib
     /// work better on different sorts of data.  The strategy parameter can affect the compression
     /// ratio and the speed of compression but not the correctness of the compresssion.
     /// </summary>
-    public enum CompressionStrategy
+    internal enum CompressionStrategy
     {
         /// <summary>
         /// The default strategy is probably the best for normal data.
@@ -246,7 +246,7 @@ namespace Ionic.Zlib
     /// <summary>
     /// An enum to specify the direction of transcoding - whether to compress or decompress.
     /// </summary>
-    public enum CompressionMode
+    internal enum CompressionMode
     {
         /// <summary>
         /// Used to specify that the stream should compress the data.
@@ -262,7 +262,7 @@ namespace Ionic.Zlib
     /// <summary>
     /// A general purpose exception class for exceptions in the Zlib library.
     /// </summary>
-    public class ZlibException : System.Exception
+    internal class ZlibException : System.Exception
     {
         /// <summary>
         /// The ZlibException class captures exception information generated
@@ -464,7 +464,7 @@ namespace Ionic.Zlib
     /// </remarks>
     ///
     /// <exclude/>
-    public sealed class Adler
+    internal sealed class Adler
     {
         // largest prime smaller than 65536
         private static readonly uint BASE = 65521;

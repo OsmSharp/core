@@ -47,9 +47,9 @@ namespace OsmSharp.Changesets
             this.Generator = reader.GetAttribute("generator");
             this.Version = reader.GetAttributeDouble("version");
             
-            List<OsmGeo> creates = null;
-            List<OsmGeo> modifies = null;
-            List<OsmGeo> deletes = null;
+            List<OsmGeo> creates = new List<OsmGeo>(); ;
+            List<OsmGeo> modifies = new List<OsmGeo>(); ;
+            List<OsmGeo> deletes = new List<OsmGeo>(); ;
 
             reader.GetElements(
                 new Tuple<string, Action>(
@@ -60,7 +60,6 @@ namespace OsmSharp.Changesets
 							reader.Read();
 							return;
 						}
-                        creates = new List<OsmGeo>();
                         reader.Read();
                         while ((reader.Name == "node" ||
                              reader.Name == "way" ||
@@ -84,7 +83,6 @@ namespace OsmSharp.Changesets
 							reader.Read();
 							return;
 						}
-                        modifies = new List<OsmGeo>();
                         reader.Read();
                         while ((reader.Name == "node" ||
                              reader.Name == "way" ||
@@ -108,7 +106,6 @@ namespace OsmSharp.Changesets
 							reader.Read();
 							return;
 						}
-                        deletes = new List<OsmGeo>();
                         reader.Read();
                         while ((reader.Name == "node" ||
                              reader.Name == "way" ||
@@ -125,18 +122,9 @@ namespace OsmSharp.Changesets
                         reader.Read();
                     }));
 
-            if (creates != null)
-            {
-                this.Create = creates.ToArray();
-            }
-            if (modifies != null)
-            {
-                this.Modify = modifies.ToArray();
-            }
-            if (deletes != null)
-            {
-                this.Delete = deletes.ToArray();
-            }
+            this.Create = creates.ToArray();
+            this.Modify = modifies.ToArray();
+            this.Delete = deletes.ToArray();
         }
 
         private static OsmGeo ReadOsmGeo(XmlReader reader)

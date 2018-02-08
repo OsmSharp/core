@@ -336,11 +336,9 @@ namespace OsmSharp.Db.Impl
                     return false;
                 }
 
-                var key = new OsmGeoKey();
                 foreach (var member in x.Members)
                 {
-                    key.Id = member.Id;
-                    key.Type = member.Type;
+                    var key = new OsmGeoKey(member.Type, member.Id);
                     if (set.Contains(key))
                     {
                         return true;

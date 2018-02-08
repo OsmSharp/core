@@ -29,7 +29,7 @@
 using System;
 using Interop = System.Runtime.InteropServices;
 
-namespace Ionic.Crc
+namespace OsmSharp.Ionic.Crc
 {
     /// <summary>
     ///   Computes a CRC-32. The CRC-32 algorithm is parameterized - you
@@ -41,7 +41,7 @@ namespace Ionic.Crc
     ///   directly by applications wishing to create, read, or manipulate zip
     ///   archive files.
     /// </remarks>
-    public class CRC32
+    internal class CRC32
     {
         /// <summary>
         ///   Indicates the total number of bytes applied to the CRC.
@@ -490,7 +490,7 @@ namespace Ionic.Crc
     /// DotNetZip library.
     /// </para>
     /// </remarks>
-    public class CrcCalculatorStream : System.IO.Stream, System.IDisposable
+    internal class CrcCalculatorStream : System.IO.Stream, System.IDisposable
     {
         private static readonly Int64 UnsetLengthLimit = -99;
 

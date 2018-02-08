@@ -27,7 +27,7 @@
 
 using System;
 
-namespace Ionic.Zlib
+namespace OsmSharp.Ionic.Zlib
 {
     /// <summary>
     /// A class for compressing and decompressing streams using the Deflate algorithm.
@@ -60,7 +60,7 @@ namespace Ionic.Zlib
     /// </para>
     ///
     /// </remarks>
-    public class DeflateStream : System.IO.Stream
+    internal class DeflateStream : System.IO.Stream
     {
         internal ZlibBaseStream _baseStream;
         internal System.IO.Stream _innerStream;

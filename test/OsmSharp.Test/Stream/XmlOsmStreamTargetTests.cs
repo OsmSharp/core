@@ -22,6 +22,7 @@
 
 using NUnit.Framework;
 using OsmSharp.Streams;
+using System;
 using System.IO;
 
 namespace OsmSharp.Test.Stream
@@ -160,12 +161,78 @@ namespace OsmSharp.Test.Stream
             using (var memoryStream = new MemoryStream())
             {
                 var target = new XmlOsmStreamTarget(memoryStream);
+                target.ExtraRootAttributes.Add(new Tuple<string, string>("upload", "never"));
                 target.RegisterSource(source);
                 target.Pull();
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 var result = (new StreamReader(memoryStream)).ReadToEnd();
-                Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\"><node id=\"1\" lat=\"1\" lon=\"1.1\" /><node id=\"2\" lat=\"2\" lon=\"2.1\" /><node id=\"3\" lat=\"3\" lon=\"3.1\" /><way id=\"1\"><nd ref=\"1\" /><nd ref=\"2\" /><nd ref=\"3\" /></way><relation id=\"1\"><member type=\"node\" ref=\"1\" role=\"\" /></relation></osm>",
+                Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\" upload=\"never\"><node id=\"1\" lat=\"1\" lon=\"1.10000002384186\" /><node id=\"2\" lat=\"2\" lon=\"2.09999990463257\" /><node id=\"3\" lat=\"3\" lon=\"3.09999990463257\" /><way id=\"1\"><nd ref=\"1\" /><nd ref=\"2\" /><nd ref=\"3\" /></way><relation id=\"1\"><member type=\"node\" ref=\"1\" role=\"\" /></relation></osm>",
+                    result);
+            }
+        }
+
+        /// <summary>
+        /// Tests writing a couple of nodes, ways and relations.
+        /// </summary>
+        [Test]
+        public void TestWriteWithBounds()
+        {
+            var source = new OsmGeo[]
+            {
+                new Node()
+                {
+                    Id = 1,
+                    Latitude = 1.0f,
+                    Longitude = 1.1f
+                },
+                new Node()
+                {
+                    Id = 2,
+                    Latitude = 2.0f,
+                    Longitude = 2.1f
+                },
+                new Node()
+                {
+                    Id = 3,
+                    Latitude = 3.0f,
+                    Longitude = 3.1f
+                },
+                new Way()
+                {
+                    Id = 1,
+                    Nodes = new long[]
+                    {
+                        1, 2, 3
+                    }
+                },
+                new Relation()
+                {
+                    Id = 1,
+                    Members = new RelationMember[]
+                    {
+                        new RelationMember(1, string.Empty, OsmGeoType.Node)
+                    }
+                }
+            };
+
+            using (var memoryStream = new MemoryStream())
+            {
+                var target = new XmlOsmStreamTarget(memoryStream);
+                target.ExtraRootAttributes.Add(new Tuple<string, string>("upload", "never"));
+                target.Bounds = new API.Bounds()
+                {
+                    MinLatitude = 1.0f,
+                    MaxLatitude = 3.0f,
+                    MinLongitude = 1.1f,
+                    MaxLongitude = 3.1f
+                };
+                target.RegisterSource(source);
+                target.Pull();
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                var result = (new StreamReader(memoryStream)).ReadToEnd();
+                Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\" upload=\"never\"><bounds minlat=\"1\" minlon=\"1.1\" maxlat=\"3\" maxlon=\"3.1\" /><node id=\"1\" lat=\"1\" lon=\"1.10000002384186\" /><node id=\"2\" lat=\"2\" lon=\"2.09999990463257\" /><node id=\"3\" lat=\"3\" lon=\"3.09999990463257\" /><way id=\"1\"><nd ref=\"1\" /><nd ref=\"2\" /><nd ref=\"3\" /></way><relation id=\"1\"><member type=\"node\" ref=\"1\" role=\"\" /></relation></osm>",
                     result);
             }
         }

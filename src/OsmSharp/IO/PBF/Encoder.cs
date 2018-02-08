@@ -679,7 +679,7 @@ namespace OsmSharp.IO.PBF
         /// Encodes a lat/lon value into an offset.
         /// </summary>
         /// <returns></returns>
-        public static long EncodeLatLon(float value, long offset, long granularity)
+        public static long EncodeLatLon(double value, long offset, long granularity)
         {
             return ((long)(value / .000000001) - offset) / granularity;
         }
@@ -688,9 +688,9 @@ namespace OsmSharp.IO.PBF
         /// Decodes a lat/lon value from an offset.
         /// </summary>
         /// <returns></returns>
-        public static float DecodeLatLon(long valueOffset, long offset, long granularity)
+        public static double DecodeLatLon(long valueOffset, long offset, long granularity)
         {
-            return (float)(.000000001 * (offset + (granularity * valueOffset)));
+            return .000000001 * (offset + (granularity * valueOffset));
         }
 
         /// <summary>

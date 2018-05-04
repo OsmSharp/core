@@ -166,12 +166,11 @@ namespace OsmSharp.IO.PBF
         /// <summary>
         /// Encodes the nodes into the given block.
         /// </summary>
-        public static void Encode(this PrimitiveBlock block, Dictionary<string, int> reverseStringTable, List<OsmGeo> osmGeos)
+        public static void Encode(this PrimitiveBlock block, Dictionary<string, int> reverseStringTable, List<OsmGeo> osmGeos, bool compressed)
         {
             var groupIdx = 0;
             var i = 0;
-            var nodeCount = 0;
-
+            
             if(block.stringtable != null &&
                block.stringtable.s != null)
             {
@@ -214,23 +213,47 @@ namespace OsmSharp.IO.PBF
                 }
 
                 // build group.
+                var currentNodeCount = 0;
                 var groupType = osmGeos[i].Type;
-                var current = osmGeos[i];
+                var previousNode = new OsmSharp.Node
+                {
+                    Id = 0,
+                    Longitude = 0,
+                    Latitude = 0,
+                    ChangeSetId = 0,
+                    TimeStamp = null,
+                    UserId = 0,
+                    UserName = null,
+                    Version = 0
+                };
+                if (groupType == OsmGeoType.Node && compressed && group.dense == null)
+                {
+                    group.dense = new DenseNodes {denseinfo = new DenseInfo()};
+                }
                 while (i < osmGeos.Count &&
                     osmGeos[i].Type == groupType)
                 {
                     switch(groupType)
                     {
                         case OsmGeoType.Node:
-                            if(group.nodes.Count > nodeCount)
-                            { // overwrite existing.
-                                Encoder.EncodeNode(block, reverseStringTable, group.nodes[nodeCount], osmGeos[i] as OsmSharp.Node);
+                            if (compressed)
+                            {
+                                var currentNode = osmGeos[i] as OsmSharp.Node;
+                                Encoder.EncodeDenseNode(block, reverseStringTable, group.dense, currentNode, previousNode);
+                                previousNode = currentNode;
                             }
                             else
-                            { // write new.
-                                group.nodes.Add(Encoder.EncodeNode(block, reverseStringTable, osmGeos[i] as OsmSharp.Node));
+                            {
+                                if (currentNodeCount < group.nodes.Count)
+                                { // overwrite existing.
+                                    Encoder.EncodeNode(block, reverseStringTable, group.nodes[currentNodeCount], osmGeos[i] as OsmSharp.Node);
+                                }
+                                else
+                                { // write new.
+                                    group.nodes.Add(Encoder.EncodeNode(block, reverseStringTable, osmGeos[i] as OsmSharp.Node));
+                                }
+                                currentNodeCount++;
                             }
-                            nodeCount++;
                             break;
                         case OsmGeoType.Way:
                             group.ways.Add(Encoder.EncodeWay(block, reverseStringTable, osmGeos[i] as OsmSharp.Way));
@@ -246,9 +269,9 @@ namespace OsmSharp.IO.PBF
                 // remove obsolete nodes.
                 if(group.nodes != null)
                 {
-                    while (nodeCount < group.nodes.Count)
+                    while (currentNodeCount < group.nodes.Count)
                     {
-                        group.nodes.RemoveAt(nodeCount);
+                        group.nodes.RemoveAt(currentNodeCount);
                     }
                 }
 
@@ -259,6 +282,39 @@ namespace OsmSharp.IO.PBF
             while (groupIdx < block.primitivegroup.Count)
             {
                 block.primitivegroup.RemoveAt(groupIdx);
+            }
+        }
+
+        private static void EncodeDenseNode(PrimitiveBlock block, Dictionary<string, int> reverseStringTable, DenseNodes groupDense, OsmSharp.Node current, OsmSharp.Node previous)
+        {
+            groupDense.id.Add(current.Id.Value - previous.Id.Value);
+            groupDense.lat.Add(Encoder.EncodeLatLon(current.Latitude.Value - previous.Latitude.Value, block.lat_offset, block.granularity));
+            groupDense.lon.Add(Encoder.EncodeLatLon(current.Longitude.Value - previous.Longitude.Value, block.lon_offset, block.granularity));
+            if (current.Tags != null && current.Tags.Count > 0)
+            {
+                foreach (var nodeTag in current.Tags)
+                {
+                    groupDense.keys_vals.Add(Encoder.EncodeString(block, reverseStringTable, nodeTag.Key));
+                    groupDense.keys_vals.Add(Encoder.EncodeString(block, reverseStringTable, nodeTag.Value));
+                }
+                groupDense.keys_vals.Add(0);
+            }
+
+            if (groupDense.denseinfo != null)
+            {
+                groupDense.denseinfo.changeset.Add(current.ChangeSetId.Value - previous.ChangeSetId.Value);
+                var currentTimeStamp = Encoder.EncodeTimestamp(current.TimeStamp.Value, block.date_granularity);
+                var previousTimeStamp = previous.TimeStamp == null
+                    ? 0
+                    : Encoder.EncodeTimestamp(previous.TimeStamp.Value, block.date_granularity);
+                groupDense.denseinfo.timestamp.Add(currentTimeStamp - previousTimeStamp);
+                groupDense.denseinfo.uid.Add((int)(current.UserId.Value - previous.UserId.Value));
+                groupDense.denseinfo.version.Add(current.Version.Value - previous.Version.Value);
+                var previousUserNameId = previous.UserName == null
+                    ? 0
+                    : Encoder.EncodeString(block, reverseStringTable, previous.UserName);
+                var currentUserNameId = Encoder.EncodeString(block, reverseStringTable, current.UserName);
+                groupDense.denseinfo.user_sid.Add(currentUserNameId - previousUserNameId);
             }
         }
 

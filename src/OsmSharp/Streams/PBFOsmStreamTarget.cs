@@ -39,7 +39,6 @@ namespace OsmSharp.Streams
         private readonly Type _blobType = typeof(Blob);
         private readonly Type _primitiveBlockType = typeof(PrimitiveBlock);
         private readonly Type _headerBlockType = typeof(HeaderBlock);
-        private readonly bool _compress = false;
 
         /// <summary>
         /// Creates a new PBF stream target.
@@ -57,11 +56,13 @@ namespace OsmSharp.Streams
             _runtimeTypeModel.Add(_blobType, true);
             _runtimeTypeModel.Add(_primitiveBlockType, true);
             _runtimeTypeModel.Add(_headerBlockType, true);
+            _compress = false;
         }
 
         private List<OsmGeo> _currentEntities;
         private Dictionary<string, int> _reverseStringTable;
         private MemoryStream _buffer;
+        private bool _compress;
 
         /// <summary>
         /// Initializes this target.
@@ -98,6 +99,11 @@ namespace OsmSharp.Streams
             _buffer.CopyTo(_stream);
         }
 
+        public void SetCompress(bool compress)
+        {
+            _compress = compress;
+        }
+
         /// <summary>
         /// Flushes the current block of data.
         /// </summary>
@@ -107,7 +113,7 @@ namespace OsmSharp.Streams
 
             // encode into block.
             var block = new PrimitiveBlock();
-            Encoder.Encode(block, _reverseStringTable, _currentEntities);
+            Encoder.Encode(block, _reverseStringTable, _currentEntities, _compress);
             _currentEntities.Clear();
             _reverseStringTable.Clear();
 
@@ -119,9 +125,8 @@ namespace OsmSharp.Streams
 
             if (_compress)
             { // compress buffer.
-                throw new NotSupportedException();
+                // do we need to do anything else?
             }
-
             // create blob.
             var blob = new Blob();
             blob.raw = blockBytes;

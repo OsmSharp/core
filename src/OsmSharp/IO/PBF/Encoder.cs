@@ -288,9 +288,14 @@ namespace OsmSharp.IO.PBF
         private static void EncodeDenseNode(PrimitiveBlock block, Dictionary<string, int> reverseStringTable, DenseNodes groupDense, OsmSharp.Node current, OsmSharp.Node previous)
         {
             groupDense.id.Add(current.Id.Value - previous.Id.Value);
-            groupDense.lat.Add(Encoder.EncodeLatLon(current.Latitude.Value - previous.Latitude.Value, block.lat_offset, block.granularity));
-            groupDense.lon.Add(Encoder.EncodeLatLon(current.Longitude.Value - previous.Longitude.Value, block.lon_offset, block.granularity));
-            if (current.Tags != null && current.Tags.Count > 0)
+            var currentLat = Encoder.EncodeLatLon(current.Latitude.Value, block.lat_offset, block.granularity);
+            var currentLon = Encoder.EncodeLatLon(current.Longitude.Value, block.lat_offset, block.granularity);
+            var previousLat = Encoder.EncodeLatLon(previous.Latitude.Value, block.lat_offset, block.granularity);
+            var previousLon = Encoder.EncodeLatLon(previous.Longitude.Value, block.lat_offset, block.granularity);
+            groupDense.lat.Add(currentLat - previousLat);
+            groupDense.lon.Add(currentLon - previousLon);
+            
+            if (current.Tags != null)
             {
                 foreach (var nodeTag in current.Tags)
                 {
@@ -395,7 +400,6 @@ namespace OsmSharp.IO.PBF
                 return id;
             }
 
-            var bytes = System.Text.Encoding.UTF8.GetBytes(value);
             block.stringtable.s.Add(System.Text.Encoding.UTF8.GetBytes(value));
             reverseStringTable.Add(value, block.stringtable.s.Count - 1);
             return block.stringtable.s.Count - 1;

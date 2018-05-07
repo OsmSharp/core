@@ -25,7 +25,7 @@ using ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using OsmSharp.Ionic.Zlib;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 namespace OsmSharp.Streams
 {
@@ -85,7 +85,23 @@ namespace OsmSharp.Streams
 
             // create blob.
             var blob = new Blob();
-            blob.raw = blockHeaderData;
+            if (_compress)
+            {
+                using (var target = new MemoryStream())
+                {
+                    using (var source = new MemoryStream(blockHeaderData))
+                    using (var deflate = new DeflaterOutputStream(target))
+                    {
+                        source.CopyTo(deflate);
+                    }
+                    blob.zlib_data =  target.ToArray();
+                }
+            }
+            else
+            {
+                blob.raw = blockHeaderData;
+            }
+            
             _runtimeTypeModel.Serialize(_buffer, blob);
 
             // create blobheader.
@@ -129,11 +145,14 @@ namespace OsmSharp.Streams
             blob.raw_size = blockBytes.Length;
             if (_compress)
             {
-                using (var ms = new MemoryStream())
+                using (var target = new MemoryStream())
                 {
-                    Stream compressor = new ZlibStream(ms, CompressionMode.Compress, CompressionLevel.BestSpeed);
-                    ZlibBaseStream.CompressBuffer(blockBytes, compressor);
-                    blob.zlib_data = ms.ToArray();
+                    using (var source = new MemoryStream(blockBytes))
+                    using (var deflate = new DeflaterOutputStream(target))
+                    {
+                        source.CopyTo(deflate);
+                    }
+                    blob.zlib_data = target.ToArray();
                 }
             }
             else

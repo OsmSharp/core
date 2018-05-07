@@ -36,3 +36,4 @@ TestResult.xml
 
 packages/*
 !packages/repositories.config
+/.vs

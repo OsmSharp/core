@@ -105,7 +105,7 @@ namespace OsmSharp.Db.Impl
             nodes.Sort((x, y) => x.Id.Value.CompareTo(y.Id.Value));
             var ways = new List<OsmGeo>(_ways.Values.Where(x => x.Visible.HasValue && x.Visible.Value));
             ways.Sort((x, y) => x.Id.Value.CompareTo(y.Id.Value));
-            var relations = new List<OsmGeo>(_ways.Values.Where(x => x.Visible.HasValue && x.Visible.Value));
+            var relations = new List<OsmGeo>(_relations.Values.Where(x => x.Visible.HasValue && x.Visible.Value));
             relations.Sort((x, y) => x.Id.Value.CompareTo(y.Id.Value));
 
             return nodes.Concat(ways).Concat(relations);

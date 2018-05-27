@@ -360,7 +360,8 @@ namespace OsmSharp.Db
         {
             var info = _db.GetChangeset(id);
 
-            if (info.ClosedAt != null)
+            if (info == null ||
+                info.ClosedAt != null)
             {
                 return false;
             }

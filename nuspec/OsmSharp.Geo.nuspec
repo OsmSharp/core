@@ -21,8 +21,6 @@
         </dependencies>
     </metadata>
     <files>
-      <file src="src\OsmSharp.Geo\bin\Release\portable40-net403+sl5+win8+wp8\OsmSharp.Geo.dll" target="lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\OsmSharp.Geo.dll" />
-      <file src="src\OsmSharp.Geo\bin\Release\net40\OsmSharp.Geo.dll" target="lib\net40\OsmSharp.Geo.dll" />
       <file src="src\OsmSharp.Geo\bin\Release\net45\OsmSharp.Geo.dll" target="lib\net45\OsmSharp.Geo.dll" />
     </files>
 </package>

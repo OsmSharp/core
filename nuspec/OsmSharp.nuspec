@@ -26,9 +26,7 @@
         </dependencies>
     </metadata>
     <files>
-      <file src="src\OsmSharp\bin\Release\portable40-net403+sl5+win8+wp8\OsmSharp.dll" target="lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\OsmSharp.dll" />
-      <file src="src\OsmSharp\bin\Release\net40\OsmSharp.dll" target="lib\net40\OsmSharp.dll" />
       <file src="src\OsmSharp\bin\Release\net45\OsmSharp.dll" target="lib\net45\OsmSharp.dll" />
-	  <file src="src\OsmSharp\bin\Release\netstandard1.3\OsmSharp.dll" target="lib\netstandard1.3\OsmSharp.dll" />
+      <file src="src\OsmSharp\bin\Release\netstandard1.3\OsmSharp.dll" target="lib\netstandard1.3\OsmSharp.dll" />
     </files>
 </package>

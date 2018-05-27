@@ -117,9 +117,9 @@ namespace OsmSharp.Geo
                             OsmSharp.Logging.Logger.Log("DefaultFeatureInterpreter", TraceEventType.Warning, "{0} is supposed to be a linestring but has less than two coordinates.",
                                 osmObject.ToInvariantString());
                         }
-                        else if (isArea && coordinates.Count < 3)
-                        {// not a linearring, needs at least three coordinates.
-                            OsmSharp.Logging.Logger.Log("DefaultFeatureInterpreter", TraceEventType.Warning, "{0} is supposed to be a linearring but has less than three coordinates.",
+                        else if (isArea && coordinates.Count < 4)
+                        {// not a linearring, needs at least four coordinates, with first and last identical.
+                            OsmSharp.Logging.Logger.Log("DefaultFeatureInterpreter", TraceEventType.Warning, "{0} is supposed to be a linearring but has less than four coordinates.",
                                 osmObject.ToInvariantString());
                         }
                         else

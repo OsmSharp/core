@@ -130,6 +130,20 @@ namespace OsmSharp.Tags
         public abstract bool TryGetValue(string key, out string value);
 
         /// <summary>
+        /// Gets the value associated with the given key, returns an empty string if the kay was not found.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public string GetValue(string key)
+        {
+            if (!this.TryGetValue(key, out var value))
+            {
+                return string.Empty;
+            }
+            return value;
+        }
+
+        /// <summary>
         /// Returns the value associated with the given key.
         /// </summary>
         public virtual string this[string key]

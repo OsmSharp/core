@@ -21,11 +21,11 @@
 // THE SOFTWARE.
 
 using OsmSharp.IO.PBF;
+using OsmSharp.IO.Zip.Streams;
 using ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 namespace OsmSharp.Streams
 {
@@ -40,11 +40,21 @@ namespace OsmSharp.Streams
         private readonly Type _blobType = typeof(Blob);
         private readonly Type _primitiveBlockType = typeof(PrimitiveBlock);
         private readonly Type _headerBlockType = typeof(HeaderBlock);
+        private readonly bool _compress;
 
         /// <summary>
         /// Creates a new PBF stream target.
         /// </summary>
         public PBFOsmStreamTarget(Stream stream)
+            : this(stream, false)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new PBF stream target.
+        /// </summary>
+        public PBFOsmStreamTarget(Stream stream, bool compress = false)
         {
             _stream = stream;
 
@@ -57,13 +67,12 @@ namespace OsmSharp.Streams
             _runtimeTypeModel.Add(_blobType, true);
             _runtimeTypeModel.Add(_primitiveBlockType, true);
             _runtimeTypeModel.Add(_headerBlockType, true);
-            _compress = false;
+            _compress = compress;
         }
 
         private List<OsmGeo> _currentEntities;
         private Dictionary<string, int> _reverseStringTable;
         private MemoryStream _buffer;
-        private bool _compress;
 
         /// <summary>
         /// Initializes this target.
@@ -114,11 +123,6 @@ namespace OsmSharp.Streams
             // flush to stream.
             _buffer.Seek(0, SeekOrigin.Begin);
             _buffer.CopyTo(_stream);
-        }
-
-        public void SetCompress(bool compress)
-        {
-            _compress = compress;
         }
 
         /// <summary>

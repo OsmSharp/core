@@ -30,19 +30,25 @@ namespace OsmSharp.Test.Functional.Staging
     /// </summary>
     public static class Download
     {
-        public static string BelgiumPBF = "ftp://build.osmsharp.com/data/OSM/planet/europe/belgium-latest.osm.pbf";
-        public static string BelgiumLocal = "belgium-latest.osm.pbf";
+        public static string PBF = "http://files.itinero.tech/data/OSM/extracts/wechel.osm.pbf";
+        public static string Local = "wechel.osm.pbf";
 
         /// <summary>
         /// Downloads the belgium data.
         /// </summary>
-        public static void DownloadBelgiumAll()
+        public static void DownloadAll()
         {
-            if (!File.Exists(Download.BelgiumLocal))
+            if (!File.Exists(Download.Local))
             {
                 var client = new WebClient();
-                client.DownloadFile(Download.BelgiumPBF,
-                    Download.BelgiumLocal);
+                client.DownloadProgressChanged += (sender, e) =>
+                { // Displays the operation identifier, and the transfer progress.
+                    OsmSharp.Logging.Logger.Log("Download", Logging.TraceEventType.Information, 
+                        "{0}    downloaded {1} of {2} bytes. {3} % complete...",
+                        (string)e.UserState, e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
+                };
+                client.DownloadFile(Download.PBF,
+                    Download.Local);
             }
         }
     }

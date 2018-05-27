@@ -614,14 +614,16 @@ namespace OsmSharp.Test.Stream
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                     "OsmSharp.Test.data.pbf.api.osm.pbf"));
 
-            var memoryStream = new MemoryStream();
-            var target = new PBFOsmStreamTarget(memoryStream);
-            target.SetCompress(true);
-            target.RegisterSource(source);
-            target.Pull();
-            memoryStream.Seek(0, 0);
+            using (var memoryStream = new MemoryStream())
+            {
+                var target = new PBFOsmStreamTarget(memoryStream);
+                target.SetCompress(true);
+                target.RegisterSource(source);
+                target.Pull();
+                memoryStream.Seek(0, 0);
 
-            Assert.AreEqual(1715, new PBFOsmStreamSource(memoryStream).Count(n => n is Node));
+                Assert.AreEqual(1715, new PBFOsmStreamSource(memoryStream).Count(n => n is Node));
+            }
         }
     }
 }

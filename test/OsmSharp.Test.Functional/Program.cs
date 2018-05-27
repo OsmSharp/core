@@ -21,9 +21,11 @@
 // THE SOFTWARE.
 
 using OsmSharp.Logging;
+using OsmSharp.Streams;
 using OsmSharp.Test.Functional.Staging;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace OsmSharp.Test.Functional
 {
@@ -134,7 +136,34 @@ namespace OsmSharp.Test.Functional
                 }
             });
             count.TestPerf("Test writing a PBF.");
-            OsmSharp.Logging.Logger.Log("Program", TraceEventType.Information, "Writing PBF.");
+            OsmSharp.Logging.Logger.Log("Program", TraceEventType.Information, "Written PBF.");
+            
+            // test converting to complete.
+            source.Reset();
+            count = new Action(() =>
+            {
+                var filteredQuery = from osmGeo in source where
+                        osmGeo.Type == OsmGeoType.Way &&
+                        osmGeo.Tags.ContainsKey("highway") &&
+                        !osmGeo.Tags.Contains("highway", "cycleway") &&
+                        !osmGeo.Tags.Contains("highway", "bus_stop") &&
+                        !osmGeo.Tags.Contains("highway", "street_lamp") &&
+                        !osmGeo.Tags.Contains("highway", "path") &&
+                        !osmGeo.Tags.Contains("highway", "turning_cycle") &&
+                        !osmGeo.Tags.Contains("highway", "traffic_signals") &&
+                        !osmGeo.Tags.Contains("highway", "stops") &&
+                        !osmGeo.Tags.Contains("highway", "pedestrian") &&
+                        !osmGeo.Tags.Contains("highway", "footway") || 
+                        osmGeo.Type == OsmGeoType.Node
+                    select osmGeo;
+
+                var collectionComplete = filteredQuery.ToComplete();
+                var completeWays = collectionComplete.Where(x => x.Type == OsmGeoType.Way).ToList();
+                OsmSharp.Logging.Logger.Log("Program", TraceEventType.Information, "Found {0} complete ways.", 
+                    completeWays.Count);
+            });
+            count.TestPerf("Test converting to complete ways.");
+            OsmSharp.Logging.Logger.Log("Program", TraceEventType.Information, "Converted completed ways.");
 
 
             OsmSharp.Logging.Logger.Log("Program", TraceEventType.Information, "Testing finished.");

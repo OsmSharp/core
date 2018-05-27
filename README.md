@@ -95,6 +95,8 @@ using (var stream = new FileInfo(@"/path/to/filterede.osm.pbf").Open(FileMode.Cr
 }
 ```
 
-
 ### Licensing
+
 The OsmSharp project is licensed under the [MIT license](https://github.com/OsmSharp/core/blob/develop/LICENSE.md).
+
+This project includes some code from [SharpZipLib](https://github.com/icsharpcode/SharpZipLib), also MIT licensed.

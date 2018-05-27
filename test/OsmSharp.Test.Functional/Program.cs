@@ -38,11 +38,11 @@ namespace OsmSharp.Test.Functional
             };
 
             // download and extract test-data if not already there.
-            OsmSharp.Logging.Logger.Log("Program", TraceEventType.Information, "Downloading Belgium...");
-            Download.DownloadBelgiumAll();
+            OsmSharp.Logging.Logger.Log("Program", TraceEventType.Information, "Downloading PBF...");
+            Download.DownloadAll();
 
             // create a source.
-            var source = new OsmSharp.Streams.PBFOsmStreamSource(File.OpenRead(Download.BelgiumLocal));
+            var source = new OsmSharp.Streams.PBFOsmStreamSource(File.OpenRead(Download.Local));
 
             // loop over all objects and count them.
             int nodes = 0, ways = 0, relations = 0;
@@ -121,6 +121,21 @@ namespace OsmSharp.Test.Functional
             count.TestPerf("Test counting objects without nodes and ways.");
             OsmSharp.Logging.Logger.Log("Program", TraceEventType.Information, "Counted {0} nodes, {1} ways and {2} relations.",
                 nodes, ways, relations);
+
+            // write a compressed PBF.
+            source.Reset();
+            count = new Action(() =>
+            {
+                using (var output = File.Open("output.osm.pbf", FileMode.Create))
+                {
+                    var target = new OsmSharp.Streams.PBFOsmStreamTarget(output, true);
+                    target.RegisterSource(source);
+                    target.Pull();
+                }
+            });
+            count.TestPerf("Test writing a PBF.");
+            OsmSharp.Logging.Logger.Log("Program", TraceEventType.Information, "Writing PBF.");
+
 
             OsmSharp.Logging.Logger.Log("Program", TraceEventType.Information, "Testing finished.");
             Console.ReadLine();

@@ -27,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace OsmSharp.Test.Stream
 {
@@ -603,6 +604,25 @@ namespace OsmSharp.Test.Stream
                 Assert.AreEqual(sourceRelation.Members[1].Id, resultRelation.Members[1].Id);
                 Assert.AreEqual(sourceRelation.Members[1].Role, resultRelation.Members[1].Role);
                 Assert.AreEqual(sourceRelation.Members[1].Type, resultRelation.Members[1].Type);
+            }
+        }
+
+        [Test]
+        public void TestReadWriteCompressedRead_ShouldSucceed()
+        {
+            var source = new PBFOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    "OsmSharp.Test.data.pbf.api.osm.pbf"));
+
+            using (var memoryStream = new MemoryStream())
+            {
+                var target = new PBFOsmStreamTarget(memoryStream);
+                target.SetCompress(true);
+                target.RegisterSource(source);
+                target.Pull();
+                memoryStream.Seek(0, 0);
+
+                Assert.AreEqual(1715, new PBFOsmStreamSource(memoryStream).Count(n => n is Node));
             }
         }
     }

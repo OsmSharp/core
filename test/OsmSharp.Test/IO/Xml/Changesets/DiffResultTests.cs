@@ -85,7 +85,7 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             diffResult = serializer.Deserialize(
                 new StringReader("<diffResult generator=\"OsmSharp\" version=\"0.6\"><node old_id=\"1\" new_id=\"2\" new_version=\"2\" /></diffResult>")) as DiffResult;
             Assert.IsNotNull(diffResult);
-            Assert.IsNull(diffResult.Results);
+            Assert.AreEqual(1, diffResult.Results.Length);
             Assert.AreEqual(0.6, diffResult.Version);
             Assert.AreEqual("OsmSharp", diffResult.Generator);
         }

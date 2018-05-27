@@ -616,8 +616,7 @@ namespace OsmSharp.Test.Stream
 
             using (var memoryStream = new MemoryStream())
             {
-                var target = new PBFOsmStreamTarget(memoryStream);
-                target.SetCompress(true);
+                var target = new PBFOsmStreamTarget(memoryStream, true);
                 target.RegisterSource(source);
                 target.Pull();
                 memoryStream.Seek(0, 0);

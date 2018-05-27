@@ -49,9 +49,13 @@ namespace OsmSharp.Changesets
             this.Generator = reader.GetAttribute("generator");
 
             List<OsmGeoResult> results = null;
-            while (reader.Read() &&
-                reader.MoveToContent() != XmlNodeType.None)
+            while (reader.Read())
             {
+                var moveToContent = reader.MoveToContent();
+                if (moveToContent == XmlNodeType.None || moveToContent == XmlNodeType.EndElement)
+                {
+                    break;
+                }
                 if (reader.Name == "node")
                 {
                     if (results == null)

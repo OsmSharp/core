@@ -25,6 +25,7 @@ using ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 namespace OsmSharp.Streams
 {
@@ -39,7 +40,6 @@ namespace OsmSharp.Streams
         private readonly Type _blobType = typeof(Blob);
         private readonly Type _primitiveBlockType = typeof(PrimitiveBlock);
         private readonly Type _headerBlockType = typeof(HeaderBlock);
-        private readonly bool _compress = false;
 
         /// <summary>
         /// Creates a new PBF stream target.
@@ -57,11 +57,13 @@ namespace OsmSharp.Streams
             _runtimeTypeModel.Add(_blobType, true);
             _runtimeTypeModel.Add(_primitiveBlockType, true);
             _runtimeTypeModel.Add(_headerBlockType, true);
+            _compress = false;
         }
 
         private List<OsmGeo> _currentEntities;
         private Dictionary<string, int> _reverseStringTable;
         private MemoryStream _buffer;
+        private bool _compress;
 
         /// <summary>
         /// Initializes this target.
@@ -83,7 +85,23 @@ namespace OsmSharp.Streams
 
             // create blob.
             var blob = new Blob();
-            blob.raw = blockHeaderData;
+            if (_compress)
+            {
+                using (var target = new MemoryStream())
+                {
+                    using (var source = new MemoryStream(blockHeaderData))
+                    using (var deflate = new DeflaterOutputStream(target))
+                    {
+                        source.CopyTo(deflate);
+                    }
+                    blob.zlib_data =  target.ToArray();
+                }
+            }
+            else
+            {
+                blob.raw = blockHeaderData;
+            }
+            
             _runtimeTypeModel.Serialize(_buffer, blob);
 
             // create blobheader.
@@ -98,6 +116,11 @@ namespace OsmSharp.Streams
             _buffer.CopyTo(_stream);
         }
 
+        public void SetCompress(bool compress)
+        {
+            _compress = compress;
+        }
+
         /// <summary>
         /// Flushes the current block of data.
         /// </summary>
@@ -107,7 +130,7 @@ namespace OsmSharp.Streams
 
             // encode into block.
             var block = new PrimitiveBlock();
-            Encoder.Encode(block, _reverseStringTable, _currentEntities);
+            Encoder.Encode(block, _reverseStringTable, _currentEntities, _compress);
             _currentEntities.Clear();
             _reverseStringTable.Clear();
 
@@ -117,14 +140,26 @@ namespace OsmSharp.Streams
             var blockBytes = _buffer.ToArray();
             _buffer.SetLength(0);
 
-            if (_compress)
-            { // compress buffer.
-                throw new NotSupportedException();
-            }
-
             // create blob.
             var blob = new Blob();
-            blob.raw = blockBytes;
+            blob.raw_size = blockBytes.Length;
+            if (_compress)
+            {
+                using (var target = new MemoryStream())
+                {
+                    using (var source = new MemoryStream(blockBytes))
+                    using (var deflate = new DeflaterOutputStream(target))
+                    {
+                        source.CopyTo(deflate);
+                    }
+                    blob.zlib_data = target.ToArray();
+                }
+            }
+            else
+            {
+                blob.raw = blockBytes;
+            }
+            
             _runtimeTypeModel.Serialize(_buffer, blob);
 
             // create blobheader.
@@ -145,7 +180,7 @@ namespace OsmSharp.Streams
         public override void AddNode(Node node)
         {
             _currentEntities.Add(node);
-            if (_currentEntities.Count > 8000)
+            if (_currentEntities.Count >= 8000)
             {
                 this.FlushBlock();
             }
@@ -157,7 +192,7 @@ namespace OsmSharp.Streams
         public override void AddWay(Way way)
         {
             _currentEntities.Add(way);
-            if (_currentEntities.Count > 8000)
+            if (_currentEntities.Count >= 8000)
             {
                 this.FlushBlock();
             }
@@ -169,7 +204,7 @@ namespace OsmSharp.Streams
         public override void AddRelation(Relation relation)
         {
             _currentEntities.Add(relation);
-            if (_currentEntities.Count > 8000)
+            if (_currentEntities.Count >= 8000)
             {
                 this.FlushBlock();
             }

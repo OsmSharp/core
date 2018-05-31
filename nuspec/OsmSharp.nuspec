@@ -32,9 +32,8 @@
 		</frameworkAssemblies>
     </metadata>
     <files>
-      <file src="src\OsmSharp\bin\Release\net40\OsmSharp.dll" target="lib\net40\OsmSharp.dll" />
       <file src="src\OsmSharp\bin\Release\net45\OsmSharp.dll" target="lib\net45\OsmSharp.dll" />
-	  <file src="src\OsmSharp\bin\Release\netstandard1.3\OsmSharp.dll" target="lib\netstandard1.3\OsmSharp.dll" />
-      <file src="src\OsmSharp\bin\Release\netstandard1.3\OsmSharp.dll" target="lib\netstandard2.0\OsmSharp.dll" />
+	    <file src="src\OsmSharp\bin\Release\netstandard1.3\OsmSharp.dll" target="lib\netstandard1.3\OsmSharp.dll" />
+      <file src="src\OsmSharp\bin\Release\netstandard2.0\OsmSharp.dll" target="lib\netstandard2.0\OsmSharp.dll" />
     </files>
 </package>

@@ -16,6 +16,10 @@ OsmSharp's core enables you to work directly with OSM-data in .NET/Mono. Most im
 - Convert a stream of native OSM objects to 'complete' OSM objects: Ways with all their actual nodes, Relations with all members instantiated.
 - Convert OSM objects to geometries.
 
+### Documentation & Samples
+
+Check the [documentation website](http://docs.itinero.tech/docs/osmsharp/index.html) for documentation and sample code. Don't hesitate to ask questions using an [issue](https://github.com/osmsharp/core/issues) or request more documentation on any topic you need.
+
 ### Install
 
     PM> Install-Package OsmSharp
@@ -26,15 +30,13 @@ There's also a package to use [NTS](https://github.com/NetTopologySuite/) togeth
 
 ### Usage
 
-This readme contains some basic examples, for more documentation and samples check the [wiki](https://github.com/OsmSharp/core/wiki).
+A really good way to get started is to have a look at the [samples](https://github.com/OsmSharp/core/tree/master/samples) but we collected a few code-snippets for you here anyway:
 
 A common usecase is to stream and filter OSM data. To read from an OSM file and enumerate all objects just open the file as a stream source and use foreach.
 
 Read data from an OSM-PBF file:
 
 ```csharp
-// using OsmSharp.Osm.PBF.Streams;
-
 using(var fileStream = new FileInfo(@"/path/to/some/osmfile.osm.pbf").OpenRead())
 {
   var source = new PBFOsmStreamSource(fileStream);
@@ -48,10 +50,6 @@ using(var fileStream = new FileInfo(@"/path/to/some/osmfile.osm.pbf").OpenRead()
 Write data to an OSM-PBF file:
 
 ```csharp
-// using OsmSharp.Collections.Tags;
-// using OsmSharp.Osm;
-// using OsmSharp.Osm.PBF.Streams;
-
 using(var fileStream = new FileInfo(@"/path/to/my/osmfile.osm.pbf").OpenRead())
 {
 	var target = new PBFOsmStreamTarget(fileStream);
@@ -78,9 +76,6 @@ using(var fileStream = new FileInfo(@"/path/to/my/osmfile.osm.pbf").OpenRead())
 Filter an area and extract a smaller region:
 
 ```csharp
-// using OsmSharp.Math.Geo;
-// using OsmSharp.Osm.PBF.Streams;
-
 var source = new PBFOsmStreamSource(
 	new FileInfo(@"/path/to/file.osm.pbf").OpenRead());
 
@@ -97,6 +92,6 @@ using (var stream = new FileInfo(@"/path/to/filterede.osm.pbf").Open(FileMode.Cr
 
 ### Licensing
 
-The OsmSharp project is licensed under the [MIT license](https://github.com/OsmSharp/core/blob/develop/LICENSE.md).
+The OsmSharp project is licensed under the [MIT license](https://github.com/OsmSharp/core/blob/master/LICENSE.md).
 
 This project includes some code from [SharpZipLib](https://github.com/icsharpcode/SharpZipLib), also MIT licensed.

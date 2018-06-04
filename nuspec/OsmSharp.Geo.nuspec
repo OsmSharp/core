@@ -15,24 +15,7 @@
         <copyright>Ben Abelshausen</copyright>
         <tags>osm, openstreetmap, mapping, nts</tags>
         <releaseNotes>
-OsmSharp 6.0.1 Release Notes
-----------------------------
-
-This is a mayor release upgrading 5.x to 6.x because of some important breaking changes. The most important being the upgrade of lat/lons on nodes from floats to doubles. We also setup some documentation [here](http://docs.itinero.tech/docs/osmsharp/index.html).
-
-New features:
-
-- Changed lat/lon to doubles instead of floats.
-- Writing compressed PBF.
-- Added other concepts apart from Nodes, Ways and Relations like Users to be better able to handle interactions with the OSM-API.
-- OsmSharp now includes .NET standard support, we now support `netstandard1.3` and `netstandard2.0`. We removed the PCL profiles because it was only there for Xamarin but that is now convered by .NET standard.
-- OsmSharp.Geo for now only supports .NET Framework 4.5 and up. Support for .NET standard is coming as soon as [NTS](https://github.com/NetTopologySuite/NetTopologySuite) releases a stable with support.
-- Support for extra root attributes in OSM-XML.
-- Better support for changesets:
-   - Applying changesets to OSM streams.
-   - Compressing multiple changesets to their minimized equivalent.
-- Better support for non-seekable streams.
-- MIT license.
+          This is a prelease.
         </releaseNotes>
 		<dependencies>
 		  <group targetFramework=".NETFramework4.5">

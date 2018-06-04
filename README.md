@@ -2,8 +2,8 @@
 
 ![Build status](http://build.itinero.tech:8080/app/rest/builds/buildType:(id:OsmSharp_CoreDevelop)/statusIcon)
 
-- OsmSharp: [![NuGet](https://img.shields.io/nuget/v/OsmSharp.svg?style=flat)](http://www.nuget.org/profiles/OsmSharp) [![NuGet](https://img.shields.io/nuget/vpre/OsmSharp.svg?style=flat)](http://www.nuget.org/profiles/OsmSharp)
-- OsmSharp.Geo: [![NuGet](https://img.shields.io/nuget/v/OsmSharp.Geo.svg?style=flat)](http://www.nuget.org/profiles/OsmSharp.Geo) [![NuGet](https://img.shields.io/nuget/vpre/OsmSharp.Geo.svg?style=flat)](http://www.nuget.org/profiles/OsmSharp.Geo)
+- OsmSharp: [![NuGet](https://img.shields.io/nuget/v/OsmSharp.svg?style=flat)](https://www.nuget.org/packages/OsmSharp/) [![NuGet](https://img.shields.io/nuget/vpre/OsmSharp.svg?style=flat)](https://www.nuget.org/packages/OsmSharp)
+- OsmSharp.Geo: [![NuGet](https://img.shields.io/nuget/v/OsmSharp.Geo.svg?style=flat)](https://www.nuget.org/packages/OsmSharp.Geo) [![NuGet](https://img.shields.io/nuget/vpre/OsmSharp.Geo.svg?style=flat)](https://www.nuget.org/packages/OsmSharp.Geo)
 
 [![Visit our website](https://img.shields.io/badge/website-osmsharp.com-020031.svg) ](http://www.osmsharp.com/)  
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/OsmSharp/core/blob/develop/LICENSE.md)  
@@ -95,6 +95,8 @@ using (var stream = new FileInfo(@"/path/to/filterede.osm.pbf").Open(FileMode.Cr
 }
 ```
 
-
 ### Licensing
+
 The OsmSharp project is licensed under the [MIT license](https://github.com/OsmSharp/core/blob/develop/LICENSE.md).
+
+This project includes some code from [SharpZipLib](https://github.com/icsharpcode/SharpZipLib), also MIT licensed.

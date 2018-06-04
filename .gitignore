@@ -34,5 +34,10 @@ TestResults*/
 *.osm.pbf
 TestResult.xml
 
+.vs/*
+.idea/*
+.vscode/*
+
 packages/*
 !packages/repositories.config
+/.vs

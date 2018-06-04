@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Ionic.Zlib;
+using OsmSharp.IO.Zip.Streams;
 using ProtoBuf;
 using ProtoBuf.Meta;
 using System;
@@ -211,16 +211,15 @@ namespace OsmSharp.IO.PBF
     }
     class ZLibStreamWrapper : InputStream
     {
-        private ZlibStream reader; 
+        private InflaterInputStream reader; 
         public ZLibStreamWrapper(Stream stream)
         {
-            reader = new ZlibStream(stream, CompressionMode.Decompress);
+            reader = new InflaterInputStream(stream);
         }
         protected override int ReadNextBlock(byte[] buffer, int offset, int count)
         {
             return reader.Read(buffer, offset, count);
         }
-
     }
     // deliberately doesn't dispose the base-stream    
     class LimitedStream : InputStream

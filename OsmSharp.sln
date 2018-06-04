@@ -1,12 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C9E0D165-758D-4AAE-8EEA-2D867CC2D89A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C0BFE4B3-A433-4E89-9659-AFFD0D3509F5}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		build.sh = build.sh
 		LICENSE.md = LICENSE.md
 		README.md = README.md
 		SharedAssemblyVersion.cs = SharedAssemblyVersion.cs
@@ -33,6 +35,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.GeometryStream.Shape", "samples\Sample.GeometryStream.Shape\Sample.GeometryStream.Shape.csproj", "{8DB2208C-C826-4B27-AF96-EAA68FAC7085}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OsmSharp.Test.Functional", "test\OsmSharp.Test.Functional\OsmSharp.Test.Functional.csproj", "{79397B53-D010-40F2-90A6-7C0997093EA6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuspec", "nuspec", "{D786499E-D04D-4436-9D7F-A3517871280F}"
+	ProjectSection(SolutionItems) = preProject
+		nuspec\OsmSharp.Geo.nuspec = nuspec\OsmSharp.Geo.nuspec
+		nuspec\OsmSharp.nuspec = nuspec\OsmSharp.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -128,5 +136,8 @@ Global
 		{85B18641-FDE4-481D-9E12-A0AB127F40CD} = {DE53B04B-2B18-4A55-A8D5-3D8BC864F59A}
 		{8DB2208C-C826-4B27-AF96-EAA68FAC7085} = {DE53B04B-2B18-4A55-A8D5-3D8BC864F59A}
 		{79397B53-D010-40F2-90A6-7C0997093EA6} = {8B983F9F-62A4-428E-BEAB-73EB6D4EF1A8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EDE68EDF-0B59-4B69-A065-ED02AEC222D2}
 	EndGlobalSection
 EndGlobal

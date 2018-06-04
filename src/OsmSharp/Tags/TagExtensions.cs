@@ -85,7 +85,7 @@ namespace OsmSharp.Tags
             }
             foreach (var tag in tags)
             {
-                if (keys != null && keys.Contains(tag.Key))
+                if (keys.Contains(tag.Key))
                 {
                     collection.Add(tag);
                 }

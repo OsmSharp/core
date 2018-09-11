@@ -14,16 +14,26 @@
         <summary>OsmSharp.Geo enables using OSM-data in NTS by providing readers/writers for OSM-data and converting OSM-data to corresponding features.</summary>
         <copyright>Ben Abelshausen</copyright>
         <tags>osm, openstreetmap, mapping, nts</tags>
-        <releaseNotes>
-          This is a prelease.
-        </releaseNotes>
-		<dependencies>
-		  <group targetFramework=".NETFramework4.5">
-			<dependency id="OsmSharp" version="1.0.0" exclude="Build,Analyzers" />
-			<dependency id="GeoAPI" version="1.7.4" exclude="Build,Analyzers" />
-			<dependency id="NetTopologySuite" version="1.14.0" exclude="Build,Analyzers" />
-		  </group>
-		</dependencies>
+        <dependencies>
+            <group targetFramework=".NETFramework4.5">
+                <dependency id="OsmSharp" version="$version$" exclude="Build,Analyzers" />
+                <dependency id="GeoAPI" version="1.7.5" exclude="Build,Analyzers" />
+                <dependency id="NetTopologySuite" version="1.15.0" exclude="Build,Analyzers" />
+                <dependency id="NetTopologySuite.Features" version="1.15.0" exclude="Build,Analyzers" />
+            </group>
+            <group targetFramework=".NETStandard1.3">
+                <dependency id="OsmSharp" version="$version$" exclude="Build,Analyzers" />
+                <dependency id="GeoAPI" version="1.7.5" exclude="Build,Analyzers" />
+                <dependency id="NetTopologySuite" version="1.15.0" exclude="Build,Analyzers" />
+                <dependency id="NetTopologySuite.Features" version="1.15.0" exclude="Build,Analyzers" />
+            </group>
+            <group targetFramework=".NETStandard2.0">
+                <dependency id="OsmSharp" version="$version$" exclude="Build,Analyzers" />
+                <dependency id="GeoAPI" version="1.7.5" exclude="Build,Analyzers" />
+                <dependency id="NetTopologySuite" version="1.15.0" exclude="Build,Analyzers" />
+                <dependency id="NetTopologySuite.Features" version="1.15.0" exclude="Build,Analyzers" />
+            </group>
+        </dependencies>
 		<frameworkAssemblies>
 		  <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework=".NETFramework4.5" />
 		  <frameworkAssembly assemblyName="System.Xml" targetFramework=".NETFramework4.5" />

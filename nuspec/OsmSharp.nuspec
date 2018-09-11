@@ -14,9 +14,6 @@
         <summary>An OpenStreetMap (OSM) library for .NET to read/write/process OSM-data.</summary>
         <copyright>Ben Abelshausen</copyright>
         <tags>osm, openstreetmap</tags>
-        <releaseNotes>
-          This is a prelease.
-        </releaseNotes>
 		<dependencies>
 		  <group targetFramework=".NETFramework4.5">
 			<dependency id="protobuf-net" version="2.3.7" exclude="Build,Analyzers" />

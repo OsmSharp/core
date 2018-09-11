@@ -42,6 +42,6 @@
     <files>
         <file src="src\OsmSharp.Geo\bin\Release\net45\OsmSharp.Geo.dll" target="lib\net45\OsmSharp.Geo.dll"/>
         <file src="src\OsmSharp.Geo\bin\Release\netstandard1.3\OsmSharp.Geo.dll" target="lib\netstandard1.3\OsmSharp.Geo.dll"/>
-        <file src="src\OsmSharp.Geo\bin\Release\netstandard2.0\OsmSharp.Geo.dll" target="lib\netstandard2.0\OsmSharp..Geodll"/>
+        <file src="src\OsmSharp.Geo\bin\Release\netstandard2.0\OsmSharp.Geo.dll" target="lib\netstandard2.0\OsmSharp.Geo.dll"/>
     </files>
 </package>

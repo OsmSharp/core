@@ -38,6 +38,8 @@ TestResult.xml
 .idea/*
 .vscode/*
 
+*luxembourg.*
+
 packages/*
 !packages/repositories.config
 /.vs

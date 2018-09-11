@@ -85,7 +85,7 @@ namespace Sample.GeometryStream
 
         private static string ToJson(FeatureCollection featureCollection)
         {
-            var jsonSerializer = new NetTopologySuite.IO.GeoJsonSerializer();
+            var jsonSerializer = NetTopologySuite.IO.GeoJsonSerializer.Create();
             var jsonStream = new StringWriter();
             jsonSerializer.Serialize(jsonStream, featureCollection);
             var json = jsonStream.ToInvariantString();

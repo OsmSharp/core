@@ -40,11 +40,9 @@ namespace Sample.GeoFilter
         /// </summary>
         public static void ToFile(string url, string filename)
         {
-            if (!File.Exists(filename))
-            {
-                var client = new WebClient();
-                client.DownloadFile(url, filename);
-            }
+            if (File.Exists(filename)) return;
+            var client = new WebClient();
+            client.DownloadFile(url, filename);
         }
 
         /// <summary>
@@ -55,7 +53,7 @@ namespace Sample.GeoFilter
         {
             using (var stream = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Sample.GeoFilter.polygon.geojson")))
             {
-                var jsonSerializer = new NetTopologySuite.IO.GeoJsonSerializer();
+                var jsonSerializer = NetTopologySuite.IO.GeoJsonSerializer.Create();
                 var features = jsonSerializer.Deserialize<FeatureCollection>(new JsonTextReader(stream));
                 return features.Features[0].Geometry as IPolygon;
             }

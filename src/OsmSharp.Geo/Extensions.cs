@@ -53,16 +53,14 @@ namespace OsmSharp.Geo
         /// </summary>
         public static List<Coordinate> GetCoordinates(this CompleteWay way)
         {
-            if (way.Nodes != null)
+            if (way.Nodes == null) return null;
+            
+            var coordinates = new List<Coordinate>();
+            for (var i = 0; i < way.Nodes.Length; i++)
             {
-                var coordinates = new List<Coordinate>();
-                for (int i = 0; i < way.Nodes.Length; i++)
-                {
-                    coordinates.Add(way.Nodes[i].GetCoordinate());
-                }
-                return coordinates;
+                coordinates.Add(way.Nodes[i].GetCoordinate());
             }
-            return null;
+            return coordinates;
         }
 
         /// <summary>
@@ -71,12 +69,10 @@ namespace OsmSharp.Geo
         public static AttributesTable ToAttributeTable(this TagsCollectionBase tags)
         {
             var table = new AttributesTable();
-            if (tags != null)
+            if (tags == null) return table;
+            foreach(var tag in tags)
             {
-                foreach(var tag in tags)
-                {
-                    table.AddAttribute(tag.Key, tag.Value);
-                }
+                table.Add(tag.Key, tag.Value);
             }
             return table;
         }

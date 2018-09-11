@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using GeoAPI.Geometries;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
@@ -45,130 +46,130 @@ namespace OsmSharp.Geo
             // contains hardcoded all relevant tags.
 
             var collection = new FeatureCollection();
+            if (osmObject == null) return collection;
+
             TagsCollectionBase tags;
-            if (osmObject != null)
+            switch (osmObject.Type)
             {
-                switch (osmObject.Type)
-                {
-                    case OsmGeoType.Node:
-                        var newCollection = new TagsCollection(
-                            osmObject.Tags);
-                        newCollection.RemoveKey("FIXME");
-                        newCollection.RemoveKey("node");
-                        newCollection.RemoveKey("source");
+                case OsmGeoType.Node:
+                    var newCollection = new TagsCollection(
+                        osmObject.Tags);
+                    newCollection.RemoveKey("FIXME");
+                    newCollection.RemoveKey("node");
+                    newCollection.RemoveKey("source");
 
-                        if (newCollection.Count > 0)
-                        { // there is still some relevant information left.
-                            collection.Add(new Feature(new Point((osmObject as Node).GetCoordinate()),
-                                TagsAndIdToAttributes(osmObject)));
-                        }
-                        break;
-                    case OsmGeoType.Way:
-                        tags = osmObject.Tags;
+                    if (newCollection.Count > 0)
+                    { // there is still some relevant information left.
+                        collection.Add(new Feature(new Point((osmObject as Node).GetCoordinate()),
+                            TagsAndIdToAttributes(osmObject)));
+                    }
+                    break;
+                case OsmGeoType.Way:
+                    tags = osmObject.Tags;
 
-                        if (tags == null)
-                        {
-                            return collection;
-                        }
+                    if (tags == null)
+                    {
+                        return collection;
+                    }
 
-                        bool isArea = false;
-                        if ((tags.ContainsKey("building") && !tags.IsFalse("building")) ||
-                            (tags.ContainsKey("landuse") && !tags.IsFalse("landuse")) ||
-                            (tags.ContainsKey("amenity") && !tags.IsFalse("amenity")) ||
-                            (tags.ContainsKey("harbour") && !tags.IsFalse("harbour")) ||
-                            (tags.ContainsKey("historic") && !tags.IsFalse("historic")) ||
-                            (tags.ContainsKey("leisure") && !tags.IsFalse("leisure")) ||
-                            (tags.ContainsKey("man_made") && !tags.IsFalse("man_made")) ||
-                            (tags.ContainsKey("military") && !tags.IsFalse("military")) ||
-                            (tags.ContainsKey("natural") && !tags.IsFalse("natural")) ||
-                            (tags.ContainsKey("office") && !tags.IsFalse("office")) ||
-                            (tags.ContainsKey("place") && !tags.IsFalse("place")) ||
-                            (tags.ContainsKey("public_transport") && !tags.IsFalse("public_transport")) ||
-                            (tags.ContainsKey("shop") && !tags.IsFalse("shop")) ||
-                            (tags.ContainsKey("sport") && !tags.IsFalse("sport")) ||
-                            (tags.ContainsKey("tourism") && !tags.IsFalse("tourism")) ||
-                            (tags.ContainsKey("waterway") && !tags.IsFalse("waterway")) ||
-                            (tags.ContainsKey("wetland") && !tags.IsFalse("wetland")) ||
-                            (tags.ContainsKey("water") && !tags.IsFalse("water")) ||
-                            (tags.ContainsKey("aeroway") && !tags.IsFalse("aeroway")))
-                        { // these tags usually indicate an area.
-                            isArea = true;
-                        }
+                    bool isArea = false;
+                    if ((tags.ContainsKey("building") && !tags.IsFalse("building")) ||
+                        (tags.ContainsKey("landuse") && !tags.IsFalse("landuse")) ||
+                        (tags.ContainsKey("amenity") && !tags.IsFalse("amenity")) ||
+                        (tags.ContainsKey("harbour") && !tags.IsFalse("harbour")) ||
+                        (tags.ContainsKey("historic") && !tags.IsFalse("historic")) ||
+                        (tags.ContainsKey("leisure") && !tags.IsFalse("leisure")) ||
+                        (tags.ContainsKey("man_made") && !tags.IsFalse("man_made")) ||
+                        (tags.ContainsKey("military") && !tags.IsFalse("military")) ||
+                        (tags.ContainsKey("natural") && !tags.IsFalse("natural")) ||
+                        (tags.ContainsKey("office") && !tags.IsFalse("office")) ||
+                        (tags.ContainsKey("place") && !tags.IsFalse("place")) ||
+                        (tags.ContainsKey("public_transport") && !tags.IsFalse("public_transport")) ||
+                        (tags.ContainsKey("shop") && !tags.IsFalse("shop")) ||
+                        (tags.ContainsKey("sport") && !tags.IsFalse("sport")) ||
+                        (tags.ContainsKey("tourism") && !tags.IsFalse("tourism")) ||
+                        (tags.ContainsKey("waterway") && !tags.IsFalse("waterway")) ||
+                        (tags.ContainsKey("wetland") && !tags.IsFalse("wetland")) ||
+                        (tags.ContainsKey("water") && !tags.IsFalse("water")) ||
+                        (tags.ContainsKey("aeroway") && !tags.IsFalse("aeroway")))
+                    { // these tags usually indicate an area.
+                        isArea = true;
+                    }
 
-                        if (tags.IsTrue("area"))
-                        { // explicitly indicated that this is an area.
-                            isArea = true;
-                        }
-                        else if (tags.IsFalse("area"))
-                        { // explicitly indicated that this is not an area.
-                            isArea = false;
-                        }
+                    if (tags.IsTrue("area"))
+                    { // explicitly indicated that this is an area.
+                        isArea = true;
+                    }
+                    else if (tags.IsFalse("area"))
+                    { // explicitly indicated that this is not an area.
+                        isArea = false;
+                    }
 
-                        // check for a closed line if area.
-                        var coordinates = (osmObject as CompleteWay).GetCoordinates();
-                        if (isArea && coordinates.Count > 1 &&
-                            !coordinates[0].Equals2D(coordinates[coordinates.Count - 1]))
-                        { // not an area, first and last coordinate do not match.
-                            OsmSharp.Logging.Logger.Log("DefaultFeatureInterpreter", TraceEventType.Warning, "{0} is supposed to be an area but first and last coordinates do not match.",
-                                osmObject.ToInvariantString());
-                        }
-                        else if (!isArea && coordinates.Count < 2)
-                        {// not a linestring, needs at least two coordinates.
-                            OsmSharp.Logging.Logger.Log("DefaultFeatureInterpreter", TraceEventType.Warning, "{0} is supposed to be a linestring but has less than two coordinates.",
-                                osmObject.ToInvariantString());
-                        }
-                        else if (isArea && coordinates.Count < 4)
-                        {// not a linearring, needs at least four coordinates, with first and last identical.
-                            OsmSharp.Logging.Logger.Log("DefaultFeatureInterpreter", TraceEventType.Warning, "{0} is supposed to be a linearring but has less than four coordinates.",
-                                osmObject.ToInvariantString());
+                    // check for a closed line if area.
+                    var coordinates = (osmObject as CompleteWay).GetCoordinates();
+                    if (isArea && coordinates.Count > 1 &&
+                        !coordinates[0].Equals2D(coordinates[coordinates.Count - 1]))
+                    { // not an area, first and last coordinate do not match.
+                        Logger.Log("DefaultFeatureInterpreter", TraceEventType.Warning, "{0} is supposed to be an area but first and last coordinates do not match.",
+                            osmObject.ToInvariantString());
+                    }
+                    else if (!isArea && coordinates.Count < 2)
+                    { // not a linestring, needs at least two coordinates.
+                        Logger.Log("DefaultFeatureInterpreter", TraceEventType.Warning, "{0} is supposed to be a linestring but has less than two coordinates.",
+                            osmObject.ToInvariantString());
+                    }
+                    else if (isArea && coordinates.Count < 4)
+                    {// not a linearring, needs at least four coordinates, with first and last identical.
+                        Logger.Log("DefaultFeatureInterpreter", TraceEventType.Warning, "{0} is supposed to be a linearring but has less than four coordinates.",
+                            osmObject.ToInvariantString());
+                    }
+                    else
+                    {
+                        if (isArea)
+                        { // area tags leads to simple polygon
+                            var lineairRing = new Feature(new LinearRing(coordinates.
+                                ToArray<Coordinate>()), TagsAndIdToAttributes(osmObject));
+                            collection.Add(lineairRing);
                         }
                         else
-                        {
-                            if (isArea)
-                            { // area tags leads to simple polygon
-                                var lineairRing = new Feature(new LinearRing(coordinates.
-                                    ToArray<Coordinate>()), TagsAndIdToAttributes(osmObject));
-                                collection.Add(lineairRing);
-                            }
-                            else
-                            { // no area tag leads to just a line.
-                                var lineString = new Feature(new LineString(coordinates.
-                                    ToArray<Coordinate>()), TagsAndIdToAttributes(osmObject));
-                                collection.Add(lineString);
-                            }
+                        { // no area tag leads to just a line.
+                            var lineString = new Feature(new LineString(coordinates.
+                                ToArray<Coordinate>()), TagsAndIdToAttributes(osmObject));
+                            collection.Add(lineString);
                         }
-                        break;
-                    case OsmGeoType.Relation:
-                        var relation = (osmObject as CompleteRelation);
-                        tags = relation.Tags;
+                    }
+                    break;
+                case OsmGeoType.Relation:
+                    var relation = (osmObject as CompleteRelation);
+                    tags = relation.Tags;
 
-                        if (tags == null)
-                        {
-                            return collection;
-                        }
+                    if (tags == null)
+                    {
+                        return collection;
+                    }
 
-                        string typeValue;
-                        if (tags.TryGetValue("type", out typeValue))
-                        { // there is a type in this relation.
-                            if (typeValue == "multipolygon" || typeValue == "linearring")
-                            { // this relation is a multipolygon.
-                                var feature = this.InterpretMultipolygonRelation(relation);
-                                if (feature != null)
-                                { // add the geometry.
-                                    collection.Add(feature);
-                                }
-                            }
-                            else if (typeValue == "boundary" && tags.Contains("boundary", "administrative"))
-                            { // this relation is a boundary.
-                                var feature = this.InterpretMultipolygonRelation(relation);
-                                if (feature != null)
-                                { // add the geometry.
-                                    collection.Add(feature);
-                                }
+                    if (tags.TryGetValue("type", out var typeValue))
+                    { // there is a type in this relation.
+                        if (typeValue == "multipolygon" || typeValue == "linearring")
+                        { // this relation is a multipolygon.
+                            var feature = this.InterpretMultipolygonRelation(relation);
+                            if (feature != null)
+                            { // add the geometry.
+                                collection.Add(feature);
                             }
                         }
-                        break;
-                }
+                        else if (typeValue == "boundary" && tags.Contains("boundary", "administrative"))
+                        { // this relation is a boundary.
+                            var feature = this.InterpretMultipolygonRelation(relation);
+                            if (feature != null)
+                            { // add the geometry.
+                                collection.Add(feature);
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
             return collection;
         }
@@ -205,16 +206,16 @@ namespace OsmSharp.Geo
                 isArea = true;
             }
 
-            string typeValue;
-            if (tags.TryGetValue("type", out typeValue))
-            { // there is a type in this relation.
-                if (typeValue == "multipolygon")
-                { // this relation is a multipolygon.
-                    isArea = true;
-                }
-                else if (typeValue == "boundary")
-                { // this relation is a boundary.
-                    isArea = true;
+            if (tags.TryGetValue("type", out var typeValue))
+            {
+                switch (typeValue)
+                {
+                    // there is a type in this relation.
+                    case "multipolygon":
+                    // this relation is a boundary.
+                    case "boundary": // this relation is a multipolygon.
+                        isArea = true;
+                        break;
                 }
             }
 
@@ -238,24 +239,23 @@ namespace OsmSharp.Geo
             Feature feature = null;
             if (relation.Members == null)
             { // the relation has no members.
-                return feature;
+                return null;
             }
 
             // build lists of outer and inner ways.
             var ways = new List<KeyValuePair<bool, CompleteWay>>(); // outer=true
             foreach (var member in relation.Members)
             {
-                if (member.Role == "inner" &&
-                    member.Member is CompleteWay)
-                { // an inner member.
-                    ways.Add(new KeyValuePair<bool, CompleteWay>(
-                        false, member.Member as CompleteWay));
-                }
-                else if (member.Role == "outer" &&
-                    member.Member is CompleteWay)
-                { // an outer member.
-                    ways.Add(new KeyValuePair<bool, CompleteWay>(
-                        true, member.Member as CompleteWay));
+                switch (member.Role)
+                {
+                    case "inner" when member.Member is CompleteWay: // an inner member.
+                        ways.Add(new KeyValuePair<bool, CompleteWay>(
+                            false, member.Member as CompleteWay));
+                        break;
+                    case "outer" when member.Member is CompleteWay: // an outer member.
+                        ways.Add(new KeyValuePair<bool, CompleteWay>(
+                            true, member.Member as CompleteWay));
+                        break;
                 }
             }
 
@@ -263,11 +263,10 @@ namespace OsmSharp.Geo
             // loosely based on: http://wiki.openstreetmap.org/wiki/Relation:multipolygon/Algorithm
 
             // recusively try to assign the rings.
-            List<KeyValuePair<bool, LinearRing>> rings;
-            if (!this.AssignRings(ways, out rings))
+            if (!this.AssignRings(ways, out var rings))
             {
                 Logging.Logger.Log("DefaultFeatureInterpreter", TraceEventType.Error,
-                    string.Format("Ring assignment failed: invalid multipolygon relation [{0}] detected!", relation.Id));
+                    $"Ring assignment failed: invalid multipolygon relation [{relation.Id}] detected!");
             }
             // group the rings and create a multipolygon.
             var geometry = this.GroupRings(rings);
@@ -517,7 +516,7 @@ namespace OsmSharp.Geo
         private static AttributesTable TagsAndIdToAttributes(ICompleteOsmGeo osmObject)
         {
             var attr = osmObject.Tags.ToAttributeTable();
-            attr.AddAttribute("id", osmObject.Id);
+            attr.Add("id", osmObject.Id);
 
             return attr;
         }

@@ -1,35 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net451</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <AssemblyName>Sample.GeoFilter</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>Sample.GeoFilter</PackageId>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\src\OsmSharp\OsmSharp.csproj" />
     <ProjectReference Include="..\..\src\OsmSharp.Geo\OsmSharp.Geo.csproj" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="GeoAPI" Version="1.7.4" />
-    <PackageReference Include="NetTopologySuite" Version="1.14.0" />
-    <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.14.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.15.0" />
   </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
-    <EmbeddedResource Include="polygon.geojson" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+  <ItemGroup>
+    <None Remove="polygon.geojson" />
+    <EmbeddedResource Include="polygon.geojson" />
   </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
-    <Reference Include="System.Xml" />
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
 </Project>

@@ -51,10 +51,7 @@ namespace OsmSharp.Geo
                 }
                 return _defaultInterpreter;
             }
-            set
-            {
-                _defaultInterpreter = value;
-            }
+            set => _defaultInterpreter = value;
         }
 
         /// <summary>
@@ -80,8 +77,9 @@ namespace OsmSharp.Geo
                     return this.Interpret((osmGeo as Way).CreateComplete(data));
                 case OsmGeoType.Relation:
                     return this.Interpret((osmGeo as Relation).CreateComplete(data));
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            throw new ArgumentOutOfRangeException();
         }
     }
 }

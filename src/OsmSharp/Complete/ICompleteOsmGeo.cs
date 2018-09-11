@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using OsmSharp.Tags;
 
 namespace OsmSharp.Complete
@@ -53,5 +54,20 @@ namespace OsmSharp.Complete
         /// Returns the tags dictionary.
         /// </summary>
         TagsCollectionBase Tags { get; set; }
+
+        /// <summary>
+        /// Gets/Sets the timestamp.
+        /// </summary>
+        DateTime? TimeStamp { get; set; }
+
+        /// <summary>
+        /// The user that created this object
+        /// </summary>
+        string UserName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the version.
+        /// </summary>
+        int? Version { get; set; }
     }
 }

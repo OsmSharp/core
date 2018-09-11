@@ -73,8 +73,7 @@ namespace Sample.GeometryStream.Shape
 
                 // build feature collection.
                 var featureCollection = new FeatureCollection();
-                var attributesTable = new AttributesTable();
-                attributesTable.AddAttribute("type", "powerline");
+                var attributesTable = new AttributesTable {{"type", "powerline"}};
                 foreach (var feature in lineStrings)
                 { // make sure there is a constant # of attributes with the same names before writing the shapefile.
                     featureCollection.Add(new Feature(feature.Geometry, attributesTable));

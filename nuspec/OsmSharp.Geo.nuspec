@@ -16,30 +16,32 @@
         <tags>osm, openstreetmap, mapping, nts</tags>
         <dependencies>
             <group targetFramework=".NETFramework4.5">
-                <dependency id="OsmSharp" version="$version$" exclude="Build,Analyzers" />
-                <dependency id="GeoAPI" version="1.7.5" exclude="Build,Analyzers" />
-                <dependency id="NetTopologySuite" version="1.15.0" exclude="Build,Analyzers" />
-                <dependency id="NetTopologySuite.Features" version="1.15.0" exclude="Build,Analyzers" />
+                <dependency id="OsmSharp" version="$version$" exclude="Build,Analyzers"/>
+                <dependency id="GeoAPI" version="1.7.5" exclude="Build,Analyzers"/>
+                <dependency id="NetTopologySuite" version="1.15.0" exclude="Build,Analyzers"/>
+                <dependency id="NetTopologySuite.Features" version="1.15.0" exclude="Build,Analyzers"/>
             </group>
             <group targetFramework=".NETStandard1.3">
-                <dependency id="OsmSharp" version="$version$" exclude="Build,Analyzers" />
-                <dependency id="GeoAPI" version="1.7.5" exclude="Build,Analyzers" />
-                <dependency id="NetTopologySuite" version="1.15.0" exclude="Build,Analyzers" />
-                <dependency id="NetTopologySuite.Features" version="1.15.0" exclude="Build,Analyzers" />
+                <dependency id="OsmSharp" version="$version$" exclude="Build,Analyzers"/>
+                <dependency id="GeoAPI" version="1.7.5" exclude="Build,Analyzers"/>
+                <dependency id="NetTopologySuite" version="1.15.0" exclude="Build,Analyzers"/>
+                <dependency id="NetTopologySuite.Features" version="1.15.0" exclude="Build,Analyzers"/>
             </group>
             <group targetFramework=".NETStandard2.0">
-                <dependency id="OsmSharp" version="$version$" exclude="Build,Analyzers" />
-                <dependency id="GeoAPI" version="1.7.5" exclude="Build,Analyzers" />
-                <dependency id="NetTopologySuite" version="1.15.0" exclude="Build,Analyzers" />
-                <dependency id="NetTopologySuite.Features" version="1.15.0" exclude="Build,Analyzers" />
+                <dependency id="OsmSharp" version="$version$" exclude="Build,Analyzers"/>
+                <dependency id="GeoAPI" version="1.7.5" exclude="Build,Analyzers"/>
+                <dependency id="NetTopologySuite" version="1.15.0" exclude="Build,Analyzers"/>
+                <dependency id="NetTopologySuite.Features" version="1.15.0" exclude="Build,Analyzers"/>
             </group>
         </dependencies>
-		<frameworkAssemblies>
-		  <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework=".NETFramework4.5" />
-		  <frameworkAssembly assemblyName="System.Xml" targetFramework=".NETFramework4.5" />
-		</frameworkAssemblies>
+        <frameworkAssemblies>
+            <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework=".NETFramework4.5"/>
+            <frameworkAssembly assemblyName="System.Xml" targetFramework=".NETFramework4.5"/>
+        </frameworkAssemblies>
     </metadata>
     <files>
-      <file src="src\OsmSharp.Geo\bin\Release\net45\OsmSharp.Geo.dll" target="lib\net45\OsmSharp.Geo.dll" />
+        <file src="src\OsmSharp.Geo\bin\Release\net45\OsmSharp.Geo.dll" target="lib\net45\OsmSharp.Geo.dll"/>
+        <file src="src\OsmSharp.Geo\bin\Release\netstandard1.3\OsmSharp.Geo.dll" target="lib\netstandard1.3\OsmSharp.Geo.dll"/>
+        <file src="src\OsmSharp.Geo\bin\Release\netstandard2.0\OsmSharp.Geo.dll" target="lib\netstandard2.0\OsmSharp..Geodll"/>
     </files>
 </package>

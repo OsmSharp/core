@@ -8,32 +8,32 @@
         <owners>Ben Abelshausen</owners>
         <licenseUrl>https://raw.githubusercontent.com/OsmSharp/core/develop/LICENSE.md</licenseUrl>
         <projectUrl>http://www.osmsharp.com/</projectUrl>
-	      <iconUrl>http://www.osmsharp.com/logos/osmsharp_logo64.png</iconUrl>
+        <iconUrl>http://www.osmsharp.com/logos/osmsharp_logo64.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>An OpenStreetMap (OSM) library for .NET.</description>
         <summary>An OpenStreetMap (OSM) library for .NET to read/write/process OSM-data.</summary>
         <copyright>Ben Abelshausen</copyright>
         <tags>osm, openstreetmap</tags>
-		<dependencies>
-		  <group targetFramework=".NETFramework4.5">
-			<dependency id="protobuf-net" version="2.3.7" exclude="Build,Analyzers" />
-		  </group>
-		  <group targetFramework=".NETStandard1.3">
-			<dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
-			<dependency id="protobuf-net" version="2.3.7" exclude="Build,Analyzers" />
-		  </group>
-		  <group targetFramework=".NETStandard2.0">
-			<dependency id="protobuf-net" version="2.3.7" exclude="Build,Analyzers" />
-		  </group>
-		</dependencies>
-		<frameworkAssemblies>
-		  <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework=".NETFramework4.5" />
-		  <frameworkAssembly assemblyName="System.Xml" targetFramework=".NETFramework4.5" />
-		</frameworkAssemblies>
+        <dependencies>
+            <group targetFramework=".NETFramework4.5">
+                <dependency id="protobuf-net" version="2.3.7" exclude="Build,Analyzers"/>
+            </group>
+            <group targetFramework=".NETStandard1.3">
+                <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers"/>
+                <dependency id="protobuf-net" version="2.3.7" exclude="Build,Analyzers"/>
+            </group>
+            <group targetFramework=".NETStandard2.0">
+                <dependency id="protobuf-net" version="2.3.7" exclude="Build,Analyzers"/>
+            </group>
+        </dependencies>
+        <frameworkAssemblies>
+            <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework=".NETFramework4.5"/>
+            <frameworkAssembly assemblyName="System.Xml" targetFramework=".NETFramework4.5"/>
+        </frameworkAssemblies>
     </metadata>
     <files>
-      <file src="src\OsmSharp\bin\Release\net45\OsmSharp.dll" target="lib\net45\OsmSharp.dll" />
-	    <file src="src\OsmSharp\bin\Release\netstandard1.3\OsmSharp.dll" target="lib\netstandard1.3\OsmSharp.dll" />
-      <file src="src\OsmSharp\bin\Release\netstandard2.0\OsmSharp.dll" target="lib\netstandard2.0\OsmSharp.dll" />
+        <file src="src\OsmSharp\bin\Release\net45\OsmSharp.dll" target="lib\net45\OsmSharp.dll"/>
+        <file src="src\OsmSharp\bin\Release\netstandard1.3\OsmSharp.dll" target="lib\netstandard1.3\OsmSharp.dll"/>
+        <file src="src\OsmSharp\bin\Release\netstandard2.0\OsmSharp.dll" target="lib\netstandard2.0\OsmSharp.dll"/>
     </files>
 </package>

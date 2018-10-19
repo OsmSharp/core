@@ -43,8 +43,8 @@ namespace OsmSharp
         {
             this.Id = reader.GetAttributeInt64("id");
             this.Version = reader.GetAttributeInt32("version");
-            this.Latitude = reader.GetAttributeSingle("lat");
-            this.Longitude = reader.GetAttributeSingle("lon");
+            this.Latitude = reader.GetAttributeDouble("lat");
+            this.Longitude = reader.GetAttributeDouble("lon");
             this.ChangeSetId = reader.GetAttributeInt64("changeset");
             this.TimeStamp = reader.GetAttributeDateTime("timestamp");
             this.UserId = reader.GetAttributeInt32("uid");

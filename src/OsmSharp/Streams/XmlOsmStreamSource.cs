@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -34,7 +35,7 @@ namespace OsmSharp.Streams
     {
         private readonly bool _disposeStream = false;
         private readonly Stream _stream;
-        private readonly long _initialPosition;
+        private readonly long? _initialPosition;
 
         /// <summary>
         /// Creates a new OSM XML processor source.
@@ -42,7 +43,11 @@ namespace OsmSharp.Streams
         public XmlOsmStreamSource(Stream stream)
         {
             _stream = stream;
-            _initialPosition = _stream.Position;
+            _initialPosition = null;
+            if (_stream.CanSeek)
+            {
+                _initialPosition = _stream.Position;
+            }
         }
 
         private XmlReader _reader;
@@ -62,7 +67,21 @@ namespace OsmSharp.Streams
             _serWay = new XmlSerializer(typeof(Way));
             _serRelation = new XmlSerializer(typeof(Relation));
 
-            this.Reset();
+            // create the xml reader settings.
+            var settings = new XmlReaderSettings();
+            settings.CloseInput = true;
+            settings.CheckCharacters = false;
+            settings.IgnoreComments = true;
+            settings.IgnoreProcessingInstructions = true;
+
+            // seek to the beginning of the stream.
+            if (_stream.CanSeek)
+            { // if a non-seekable stream is given resetting is disabled.
+                _stream.Seek(_initialPosition.Value, SeekOrigin.Begin);
+            }
+
+            var textReader = new StreamReader(_stream, Encoding.UTF8);
+            _reader = XmlReader.Create(textReader, settings);
         }
 
         /// <summary>
@@ -70,18 +89,20 @@ namespace OsmSharp.Streams
         /// </summary>
         public override void Reset()
         {
+            if (_initialPosition == null) throw new NotSupportedException(
+                $"Cannot reset this stream, source stream is not seekable, check {nameof(this.CanReset)} before calling {nameof(this.Reset)}");
+            
             // create the xml reader settings.
             var settings = new XmlReaderSettings();
             settings.CloseInput = true;
             settings.CheckCharacters = false;
             settings.IgnoreComments = true;
             settings.IgnoreProcessingInstructions = true;
-            //settings.IgnoreWhitespace = true;
 
             // seek to the beginning of the stream.
             if (_stream.CanSeek)
             { // if a non-seekable stream is given resetting is disabled.
-                _stream.Seek(_initialPosition, SeekOrigin.Begin);
+                _stream.Seek(_initialPosition.Value, SeekOrigin.Begin);
             }
 
             var textReader = new StreamReader(_stream, Encoding.UTF8);

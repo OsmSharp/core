@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using OsmSharp.IO.PBF;
 using System.Collections.Generic;
 using System.IO;
@@ -32,15 +33,19 @@ namespace OsmSharp.Streams
     public class PBFOsmStreamSource : OsmStreamSource, IPBFOsmPrimitiveConsumer
     {
         private readonly Stream _stream;
-        private readonly long _initialPosition;
+        private readonly long? _initialPosition;
 
         /// <summary>
-        /// Creates a new source of PBF formated OSM data.
+        /// Creates a new source of PBF formatted OSM data.
         /// </summary>
         public PBFOsmStreamSource(Stream stream)
         {
             _stream = stream;
-            _initialPosition = _stream.Position;
+            _initialPosition = null;
+            if (_stream.CanSeek)
+            {
+                _initialPosition = _stream.Position;
+            }
         }
 
         private bool _initialized = false;
@@ -71,25 +76,21 @@ namespace OsmSharp.Streams
             var nextPBFPrimitive = this.MoveToNextPrimitive(ignoreNodes, ignoreWays, ignoreRelations);
             while(nextPBFPrimitive.Value != null)
             {
-                OsmSharp.IO.PBF.Node node = (nextPBFPrimitive.Value as OsmSharp.IO.PBF.Node);
-                if(node != null && !ignoreNodes)
-                { // next primitve is a node.
-                    _current = Encoder.DecodeNode(nextPBFPrimitive.Key, node);
-                    return true;
+                switch (nextPBFPrimitive.Value)
+                {
+                    case IO.PBF.Node node when !ignoreNodes: // next primitive is a node.
+                        _current = Encoder.DecodeNode(nextPBFPrimitive.Key, node);
+                        return true;
+                    case IO.PBF.Way way when !ignoreWays: // next primitive is a way.
+                        _current = Encoder.DecodeWay(nextPBFPrimitive.Key, way);
+                        return true;
+                    case IO.PBF.Relation relation when !ignoreRelations: // next primitive is a relation.
+                        _current = Encoder.DecodeRelation(nextPBFPrimitive.Key, relation);
+                        return true;
+                    default:
+                        nextPBFPrimitive = this.MoveToNextPrimitive(ignoreNodes, ignoreWays, ignoreRelations);
+                        break;
                 }
-                OsmSharp.IO.PBF.Way way = (nextPBFPrimitive.Value as OsmSharp.IO.PBF.Way);
-                if(way != null && !ignoreWays)
-                { // next primitive is a way.
-                    _current = Encoder.DecodeWay(nextPBFPrimitive.Key, way);
-                    return true;
-                }
-                OsmSharp.IO.PBF.Relation relation = (nextPBFPrimitive.Value as OsmSharp.IO.PBF.Relation);
-                if (relation != null && !ignoreRelations)
-                { // next primitive is a relation.
-                    _current = Encoder.DecodeRelation(nextPBFPrimitive.Key, relation);
-                    return true;
-                }
-                nextPBFPrimitive = this.MoveToNextPrimitive(ignoreNodes, ignoreWays, ignoreRelations);
             }
             return false;
         }
@@ -112,27 +113,24 @@ namespace OsmSharp.Streams
         /// </summary>
         public override void Reset()
         {
+            if (_initialPosition == null) throw new NotSupportedException(
+                $"Cannot reset this stream, source stream is not seekable, check {nameof(this.CanReset)} before calling {nameof(this.Reset)}");
+            
             _current = null;
-            if (_cachedPrimitives != null) { _cachedPrimitives.Clear(); }
-            _stream.Seek(_initialPosition, SeekOrigin.Begin);
+            _cachedPrimitives?.Clear();
+            _stream.Seek(_initialPosition.Value, SeekOrigin.Begin);
         }
 
         /// <summary>
         /// Returns true if this source can be reset.
         /// </summary>
-        public override bool CanReset
-        {
-            get
-            {
-                return _stream.CanSeek;
-            }
-        }
+        public override bool CanReset => _initialPosition.HasValue && _stream.CanSeek;
 
         #region PBF Blocks Reader
         
         private PBFReader _reader;
-        private long _firstWayPosition = -1;
-        private long _firstRelationPosition = -1;
+        private long? _firstWayPosition = null;
+        private long? _firstRelationPosition = null;
 
         /// <summary>
         /// Initializes the PBF reader.
@@ -154,27 +152,31 @@ namespace OsmSharp.Streams
             if (next.Value == null)
             { // decode another block.
                 // move to first way/relation position if they are known and nodes and or ways are to be skipped.
-                if (_firstWayPosition != -1 && ignoreNodes && !ignoreWays)
+                if (_firstWayPosition != null && ignoreNodes && !ignoreWays)
                 { // if nodes have to be ignored, there was already a first pass and ways are not to be ignored jump to the first way.
                     if (_stream.Position <= _firstWayPosition)
                     { // only just to the first way if that hasn't happened yet.
-                        _stream.Seek(_firstWayPosition, SeekOrigin.Begin);
+                        _stream.Seek(_firstWayPosition.Value, SeekOrigin.Begin);
                     }
                 }
-                if (_firstRelationPosition != -1 && ignoreNodes && ignoreWays && !ignoreRelations)
-                { // if nodes and ways have to be ignored, there was already a first pass and ways are not be ignored jump to the first relation.
+
+                if (_firstRelationPosition != null && ignoreNodes && ignoreWays && !ignoreRelations)
+                {
+                    // if nodes and ways have to be ignored, there was already a first pass and ways are not be ignored jump to the first relation.
                     if (_stream.Position < _firstRelationPosition)
-                    { // only just to the first relation if that hasn't happened yet.
-                        _stream.Seek(_firstRelationPosition, SeekOrigin.Begin);
+                    {
+                        // only just to the first relation if that hasn't happened yet.
+                        _stream.Seek(_firstRelationPosition.Value, SeekOrigin.Begin);
                     }
                 }
 
                 // just to the next block.
-                var beforeBlockPosition = _stream.Position;
+                long? beforeBlockPosition = null;
+                if (_stream.CanSeek) beforeBlockPosition = _stream.Position;
                 var block = _reader.MoveNext();
-                bool hasNodes = false, hasWays = false, hasRelations = false;
-                while (block != null && !Encoder.Decode(block, this, ignoreNodes, ignoreWays, ignoreRelations,
-                    out hasNodes, out hasWays, out hasRelations))
+                bool hasWays = false, hasRelations = false;
+                while (block != null && !block.Decode(this, ignoreNodes, ignoreWays, ignoreRelations,
+                    out _, out hasWays, out hasRelations))
                 {
                     if (hasWays && _firstWayPosition == -1)
                     {
@@ -184,7 +186,7 @@ namespace OsmSharp.Streams
                     {
                         _firstRelationPosition = beforeBlockPosition;
                     }
-                    beforeBlockPosition = _stream.Position;
+                    if (_stream.CanSeek) beforeBlockPosition = _stream.Position;
                     block = _reader.MoveNext();
                 }
                 if (hasWays && _firstWayPosition == -1)

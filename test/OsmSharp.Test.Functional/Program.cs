@@ -78,7 +78,7 @@ namespace OsmSharp.Test.Functional
             source.Reset();
             testAction = new Action(() =>
             {
-                foreach (var osmGeo in source.EnumerateAndIgore(true, false, false))
+                foreach (var osmGeo in source.EnumerateAndIgnore(true, false, false))
                 {
                     if (osmGeo.Type == OsmGeoType.Node)
                     {
@@ -105,7 +105,7 @@ namespace OsmSharp.Test.Functional
             source.Reset();
             testAction = new Action(() =>
             {
-                foreach (var osmGeo in source.EnumerateAndIgore(true, true, false))
+                foreach (var osmGeo in source.EnumerateAndIgnore(true, true, false))
                 {
                     if (osmGeo.Type == OsmGeoType.Node)
                     {

@@ -108,7 +108,6 @@ namespace OsmSharp.Streams.Filters
                 _mergedSource = mergedSource;
             }
 
-            OsmGeo modified;
             while (_mergedSource.MoveNext(ignoreNodes, ignoreWays, ignoreRelations))
             {
                 // returns the next out of the merged source of the creations and the source.
@@ -122,10 +121,14 @@ namespace OsmSharp.Streams.Filters
                     _current = null;
                     continue;
                 }
-                else if (_modifications.TryGetValue(key, out modified))
+                else
                 {
-                    _current = modified;
+                    if (_modifications.TryGetValue(key, out var modified))
+                    {
+                        _current = modified;
+                    }
                 }
+
                 return true;
             }
             return false;

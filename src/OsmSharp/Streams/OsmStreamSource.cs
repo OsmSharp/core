@@ -20,9 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using OsmSharp.Tags;
 using System.Collections;
 using System.Collections.Generic;
+using OsmSharp.Streams.Seek;
 
 namespace OsmSharp.Streams
 {
@@ -86,6 +88,18 @@ namespace OsmSharp.Streams
         /// Returns the current item in the stream.
         /// </summary>
         public abstract OsmGeo Current();
+        
+        /// <summary>
+        /// Gets the current position.
+        /// </summary>
+        public abstract SeekPosition Position { get; }
+
+        /// <summary>
+        /// Positions the stream to the given seek position.
+        /// </summary>
+        /// <param name="position">The seek position.</param>
+        /// <remarks>Throws an exception if the given seek position is not supported.</remarks>
+        public abstract void Seek(SeekPosition position);
 
         /// <summary>
         /// Resets the source to the beginning.
@@ -104,24 +118,12 @@ namespace OsmSharp.Streams
         /// <summary>
         /// Returns true if this source never returns a way or relation before an node or a relation before a way.
         /// </summary>
-        public virtual bool IsSorted
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool IsSorted => false;
 
         /// <summary>
         /// Gets the meta-data.
         /// </summary>
-        public TagsCollectionBase Meta
-        {
-            get
-            {
-                return _meta;
-            }
-        }
+        public TagsCollectionBase Meta => _meta;
 
         /// <summary>
         /// Gets all meta-data from all sources and filters that provide this source of data.
@@ -185,7 +187,16 @@ namespace OsmSharp.Streams
         /// <summary>
         /// Returns an enumerable that ignores some types of objects.
         /// </summary>
+        [Obsolete]
         public IEnumerable<OsmGeo> EnumerateAndIgore(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
+        {
+            return new OsmStreamSourceEnumerable(this, ignoreNodes, ignoreWays, ignoreRelations);
+        }
+
+        /// <summary>
+        /// Returns an enumerable that ignores some types of objects.
+        /// </summary>
+        public IEnumerable<OsmGeo> EnumerateAndIgnore(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
             return new OsmStreamSourceEnumerable(this, ignoreNodes, ignoreWays, ignoreRelations);
         }

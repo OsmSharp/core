@@ -40,7 +40,7 @@ namespace OsmSharp.Db
         /// </summary>
         public HistoryDb(IHistoryDbImpl db)
         {
-            _db = db;
+            _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
         private long _lastNodeId = -1;
@@ -122,6 +122,8 @@ namespace OsmSharp.Db
         /// </summary>
         public void Add(IEnumerable<OsmGeo> osmGeos)
         {
+            if (osmGeos == null) throw new ArgumentNullException(nameof(osmGeos));
+            
             _db.Add(osmGeos);
         }
 
@@ -130,6 +132,9 @@ namespace OsmSharp.Db
         /// </summary>
         public void Add(Changeset meta, OsmChange changes)
         {
+            if (meta == null) throw new ArgumentNullException(nameof(meta));
+            if (changes == null) throw new ArgumentNullException(nameof(changes));
+            
             _db.AddOrUpdate(meta);
             _db.AddChanges(meta.Id.Value, changes);
         }
@@ -156,6 +161,8 @@ namespace OsmSharp.Db
         /// </summary>
         public IEnumerable<OsmGeo> Get(IEnumerable<OsmGeoKey> keys)
         {
+            if (keys == null) throw new ArgumentNullException(nameof(keys));
+            
             return _db.Get(keys);
         }
 
@@ -164,6 +171,8 @@ namespace OsmSharp.Db
         /// </summary>
         public IEnumerable<OsmGeo> Get(IEnumerable<OsmGeoVersionKey> keys)
         {
+            if (keys == null) throw new ArgumentNullException(nameof(keys));
+            
             return _db.Get(keys);
         }
 
@@ -180,6 +189,8 @@ namespace OsmSharp.Db
         /// </summary>
         public long OpenChangeset(Changeset info)
         {
+            if (info == null) throw new ArgumentNullException(nameof(info));
+            
             info.Id = this.GetNextChangesetId();
 
             _db.AddOrUpdate(info);
@@ -191,7 +202,7 @@ namespace OsmSharp.Db
         /// </summary>
         public DiffResultResult ApplyChangeset(long id, OsmChange changeset)
         {
-            if (changeset == null) { throw new ArgumentNullException("changeset"); }
+            if (changeset == null) throw new ArgumentNullException(nameof(changeset));
 
             var results = new List<OsmGeoResult>();
             var nodeTransforms = new Dictionary<long, long>();
@@ -350,6 +361,8 @@ namespace OsmSharp.Db
         /// </summary>
         public void UpdateChangesetInfo(Changeset info)
         {
+            if (info == null) throw new ArgumentNullException(nameof(info));
+            
             _db.AddOrUpdate(info);
         }
 

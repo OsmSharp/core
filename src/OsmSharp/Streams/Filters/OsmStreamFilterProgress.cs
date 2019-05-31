@@ -92,7 +92,7 @@ namespace OsmSharp.Streams.Filters
             var current = this.Source.Current();
 
             // keep the start ticks.
-            long ticksStart = DateTime.Now.Ticks;
+            var ticksStart = DateTime.Now.Ticks;
 
             if (!_lastType.HasValue)
             { // has a last type.
@@ -102,7 +102,7 @@ namespace OsmSharp.Streams.Filters
 
             if (_lastType != current.Type)
             { // the last type has changed.
-                long lastTicks = ticksStart - _lastTypeStart;
+                var lastTicks = ticksStart - _lastTypeStart;
                 switch (_lastType)
                 {
                     case OsmGeoType.Node:
@@ -114,6 +114,10 @@ namespace OsmSharp.Streams.Filters
                     case OsmGeoType.Relation:
                         _relationTicks = _relationTicks + lastTicks;
                         break;
+                    case null:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
                 // start new ticks.
                 _lastTypeStart = DateTime.Now.Ticks;
@@ -129,7 +133,7 @@ namespace OsmSharp.Streams.Filters
                     {
                         var nodeSpan = new TimeSpan(_nodeTicks + (ticksStart - _lastTypeStart));
                         var nodePerSecond = System.Math.Round((double)_node / nodeSpan.TotalSeconds, 0);
-                        Logging.Logger.Log("StreamProgress", TraceEventType.Information,
+                        Logging.Logger.Log("StreamProgress", TraceEventType.Verbose,
                             "Pass {2} - Node[{0}] @ {1}/s", _node, nodePerSecond, _pass);
                     }
                     break;
@@ -140,7 +144,7 @@ namespace OsmSharp.Streams.Filters
                     {
                         var relationSpan = new TimeSpan(_relationTicks + (ticksStart - _lastTypeStart));
                         var relationPerSecond = System.Math.Round((double)_relation / relationSpan.TotalSeconds, 2);
-                        Logging.Logger.Log("StreamProgress", TraceEventType.Information,
+                        Logging.Logger.Log("StreamProgress", TraceEventType.Verbose,
                             "Pass {2} - Relation[{0}] @ {1}/s", _relation, relationPerSecond, _pass);
                     }
                     break;
@@ -151,7 +155,7 @@ namespace OsmSharp.Streams.Filters
                     {
                         var waySpan = new TimeSpan(_wayTicks + (ticksStart - _lastTypeStart));
                         var wayPerSecond = System.Math.Round((double)_way / waySpan.TotalSeconds, 2);
-                        Logging.Logger.Log("StreamProgress", TraceEventType.Information,
+                        Logging.Logger.Log("StreamProgress", TraceEventType.Verbose,
                             "Pass {2} - Way[{0}] @ {1}/s", _way, wayPerSecond, _pass);
                     }
                     break;
@@ -199,9 +203,6 @@ namespace OsmSharp.Streams.Filters
         /// <summary>
         /// Returns true if this source can be reset.
         /// </summary>
-        public override bool CanReset
-        {
-            get { return this.Source.CanReset; }
-        }
+        public override bool CanReset => this.Source.CanReset;
     }
 }

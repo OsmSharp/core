@@ -168,5 +168,24 @@ namespace OsmSharp.Test.Stream
 
             Assert.AreEqual(13978, wechel.Count);
         }
+
+        /// <summary>
+        /// Tests reading from a stream where position is not available.
+        /// </summary>
+        [Test]
+        public void PBFOsmStreamSource_ShouldBeAbleToReadFromStreamWithPositionNotAvailable()
+        {
+            using (var fileStream = new DeflateMockStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                "OsmSharp.Test.data.pbf.wechel.osm.pbf")))
+            {
+                var wechel = new List<OsmGeo>();
+                using (var reader = new PBFOsmStreamSource(fileStream))
+                {
+                    wechel.AddRange(reader);
+                }
+
+                Assert.AreEqual(13978, wechel.Count);
+            }
+        }
     }
 }

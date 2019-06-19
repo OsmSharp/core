@@ -23,6 +23,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace OsmSharp.Tags
 {
@@ -288,5 +289,23 @@ namespace OsmSharp.Tags
         }
 
         #endregion
+
+        /// <summary>
+        /// Gets a proper description of this tags collection.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            var builder = new StringBuilder();
+            foreach(var a in this)
+            {
+                if (builder.Length > 0)
+                {
+                    builder.Append('|');
+                }
+                builder.Append(a.ToString());
+            }
+            return builder.ToString();
+        }
     }
 }

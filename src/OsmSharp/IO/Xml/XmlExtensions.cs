@@ -193,22 +193,29 @@ namespace OsmSharp.IO.Xml
         /// </summary>
         public static void GetElements(this XmlReader reader, Dictionary<string, Action> getElements)
         {
+            var parentName = reader.Name;
             reader.Read();
+
             while (reader.MoveToContent() != XmlNodeType.None)
             {
-                Action action;
-                if(!getElements.TryGetValue(reader.Name, out action))
+                if (getElements.TryGetValue(reader.Name, out Action action))
                 {
-                    if (reader.Name != "osm")
-                    {
-                        Logger.Log("XmlExtensions", TraceEventType.Verbose, "No action found for xml node with name {0}.", reader.Name);
-                    }
-                    break;
+                    action();
                 }
-                action();
+                else
+                {
+                    Logger.Log("XmlExtensions", TraceEventType.Verbose, "No action found for xml node with name {0}. Skipping it.", reader.Name);
+                    reader.Read();
+                }
 
                 if (reader.NodeType == XmlNodeType.EndElement)
                 {
+                    if (reader.Name == parentName)
+                    {
+                        reader.Read();
+                        break;
+                    }
+
                     reader.Read();
                 }
             }

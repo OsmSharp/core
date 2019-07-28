@@ -114,5 +114,48 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.IsNotNull(capabilities.WayNodes);
             Assert.AreEqual(2000, capabilities.WayNodes.Maximum);
         }
+
+        /// <summary>
+        /// Test deserialization of XML that contains unexpected elements (for example 'note' and 'meta' from an OverpassApi result).
+        /// </summary>
+        [Test]
+        public void TestDeserializeSkippingUnexpectedElements()
+        {
+            var xml =
+@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<osm version=""0.6"" generator=""Overpass API 0.7.55.7 8b86ff77"">
+    <note>This is just a note</note>
+    <meta osm_base=""2019-07-27T00:04:02Z"" areas=""2019-07-26T23:48:03Z""/>
+    <node id=""1"" lat=""111"" lon=""-70.111"">
+        <tag k=""addr:housenumber"" v=""11""/>
+        <tag k=""addr:street"" v=""Main Street""/>
+    </node>
+</osm>";
+            var serializer = new XmlSerializer(typeof(Osm));
+            var osm = serializer.Deserialize(new StringReader(xml)) as Osm;
+            Assert.IsNotNull(osm);
+            Assert.AreEqual(.6, osm.Version);
+            Assert.AreEqual("Overpass API 0.7.55.7 8b86ff77", osm.Generator);
+
+            Assert.IsNull(osm.Ways);
+            Assert.IsNull(osm.Relations);
+            Assert.IsNull(osm.User);
+            Assert.IsNull(osm.GpxFiles);
+            Assert.IsNull(osm.Bounds);
+            Assert.IsNull(osm.Api);
+
+            Assert.IsNotNull(osm.Nodes);
+            Assert.AreEqual(1, osm.Nodes.Length);
+            var node = osm.Nodes[0];
+            Assert.AreEqual(1, node.Id);
+            Assert.AreEqual(111, node.Latitude);
+            Assert.AreEqual(-70.111, node.Longitude);
+            Assert.NotNull(node.Tags);
+            Assert.AreEqual(2, node.Tags.Count);
+            Assert.True(node.Tags.ContainsKey("addr:housenumber"));
+            Assert.AreEqual("11", node.Tags["addr:housenumber"]);
+            Assert.True(node.Tags.ContainsKey("addr:street"));
+            Assert.AreEqual("Main Street", node.Tags["addr:street"]);
+        }
     }
 }

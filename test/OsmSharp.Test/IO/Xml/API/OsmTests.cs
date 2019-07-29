@@ -122,15 +122,16 @@ namespace OsmSharp.Test.IO.Xml.API
         public void TestDeserializeSkippingUnexpectedElements()
         {
             var xml =
-@"<?xml version=""1.0"" encoding=""UTF-8""?>
-<osm version=""0.6"" generator=""Overpass API 0.7.55.7 8b86ff77"">
-    <note>This is just a note</note>
-    <meta osm_base=""2019-07-27T00:04:02Z"" areas=""2019-07-26T23:48:03Z""/>
-    <node id=""1"" lat=""111"" lon=""-70.111"">
-        <tag k=""addr:housenumber"" v=""11""/>
-        <tag k=""addr:street"" v=""Main Street""/>
-    </node>
-</osm>";
+                @"<?xml version=""1.0"" encoding=""UTF-8""?>
+                <osm version=""0.6"" generator=""Overpass API 0.7.55.7 8b86ff77"">
+                    <note>This is just a note</note>
+                    <meta osm_base=""2019-07-27T00:04:02Z"" areas=""2019-07-26T23:48:03Z""/>
+                    <node id=""1"" lat=""111"" lon=""-70.111"">
+                        <tag k=""addr:housenumber"" v=""11""/>
+                        <tag k=""addr:street"" v=""Main Street""/>
+                    </node>
+                </osm>";
+            
             var serializer = new XmlSerializer(typeof(Osm));
             var osm = serializer.Deserialize(new StringReader(xml)) as Osm;
             Assert.IsNotNull(osm);

@@ -44,6 +44,7 @@ namespace OsmSharp.API
             this.MinLongitude = reader.GetAttributeSingle("minlon");
             this.MaxLatitude = reader.GetAttributeSingle("maxlat");
             this.MaxLongitude = reader.GetAttributeSingle("maxlon");
+            reader.Read();
         }
 
         void IXmlSerializable.WriteXml(XmlWriter writer)

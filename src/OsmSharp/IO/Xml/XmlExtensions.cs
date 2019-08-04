@@ -151,9 +151,7 @@ namespace OsmSharp.IO.Xml
         public static double? GetAttributeDouble(this XmlReader reader, string name)
         {
             var valueString = reader.GetAttribute(name);
-            double value = 0;
-            if (!string.IsNullOrWhiteSpace(valueString) &&
-               double.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out value))
+            if (double.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out double value))
             {
                 return value;
             }
@@ -166,9 +164,7 @@ namespace OsmSharp.IO.Xml
         public static float? GetAttributeSingle(this XmlReader reader, string name)
         {
             var valueString = reader.GetAttribute(name);
-            float value = 0;
-            if (!string.IsNullOrWhiteSpace(valueString) &&
-               float.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out value))
+            if (float.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out float value))
             {
                 return value;
             }
@@ -227,9 +223,7 @@ namespace OsmSharp.IO.Xml
         public static long? GetAttributeInt64(this XmlReader reader, string name)
         {
             var valueString = reader.GetAttribute(name);
-            long value = 0;
-            if (!string.IsNullOrWhiteSpace(valueString) &&
-               long.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out value))
+            if (long.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out long value))
             {
                 return value;
             }
@@ -242,9 +236,7 @@ namespace OsmSharp.IO.Xml
         public static int? GetAttributeInt32(this XmlReader reader, string name)
         {
             var valueString = reader.GetAttribute(name);
-            int value = 0;
-            if (!string.IsNullOrWhiteSpace(valueString) &&
-               int.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out value))
+            if (int.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out int value))
             {
                 return value;
             }
@@ -257,9 +249,7 @@ namespace OsmSharp.IO.Xml
         public static bool? GetAttributeBool(this XmlReader reader, string name)
         {
             var valueString = reader.GetAttribute(name);
-            bool value = false;
-            if (!string.IsNullOrWhiteSpace(valueString) &&
-               bool.TryParse(valueString, out value))
+            if (bool.TryParse(valueString, out bool value))
             {
                 return value;
             }
@@ -272,9 +262,7 @@ namespace OsmSharp.IO.Xml
         public static DateTime? GetAttributeDateTime(this XmlReader reader, string name)
         {
             var valueString = reader.GetAttribute(name);
-            DateTime value;
-            if (!string.IsNullOrWhiteSpace(valueString) &&
-               DateTime.TryParse(valueString, System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out value))
+            if (DateTime.TryParse(valueString, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime value))
             {
                 return value;
             }
@@ -295,7 +283,6 @@ namespace OsmSharp.IO.Xml
             var emptyNamespace = new XmlSerializerNamespaces();
             emptyNamespace.Add(string.Empty, string.Empty);
 
-            var result = string.Empty;
             using (var resultStream = new MemoryStream())
             {
                 using (var stringWriter = XmlWriter.Create(resultStream, settings))

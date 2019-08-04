@@ -319,5 +319,30 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.AreEqual(@"http://xdworld\.vworld\.kr:8080/.*", osm.Policy.Imagery.Blacklists[1].Regex);
             Assert.AreEqual(@".*\.here\.com[/:].*", osm.Policy.Imagery.Blacklists[2].Regex);
         }
+
+        /// <summary>
+        /// Test deserialization of XML that contains the version as a single value (as apposed to attributes).
+        /// </summary>
+        [Test]
+        public void TestDeserializeVersionAsValue()
+        {
+            var xml =
+                @"<?xml version=""1.0"" encoding=""UTF-8""?>
+                <osm>
+                  <api>
+                    <version>0.6</version>
+                  </api>
+                </osm>
+                ";
+
+            var serializer = new XmlSerializer(typeof(Osm));
+            var osm = serializer.Deserialize(new StringReader(xml)) as Osm;
+
+            Assert.IsNotNull(osm);
+            Assert.IsNotNull(osm.Api);
+            Assert.IsNotNull(osm.Api.Version);
+            Assert.AreEqual(.6, osm.Api.Version.Maximum);
+            Assert.AreEqual(.6, osm.Api.Version.Maximum);
+        }
     }
 }

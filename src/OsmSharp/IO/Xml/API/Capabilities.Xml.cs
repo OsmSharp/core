@@ -125,8 +125,21 @@ namespace OsmSharp.API
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
-            this.Minimum = reader.GetAttributeDouble("minimum");
-            this.Maximum = reader.GetAttributeDouble("maximum");
+            // osm.api.version sometimes has attributes, sometimes just a value
+            if (reader.HasAttributes)
+            {
+                this.Minimum = reader.GetAttributeDouble("minimum");
+                this.Maximum = reader.GetAttributeDouble("maximum");
+            }
+            else if (!reader.IsEmptyElement)
+            {
+                reader.Read();
+                if (double.TryParse(reader.Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double value))
+                {
+                    this.Maximum = value;
+                    this.Minimum = value;
+                }
+            }
         }
 
         void IXmlSerializable.WriteXml(XmlWriter writer)

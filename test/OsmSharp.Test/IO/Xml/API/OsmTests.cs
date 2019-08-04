@@ -247,5 +247,77 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.True(way.Tags.ContainsKey("maxspeed:practical"));
             Assert.AreEqual("12.910093541777924", way.Tags["maxspeed:practical"]);
         }
+
+        /// <summary>
+        /// Test deserialization of XML that contains api-capabilities and policies.
+        /// </summary>
+        [Test]
+        public void TestDeserializeWithCapabilitiesAndPolicies()
+        {
+            var xml =
+                @"<?xml version=""1.0"" encoding=""UTF-8""?>
+                <osm version=""0.6"" generator=""OpenStreetMap server"" copyright=""OpenStreetMap and contributors"" attribution=""http://www.openstreetmap.org/copyright"" license=""http://opendatacommons.org/licenses/odbl/1-0/"">
+                  <api>
+                    <version minimum=""0.6"" maximum=""0.6""/>
+                    <area maximum=""0.25""/>
+                    <note_area maximum=""25""/>
+                    <tracepoints per_page=""5000""/>
+                    <waynodes maximum=""2000""/>
+                    <changesets maximum_elements=""10000""/>
+                    <timeout seconds=""300""/>
+                    <status database=""online"" api=""online"" gpx=""online""/>
+                  </api>
+                  <policy>
+                    <imagery>
+                      <blacklist regex="".*\.google(apis)?\..*/(vt|kh)[\?/].*([xyz]=.*){3}.*""/>
+                      <blacklist regex=""http://xdworld\.vworld\.kr:8080/.*""/>
+                      <blacklist regex="".*\.here\.com[/:].*""/>
+                    </imagery>
+                  </policy>
+                </osm>
+                ";
+
+            var serializer = new XmlSerializer(typeof(Osm));
+            var osm = serializer.Deserialize(new StringReader(xml)) as Osm;
+            Assert.IsNotNull(osm);
+            Assert.AreEqual(.6, osm.Version);
+            Assert.AreEqual("OpenStreetMap server", osm.Generator);
+
+            Assert.IsNull(osm.Relations);
+            Assert.IsNull(osm.User);
+            Assert.IsNull(osm.GpxFiles);
+            Assert.IsNull(osm.Nodes);
+            Assert.IsNull(osm.Ways);
+            Assert.IsNull(osm.Bounds);
+
+            Assert.IsNotNull(osm.Api);
+            Assert.IsNotNull(osm.Api.Version);
+            Assert.AreEqual(.6, osm.Api.Version.Maximum);
+            Assert.AreEqual(.6, osm.Api.Version.Minimum);
+            Assert.IsNotNull(osm.Api.Area);
+            Assert.AreEqual(.25, osm.Api.Area.Maximum);
+            Assert.IsNotNull(osm.Api.NoteArea);
+            Assert.AreEqual(25, osm.Api.NoteArea.Maximum);
+            Assert.IsNotNull(osm.Api.Tracepoints);
+            Assert.AreEqual(5000, osm.Api.Tracepoints.PerPage);
+            Assert.IsNotNull(osm.Api.WayNodes);
+            Assert.AreEqual(2000, osm.Api.WayNodes.Maximum);
+            Assert.IsNotNull(osm.Api.Changesets);
+            Assert.AreEqual(10000, osm.Api.Changesets.MaximumElements);
+            Assert.IsNotNull(osm.Api.Timeout);
+            Assert.AreEqual(300, osm.Api.Timeout.Seconds);
+            Assert.IsNotNull(osm.Api.Status);
+            Assert.AreEqual("online", osm.Api.Status.Database);
+            Assert.AreEqual("online", osm.Api.Status.Api);
+            Assert.AreEqual("online", osm.Api.Status.Gpx);
+
+            Assert.IsNotNull(osm.Policy);
+            Assert.IsNotNull(osm.Policy.Imagery);
+            Assert.IsNotNull(osm.Policy.Imagery.Blacklists);
+            Assert.AreEqual(3, osm.Policy.Imagery.Blacklists.Length);
+            Assert.AreEqual(@".*\.google(apis)?\..*/(vt|kh)[\?/].*([xyz]=.*){3}.*", osm.Policy.Imagery.Blacklists[0].Regex);
+            Assert.AreEqual(@"http://xdworld\.vworld\.kr:8080/.*", osm.Policy.Imagery.Blacklists[1].Regex);
+            Assert.AreEqual(@".*\.here\.com[/:].*", osm.Policy.Imagery.Blacklists[2].Regex);
+        }
     }
 }

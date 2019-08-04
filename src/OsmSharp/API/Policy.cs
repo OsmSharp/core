@@ -20,38 +20,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-using OsmSharp.IO.Xml;
+using System;
 
 namespace OsmSharp.API
 {
     /// <summary>
-    /// Represents the API capabilities.
+    /// Represents a Policy.
     /// </summary>
-    [XmlRoot("bounds")]
-    public partial class Bounds : IXmlSerializable
+    public partial class Policy
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
+        /// <summary>
+        /// Gets or sets the Imagery.
+        /// </summary>
+        public Imagery Imagery { get; set; }
+    }
 
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            this.MinLatitude = reader.GetAttributeSingle("minlat");
-            this.MinLongitude = reader.GetAttributeSingle("minlon");
-            this.MaxLatitude = reader.GetAttributeSingle("maxlat");
-            this.MaxLongitude = reader.GetAttributeSingle("maxlon");
-        }
+    /// <summary>
+    /// Represents a Imagery.
+    /// </summary>
+    public partial class Imagery
+    {
+        /// <summary>
+        /// Gets or sets the Blacklists.
+        /// </summary>
+        public Blacklist[] Blacklists { get; set; }
+    }
 
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteAttribute("minlat", this.MinLatitude);
-            writer.WriteAttribute("minlon", this.MinLongitude);
-            writer.WriteAttribute("maxlat", this.MaxLatitude);
-            writer.WriteAttribute("maxlon", this.MaxLongitude);
-        }
+    /// <summary>
+    /// Represents a Blacklist.
+    /// </summary>
+    public partial class Blacklist
+    {
+        /// <summary>
+        /// Gets or sets the Regex.
+        /// </summary>
+        public string Regex { get; set; }
     }
 }

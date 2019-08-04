@@ -57,6 +57,13 @@ namespace OsmSharp.API
                         reader.Read();
                     }),
                 new Tuple<string, Action>(
+                    "note_area", () =>
+                    {
+                        this.NoteArea = new NoteArea();
+                        (this.NoteArea as IXmlSerializable).ReadXml(reader);
+                        reader.Read();
+                    }),
+                new Tuple<string, Action>(
                     "tracepoints", () =>
                     {
                         this.Tracepoints = new Tracepoints();
@@ -134,6 +141,28 @@ namespace OsmSharp.API
     /// </summary>
     [XmlRoot("area")]
     public partial class Area : IXmlSerializable
+    {
+        XmlSchema IXmlSerializable.GetSchema()
+        {
+            return null;
+        }
+
+        void IXmlSerializable.ReadXml(XmlReader reader)
+        {
+            this.Maximum = reader.GetAttributeDouble("maximum");
+        }
+
+        void IXmlSerializable.WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttribute("maximum", this.Maximum);
+        }
+    }
+
+    /// <summary>
+    /// Represents the API-note-area capability.
+    /// </summary>
+    [XmlRoot("note_area")]
+    public partial class NoteArea : IXmlSerializable
     {
         XmlSchema IXmlSerializable.GetSchema()
         {

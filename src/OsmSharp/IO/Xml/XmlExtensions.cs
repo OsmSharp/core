@@ -270,6 +270,19 @@ namespace OsmSharp.IO.Xml
         }
 
         /// <summary>
+        /// Reads an enum attribute.
+        /// </summary>
+        public static T? GetAttributeEnum<T>(this XmlReader reader, string name) where T : struct
+        {
+            var valueString = reader.GetAttribute(name);
+            if (Enum.TryParse(valueString, true, out T value))
+            {
+                return value;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Serializes to xml with default settings for OSM-related entities.
         /// </summary>
         public static string SerializeToXml<T>(this T value)

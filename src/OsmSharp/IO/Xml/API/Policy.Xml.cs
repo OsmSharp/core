@@ -30,7 +30,7 @@ using System.Collections.Generic;
 namespace OsmSharp.API
 {
     /// <summary>
-    /// Represents the OSM base object.
+    /// Represents the Policy object.
     /// </summary>
     [XmlRoot("policy")]
     public partial class Policy : IXmlSerializable

@@ -344,5 +344,34 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.AreEqual(.6, osm.Api.Version.Maximum);
             Assert.AreEqual(.6, osm.Api.Version.Maximum);
         }
+
+        /// <summary>
+        /// Test deserialization of XML that contains the version as a single value (as apposed to attributes).
+        /// </summary>
+        [Test]
+        public void TestDeserializePermissions()
+        {
+            var xml =
+                @"<?xml version=""1.0"" encoding=""UTF-8""?>
+                <osm version=""0.6"" generator=""OpenStreetMap server"">
+                  <permissions>
+                    <permission name=""allow_read_prefs""/>
+                    <permission name=""allow_read_gpx""/>
+                    <permission name=""allow_write_gpx""/>
+                  </permissions>
+                </osm>
+                ";
+
+            var serializer = new XmlSerializer(typeof(Osm));
+            var osm = serializer.Deserialize(new StringReader(xml)) as Osm;
+
+            Assert.IsNotNull(osm);
+            Assert.IsNotNull(osm.Permissions);
+            Assert.IsNotNull(osm.Permissions.UserPermission);
+            Assert.AreEqual(3, osm.Permissions.UserPermission.Length);
+            Assert.AreEqual(Permissions.Permission.allow_read_prefs, osm.Permissions.UserPermission[0]);
+            Assert.AreEqual(Permissions.Permission.allow_read_gpx, osm.Permissions.UserPermission[1]);
+            Assert.AreEqual(Permissions.Permission.allow_write_gpx, osm.Permissions.UserPermission[2]);
+        }
     }
 }

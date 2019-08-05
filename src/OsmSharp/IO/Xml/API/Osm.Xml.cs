@@ -122,6 +122,12 @@ namespace OsmSharp.API
                         (this.Policy as IXmlSerializable).ReadXml(reader);
                     }),
                 new Tuple<string, Action>(
+                    "permissions", () =>
+                    {
+                        this.Permissions = new Permissions();
+                        (this.Permissions as IXmlSerializable).ReadXml(reader);
+                    }),
+                new Tuple<string, Action>(
                     "gpx_file", () =>
                     {
                         var gpxFile = new GpxFile();

@@ -78,10 +78,20 @@ namespace OsmSharp.API
         /// Gets or sets the bounds.
         /// </summary>
         public Bounds Bounds { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the GPX files.
         /// </summary>
         public GpxFile[] GpxFiles { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Policy.
+        /// </summary>
+        public Policy Policy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Permissions.
+        /// </summary>
+        public Permissions Permissions { get; set; }
     }
 }

@@ -57,13 +57,13 @@ namespace OsmSharp.API
                     {
                         this.Api = new Capabilities();
                         (this.Api as IXmlSerializable).ReadXml(reader);
-                        reader.Read();
                     }),
                 new Tuple<string, Action>(
                     "bounds", () =>
                     {
                         this.Bounds = new Bounds();
                         (this.Bounds as IXmlSerializable).ReadXml(reader);
+                        reader.Read();
                     }),
                 new Tuple<string, Action>(
                     "node", () =>
@@ -114,6 +114,18 @@ namespace OsmSharp.API
                     {
                         this.User = new User();
                         (this.User as IXmlSerializable).ReadXml(reader);
+                    }),
+                new Tuple<string, Action>(
+                    "policy", () =>
+                    {
+                        this.Policy = new Policy();
+                        (this.Policy as IXmlSerializable).ReadXml(reader);
+                    }),
+                new Tuple<string, Action>(
+                    "permissions", () =>
+                    {
+                        this.Permissions = new Permissions();
+                        (this.Permissions as IXmlSerializable).ReadXml(reader);
                     }),
                 new Tuple<string, Action>(
                     "gpx_file", () =>

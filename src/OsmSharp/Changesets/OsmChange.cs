@@ -33,6 +33,21 @@ namespace OsmSharp.Changesets
         public string Generator { get; set; }
 
         /// <summary>
+        /// Gets or sets the copyright.
+        /// </summary>
+        public string Copyright { get; set; }
+
+        /// <summary>
+        /// Gets or sets the attribution.
+        /// </summary>
+        public string Attribution { get; set; }
+
+        /// <summary>
+        /// Gets or sets the license.
+        /// </summary>
+        public string License { get; set; }
+
+        /// <summary>
         /// Gets or sets the version.
         /// </summary>
         public double? Version { get; set; }

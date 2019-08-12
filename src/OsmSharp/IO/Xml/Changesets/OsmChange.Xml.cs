@@ -46,7 +46,10 @@ namespace OsmSharp.Changesets
 
             this.Generator = reader.GetAttribute("generator");
             this.Version = reader.GetAttributeDouble("version");
-            
+            this.Copyright = reader.GetAttribute("copyright");
+            this.Attribution = reader.GetAttribute("attribution");
+            this.License = reader.GetAttribute("license");
+
             List<OsmGeo> creates = new List<OsmGeo>(); ;
             List<OsmGeo> modifies = new List<OsmGeo>(); ;
             List<OsmGeo> deletes = new List<OsmGeo>(); ;
@@ -150,8 +153,11 @@ namespace OsmSharp.Changesets
         {
             writer.WriteAttribute("generator", this.Generator);
             writer.WriteAttribute("version", this.Version);
+            writer.WriteAttribute("copyright", this.Copyright);
+            writer.WriteAttribute("attribution", this.Attribution);
+            writer.WriteAttribute("license", this.License);
 
-            if(this.Create != null)
+            if (this.Create != null)
             {
                 writer.WriteStartElement("create");
                 for (var i = 0; i < this.Create.Length; i++)

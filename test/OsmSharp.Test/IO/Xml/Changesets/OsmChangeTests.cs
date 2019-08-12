@@ -112,20 +112,26 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             Assert.AreEqual(0, osmChange.Modify.Length);
             Assert.AreEqual(0.6, osmChange.Version);
             Assert.IsNull(osmChange.Generator);
+            Assert.IsNull(osmChange.Copyright);
+            Assert.IsNull(osmChange.Attribution);
+            Assert.IsNull(osmChange.License);
         }
 
         [Test]
-        public void TestDeserialize_WithGenerator()
+        public void TestDeserialize_WithAttributes()
         {
             var serializer = new XmlSerializer(typeof(OsmChange));
             var osmChange = serializer.Deserialize(
-                new StringReader("<osmChange generator=\"OsmSharp\" version=\"0.6\"></osmChange>")) as OsmChange;
+                new StringReader("<osmChange generator=\"OsmSharp\" version=\"0.6\" copyright=\"OpenStreetMap and contributors\" attribution=\"http://www.openstreetmap.org/copyright\" license=\"http://opendatacommons.org/licenses/odbl/1-0/\"></osmChange>")) as OsmChange;
             Assert.IsNotNull(osmChange);
             Assert.AreEqual(0, osmChange.Create.Length);
             Assert.AreEqual(0, osmChange.Delete.Length);
             Assert.AreEqual(0, osmChange.Modify.Length);
             Assert.AreEqual(0.6, osmChange.Version);
             Assert.AreEqual("OsmSharp", osmChange.Generator);
+            Assert.AreEqual("OpenStreetMap and contributors", osmChange.Copyright);
+            Assert.AreEqual("http://www.openstreetmap.org/copyright", osmChange.Attribution);
+            Assert.AreEqual("http://opendatacommons.org/licenses/odbl/1-0/", osmChange.License);
         }
 
         [Test]

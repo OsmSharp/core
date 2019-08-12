@@ -155,19 +155,25 @@ namespace OsmSharp.API
     /// </summary>
     public partial class Status
     {
+        public enum ServiceStatus
+        {
+            online,
+            @readonly,
+            offline,
+        }
         /// <summary>
         /// Gets or sets the database status.
         /// </summary>
-        public string Database { get; set; }
+        public ServiceStatus? Database { get; set; }
 
         /// <summary>
         /// Gets or sets the api status.
         /// </summary>
-        public string Api { get; set; }
+        public ServiceStatus? Api { get; set; }
 
         /// <summary>
         /// Gets or sets the gpx status.
         /// </summary>
-        public string Gpx { get; set; }
+        public ServiceStatus? Gpx { get; set; }
     }
 }

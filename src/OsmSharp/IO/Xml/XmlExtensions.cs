@@ -194,16 +194,6 @@ namespace OsmSharp.IO.Xml
 
             while (reader.MoveToContent() != XmlNodeType.None)
             {
-                if (getElements.TryGetValue(reader.Name, out Action action))
-                {
-                    action();
-                }
-                else
-                {
-                    Logger.Log("XmlExtensions", TraceEventType.Verbose, "No action found for xml node with name {0}. Skipping it.", reader.Name);
-                    reader.Read();
-                }
-
                 if (reader.NodeType == XmlNodeType.EndElement)
                 {
                     if (reader.Name == parentName)
@@ -212,6 +202,15 @@ namespace OsmSharp.IO.Xml
                         break;
                     }
 
+                    reader.Read();
+                }
+                else if (getElements.TryGetValue(reader.Name, out Action action))
+                {
+                    action();
+                }
+                else
+                {
+                    Logger.Log("XmlExtensions", TraceEventType.Verbose, "No action found for xml node with name {0}. Skipping it.", reader.Name);
                     reader.Read();
                 }
             }

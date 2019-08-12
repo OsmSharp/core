@@ -294,16 +294,16 @@ namespace OsmSharp.API
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
-            this.Api = reader.GetAttribute("api");
-            this.Database = reader.GetAttribute("database");
-            this.Gpx = reader.GetAttribute("gpx");
+            this.Api = reader.GetAttributeEnum<ServiceStatus>("api");
+            this.Database = reader.GetAttributeEnum<ServiceStatus>("database");
+            this.Gpx = reader.GetAttributeEnum<ServiceStatus>("gpx");
         }
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
-            writer.WriteAttribute("api", this.Api);
-            writer.WriteAttribute("database", this.Database);
-            writer.WriteAttribute("gpx", this.Gpx);
+            writer.WriteAttribute("api", this.Api.ToString());
+            writer.WriteAttribute("database", this.Database.ToString());
+            writer.WriteAttribute("gpx", this.Gpx.ToString());
         }
     }
 }

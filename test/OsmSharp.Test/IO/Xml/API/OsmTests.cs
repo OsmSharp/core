@@ -61,10 +61,10 @@ namespace OsmSharp.Test.IO.Xml.API
                     },
                     Status = new Status()
                     {
-                        Api = "online",
-                        Database = "online",
-                        Gpx = "online"
-                    },
+                        Api = Status.ServiceStatus.online,
+                        Database = Status.ServiceStatus.online,
+                        Gpx = Status.ServiceStatus.online
+					},
                     Timeout = new Timeout()
                     {
                         Seconds = 300
@@ -106,9 +106,9 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.IsNotNull(capabilities.Changesets);
             Assert.AreEqual(50000, capabilities.Changesets.MaximumElements);
             Assert.IsNotNull(capabilities.Status);
-            Assert.AreEqual("online", capabilities.Status.Api);
-            Assert.AreEqual("online", capabilities.Status.Database);
-            Assert.AreEqual("online", capabilities.Status.Gpx);
+            Assert.AreEqual(Status.ServiceStatus.online, capabilities.Status.Api);
+            Assert.AreEqual(Status.ServiceStatus.online, capabilities.Status.Database);
+            Assert.AreEqual(Status.ServiceStatus.online, capabilities.Status.Gpx);
             Assert.IsNotNull(capabilities.Timeout);
             Assert.AreEqual(300, capabilities.Timeout.Seconds);
             Assert.IsNotNull(capabilities.Tracepoints);
@@ -307,9 +307,9 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.IsNotNull(osm.Api.Timeout);
             Assert.AreEqual(300, osm.Api.Timeout.Seconds);
             Assert.IsNotNull(osm.Api.Status);
-            Assert.AreEqual("online", osm.Api.Status.Database);
-            Assert.AreEqual("online", osm.Api.Status.Api);
-            Assert.AreEqual("online", osm.Api.Status.Gpx);
+            Assert.AreEqual(Status.ServiceStatus.online, osm.Api.Status.Database);
+            Assert.AreEqual(Status.ServiceStatus.online, osm.Api.Status.Api);
+            Assert.AreEqual(Status.ServiceStatus.online, osm.Api.Status.Gpx);
 
             Assert.IsNotNull(osm.Policy);
             Assert.IsNotNull(osm.Policy.Imagery);

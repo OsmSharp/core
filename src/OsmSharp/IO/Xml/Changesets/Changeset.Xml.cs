@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -68,6 +70,11 @@ namespace OsmSharp.Changesets
                         Value = reader.GetAttribute("v")
                     });
                 }
+                else if (reader.Name == "discussion")
+                {
+                    this.Discussion = new Discussion();
+                    (this.Discussion as IXmlSerializable).ReadXml(reader);
+                }
                 else
                 {
                     if (tags != null)
@@ -106,6 +113,82 @@ namespace OsmSharp.Changesets
                     writer.WriteEndElement();
                 }
             }
+
+            writer.WriteElement("discussion", this.Discussion);
+        }
+    }
+
+    /// <summary>
+    /// Represents a Discussion.
+    /// </summary>
+    [XmlRoot("discussion")]
+    public partial class Discussion : IXmlSerializable
+    {
+        XmlSchema IXmlSerializable.GetSchema()
+        {
+            return null;
+        }
+
+        void IXmlSerializable.ReadXml(XmlReader reader)
+        {
+            var comments = new List<Comment>();
+
+            reader.GetElements(
+               new Tuple<string, Action>(
+                   "comment", () =>
+                   {
+                       var comment = new Comment();
+                       (comment as IXmlSerializable).ReadXml(reader);
+                       comments.Add(comment);
+                   })
+               );
+
+           this.Comments = comments.ToArray();
+        }
+
+        void IXmlSerializable.WriteXml(XmlWriter writer)
+        {
+            writer.WriteElements("comment", this.Comments);
+        }
+    }
+
+    /// <summary>
+    /// Represents a Comment.
+    /// </summary>
+    [XmlRoot("comment")]
+    public partial class Comment : IXmlSerializable
+    {
+        XmlSchema IXmlSerializable.GetSchema()
+        {
+            return null;
+        }
+
+        void IXmlSerializable.ReadXml(XmlReader reader)
+        {
+            this.Date = reader.GetAttributeDateTime("date");
+            this.UserId = reader.GetAttributeInt32("uid");
+            this.UserName = reader.GetAttribute("user");
+
+            reader.GetElements(
+               new Tuple<string, Action>(
+                   "text", () =>
+                   {
+                       reader.Read();
+                       this.Text = reader.Value;
+                       reader.Read();
+                   })
+               );
+        }
+
+        void IXmlSerializable.WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttribute("date", this.Date);
+            writer.WriteAttribute("uid", this.UserId);
+            writer.WriteAttribute("user", this.UserName);
+
+            writer.WriteStartElement("text");
+            writer.WriteString(this.Text);
+            writer.WriteEndElement();
         }
     }
 }

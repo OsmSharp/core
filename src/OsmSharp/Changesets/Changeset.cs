@@ -84,5 +84,47 @@ namespace OsmSharp.Changesets
         /// Gets or sets the maximum longitude.
         /// </summary>
         public float? MaxLongitude { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Discussion.
+        /// </summary>
+        public Discussion Discussion { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a Discussion.
+    /// </summary>
+    public partial class Discussion
+    {
+        /// <summary>
+        /// Gets or sets the comments.
+        /// </summary>
+        public Comment[] Comments { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a Comment.
+    /// </summary>
+    public partial class Comment
+    {
+        /// <summary>
+        /// Gets or sets the date.
+        /// </summary>
+        public DateTime? Date { get; set; }
+
+        /// <summary>
+        /// Gets or sets the UserId.
+        /// </summary>
+        public int? UserId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the UserName.
+        /// </summary>
+        public string UserName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Text.
+        /// </summary>
+        public string Text { get; set; }
     }
 }

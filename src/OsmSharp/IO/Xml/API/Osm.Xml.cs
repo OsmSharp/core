@@ -51,6 +51,7 @@ namespace OsmSharp.API
             List<Relation> relations = null;
             List<Changeset> changesets = null;
             List<GpxFile> gpxFiles = null;
+            List<User> users = null;
             reader.GetElements(
                 new Tuple<string, Action>(
                     "api", () =>
@@ -112,8 +113,13 @@ namespace OsmSharp.API
                 new Tuple<string, Action>(
                     "user", () =>
                     {
-                        this.User = new User();
-                        (this.User as IXmlSerializable).ReadXml(reader);
+                        var user = new User();
+                        (user as IXmlSerializable).ReadXml(reader);
+                        if (users == null)
+                        {
+                            users = new List<User>();
+                        }
+                        users.Add(this.User);
                     }),
                 new Tuple<string, Action>(
                     "policy", () =>
@@ -158,6 +164,17 @@ namespace OsmSharp.API
             if (gpxFiles != null)
             {
                 this.GpxFiles = gpxFiles.ToArray();
+            }
+            if (users != null)
+            {
+                if (users.Count == 1)
+                {
+                    this.User = users[0];
+                }
+                else
+                {
+                    this.Users = users.ToArray();
+                }
             }
         }
 

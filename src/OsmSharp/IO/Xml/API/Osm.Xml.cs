@@ -119,7 +119,7 @@ namespace OsmSharp.API
                         {
                             users = new List<User>();
                         }
-                        users.Add(this.User);
+                        users.Add(user);
                     }),
                 new Tuple<string, Action>(
                     "policy", () =>

@@ -184,6 +184,7 @@ namespace OsmSharp.API
             writer.WriteAttribute("generator", this.Generator);
 
             writer.WriteElement("user", this.User);
+            writer.WriteElements("user", this.Users);
             writer.WriteElement("bounds", this.Bounds);
             writer.WriteElement("api", this.Api);
 

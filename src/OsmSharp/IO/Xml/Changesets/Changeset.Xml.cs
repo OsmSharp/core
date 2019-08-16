@@ -53,6 +53,8 @@ namespace OsmSharp.Changesets
             this.MinLatitude = reader.GetAttributeSingle("min_lat");
             this.MaxLongitude = reader.GetAttributeSingle("max_lon");
             this.MaxLatitude = reader.GetAttributeSingle("max_lat");
+            this.CommentsCount = reader.GetAttributeInt32("comments_count");
+            this.ChangesCount = reader.GetAttributeInt32("changes_count");
 
             TagsCollection tags = null;
             while (reader.Read() &&
@@ -102,6 +104,8 @@ namespace OsmSharp.Changesets
             writer.WriteAttribute("min_lat", this.MinLatitude);
             writer.WriteAttribute("max_lon", this.MaxLongitude);
             writer.WriteAttribute("max_lat", this.MaxLatitude);
+            writer.WriteAttribute("comments_count", this.CommentsCount);
+            writer.WriteAttribute("changes_count", this.ChangesCount);
 
             if (this.Tags != null)
             {

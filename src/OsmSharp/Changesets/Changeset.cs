@@ -89,6 +89,17 @@ namespace OsmSharp.Changesets
         /// Gets or sets the Discussion.
         /// </summary>
         public Discussion Discussion { get; set; }
+
+        /// <summary>
+        /// Gets or sets the comment count.
+        /// </summary>
+        public int? CommentsCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the change count.
+        /// </summary>
+        public int? ChangesCount { get; set; }
+
     }
 
     /// <summary>

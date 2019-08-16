@@ -108,7 +108,7 @@ namespace OsmSharp.Test.IO.Xml.Changesets
         {
             var xml =
 @"<osm>
-  <changeset id=""10"" user=""fred"" uid=""123"" created_at=""2008-11-08T19:07:39+01:00"" open=""true"" min_lon=""7.0191821"" min_lat=""49.2785426"" max_lon=""7.0197485"" max_lat=""49.2793101"">
+  <changeset id=""10"" user=""fred"" uid=""123"" created_at=""2008-11-08T19:07:39+01:00"" open=""true"" min_lon=""7.0191821"" min_lat=""49.2785426"" max_lon=""7.0197485"" max_lat=""49.2793101"" comments_count=""2"" changes_count=""5"">
     <tag k=""created_by"" v=""JOSM 1.61""/>
     <tag k=""comment"" v=""Just adding some streetnames""/>
     <discussion>
@@ -141,6 +141,8 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             Assert.AreEqual(49.2785426f, changeset.MinLatitude, 0.00001f);
             Assert.AreEqual(7.0197485f, changeset.MaxLongitude, 0.00001f);
             Assert.AreEqual(49.27931011f, changeset.MaxLatitude, 0.00001f);
+            Assert.AreEqual(2, changeset.CommentsCount);
+            Assert.AreEqual(5, changeset.ChangesCount);
             Assert.IsNull(changeset.ClosedAt);
 
             Assert.IsNotNull(changeset.Tags);

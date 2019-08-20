@@ -346,7 +346,7 @@ namespace OsmSharp.Test.IO.Xml.API
         }
 
         /// <summary>
-        /// Test deserialization of XML that contains the version as a single value (as apposed to attributes).
+        /// Test deserialization of XML that contains permissions.
         /// </summary>
         [Test]
         public void TestDeserializePermissions()
@@ -372,6 +372,35 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.AreEqual(Permissions.Permission.allow_read_prefs, osm.Permissions.UserPermission[0]);
             Assert.AreEqual(Permissions.Permission.allow_read_gpx, osm.Permissions.UserPermission[1]);
             Assert.AreEqual(Permissions.Permission.allow_write_gpx, osm.Permissions.UserPermission[2]);
+        }
+
+        /// <summary>
+        /// Test deserialization of XML that contains perferences.
+        /// </summary>
+        [Test]
+        public void TestDeserializePreferences()
+        {
+            var xml =
+                @"<?xml version=""1.0"" encoding=""UTF -8"" ?>
+                <osm>
+                    <preferences>
+                        <preference k=""gps.trace.visibility"" v=""public"" />
+                        <preference k=""color"" v=""red"" />
+                    </preferences>
+                </osm>
+                ";
+
+            var serializer = new XmlSerializer(typeof(Osm));
+            var osm = serializer.Deserialize(new StringReader(xml)) as Osm;
+
+            Assert.IsNotNull(osm);
+            Assert.IsNotNull(osm.Preferences);
+            Assert.IsNotNull(osm.Preferences.UserPreferences);
+            Assert.AreEqual(2, osm.Preferences.UserPreferences.Length);
+            Assert.AreEqual("gps.trace.visibility", osm.Preferences.UserPreferences[0].Key);
+            Assert.AreEqual("public", osm.Preferences.UserPreferences[0].Value);
+            Assert.AreEqual("color", osm.Preferences.UserPreferences[1].Key);
+            Assert.AreEqual("red", osm.Preferences.UserPreferences[1].Value);
         }
     }
 }

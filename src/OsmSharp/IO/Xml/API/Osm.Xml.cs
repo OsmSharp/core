@@ -134,6 +134,12 @@ namespace OsmSharp.API
                         (this.Permissions as IXmlSerializable).ReadXml(reader);
                     }),
                 new Tuple<string, Action>(
+                    "preferences", () =>
+                    {
+                        this.Preferences = new Preferences();
+                        (this.Preferences as IXmlSerializable).ReadXml(reader);
+                    }),
+                new Tuple<string, Action>(
                     "gpx_file", () =>
                     {
                         var gpxFile = new GpxFile();
@@ -187,6 +193,9 @@ namespace OsmSharp.API
             writer.WriteElements("user", this.Users);
             writer.WriteElement("bounds", this.Bounds);
             writer.WriteElement("api", this.Api);
+            writer.WriteElement("policy", this.Policy);
+            writer.WriteElement("permissions", this.Permissions);
+            writer.WriteElement("preferences", this.Preferences);
 
             writer.WriteElements("node", this.Nodes);
             writer.WriteElements("way", this.Ways);

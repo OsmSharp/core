@@ -402,5 +402,60 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.AreEqual("color", osm.Preferences.UserPreferences[1].Key);
             Assert.AreEqual("red", osm.Preferences.UserPreferences[1].Value);
         }
+
+        /// <summary>
+        /// Test deserialization of XML that contains Notes.
+        /// </summary>
+        [Test]
+        public void TestDeserializeNotes()
+        {
+            var xml =
+                @"<?xml version=""1.0"" encoding=""UTF-8""?>
+                <osm>
+                    <note lon=""0.1000000"" lat=""51.0000000"">
+                        <id>16659</id>
+                        <url>https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659</url>
+                        <comment_url>https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659/comment</comment_url>
+                        <close_url>https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659/close</close_url>
+                        <date_created>2019-06-15 08:26:04 UTC</date_created>
+                        <status>open</status>
+                        <comments>
+                            <comment>
+                                <date>2019-06-15 08:26:04 UTC</date>
+                                <action>opened</action>
+                                <text>ThisIsANote</text>
+                                <html>&lt;p&gt;ThisIsANote&lt;/p&gt;</html>
+                            </comment>
+                        </comments>
+                    </note>
+                </osm>
+                ";
+
+            var serializer = new XmlSerializer(typeof(Osm));
+            var osm = serializer.Deserialize(new StringReader(xml)) as Osm;
+
+            Assert.IsNotNull(osm);
+            Assert.IsNotNull(osm.Notes);
+            Assert.AreEqual(1, osm.Notes.Length);
+
+            var note = osm.Notes[0];
+            Assert.AreEqual(51, note.Latitude);
+            Assert.AreEqual(0.1, note.Longitude);
+            Assert.AreEqual(16659, note.Id);
+            Assert.AreEqual("https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659", note.Url);
+            Assert.AreEqual("https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659/comment", note.CommentUrl);
+            Assert.AreEqual("https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659/close", note.CloseUrl);
+            Assert.AreEqual(Note.ParseNoteDate("2019-06-15 08:26:04 UTC"), note.DateCreated);
+            Assert.AreEqual(Note.NoteStatus.Open, note.Status);
+            Assert.IsNotNull(note.Comments);
+            Assert.IsNotNull(note.Comments.Comments);
+            Assert.AreEqual(1, note.Comments.Comments.Length);
+
+            var comment = note.Comments.Comments[0];
+            Assert.AreEqual(Note.ParseNoteDate("2019-06-15 08:26:04 UTC"), comment.Date);
+            Assert.AreEqual(Note.Comment.CommentAction.Opened, comment.Action);
+            Assert.AreEqual("ThisIsANote", comment.Text);
+            Assert.AreEqual("<p>ThisIsANote</p>", comment.HTML);
+        }
     }
 }

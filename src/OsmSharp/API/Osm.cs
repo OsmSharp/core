@@ -98,5 +98,10 @@ namespace OsmSharp.API
         /// Gets or sets the Preferences.
         /// </summary>
         public Preferences Preferences { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Notes.
+        /// </summary>
+        public Note[] Notes { get; set; }
     }
 }

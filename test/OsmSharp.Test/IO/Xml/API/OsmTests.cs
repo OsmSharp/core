@@ -422,6 +422,9 @@ namespace OsmSharp.Test.IO.Xml.API
                         <comments>
                             <comment>
                                 <date>2019-06-15 08:26:04 UTC</date>
+                                <uid>1234</uid>
+                                <user>userName</user>
+                                <user_url>https://master.apis.dev.openstreetmap.org/user/userName</user_url>
                                 <action>opened</action>
                                 <text>ThisIsANote</text>
                                 <html>&lt;p&gt;ThisIsANote&lt;/p&gt;</html>
@@ -453,6 +456,9 @@ namespace OsmSharp.Test.IO.Xml.API
 
             var comment = note.Comments.Comments[0];
             Assert.AreEqual(Note.ParseNoteDate("2019-06-15 08:26:04 UTC"), comment.Date);
+            Assert.AreEqual(1234, comment.UserId);
+            Assert.AreEqual("userName", comment.UserName);
+            Assert.AreEqual("https://master.apis.dev.openstreetmap.org/user/userName", comment.UserUrl);
             Assert.AreEqual(Note.Comment.CommentAction.Opened, comment.Action);
             Assert.AreEqual("ThisIsANote", comment.Text);
             Assert.AreEqual("<p>ThisIsANote</p>", comment.HTML);

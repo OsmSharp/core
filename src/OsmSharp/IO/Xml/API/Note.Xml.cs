@@ -151,6 +151,21 @@ namespace OsmSharp.API
                             this.Date = ParseNoteDate(valueString);
                         }),
                     new Tuple<string, Action>(
+                        "uid", () =>
+                        {
+                            this.UserId = reader.ReadElementContentAsLong();
+                        }),
+                    new Tuple<string, Action>(
+                        "user", () =>
+                        {
+                            this.UserName = reader.ReadElementContentAsString();
+                        }),
+                    new Tuple<string, Action>(
+                        "user_url", () =>
+                        {
+                            this.UserUrl = reader.ReadElementContentAsString();
+                        }),
+                    new Tuple<string, Action>(
                         "action", () =>
                         {
                             this.Action = reader.ReadElementContentAsEnum<CommentAction>();
@@ -170,6 +185,9 @@ namespace OsmSharp.API
             public void WriteXml(XmlWriter writer)
             {
                 writer.WriteStartAndEndElementWithContent("date", this.Date?.ToString());
+                writer.WriteStartAndEndElementWithContent("uid", this.UserId?.ToString());
+                writer.WriteStartAndEndElementWithContent("user", this.UserName?.ToString());
+                writer.WriteStartAndEndElementWithContent("user_url", this.UserUrl?.ToString());
                 writer.WriteStartAndEndElementWithContent("action", this.Action?.ToString().ToLower());
                 writer.WriteStartAndEndElementWithContent("text", this.Text);
                 writer.WriteStartAndEndElementWithContent("html", this.HTML);

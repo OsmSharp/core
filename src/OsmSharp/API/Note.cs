@@ -102,6 +102,21 @@ namespace OsmSharp.API
             public DateTime? Date { get; set; }
 
             /// <summary>
+            /// The id of the user that created the comment, or null if the comment is anonymous.
+            /// </summary>
+            public long? UserId { get; set; }
+
+            /// <summary>
+            /// The name of the user that created the comment, or null if the comment is anonymous.
+            /// </summary>
+            public string UserName { get; set; }
+
+            /// <summary>
+            /// The url of the user that created the comment, or null if the comment is anonymous.
+            /// </summary>
+            public string UserUrl { get; set; }
+
+            /// <summary>
             /// The action performed with this comment.
             /// </summary>
             public CommentAction? Action { get; set; }

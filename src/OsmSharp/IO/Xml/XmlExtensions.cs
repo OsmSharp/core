@@ -146,14 +146,25 @@ namespace OsmSharp.IO.Xml
         }
 
         /// <summary>
+        /// Writes a xml start [Name] element, then the string content, then an end element.
+        /// </summary>
+        public static void WriteStartAndEndElementWithContent(this XmlWriter writer, string name, string content)
+        {
+            if (content != null)
+            {
+                writer.WriteStartElement(name);
+                writer.WriteString(content);
+                writer.WriteEndElement();
+            }
+        }
+
+        /// <summary>
         /// Reads a double attribute.
         /// </summary>
         public static double? GetAttributeDouble(this XmlReader reader, string name)
         {
             var valueString = reader.GetAttribute(name);
-            double value = 0;
-            if (!string.IsNullOrWhiteSpace(valueString) &&
-               double.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out value))
+            if (double.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out double value))
             {
                 return value;
             }
@@ -166,9 +177,7 @@ namespace OsmSharp.IO.Xml
         public static float? GetAttributeSingle(this XmlReader reader, string name)
         {
             var valueString = reader.GetAttribute(name);
-            float value = 0;
-            if (!string.IsNullOrWhiteSpace(valueString) &&
-               float.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out value))
+            if (float.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out float value))
             {
                 return value;
             }
@@ -198,16 +207,6 @@ namespace OsmSharp.IO.Xml
 
             while (reader.MoveToContent() != XmlNodeType.None)
             {
-                if (getElements.TryGetValue(reader.Name, out Action action))
-                {
-                    action();
-                }
-                else
-                {
-                    Logger.Log("XmlExtensions", TraceEventType.Verbose, "No action found for xml node with name {0}. Skipping it.", reader.Name);
-                    reader.Read();
-                }
-
                 if (reader.NodeType == XmlNodeType.EndElement)
                 {
                     if (reader.Name == parentName)
@@ -216,6 +215,15 @@ namespace OsmSharp.IO.Xml
                         break;
                     }
 
+                    reader.Read();
+                }
+                else if (getElements.TryGetValue(reader.Name, out Action action))
+                {
+                    action();
+                }
+                else
+                {
+                    Logger.Log("XmlExtensions", TraceEventType.Verbose, "No action found for xml node with name {0}. Skipping it.", reader.Name);
                     reader.Read();
                 }
             }
@@ -227,9 +235,7 @@ namespace OsmSharp.IO.Xml
         public static long? GetAttributeInt64(this XmlReader reader, string name)
         {
             var valueString = reader.GetAttribute(name);
-            long value = 0;
-            if (!string.IsNullOrWhiteSpace(valueString) &&
-               long.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out value))
+            if (long.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out long value))
             {
                 return value;
             }
@@ -242,9 +248,7 @@ namespace OsmSharp.IO.Xml
         public static int? GetAttributeInt32(this XmlReader reader, string name)
         {
             var valueString = reader.GetAttribute(name);
-            int value = 0;
-            if (!string.IsNullOrWhiteSpace(valueString) &&
-               int.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out value))
+            if (int.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out int value))
             {
                 return value;
             }
@@ -257,9 +261,7 @@ namespace OsmSharp.IO.Xml
         public static bool? GetAttributeBool(this XmlReader reader, string name)
         {
             var valueString = reader.GetAttribute(name);
-            bool value = false;
-            if (!string.IsNullOrWhiteSpace(valueString) &&
-               bool.TryParse(valueString, out value))
+            if (bool.TryParse(valueString, out bool value))
             {
                 return value;
             }
@@ -272,9 +274,33 @@ namespace OsmSharp.IO.Xml
         public static DateTime? GetAttributeDateTime(this XmlReader reader, string name)
         {
             var valueString = reader.GetAttribute(name);
-            DateTime value;
-            if (!string.IsNullOrWhiteSpace(valueString) &&
-               DateTime.TryParse(valueString, System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out value))
+            if (DateTime.TryParse(valueString, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime value))
+            {
+                return value;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Reads an enum attribute.
+        /// </summary>
+        public static T? GetAttributeEnum<T>(this XmlReader reader, string name) where T : struct
+        {
+            var valueString = reader.GetAttribute(name);
+            if (Enum.TryParse(valueString, true, out T value))
+            {
+                return value;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Reads the current element content and returns the contents as an enum.
+        /// </summary>
+        public static T? ReadElementContentAsEnum<T>(this XmlReader reader) where T : struct
+        {
+            var valueString = reader.ReadElementContentAsString();
+            if (Enum.TryParse(valueString, true, out T value))
             {
                 return value;
             }
@@ -295,7 +321,6 @@ namespace OsmSharp.IO.Xml
             var emptyNamespace = new XmlSerializerNamespaces();
             emptyNamespace.Add(string.Empty, string.Empty);
 
-            var result = string.Empty;
             using (var resultStream = new MemoryStream())
             {
                 using (var stringWriter = XmlWriter.Create(resultStream, settings))

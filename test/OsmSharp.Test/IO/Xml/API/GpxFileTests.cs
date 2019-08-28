@@ -51,7 +51,7 @@ namespace OsmSharp.Test.IO.Xml.API
                         Lat = 1.1,
                         Lon = 2.2,
                         User = "User",
-                        Visibility = "private",
+                        Visibility = Visibility.Private,
                         Pending = false,
                         TimeStamp = new DateTime(1947, 11, 29, 12, 0, 0, DateTimeKind.Utc),
                         Description = "Description",
@@ -81,7 +81,7 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.AreEqual(1.1, gpxFile.Lat);
             Assert.AreEqual(2.2, gpxFile.Lon);
             Assert.AreEqual("User", gpxFile.User);
-            Assert.AreEqual("private", gpxFile.Visibility);
+            Assert.AreEqual(Visibility.Private, gpxFile.Visibility);
             Assert.AreEqual(false, gpxFile.Pending);
             Assert.AreEqual(1947, gpxFile.TimeStamp.Year);
             Assert.AreEqual("Description", gpxFile.Description);

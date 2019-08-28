@@ -20,51 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.Changesets
+using System;
+
+namespace OsmSharp.API
 {
     /// <summary>
-    /// Represents an OSM change.
+    /// Represents a Permissions.
     /// </summary>
-    public partial class OsmChange
+    public partial class Permissions
     {
-        /// <summary>
-        /// Gets or sets the generator.
-        /// </summary>
-        public string Generator { get; set; }
+        public enum Permission
+        {
+            //read user preferences
+            allow_read_prefs,
+            //modify user preferences
+            allow_write_prefs,
+            //create diary entries, comments and make friends
+            allow_write_diary,
+            //modify the map
+            allow_write_api,
+            //read private GPS traces
+            allow_read_gpx,
+            //upload GPS traces
+            allow_write_gpx,
+            //modify notes
+            allow_write_notes
+        }
 
         /// <summary>
-        /// Gets or sets the copyright.
+        /// Gets or sets the Permission array.
         /// </summary>
-        public string Copyright { get; set; }
-
-        /// <summary>
-        /// Gets or sets the attribution.
-        /// </summary>
-        public string Attribution { get; set; }
-
-        /// <summary>
-        /// Gets or sets the license.
-        /// </summary>
-        public string License { get; set; }
-
-        /// <summary>
-        /// Gets or sets the version.
-        /// </summary>
-        public double? Version { get; set; }
-
-        /// <summary>
-        /// Gets or sets the create change array.
-        /// </summary>
-        public OsmGeo[] Create { get; set; }
-
-        /// <summary>
-        /// Gets or sets the modify change array.
-        /// </summary>
-        public OsmGeo[] Modify { get; set; }
-
-        /// <summary>
-        /// Gets or sets the delete change array.
-        /// </summary>
-        public OsmGeo[] Delete { get; set; }
+        public Permission[] UserPermission { get; set; }
     }
 }

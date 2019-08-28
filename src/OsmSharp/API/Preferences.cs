@@ -20,51 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.Changesets
+using System;
+
+namespace OsmSharp.API
 {
     /// <summary>
-    /// Represents an OSM change.
+    /// Represents a User's Preferences.
     /// </summary>
-    public partial class OsmChange
+    public partial class Preferences
     {
         /// <summary>
-        /// Gets or sets the generator.
+        /// Gets or sets the Permission array.
         /// </summary>
-        public string Generator { get; set; }
+        public Preference[] UserPreferences { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a User's Preference.
+    /// </summary>
+    public partial class Preference
+    {
+        /// <summary>
+        /// Gets or sets the Key.
+        /// </summary>
+        public string Key { get; set; }
 
         /// <summary>
-        /// Gets or sets the copyright.
+        /// Gets or sets the Value.
         /// </summary>
-        public string Copyright { get; set; }
-
-        /// <summary>
-        /// Gets or sets the attribution.
-        /// </summary>
-        public string Attribution { get; set; }
-
-        /// <summary>
-        /// Gets or sets the license.
-        /// </summary>
-        public string License { get; set; }
-
-        /// <summary>
-        /// Gets or sets the version.
-        /// </summary>
-        public double? Version { get; set; }
-
-        /// <summary>
-        /// Gets or sets the create change array.
-        /// </summary>
-        public OsmGeo[] Create { get; set; }
-
-        /// <summary>
-        /// Gets or sets the modify change array.
-        /// </summary>
-        public OsmGeo[] Modify { get; set; }
-
-        /// <summary>
-        /// Gets or sets the delete change array.
-        /// </summary>
-        public OsmGeo[] Delete { get; set; }
+        public string Value { get; set; }
     }
 }

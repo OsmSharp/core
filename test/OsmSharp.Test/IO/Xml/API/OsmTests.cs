@@ -61,10 +61,10 @@ namespace OsmSharp.Test.IO.Xml.API
                     },
                     Status = new Status()
                     {
-                        Api = "online",
-                        Database = "online",
-                        Gpx = "online"
-                    },
+                        Api = Status.ServiceStatus.online,
+                        Database = Status.ServiceStatus.online,
+                        Gpx = Status.ServiceStatus.online
+					},
                     Timeout = new Timeout()
                     {
                         Seconds = 300
@@ -106,9 +106,9 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.IsNotNull(capabilities.Changesets);
             Assert.AreEqual(50000, capabilities.Changesets.MaximumElements);
             Assert.IsNotNull(capabilities.Status);
-            Assert.AreEqual("online", capabilities.Status.Api);
-            Assert.AreEqual("online", capabilities.Status.Database);
-            Assert.AreEqual("online", capabilities.Status.Gpx);
+            Assert.AreEqual(Status.ServiceStatus.online, capabilities.Status.Api);
+            Assert.AreEqual(Status.ServiceStatus.online, capabilities.Status.Database);
+            Assert.AreEqual(Status.ServiceStatus.online, capabilities.Status.Gpx);
             Assert.IsNotNull(capabilities.Timeout);
             Assert.AreEqual(300, capabilities.Timeout.Seconds);
             Assert.IsNotNull(capabilities.Tracepoints);
@@ -246,6 +246,222 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.AreEqual("residential", way.Tags["highway"]);
             Assert.True(way.Tags.ContainsKey("maxspeed:practical"));
             Assert.AreEqual("12.910093541777924", way.Tags["maxspeed:practical"]);
+        }
+
+        /// <summary>
+        /// Test deserialization of XML that contains api-capabilities and policies.
+        /// </summary>
+        [Test]
+        public void TestDeserializeWithCapabilitiesAndPolicies()
+        {
+            var xml =
+                @"<?xml version=""1.0"" encoding=""UTF-8""?>
+                <osm version=""0.6"" generator=""OpenStreetMap server"" copyright=""OpenStreetMap and contributors"" attribution=""http://www.openstreetmap.org/copyright"" license=""http://opendatacommons.org/licenses/odbl/1-0/"">
+                  <api>
+                    <version minimum=""0.6"" maximum=""0.6""/>
+                    <area maximum=""0.25""/>
+                    <note_area maximum=""25""/>
+                    <tracepoints per_page=""5000""/>
+                    <waynodes maximum=""2000""/>
+                    <changesets maximum_elements=""10000""/>
+                    <timeout seconds=""300""/>
+                    <status database=""online"" api=""online"" gpx=""online""/>
+                  </api>
+                  <policy>
+                    <imagery>
+                      <blacklist regex="".*\.google(apis)?\..*/(vt|kh)[\?/].*([xyz]=.*){3}.*""/>
+                      <blacklist regex=""http://xdworld\.vworld\.kr:8080/.*""/>
+                      <blacklist regex="".*\.here\.com[/:].*""/>
+                    </imagery>
+                  </policy>
+                </osm>
+                ";
+
+            var serializer = new XmlSerializer(typeof(Osm));
+            var osm = serializer.Deserialize(new StringReader(xml)) as Osm;
+            Assert.IsNotNull(osm);
+            Assert.AreEqual(.6, osm.Version);
+            Assert.AreEqual("OpenStreetMap server", osm.Generator);
+
+            Assert.IsNull(osm.Relations);
+            Assert.IsNull(osm.User);
+            Assert.IsNull(osm.GpxFiles);
+            Assert.IsNull(osm.Nodes);
+            Assert.IsNull(osm.Ways);
+            Assert.IsNull(osm.Bounds);
+
+            Assert.IsNotNull(osm.Api);
+            Assert.IsNotNull(osm.Api.Version);
+            Assert.AreEqual(.6, osm.Api.Version.Maximum);
+            Assert.AreEqual(.6, osm.Api.Version.Minimum);
+            Assert.IsNotNull(osm.Api.Area);
+            Assert.AreEqual(.25, osm.Api.Area.Maximum);
+            Assert.IsNotNull(osm.Api.NoteArea);
+            Assert.AreEqual(25, osm.Api.NoteArea.Maximum);
+            Assert.IsNotNull(osm.Api.Tracepoints);
+            Assert.AreEqual(5000, osm.Api.Tracepoints.PerPage);
+            Assert.IsNotNull(osm.Api.WayNodes);
+            Assert.AreEqual(2000, osm.Api.WayNodes.Maximum);
+            Assert.IsNotNull(osm.Api.Changesets);
+            Assert.AreEqual(10000, osm.Api.Changesets.MaximumElements);
+            Assert.IsNotNull(osm.Api.Timeout);
+            Assert.AreEqual(300, osm.Api.Timeout.Seconds);
+            Assert.IsNotNull(osm.Api.Status);
+            Assert.AreEqual(Status.ServiceStatus.online, osm.Api.Status.Database);
+            Assert.AreEqual(Status.ServiceStatus.online, osm.Api.Status.Api);
+            Assert.AreEqual(Status.ServiceStatus.online, osm.Api.Status.Gpx);
+
+            Assert.IsNotNull(osm.Policy);
+            Assert.IsNotNull(osm.Policy.Imagery);
+            Assert.IsNotNull(osm.Policy.Imagery.Blacklists);
+            Assert.AreEqual(3, osm.Policy.Imagery.Blacklists.Length);
+            Assert.AreEqual(@".*\.google(apis)?\..*/(vt|kh)[\?/].*([xyz]=.*){3}.*", osm.Policy.Imagery.Blacklists[0].Regex);
+            Assert.AreEqual(@"http://xdworld\.vworld\.kr:8080/.*", osm.Policy.Imagery.Blacklists[1].Regex);
+            Assert.AreEqual(@".*\.here\.com[/:].*", osm.Policy.Imagery.Blacklists[2].Regex);
+        }
+
+        /// <summary>
+        /// Test deserialization of XML that contains the version as a single value (as apposed to attributes).
+        /// </summary>
+        [Test]
+        public void TestDeserializeVersionAsValue()
+        {
+            var xml =
+                @"<?xml version=""1.0"" encoding=""UTF-8""?>
+                <osm>
+                  <api>
+                    <version>0.6</version>
+                  </api>
+                </osm>
+                ";
+
+            var serializer = new XmlSerializer(typeof(Osm));
+            var osm = serializer.Deserialize(new StringReader(xml)) as Osm;
+
+            Assert.IsNotNull(osm);
+            Assert.IsNotNull(osm.Api);
+            Assert.IsNotNull(osm.Api.Version);
+            Assert.AreEqual(.6, osm.Api.Version.Maximum);
+            Assert.AreEqual(.6, osm.Api.Version.Maximum);
+        }
+
+        /// <summary>
+        /// Test deserialization of XML that contains permissions.
+        /// </summary>
+        [Test]
+        public void TestDeserializePermissions()
+        {
+            var xml =
+                @"<?xml version=""1.0"" encoding=""UTF-8""?>
+                <osm version=""0.6"" generator=""OpenStreetMap server"">
+                  <permissions>
+                    <permission name=""allow_read_prefs""/>
+                    <permission name=""allow_read_gpx""/>
+                    <permission name=""allow_write_gpx""/>
+                  </permissions>
+                </osm>
+                ";
+
+            var serializer = new XmlSerializer(typeof(Osm));
+            var osm = serializer.Deserialize(new StringReader(xml)) as Osm;
+
+            Assert.IsNotNull(osm);
+            Assert.IsNotNull(osm.Permissions);
+            Assert.IsNotNull(osm.Permissions.UserPermission);
+            Assert.AreEqual(3, osm.Permissions.UserPermission.Length);
+            Assert.AreEqual(Permissions.Permission.allow_read_prefs, osm.Permissions.UserPermission[0]);
+            Assert.AreEqual(Permissions.Permission.allow_read_gpx, osm.Permissions.UserPermission[1]);
+            Assert.AreEqual(Permissions.Permission.allow_write_gpx, osm.Permissions.UserPermission[2]);
+        }
+
+        /// <summary>
+        /// Test deserialization of XML that contains perferences.
+        /// </summary>
+        [Test]
+        public void TestDeserializePreferences()
+        {
+            var xml =
+                @"<?xml version=""1.0"" encoding=""UTF -8"" ?>
+                <osm>
+                    <preferences>
+                        <preference k=""gps.trace.visibility"" v=""public"" />
+                        <preference k=""color"" v=""red"" />
+                    </preferences>
+                </osm>
+                ";
+
+            var serializer = new XmlSerializer(typeof(Osm));
+            var osm = serializer.Deserialize(new StringReader(xml)) as Osm;
+
+            Assert.IsNotNull(osm);
+            Assert.IsNotNull(osm.Preferences);
+            Assert.IsNotNull(osm.Preferences.UserPreferences);
+            Assert.AreEqual(2, osm.Preferences.UserPreferences.Length);
+            Assert.AreEqual("gps.trace.visibility", osm.Preferences.UserPreferences[0].Key);
+            Assert.AreEqual("public", osm.Preferences.UserPreferences[0].Value);
+            Assert.AreEqual("color", osm.Preferences.UserPreferences[1].Key);
+            Assert.AreEqual("red", osm.Preferences.UserPreferences[1].Value);
+        }
+
+        /// <summary>
+        /// Test deserialization of XML that contains Notes.
+        /// </summary>
+        [Test]
+        public void TestDeserializeNotes()
+        {
+            var xml =
+                @"<?xml version=""1.0"" encoding=""UTF-8""?>
+                <osm>
+                    <note lon=""0.1000000"" lat=""51.0000000"">
+                        <id>16659</id>
+                        <url>https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659</url>
+                        <comment_url>https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659/comment</comment_url>
+                        <close_url>https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659/close</close_url>
+                        <date_created>2019-06-15 08:26:04 UTC</date_created>
+                        <status>open</status>
+                        <comments>
+                            <comment>
+                                <date>2019-06-15 08:26:04 UTC</date>
+                                <uid>1234</uid>
+                                <user>userName</user>
+                                <user_url>https://master.apis.dev.openstreetmap.org/user/userName</user_url>
+                                <action>opened</action>
+                                <text>ThisIsANote</text>
+                                <html>&lt;p&gt;ThisIsANote&lt;/p&gt;</html>
+                            </comment>
+                        </comments>
+                    </note>
+                </osm>
+                ";
+
+            var serializer = new XmlSerializer(typeof(Osm));
+            var osm = serializer.Deserialize(new StringReader(xml)) as Osm;
+
+            Assert.IsNotNull(osm);
+            Assert.IsNotNull(osm.Notes);
+            Assert.AreEqual(1, osm.Notes.Length);
+
+            var note = osm.Notes[0];
+            Assert.AreEqual(51, note.Latitude);
+            Assert.AreEqual(0.1, note.Longitude);
+            Assert.AreEqual(16659, note.Id);
+            Assert.AreEqual("https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659", note.Url);
+            Assert.AreEqual("https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659/comment", note.CommentUrl);
+            Assert.AreEqual("https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659/close", note.CloseUrl);
+            Assert.AreEqual(Note.ParseNoteDate("2019-06-15 08:26:04 UTC"), note.DateCreated);
+            Assert.AreEqual(Note.NoteStatus.Open, note.Status);
+            Assert.IsNotNull(note.Comments);
+            Assert.IsNotNull(note.Comments.Comments);
+            Assert.AreEqual(1, note.Comments.Comments.Length);
+
+            var comment = note.Comments.Comments[0];
+            Assert.AreEqual(Note.ParseNoteDate("2019-06-15 08:26:04 UTC"), comment.Date);
+            Assert.AreEqual(1234, comment.UserId);
+            Assert.AreEqual("userName", comment.UserName);
+            Assert.AreEqual("https://master.apis.dev.openstreetmap.org/user/userName", comment.UserUrl);
+            Assert.AreEqual(Note.Comment.CommentAction.Opened, comment.Action);
+            Assert.AreEqual("ThisIsANote", comment.Text);
+            Assert.AreEqual("<p>ThisIsANote</p>", comment.HTML);
         }
     }
 }

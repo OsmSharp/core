@@ -24,14 +24,16 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using OsmSharp.IO.Xml;
+using System;
+using System.Collections.Generic;
 
 namespace OsmSharp.API
 {
     /// <summary>
-    /// Represents the API capabilities.
+    /// Represents the Preferences object.
     /// </summary>
-    [XmlRoot("bounds")]
-    public partial class Bounds : IXmlSerializable
+    [XmlRoot("preferences")]
+    public partial class Preferences : IXmlSerializable
     {
         XmlSchema IXmlSerializable.GetSchema()
         {
@@ -40,18 +42,51 @@ namespace OsmSharp.API
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
-            this.MinLatitude = reader.GetAttributeSingle("minlat");
-            this.MinLongitude = reader.GetAttributeSingle("minlon");
-            this.MaxLatitude = reader.GetAttributeSingle("maxlat");
-            this.MaxLongitude = reader.GetAttributeSingle("maxlon");
+            var userPreference = new List<Preference>();
+
+            reader.GetElements(
+                new Tuple<string, Action>(
+                    "preference", () =>
+                    {
+                        var preference = new Preference();
+                        (preference as IXmlSerializable).ReadXml(reader);
+                        userPreference.Add(preference);
+                        reader.Read();
+                    })
+            );
+
+            this.UserPreferences = userPreference.ToArray();
         }
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
-            writer.WriteAttribute("minlat", this.MinLatitude);
-            writer.WriteAttribute("minlon", this.MinLongitude);
-            writer.WriteAttribute("maxlat", this.MaxLatitude);
-            writer.WriteAttribute("maxlon", this.MaxLongitude);
+            writer.WriteStartElement("preferences");
+            writer.WriteElements("preference", this.UserPreferences);
+            writer.WriteEndElement();
+        }
+    }
+
+    /// <summary>
+    /// Represents the Preference object.
+    /// </summary>
+    [XmlRoot("preference")]
+    public partial class Preference : IXmlSerializable
+    {
+        XmlSchema IXmlSerializable.GetSchema()
+        {
+            return null;
+        }
+
+        void IXmlSerializable.ReadXml(XmlReader reader)
+        {
+            this.Key = reader.GetAttribute("k");
+            this.Value = reader.GetAttribute("v");
+        }
+
+        void IXmlSerializable.WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttribute("k", this.Key);
+            writer.WriteAttribute("v", this.Value);
         }
     }
 }

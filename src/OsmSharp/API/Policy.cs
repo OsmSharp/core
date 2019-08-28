@@ -20,51 +20,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.Changesets
+using System;
+
+namespace OsmSharp.API
 {
     /// <summary>
-    /// Represents an OSM change.
+    /// Represents a Policy.
     /// </summary>
-    public partial class OsmChange
+    public partial class Policy
     {
         /// <summary>
-        /// Gets or sets the generator.
+        /// Gets or sets the Imagery.
         /// </summary>
-        public string Generator { get; set; }
+        public Imagery Imagery { get; set; }
+    }
 
+    /// <summary>
+    /// Represents a Imagery.
+    /// </summary>
+    public partial class Imagery
+    {
         /// <summary>
-        /// Gets or sets the copyright.
+        /// Gets or sets the Blacklists.
         /// </summary>
-        public string Copyright { get; set; }
+        public Blacklist[] Blacklists { get; set; }
+    }
 
+    /// <summary>
+    /// Represents a Blacklist.
+    /// </summary>
+    public partial class Blacklist
+    {
         /// <summary>
-        /// Gets or sets the attribution.
+        /// Gets or sets the Regex.
         /// </summary>
-        public string Attribution { get; set; }
-
-        /// <summary>
-        /// Gets or sets the license.
-        /// </summary>
-        public string License { get; set; }
-
-        /// <summary>
-        /// Gets or sets the version.
-        /// </summary>
-        public double? Version { get; set; }
-
-        /// <summary>
-        /// Gets or sets the create change array.
-        /// </summary>
-        public OsmGeo[] Create { get; set; }
-
-        /// <summary>
-        /// Gets or sets the modify change array.
-        /// </summary>
-        public OsmGeo[] Modify { get; set; }
-
-        /// <summary>
-        /// Gets or sets the delete change array.
-        /// </summary>
-        public OsmGeo[] Delete { get; set; }
+        public string Regex { get; set; }
     }
 }

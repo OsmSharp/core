@@ -24,14 +24,16 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using OsmSharp.IO.Xml;
+using System;
+using System.Collections.Generic;
 
 namespace OsmSharp.API
 {
     /// <summary>
-    /// Represents the API capabilities.
+    /// Represents the Permissions object.
     /// </summary>
-    [XmlRoot("bounds")]
-    public partial class Bounds : IXmlSerializable
+    [XmlRoot("permissions")]
+    public partial class Permissions : IXmlSerializable
     {
         XmlSchema IXmlSerializable.GetSchema()
         {
@@ -40,18 +42,32 @@ namespace OsmSharp.API
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
-            this.MinLatitude = reader.GetAttributeSingle("minlat");
-            this.MinLongitude = reader.GetAttributeSingle("minlon");
-            this.MaxLatitude = reader.GetAttributeSingle("maxlat");
-            this.MaxLongitude = reader.GetAttributeSingle("maxlon");
+            var userPermissions = new List<Permission>();
+
+            reader.GetElements(
+                new Tuple<string, Action>(
+                    "permission", () =>
+                    {
+                        var value = reader.GetAttributeEnum<Permission>("name");
+                        if (value != null)
+                        {
+                            userPermissions.Add(value.Value);
+                        }
+                        reader.Read();
+                    })
+            );
+
+            this.UserPermission = userPermissions.ToArray();
         }
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
-            writer.WriteAttribute("minlat", this.MinLatitude);
-            writer.WriteAttribute("minlon", this.MinLongitude);
-            writer.WriteAttribute("maxlat", this.MaxLatitude);
-            writer.WriteAttribute("maxlon", this.MaxLongitude);
+            foreach (var permission in this.UserPermission)
+            {
+                writer.WriteStartElement("permission");
+                writer.WriteAttribute("name", permission.ToString());
+                writer.WriteEndElement();
+            }
         }
     }
 }

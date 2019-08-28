@@ -51,19 +51,21 @@ namespace OsmSharp.API
             List<Relation> relations = null;
             List<Changeset> changesets = null;
             List<GpxFile> gpxFiles = null;
+            List<User> users = null;
+            List<Note> notes = null;
             reader.GetElements(
                 new Tuple<string, Action>(
                     "api", () =>
                     {
                         this.Api = new Capabilities();
                         (this.Api as IXmlSerializable).ReadXml(reader);
-                        reader.Read();
                     }),
                 new Tuple<string, Action>(
                     "bounds", () =>
                     {
                         this.Bounds = new Bounds();
                         (this.Bounds as IXmlSerializable).ReadXml(reader);
+                        reader.Read();
                     }),
                 new Tuple<string, Action>(
                     "node", () =>
@@ -112,8 +114,42 @@ namespace OsmSharp.API
                 new Tuple<string, Action>(
                     "user", () =>
                     {
-                        this.User = new User();
-                        (this.User as IXmlSerializable).ReadXml(reader);
+                        var user = new User();
+                        (user as IXmlSerializable).ReadXml(reader);
+                        if (users == null)
+                        {
+                            users = new List<User>();
+                        }
+                        users.Add(user);
+                    }),
+                new Tuple<string, Action>(
+                    "note", () =>
+                    {
+                        var note = new Note();
+                        (note as IXmlSerializable).ReadXml(reader);
+                        if (notes == null)
+                        {
+                            notes = new List<Note>();
+                        }
+                        notes.Add(note);
+                    }),
+                new Tuple<string, Action>(
+                    "policy", () =>
+                    {
+                        this.Policy = new Policy();
+                        (this.Policy as IXmlSerializable).ReadXml(reader);
+                    }),
+                new Tuple<string, Action>(
+                    "permissions", () =>
+                    {
+                        this.Permissions = new Permissions();
+                        (this.Permissions as IXmlSerializable).ReadXml(reader);
+                    }),
+                new Tuple<string, Action>(
+                    "preferences", () =>
+                    {
+                        this.Preferences = new Preferences();
+                        (this.Preferences as IXmlSerializable).ReadXml(reader);
                     }),
                 new Tuple<string, Action>(
                     "gpx_file", () =>
@@ -147,6 +183,21 @@ namespace OsmSharp.API
             {
                 this.GpxFiles = gpxFiles.ToArray();
             }
+            if (users != null)
+            {
+                if (users.Count == 1)
+                {
+                    this.User = users[0];
+                }
+                else
+                {
+                    this.Users = users.ToArray();
+                }
+            }
+            if (notes != null)
+            {
+                this.Notes = notes.ToArray();
+            }
         }
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
@@ -155,8 +206,13 @@ namespace OsmSharp.API
             writer.WriteAttribute("generator", this.Generator);
 
             writer.WriteElement("user", this.User);
+            writer.WriteElements("user", this.Users);
             writer.WriteElement("bounds", this.Bounds);
             writer.WriteElement("api", this.Api);
+            writer.WriteElement("policy", this.Policy);
+            writer.WriteElement("permissions", this.Permissions);
+            writer.WriteElement("preferences", this.Preferences);
+            writer.WriteElements("note", this.Notes);
 
             writer.WriteElements("node", this.Nodes);
             writer.WriteElements("way", this.Ways);

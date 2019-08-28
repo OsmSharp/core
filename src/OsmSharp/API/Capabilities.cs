@@ -38,6 +38,11 @@ namespace OsmSharp.API
         public Area Area { get; set; }
 
         /// <summary>
+        /// Gets or sets the area.
+        /// </summary>
+        public NoteArea NoteArea { get; set; }
+
+        /// <summary>
         /// Gets or sets the tracepoints.
         /// </summary>
         public Tracepoints Tracepoints { get; set; }
@@ -83,6 +88,17 @@ namespace OsmSharp.API
     /// Represents the API-area capability.
     /// </summary>
     public partial class Area
+    {
+        /// <summary>
+        /// Gets or sets the maxium.
+        /// </summary>
+        public double? Maximum { get; set; }
+    }
+
+    /// <summary>
+    /// Represents the API-note-area capability.
+    /// </summary>
+    public partial class NoteArea
     {
         /// <summary>
         /// Gets or sets the maxium.
@@ -139,19 +155,25 @@ namespace OsmSharp.API
     /// </summary>
     public partial class Status
     {
+        public enum ServiceStatus
+        {
+            online,
+            @readonly,
+            offline,
+        }
         /// <summary>
         /// Gets or sets the database status.
         /// </summary>
-        public string Database { get; set; }
+        public ServiceStatus? Database { get; set; }
 
         /// <summary>
         /// Gets or sets the api status.
         /// </summary>
-        public string Api { get; set; }
+        public ServiceStatus? Api { get; set; }
 
         /// <summary>
         /// Gets or sets the gpx status.
         /// </summary>
-        public string Gpx { get; set; }
+        public ServiceStatus? Gpx { get; set; }
     }
 }

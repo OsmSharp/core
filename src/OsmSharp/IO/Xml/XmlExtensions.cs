@@ -146,6 +146,19 @@ namespace OsmSharp.IO.Xml
         }
 
         /// <summary>
+        /// Writes a xml start [Name] element, then the string content, then an end element.
+        /// </summary>
+        public static void WriteStartAndEndElementWithContent(this XmlWriter writer, string name, string content)
+        {
+            if (content != null)
+            {
+                writer.WriteStartElement(name);
+                writer.WriteString(content);
+                writer.WriteEndElement();
+            }
+        }
+
+        /// <summary>
         /// Reads a double attribute.
         /// </summary>
         public static double? GetAttributeDouble(this XmlReader reader, string name)
@@ -274,6 +287,19 @@ namespace OsmSharp.IO.Xml
         public static T? GetAttributeEnum<T>(this XmlReader reader, string name) where T : struct
         {
             var valueString = reader.GetAttribute(name);
+            if (Enum.TryParse(valueString, true, out T value))
+            {
+                return value;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Reads the current element content and returns the contents as an enum.
+        /// </summary>
+        public static T? ReadElementContentAsEnum<T>(this XmlReader reader) where T : struct
+        {
+            var valueString = reader.ReadElementContentAsString();
             if (Enum.TryParse(valueString, true, out T value))
             {
                 return value;

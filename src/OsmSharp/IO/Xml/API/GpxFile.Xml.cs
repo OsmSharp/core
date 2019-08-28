@@ -47,7 +47,7 @@ namespace OsmSharp.API
             this.Lat = reader.GetAttributeDouble("lat");
             this.Lon = reader.GetAttributeDouble("lon");
             this.User = reader.GetAttribute("user");
-            this.Visibility = reader.GetAttribute("visibility");
+            this.Visibility = reader.GetAttributeEnum<Visibility>("visibility");
             this.Pending = reader.GetAttributeBool("pending") ?? false;
             this.TimeStamp = reader.GetAttributeDateTime("timestamp") ?? DateTime.Now;
             var tags = new List<string>();
@@ -78,13 +78,16 @@ namespace OsmSharp.API
                 writer.WriteAttributeString("lon", this.Lon.Value.ToInvariantString());
             }
             writer.WriteAttributeString("user", this.User);
-            writer.WriteAttributeString("visibility", this.Visibility);
+            writer.WriteAttributeString("visibility", this.Visibility.ToString().ToLower());
             writer.WriteAttributeString("pending", this.Pending.ToString());
             writer.WriteAttribute("timestamp", this.TimeStamp);
             writer.WriteElementString("description", this.Description);
-            foreach (string tag in this.Tags)
+            if(this.Tags != null)
             {
-                writer.WriteElementString("tag", tag);
+                foreach (string tag in this.Tags)
+                {
+                    writer.WriteElementString("tag", tag);
+                }
             }
         }
     }

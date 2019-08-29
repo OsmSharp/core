@@ -20,52 +20,50 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Collections;
+using System.Collections.Generic;
+
 namespace OsmSharp.Changesets
 {
     /// <summary>
-    /// Represents an OSM change.
+    /// The delete section of a changeset, pretending to be an OsmGeo[].
     /// </summary>
-    public partial class OsmChange
+    public partial class OsmChangeDelete : IEnumerable<OsmGeo>
     {
-        /// <summary>
-        /// Gets or sets the generator.
-        /// </summary>
-        public string Generator { get; set; }
+        private OsmGeo[] Delete { get; set; }
 
-        /// <summary>
-        /// Gets or sets the copyright.
-        /// </summary>
-        public string Copyright { get; set; }
+        public int Length => Delete.Length;
 
-        /// <summary>
-        /// Gets or sets the attribution.
-        /// </summary>
-        public string Attribution { get; set; }
+        public OsmGeo this[int i]
+        {
+            get { return Delete[i]; }
+            set { Delete[i] = value; }
+        }
 
-        /// <summary>
-        /// Gets or sets the license.
-        /// </summary>
-        public string License { get; set; }
+        public bool IfUnused { get; set; }
 
-        /// <summary>
-        /// Gets or sets the version.
-        /// </summary>
-        public double? Version { get; set; }
+        public IEnumerator<OsmGeo> GetEnumerator()
+        {
+            return ((IEnumerable<OsmGeo>)Delete).GetEnumerator();
+        }
 
-        /// <summary>
-        /// Gets or sets the create change array.
-        /// </summary>
-        public OsmGeo[] Create { get; set; }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable<OsmGeo>)Delete).GetEnumerator();
+        }
 
-        /// <summary>
-        /// Gets or sets the modify change array.
-        /// </summary>
-        public OsmGeo[] Modify { get; set; }
+        public static implicit operator OsmGeo[](OsmChangeDelete delete)
+        {
+            return delete.Delete;
+        }
 
-
-		/// <summary>
-		/// Gets or sets the delete change array.
-		/// </summary>
-		public OsmChangeDelete Delete { get; set; }
+        public static implicit operator OsmChangeDelete(OsmGeo[] delete)
+        {
+            return new OsmChangeDelete()
+            {
+                Delete = delete,
+                IfUnused = false
+            };
+        }
     }
 }

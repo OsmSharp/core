@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using System.Linq;
 
 namespace OsmSharp.Changesets
 {
@@ -50,11 +51,10 @@ namespace OsmSharp.Changesets
             this.Attribution = reader.GetAttribute("attribution");
             this.License = reader.GetAttribute("license");
 
-            List<OsmGeo> creates = new List<OsmGeo>(); ;
-            List<OsmGeo> modifies = new List<OsmGeo>(); ;
-            List<OsmGeo> deletes = new List<OsmGeo>(); ;
+            List<OsmGeo> creates = new List<OsmGeo>();
+            List<OsmGeo> modifies = new List<OsmGeo>();
 
-            reader.GetElements(
+			reader.GetElements(
                 new Tuple<string, Action>(
                     "create", () =>
                     {
@@ -104,30 +104,13 @@ namespace OsmSharp.Changesets
                 new Tuple<string, Action>(
                     "delete", () =>
                     {
-						if (reader.IsEmptyElement)
-						{
-							reader.Read();
-							return;
-						}
-                        reader.Read();
-                        while ((reader.Name == "node" ||
-                             reader.Name == "way" ||
-                             reader.Name == "relation"))
-                        {
-                            deletes.Add(OsmChange.ReadOsmGeo(reader));
-                            if (reader.NodeType == XmlNodeType.EndElement && (reader.Name == "node" ||
-                                 reader.Name == "way" ||
-                                 reader.Name == "relation"))
-                            {
-                                reader.Read();
-                            }
-                        }
-                        reader.Read();
+                        this.Delete = new OsmChangeDelete();
+                        (this.Delete as IXmlSerializable).ReadXml(reader);
+                        // reader.Read()?
                     }));
 
             this.Create = creates.ToArray();
             this.Modify = modifies.ToArray();
-            this.Delete = deletes.ToArray();
         }
 
         private static OsmGeo ReadOsmGeo(XmlReader reader)
@@ -157,34 +140,36 @@ namespace OsmSharp.Changesets
             writer.WriteAttribute("attribution", this.Attribution);
             writer.WriteAttribute("license", this.License);
 
-            if (this.Create != null)
+			if (this.Create != null)
             {
                 writer.WriteStartElement("create");
-                for (var i = 0; i < this.Create.Length; i++)
+				// Add in order: nodes, ways, relations
+                foreach (var OsmGeo in this.Create.OrderBy(g => g.Type))
                 {
-                    OsmChange.WriteOsmGeo(writer, this.Create[i]);
+                    OsmChange.WriteOsmGeo(writer, OsmGeo);
                 }
                 writer.WriteEndElement();
             }
             if (this.Modify != null)
             {
                 writer.WriteStartElement("modify");
-                for (var i = 0; i < this.Modify.Length; i++)
-                {
-                    OsmChange.WriteOsmGeo(writer, this.Modify[i]);
+				foreach (var OsmGeo in this.Modify)
+				{
+                    OsmChange.WriteOsmGeo(writer, OsmGeo);
                 }
                 writer.WriteEndElement();
             }
             if (this.Delete != null)
             {
                 writer.WriteStartElement("delete");
-                for (var i = 0; i < this.Delete.Length; i++)
-                {
-                    OsmChange.WriteOsmGeo(writer, this.Delete[i]);
+				// Delete in order: relations, ways, nodes
+				foreach (var OsmGeo in this.Delete.OrderByDescending(g => g.Type))
+				{
+                    OsmChange.WriteOsmGeo(writer, OsmGeo);
                 }
                 writer.WriteEndElement();
             }
-        }
+		}
 
         private static void WriteOsmGeo(XmlWriter writer, OsmGeo osmGeo)
         {

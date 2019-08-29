@@ -53,16 +53,18 @@ namespace OsmSharp.Changesets
 
             List<OsmGeo> creates = new List<OsmGeo>();
             List<OsmGeo> modifies = new List<OsmGeo>();
+            List<OsmGeo> deletes = new List<OsmGeo>();
+            List<OsmGeo> deletesIfUnused = new List<OsmGeo>();
 
-			reader.GetElements(
+            reader.GetElements(
                 new Tuple<string, Action>(
                     "create", () =>
                     {
-						if (reader.IsEmptyElement)
-						{
-							reader.Read();
-							return;
-						}
+                        if (reader.IsEmptyElement)
+                        {
+                            reader.Read();
+                            return;
+                        }
                         reader.Read();
                         while ((reader.Name == "node" ||
                              reader.Name == "way" ||
@@ -81,11 +83,11 @@ namespace OsmSharp.Changesets
                 new Tuple<string, Action>(
                     "modify", () =>
                     {
-						if (reader.IsEmptyElement)
-						{
-							reader.Read();
-							return;
-						}
+                        if (reader.IsEmptyElement)
+                        {
+                            reader.Read();
+                            return;
+                        }
                         reader.Read();
                         while ((reader.Name == "node" ||
                              reader.Name == "way" ||
@@ -104,13 +106,32 @@ namespace OsmSharp.Changesets
                 new Tuple<string, Action>(
                     "delete", () =>
                     {
-                        this.Delete = new OsmChangeDelete();
-                        (this.Delete as IXmlSerializable).ReadXml(reader);
-                        // reader.Read()?
+                        if (reader.IsEmptyElement)
+                        {
+                            reader.Read();
+                            return;
+                        }
+                        var ifUnused = reader.GetAttribute("if-unused") != null;
+                        reader.Read();
+                        while ((reader.Name == "node" ||
+                             reader.Name == "way" ||
+                             reader.Name == "relation"))
+                        {
+                            (ifUnused ? deletesIfUnused : deletes).Add(OsmChange.ReadOsmGeo(reader));
+                            if (reader.NodeType == XmlNodeType.EndElement && (reader.Name == "node" ||
+                                 reader.Name == "way" ||
+                                 reader.Name == "relation"))
+                            {
+                                reader.Read();
+                            }
+                        }
+                        reader.Read();
                     }));
 
             this.Create = creates.ToArray();
             this.Modify = modifies.ToArray();
+            this.Delete = deletes.ToArray();
+            this.DeleteIfUnused = deletesIfUnused.ToArray();
         }
 
         private static OsmGeo ReadOsmGeo(XmlReader reader)
@@ -140,10 +161,10 @@ namespace OsmSharp.Changesets
             writer.WriteAttribute("attribution", this.Attribution);
             writer.WriteAttribute("license", this.License);
 
-			if (this.Create != null)
+            if (this.Create != null)
             {
                 writer.WriteStartElement("create");
-				// Add in order: nodes, ways, relations
+                // Add in order: nodes, ways, relations
                 foreach (var OsmGeo in this.Create.OrderBy(g => g.Type))
                 {
                     OsmChange.WriteOsmGeo(writer, OsmGeo);
@@ -153,8 +174,8 @@ namespace OsmSharp.Changesets
             if (this.Modify != null)
             {
                 writer.WriteStartElement("modify");
-				foreach (var OsmGeo in this.Modify)
-				{
+                foreach (var OsmGeo in this.Modify)
+                {
                     OsmChange.WriteOsmGeo(writer, OsmGeo);
                 }
                 writer.WriteEndElement();
@@ -162,14 +183,25 @@ namespace OsmSharp.Changesets
             if (this.Delete != null)
             {
                 writer.WriteStartElement("delete");
-				// Delete in order: relations, ways, nodes
-				foreach (var OsmGeo in this.Delete.OrderByDescending(g => g.Type))
-				{
+                // Delete elements in this order: relations, ways, nodes
+                foreach (var OsmGeo in this.Delete.OrderByDescending(g => g.Type))
+                {
                     OsmChange.WriteOsmGeo(writer, OsmGeo);
                 }
                 writer.WriteEndElement();
             }
-		}
+            if (this.DeleteIfUnused != null)
+            {
+                writer.WriteStartElement("delete");
+                writer.WriteAttribute("if-unused", "true");
+                // Delete elements in this order: relations, ways, nodes
+                foreach (var OsmGeo in this.DeleteIfUnused.OrderByDescending(g => g.Type))
+                {
+                    OsmChange.WriteOsmGeo(writer, OsmGeo);
+                }
+                writer.WriteEndElement();
+            }
+        }
 
         private static void WriteOsmGeo(XmlWriter writer, OsmGeo osmGeo)
         {

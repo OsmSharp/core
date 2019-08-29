@@ -88,11 +88,26 @@ namespace OsmSharp.Test.IO.Xml.Changesets
                     {
                         Id = 300
                     }
+                },
+                DeleteIfUnused = new OsmGeo[]
+                {
+                    new Node()
+                    {
+                        Id = 31
+                    },
+                    new Way()
+                    {
+                        Id = 301
+                    },
+                    new Relation()
+                    {
+                        Id = 3001
+                    }
                 }
             };
 
             var result = osmChange.SerializeToXml();
-            Assert.AreEqual("<osmChange generator=\"OsmSharp\" version=\"0.6\"><create><node id=\"1\" /><way id=\"10\" /><relation id=\"100\" /></create><modify><node id=\"2\" /><way id=\"20\" /><relation id=\"200\" /></modify><delete><node id=\"3\" /><way id=\"30\" /><relation id=\"300\" /></delete></osmChange>",
+            Assert.AreEqual("<osmChange generator=\"OsmSharp\" version=\"0.6\"><create><node id=\"1\" /><way id=\"10\" /><relation id=\"100\" /></create><modify><node id=\"2\" /><way id=\"20\" /><relation id=\"200\" /></modify><delete><relation id=\"300\" /><way id=\"30\" /><node id=\"3\" /></delete><delete if-unused=\"true\"><relation id=\"3001\" /><way id=\"301\" /><node id=\"31\" /></delete></osmChange>",
                 result);
         }
 
@@ -109,7 +124,7 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             Assert.IsNotNull(osmChange);
             Assert.AreEqual(0, osmChange.Create.Length);
             Assert.AreEqual(0, osmChange.Delete.Length);
-            Assert.IsNull(osmChange.Delete.IfUnused);
+            Assert.AreEqual(0, osmChange.DeleteIfUnused.Length);
             Assert.AreEqual(0, osmChange.Modify.Length);
             Assert.AreEqual(0.6, osmChange.Version);
             Assert.IsNull(osmChange.Generator);
@@ -127,7 +142,7 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             Assert.IsNotNull(osmChange);
             Assert.AreEqual(0, osmChange.Create.Length);
             Assert.AreEqual(0, osmChange.Delete.Length);
-            Assert.IsNull(osmChange.Delete.IfUnused);
+            Assert.AreEqual(0, osmChange.DeleteIfUnused.Length);
             Assert.AreEqual(0, osmChange.Modify.Length);
             Assert.AreEqual(0.6, osmChange.Version);
             Assert.AreEqual("OsmSharp", osmChange.Generator);
@@ -172,7 +187,10 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             Assert.AreEqual(300, osmChange.Delete[2].Id);
             Assert.AreEqual(OsmGeoType.Relation, osmChange.Delete[2].Type);
 
-            Assert.AreEqual(0.6, osmChange.Version);
+			Assert.IsNotNull(osmChange.DeleteIfUnused);
+			Assert.AreEqual(0, osmChange.DeleteIfUnused.Length);
+
+			Assert.AreEqual(0.6, osmChange.Version);
             Assert.AreEqual("OsmSharp", osmChange.Generator);
 
         }
@@ -183,7 +201,7 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             var serializer = new XmlSerializer(typeof(OsmChange));
 
             var osmChange = serializer.Deserialize(
-				new StringReader("<osmChange version=\"0.6\" generator=\"iD\"><create/><modify><node id=\"1014872736\" lon=\"4.793814787696839\" lat=\"51.26403992993145\" version=\"1470\" changeset=\"2\"/></modify><delete if-unused=\"true\"/></osmChange>")) as OsmChange;
+				new StringReader("<osmChange version=\"0.6\" generator=\"iD\"><create/><modify><node id=\"1014872736\" lon=\"4.793814787696839\" lat=\"51.26403992993145\" version=\"1470\" changeset=\"2\"/></modify><delete if-unused=\"true\"><node id=\"3\" /></delete></osmChange>")) as OsmChange;
 			Assert.IsNotNull(osmChange);
 
 			Assert.AreEqual(0, osmChange.Create.Length);
@@ -192,7 +210,8 @@ namespace OsmSharp.Test.IO.Xml.Changesets
 			Assert.AreEqual(1014872736, osmChange.Modify[0].Id);
 			Assert.AreEqual(OsmGeoType.Node, osmChange.Modify[0].Type);
 			Assert.AreEqual(0, osmChange.Delete.Length);
-			Assert.IsTrue(osmChange.Delete.IfUnused);
+			Assert.AreEqual(1, osmChange.DeleteIfUnused.Length);
+			Assert.AreEqual(3, osmChange.DeleteIfUnused[0].Id);
 			Assert.AreEqual(0.6, osmChange.Version);
 			Assert.AreEqual("iD", osmChange.Generator);
         }

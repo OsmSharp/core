@@ -62,10 +62,14 @@ namespace OsmSharp.Changesets
         /// </summary>
         public OsmGeo[] Modify { get; set; }
 
+        /// <summary>
+        /// Gets or sets the delete change array.
+        /// </summary>
+        public OsmGeo[] Delete { get; set; }
 
-		/// <summary>
-		/// Gets or sets the delete change array.
-		/// </summary>
-		public OsmChangeDelete Delete { get; set; }
+        /// <summary>
+        /// Gets or sets the deleteIfUnused change array.
+        /// </summary>
+        public OsmGeo[] DeleteIfUnused { get; set; }
     }
 }

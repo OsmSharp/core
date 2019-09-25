@@ -127,11 +127,14 @@ namespace OsmSharp.API
                     {
                         var note = new Note();
                         (note as IXmlSerializable).ReadXml(reader);
-                        if (notes == null)
+                        if (note.Id.HasValue) // Ignore Notes missing content.
                         {
-                            notes = new List<Note>();
+                            if (notes == null)
+                            {
+                                notes = new List<Note>();
+                            }
+                            notes.Add(note);
                         }
-                        notes.Add(note);
                     }),
                 new Tuple<string, Action>(
                     "policy", () =>

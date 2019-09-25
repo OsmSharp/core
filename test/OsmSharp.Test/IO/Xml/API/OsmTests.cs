@@ -146,6 +146,7 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.IsNull(osm.GpxFiles);
             Assert.IsNull(osm.Bounds);
             Assert.IsNull(osm.Api);
+            Assert.IsNull(osm.Notes);
 
             Assert.IsNotNull(osm.Nodes);
             Assert.AreEqual(1, osm.Nodes.Length);
@@ -412,6 +413,7 @@ namespace OsmSharp.Test.IO.Xml.API
             var xml =
                 @"<?xml version=""1.0"" encoding=""UTF-8""?>
                 <osm>
+                    <note>This note should be skipped because it has no ID</note>
                     <note lon=""0.1000000"" lat=""51.0000000"">
                         <id>16659</id>
                         <url>https://master.apis.dev.openstreetmap.org/api/0.6/notes/16659</url>

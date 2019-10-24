@@ -53,7 +53,7 @@ namespace OsmSharp.Complete
         /// <summary>
         /// Gets/Sets the version.
         /// </summary>
-        public int? Version { get; set; }
+        public long? Version { get; set; }
 
         /// <summary>
         /// The user that created this object

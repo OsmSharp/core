@@ -126,7 +126,7 @@ namespace OsmSharp.Changesets
         /// <summary>
         /// Gets or sets the UserId.
         /// </summary>
-        public int? UserId { get; set; }
+        public long? UserId { get; set; }
 
         /// <summary>
         /// Gets or sets the UserName.

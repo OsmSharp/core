@@ -63,7 +63,7 @@ namespace OsmSharp
         /// <summary>
         /// Gets or sets the version.
         /// </summary>
-        public int? Version { get; set; }
+        public long? Version { get; set; }
 
         /// <summary>
         /// Gets or sets the userid.

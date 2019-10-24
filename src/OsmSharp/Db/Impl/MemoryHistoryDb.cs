@@ -413,7 +413,7 @@ namespace OsmSharp.Db.Impl
         /// <summary>
         /// Gets an osm object of the given type, the given id and the given version #.
         /// </summary>
-        public OsmGeo Get(OsmGeoType type, long id, int version)
+        public OsmGeo Get(OsmGeoType type, long id, long version)
         {
             var key = new Key(id, version);
 
@@ -452,7 +452,7 @@ namespace OsmSharp.Db.Impl
 
         class Key
         {
-            public Key(long id, int version)
+            public Key(long id, long version)
             {
                 this.Id = id;
                 this.Version = version;
@@ -466,7 +466,7 @@ namespace OsmSharp.Db.Impl
 
             public long Id { get; set; }
 
-            public int Version { get; set; }
+            public long Version { get; set; }
 
             public override bool Equals(object obj)
             {

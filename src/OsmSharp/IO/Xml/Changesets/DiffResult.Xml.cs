@@ -171,9 +171,9 @@ namespace OsmSharp.Changesets
             }
 
             var versionString = reader.GetAttribute("new_version");
-            int version = 0;
+            long version = 0;
             if (!string.IsNullOrWhiteSpace(versionString) &&
-               int.TryParse(versionString, NumberStyles.Any, CultureInfo.InvariantCulture, out version))
+               long.TryParse(versionString, NumberStyles.Any, CultureInfo.InvariantCulture, out version))
             {
                 this.NewVersion = version;
             }
@@ -198,7 +198,7 @@ namespace OsmSharp.Changesets
         /// <summary>
         /// Creates a modification.
         /// </summary>
-        public static OsmGeoResult CreateModification(OsmGeo modify, int newVersion)
+        public static OsmGeoResult CreateModification(OsmGeo modify, long newVersion)
         {
             switch(modify.Type)
             {

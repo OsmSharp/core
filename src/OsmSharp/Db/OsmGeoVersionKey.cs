@@ -32,7 +32,7 @@ namespace OsmSharp.Db
         /// <summary>
         /// Creates a version key.
         /// </summary>
-        public OsmGeoVersionKey(OsmGeoType type, long id, int version)
+        public OsmGeoVersionKey(OsmGeoType type, long id, long version)
         {
             this.Type = type;
             this.Id = id;
@@ -62,7 +62,7 @@ namespace OsmSharp.Db
         /// <summary>
         /// Gets or sets the version #.
         /// </summary>
-        public int Version { get; private set; }
+        public long Version { get; private set; }
         
         /// <summary>
         /// Gets the previous version.

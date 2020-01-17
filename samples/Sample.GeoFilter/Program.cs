@@ -30,7 +30,7 @@ namespace Sample.GeoFilter
     {
         static void Main(string[] args)
         {
-            Staging.ToFile("ftp://ftp.osmsharp.com/data/OSM/planet/europe/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf");
+            Staging.ToFile("https://files.itinero.tech/data/OSM/planet/europe/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf");
 
             var polygon = Staging.LoadPolygon();
             

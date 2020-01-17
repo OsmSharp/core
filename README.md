@@ -17,6 +17,14 @@ OsmSharp enables you to work directly with OSM-data in .NET. Most important feat
 
 Check the [documentation website](http://docs.itinero.tech/docs/osmsharp/index.html) for documentation and sample code. Don't hesitate to ask questions using an [issue](https://github.com/osmsharp/core/issues) or request more documentation on any topic you need.
 
+There are 5 sample projects in the `samples` folder:
+
+- Sample.CompleteStream: Convert Ways and Relation into objects with nodes and members instantiated.
+- Sample.Filter: Filter data from an OSM file using LINQ.
+- Sample.GeoFilter: Filter data using a bounding box or polygon.
+- Sample.GeometryStream: Extract all power lines from an OSM file, convert them to linestring features and write to GeoJSON.
+- Sample.GeometryStream.Shape: Extract all power lines from an OSM file, convert them to linestring features and write to a shapefile.
+
 ### Install
 
     PM> Install-Package OsmSharp

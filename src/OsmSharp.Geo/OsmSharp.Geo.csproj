@@ -8,6 +8,16 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <PackageVersion />
+    <Title>OsmSharp.Geo</Title>
+    <Authors>Itinero BV</Authors>
+    <Description> OsmSharp.Geo enables using OSM-data in NTS.</Description>
+    <Copyright>Itinero BV</Copyright>
+    <PackageProjectUrl>http://www.osmsharp.com/</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/OsmSharp/core/develop/LICENSE.md</PackageLicenseUrl>
+    <PackageIconUrl>http://www.osmsharp.com/logos/osmsharp_logo64.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/osmsharp/core</RepositoryUrl>
+    <PackageTags>openstreetmap, osm, NTS</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp\OsmSharp.csproj" />

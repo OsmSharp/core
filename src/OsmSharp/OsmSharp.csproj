@@ -10,6 +10,16 @@
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <LangVersion>latest</LangVersion>
+    <PackageVersion />
+    <Title>OsmSharp</Title>
+    <Authors>Itinero BV</Authors>
+    <Description>An OpenStreetMap (OSM) library for .NET.</Description>
+    <Copyright>Itinero BV</Copyright>
+    <PackageProjectUrl>http://www.osmsharp.com/</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/OsmSharp/core/develop/LICENSE.md</PackageLicenseUrl>
+    <PackageIconUrl>http://www.osmsharp.com/logos/osmsharp_logo64.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/osmsharp/core</RepositoryUrl>
+    <PackageTags>openstreetmap, osm</PackageTags>
   </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="protobuf-net" Version="2.3.7" />

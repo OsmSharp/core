@@ -61,7 +61,7 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             };
 
             var result = changeset.SerializeToXml();
-            Assert.AreEqual("<changeset id=\"10\" user=\"fred\" uid=\"123\" created_at=\"2008-11-08T19:07:39Z\" open=\"true\" min_lon=\"7.019182\" min_lat=\"49.27854\" max_lon=\"7.019749\" max_lat=\"49.27931\"><tag k=\"created_by\" v=\"JOSM 1.61\" /><tag k=\"comment\" v=\"Just adding some streetnames\" /></changeset>",
+            Assert.AreEqual("<changeset id=\"10\" user=\"fred\" uid=\"123\" created_at=\"2008-11-08T19:07:39Z\" open=\"true\" min_lon=\"7.019182\" min_lat=\"49.27854\" max_lon=\"7.0197487\" max_lat=\"49.27931\"><tag k=\"created_by\" v=\"JOSM 1.61\" /><tag k=\"comment\" v=\"Just adding some streetnames\" /></changeset>",
                 result);
         }
 

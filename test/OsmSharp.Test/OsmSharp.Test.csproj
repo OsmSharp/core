@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>OsmSharp.Test</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
@@ -9,11 +9,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.15.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="dotnet-test-nunit" Version="3.4.0-beta-3" />
-    <PackageReference Include="nunit" Version="3.9.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="nunit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="data\pbf\*.pbf;data\xml\*.osm" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />

@@ -45,5 +45,14 @@ namespace OsmSharp.Tags
         ///  Gets or sets the value.
         /// </summary>
         public string Value { get; set; }
+
+        /// <summary>
+        /// Gets a proper description of this tag.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"{Key}={Value}";
+        }
     }
 }

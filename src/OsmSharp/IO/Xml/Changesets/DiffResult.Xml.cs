@@ -116,7 +116,7 @@ namespace OsmSharp.Changesets
             {
                 for (var i = 0; i < this.Results.Length; i++)
                 {
-                    var result = this.Results[0] as IXmlSerializable;
+                    var result = this.Results[i] as IXmlSerializable;
                     if (result is NodeResult)
                     {
                         writer.WriteStartElement("node");

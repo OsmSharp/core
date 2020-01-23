@@ -86,8 +86,7 @@ namespace OsmSharp.IO.PBF
                                         primitivegroup.dense.denseinfo.uid[idx];
                                     currentUserSid = currentUserSid +
                                         primitivegroup.dense.denseinfo.user_sid[idx];
-                                    currentVersion = currentVersion +
-                                        primitivegroup.dense.denseinfo.version[idx];
+                                    currentVersion = primitivegroup.dense.denseinfo.version[idx];
                                 }
 
                                 var node = new Node();

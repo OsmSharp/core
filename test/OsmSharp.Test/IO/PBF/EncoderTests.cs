@@ -466,7 +466,7 @@ namespace OsmSharp.Test.IO.PBF
 
             primitiveGroup.dense.denseinfo.version.Add(1);
             primitiveGroup.dense.denseinfo.version.Add(1);
-            primitiveGroup.dense.denseinfo.version.Add(1);
+            primitiveGroup.dense.denseinfo.version.Add(3);
 
             primitiveGroup.dense.id.Add(1);
             primitiveGroup.dense.id.Add(1);
@@ -521,7 +521,7 @@ namespace OsmSharp.Test.IO.PBF
             Assert.AreEqual(11, node.info.timestamp);
             Assert.AreEqual(1, node.info.uid);
             Assert.AreEqual(3, node.info.user_sid);
-            Assert.AreEqual(2, node.info.version);
+            Assert.AreEqual(1, node.info.version);
             Assert.AreEqual(1, node.keys.Count);
             Assert.AreEqual(1, node.keys[0]);
             Assert.AreEqual(1, node.vals.Count);

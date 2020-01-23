@@ -42,7 +42,7 @@ namespace OsmSharp.API
 
         public void ReadXml(XmlReader reader)
         {
-            this.Id = reader.GetAttributeInt32("id") ?? 0;
+            this.Id = reader.GetAttributeInt64("id") ?? 0;
             this.Name = reader.GetAttribute("name");
             this.Lat = reader.GetAttributeDouble("lat");
             this.Lon = reader.GetAttributeDouble("lon");

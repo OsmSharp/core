@@ -32,7 +32,7 @@ namespace OsmSharp.API
         /// <summary>
         /// Gets or sets the id.
         /// </summary>
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Gets or sets the name.

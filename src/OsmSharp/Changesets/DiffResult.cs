@@ -63,7 +63,7 @@ namespace OsmSharp.Changesets
         /// <summary>
         /// Gets or sets the new version #.
         /// </summary>
-        public int? NewVersion { get; set; }
+        public long? NewVersion { get; set; }
     }
 
     /// <summary>

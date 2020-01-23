@@ -43,10 +43,10 @@ namespace OsmSharp
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
             this.Id = reader.GetAttributeInt64("id");
-            this.Version = reader.GetAttributeInt32("version");
+            this.Version = reader.GetAttributeInt64("version");
             this.ChangeSetId = reader.GetAttributeInt64("changeset");
             this.TimeStamp = reader.GetAttributeDateTime("timestamp");
-            this.UserId = reader.GetAttributeInt32("uid");
+            this.UserId = reader.GetAttributeInt64("uid");
             this.UserName = reader.GetAttribute("user");
             this.Visible = reader.GetAttributeBool("visible");
 

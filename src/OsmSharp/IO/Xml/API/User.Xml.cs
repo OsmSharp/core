@@ -42,7 +42,7 @@ namespace OsmSharp.API
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
-            this.Id = reader.GetAttributeInt32("id") ?? 0;
+            this.Id = reader.GetAttributeInt64("id") ?? 0;
             this.DisplayName = reader.GetAttribute("display_name");
             this.AccountCreated = reader.GetAttributeDateTime("account_created").Value;
 

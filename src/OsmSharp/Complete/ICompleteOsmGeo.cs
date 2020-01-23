@@ -68,6 +68,6 @@ namespace OsmSharp.Complete
         /// <summary>
         /// Gets or sets the version.
         /// </summary>
-        int? Version { get; set; }
+        long? Version { get; set; }
     }
 }

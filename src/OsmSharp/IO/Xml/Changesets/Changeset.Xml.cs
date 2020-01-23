@@ -45,7 +45,7 @@ namespace OsmSharp.Changesets
         {
             this.Id = reader.GetAttributeInt64("id");
             this.UserName = reader.GetAttribute("user");
-            this.UserId = reader.GetAttributeInt32("uid");
+            this.UserId = reader.GetAttributeInt64("uid");
             this.CreatedAt = reader.GetAttributeDateTime("created_at");
             this.ClosedAt = reader.GetAttributeDateTime("closed_at");
             this.Open = reader.GetAttributeBool("open");
@@ -170,7 +170,7 @@ namespace OsmSharp.Changesets
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
             this.Date = reader.GetAttributeDateTime("date");
-            this.UserId = reader.GetAttributeInt32("uid");
+            this.UserId = reader.GetAttributeInt64("uid");
             this.UserName = reader.GetAttribute("user");
 
             reader.GetElements(

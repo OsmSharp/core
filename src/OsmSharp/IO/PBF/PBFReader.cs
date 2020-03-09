@@ -141,12 +141,6 @@ namespace OsmSharp.IO.PBF
             }
             return block;
         }
-
-        // 4-byte number
-        private static int IntLittleEndianToBigEndian(uint i)
-        {
-            return (int)(((i & 0xff) << 24) + ((i & 0xff00) << 8) + ((i & 0xff0000) >> 8) + ((i >> 24) & 0xff));
-        }
     }
 
     abstract class InputStream : Stream

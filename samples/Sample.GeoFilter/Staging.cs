@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using GeoAPI.Geometries;
 using NetTopologySuite.Features;
+using NetTopologySuite.Geometries;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -49,13 +49,13 @@ namespace Sample.GeoFilter
         /// Loads the test polygon.
         /// </summary>
         /// <returns></returns>
-        internal static IPolygon LoadPolygon()
+        internal static Polygon LoadPolygon()
         {
             using (var stream = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Sample.GeoFilter.polygon.geojson")))
             {
                 var jsonSerializer = NetTopologySuite.IO.GeoJsonSerializer.Create();
                 var features = jsonSerializer.Deserialize<FeatureCollection>(new JsonTextReader(stream));
-                return features.Features[0].Geometry as IPolygon;
+                return features[0].Geometry as Polygon;
             }
         }
     }

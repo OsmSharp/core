@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using GeoAPI.Geometries;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using OsmSharp.Complete;
@@ -111,7 +110,7 @@ namespace OsmSharp.Geo
         /// <summary>
         /// Filters a stream of objects spatially.
         /// </summary>
-        public static OsmStreamSource FilterSpatial(this IEnumerable<OsmGeo> source, IPolygon polygon, bool completeWays = false)
+        public static OsmStreamSource FilterSpatial(this IEnumerable<OsmGeo> source, Polygon polygon, bool completeWays = false)
         {
             var nodeFilter = new OsmSharp.Streams.Filters.OsmStreamFilterNode(n =>
             {

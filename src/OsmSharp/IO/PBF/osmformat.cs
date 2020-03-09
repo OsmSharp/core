@@ -867,19 +867,19 @@ namespace OsmSharp.IO.PBF
       /// <summary>
       /// 
       /// </summary>
-      [global::ProtoBuf.ProtoEnum(Name=@"NODE", Value=0)]
+      [global::ProtoBuf.ProtoEnum(Name=@"NODE")]
       NODE = 0,
             
       /// <summary>
       /// 
       /// </summary>
-      [global::ProtoBuf.ProtoEnum(Name=@"WAY", Value=1)]
+      [global::ProtoBuf.ProtoEnum(Name=@"WAY")]
       WAY = 1,
             
       /// <summary>
       /// 
       /// </summary>
-      [global::ProtoBuf.ProtoEnum(Name=@"RELATION", Value=2)]
+      [global::ProtoBuf.ProtoEnum(Name=@"RELATION")]
       RELATION = 2
     }
   

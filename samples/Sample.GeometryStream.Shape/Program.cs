@@ -80,12 +80,12 @@ namespace Sample.GeometryStream.Shape
                 }
 
                 // convert to shape.
-                var header = ShapefileDataWriter.GetHeader(featureCollection.Features.First(), featureCollection.Features.Count);
+                var header = ShapefileDataWriter.GetHeader(featureCollection.First(), featureCollection.Count);
                 var shapeWriter = new ShapefileDataWriter("luxembourg.shp", new GeometryFactory())
                 {
                     Header = header
                 };
-                shapeWriter.Write(featureCollection.Features);
+                shapeWriter.Write(featureCollection);
             }
         }
     }

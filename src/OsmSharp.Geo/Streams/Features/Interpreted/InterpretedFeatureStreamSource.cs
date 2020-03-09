@@ -23,8 +23,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using GeoAPI.Geometries;
 using NetTopologySuite.Features;
+using NetTopologySuite.Geometries;
 using OsmSharp.Streams.Complete;
 
 namespace OsmSharp.Geo.Streams.Features.Interpreted
@@ -161,7 +161,7 @@ namespace OsmSharp.Geo.Streams.Features.Interpreted
                 }
                 var next = _source.Current();
                 var nextFeatures = _interpreter.Interpret(next);
-                _currentFeatures = new List<IFeature>(nextFeatures.Features);
+                _currentFeatures = new List<IFeature>(nextFeatures);
                 _currentFeatureIndex = 0;
 
                 if(_currentFeatures.Count > 0)

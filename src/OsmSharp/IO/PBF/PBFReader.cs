@@ -134,7 +134,7 @@ namespace OsmSharp.IO.PBF
 
                         if (header.type == Encoder.OSMData)
                         {
-                            block = _runtimeTypeModel.Deserialize(sourceStream, _block, _primitiveBlockType) as PrimitiveBlock;
+                            block = _runtimeTypeModel.Deserialize<PrimitiveBlock>(sourceStream, _block, _primitiveBlockType);
                         }
                     }
                 }

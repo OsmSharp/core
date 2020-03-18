@@ -21,7 +21,6 @@
 // THE SOFTWARE.
 
 using System;
-using GeoAPI.Geometries;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using OsmSharp.Complete;

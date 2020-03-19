@@ -85,11 +85,107 @@ namespace OsmSharp.Streams
         }
 
         /// <summary>
+        /// Merges a stream with the given other stream.
+        /// </summary>
+        public static OsmStreamSource Merge(this IEnumerable<OsmGeo> source, ConflictResolutionType resolutionType, OsmStreamSource other)
+        {
+            var merged = new OsmStreamFilterMerge(resolutionType);
+            merged.RegisterSource(source);
+            merged.RegisterSource(other);
+            return merged;
+        }
+
+        /// <summary>
         /// Merges the given sources into this source.
         /// </summary>
         public static OsmStreamSource Merge(this IEnumerable<OsmGeo> source, params OsmStreamSource[] sources)
         {
-            return source.Merge(ConflictResolutionType.FirstStream, new OsmEnumerableStreamSource(source));
+            return source.Merge(ConflictResolutionType.FirstStream, sources);
+        }
+
+        /// <summary>
+        /// Merges the given sources into this source.
+        /// </summary>
+        public static OsmStreamSource Merge(this IEnumerable<OsmGeo> source, ConflictResolutionType resolutionType, params OsmStreamSource[] sources)
+        {
+            if (sources.Length == 0)
+            {
+                return new OsmEnumerableStreamSource(source);
+            }
+            
+            var merged = new OsmStreamFilterMerge(resolutionType);
+            merged.RegisterSource(source);
+            merged.RegisterSource(sources[0]);
+            for (var s = 1; s < sources.Length; s++)
+            {
+                var next = new OsmStreamFilterMerge(resolutionType);
+                next.RegisterSource(merged);
+                next.RegisterSource(sources[s]);
+
+                merged = next;
+            }
+
+            return merged;
+        }
+
+        /// <summary>
+        /// Merges all the given sources.
+        /// </summary>
+        /// <param name="sources">The sources.</param>
+        /// <param name="resolutionType">The resolution type.</param>
+        /// <returns>A merged stream.</returns>
+        public static OsmStreamSource Merge(this IEnumerable<IEnumerable<OsmGeo>> sources, 
+            ConflictResolutionType resolutionType = ConflictResolutionType.FirstStream)
+        {
+            OsmStreamSource previous = null;
+            foreach (var source in sources)
+            {
+                var osmSource = new OsmEnumerableStreamSource(source);
+
+                if (previous == null)
+                {
+                    previous = osmSource;
+                }
+                else
+                {
+                    var next = new OsmStreamFilterMerge(resolutionType);
+                    next.RegisterSource(previous);
+                    next.RegisterSource(osmSource);
+
+                    previous = next;
+                }
+            }
+
+            return previous;
+        }
+
+        /// <summary>
+        /// Merges all the given sources.
+        /// </summary>
+        /// <param name="sources">The sources.</param>
+        /// <param name="resolutionType">The resolution type.</param>
+        /// <returns>A merged stream.</returns>
+        public static OsmStreamSource Merge(this IEnumerable<OsmStreamSource> sources, 
+            ConflictResolutionType resolutionType = ConflictResolutionType.FirstStream)
+        {
+            OsmStreamSource previous = null;
+            foreach (var osmSource in sources)
+            {
+                if (previous == null)
+                {
+                    previous = osmSource;
+                }
+                else
+                {
+                    var next = new OsmStreamFilterMerge(resolutionType);
+                    next.RegisterSource(previous);
+                    next.RegisterSource(osmSource);
+
+                    previous = next;
+                }
+            }
+
+            return previous;
         }
 
         /// <summary>
@@ -97,12 +193,13 @@ namespace OsmSharp.Streams
         /// </summary>
         public static OsmStreamSource Merge(this IEnumerable<OsmGeo> source, ConflictResolutionType resolutionType, params IEnumerable<OsmGeo>[] sources)
         {
-            var merge = new OsmStreamFilterMerge(resolutionType);
-            for(var i = 0; i < sources.Length; i++)
+            var osmSources = new OsmStreamSource[sources.Length];
+            for (var s = 0; s < sources.Length; s++)
             {
-                merge.RegisterSource(sources[i]);
+                osmSources[s] = new OsmEnumerableStreamSource(sources[s]);
             }
-            return merge;
+
+            return source.Merge(resolutionType, osmSources);
         }
 
         /// <summary>

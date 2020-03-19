@@ -56,7 +56,20 @@ namespace OsmSharp.Streams.Filters
         {
             get
             {
-                return _source1.CanReset && _source2.CanReset;
+                if (_source1 != null && _source2 != null)
+                {
+                    return _source1.CanReset && _source2.CanReset;
+                }
+                else if (_source1 != null)
+                {
+                    return _source1.CanReset;
+                }
+                else if(_source2 != null)
+                {
+                    return _source2.CanReset;
+                }
+
+                return true; // a stream can be reset when there is no data.
             }
         }
 
@@ -65,8 +78,8 @@ namespace OsmSharp.Streams.Filters
         /// </summary>
         public override void Reset()
         {
-            _source1.Reset();
-            _source2.Reset();
+            _source1?.Reset();
+            _source2?.Reset();
 
             _source1Status = null;
             _source2Status = null;
@@ -115,16 +128,26 @@ namespace OsmSharp.Streams.Filters
         private OsmGeo _current;
         private bool? _source1Status = null; // false when finished, true when there is data, null when unintialized.
         private bool? _source2Status = null; // false when finished, true when there is data, null when unintialized.
-        private ConflictResolutionType _resolutionType = ConflictResolutionType.None;
+        private readonly ConflictResolutionType _resolutionType;
 
         /// <summary>
         /// Move to the next object.
         /// </summary>
         public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
+            if (_source1 != null && _source2 == null)
+            {
+                return _source1.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
+            }
+            
+            if (_source1 == null && _source2 != null)
+            {
+                return _source2.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
+            }
+            
             OsmGeo source1Current = null;
             OsmGeo source2Current = null;
-
+            
             // get currents or move to first.
             if (_source1Status == null)
             {

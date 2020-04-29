@@ -60,9 +60,9 @@ namespace OsmSharp
             }
             if (!this.Id.HasValue)
             {
-                return string.Format("Node[null]{0}", tags);
+                return $"Node[null]{tags}";
             }
-            return string.Format("Node[{0}]{1}", this.Id.Value, tags);
+            return $"Node[{this.Id.Value}]{tags}";
         }
     }
 }

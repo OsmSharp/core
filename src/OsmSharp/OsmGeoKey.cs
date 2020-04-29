@@ -98,5 +98,14 @@ namespace OsmSharp
             }
             return 1;
         }
+
+        /// <summary>
+        /// Returns a description of this object.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"{this.Type}[{this.Id}]";
+        }
     }
 }

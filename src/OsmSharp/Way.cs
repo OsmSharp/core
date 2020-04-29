@@ -54,9 +54,9 @@ namespace OsmSharp
             }
             if (!this.Id.HasValue)
             {
-                return string.Format("Way[null]{0}", tags);
+                return $"Way[null]{tags}";
             }
-            return string.Format("Way[{0}]{1}", this.Id.Value, tags);
+            return $"Way[{this.Id.Value}]{tags}";
         }
     }
 }

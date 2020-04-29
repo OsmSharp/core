@@ -52,9 +52,9 @@ namespace OsmSharp
             }
             if (!this.Id.HasValue)
             {
-                return string.Format("Relation[null]{0}", tags);
+                return $"Relation[null]{tags}";
             }
-            return string.Format("Relation[{0}]{1}", this.Id.Value, tags);
+            return $"Relation[{this.Id.Value}]{tags}";
         }
     }
     

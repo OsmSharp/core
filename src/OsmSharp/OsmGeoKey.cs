@@ -58,6 +58,26 @@ namespace OsmSharp
             return obj is OsmGeo geo && Equals(geo);
         }
 
+        public static bool operator <(OsmGeoKey key1, OsmGeoKey key2)
+        {
+            return key1.CompareTo(key2) < 0;
+        }
+
+        public static bool operator >(OsmGeoKey key1, OsmGeoKey key2)
+        {
+            return key1.CompareTo(key2) > 0;
+        }
+
+        public static bool operator >=(OsmGeoKey key1, OsmGeoKey key2)
+        {
+            return key1.CompareTo(key2) >= 0;
+        }
+
+        public static bool operator <=(OsmGeoKey key1, OsmGeoKey key2)
+        {
+            return key1.CompareTo(key2) <= 0;
+        }
+
         /// <inheritdoc/>
         public int CompareTo(OsmGeoKey other)
         {

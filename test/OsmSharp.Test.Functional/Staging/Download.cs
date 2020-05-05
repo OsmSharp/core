@@ -30,8 +30,8 @@ namespace OsmSharp.Test.Functional.Staging
     /// </summary>
     public static class Download
     {
-        public static string PBF = "http://files.itinero.tech/data/OSM/extracts/wechel.osm.pbf";
-        public static string Local = "wechel.osm.pbf";
+        public static string PBF = "https://files.itinero.tech/data/OSM/planet/europe/luxembourg-latest.osm.pbf";
+        public static string Local = "luxembourg-latest.osm.pbf";
 
         /// <summary>
         /// Downloads the belgium data.

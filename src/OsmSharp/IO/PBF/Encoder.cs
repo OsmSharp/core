@@ -335,7 +335,7 @@ namespace OsmSharp.IO.PBF
             }
             if (node.Tags == null)
             { // create tags collection.
-                node.Tags = new TagsCollection();
+                node.Tags = new TagsCollection(0);
             }
 
             // set new stuff.

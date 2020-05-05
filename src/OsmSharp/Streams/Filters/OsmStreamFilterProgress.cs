@@ -91,9 +91,6 @@ namespace OsmSharp.Streams.Filters
         {
             var current = this.Source.Current();
 
-            // keep the start ticks.
-            var ticksStart = DateTime.Now.Ticks;
-
             if (!_lastType.HasValue)
             { // has a last type.
                 _lastTypeStart = DateTime.Now.Ticks;
@@ -102,6 +99,7 @@ namespace OsmSharp.Streams.Filters
 
             if (_lastType != current.Type)
             { // the last type has changed.
+                var ticksStart = DateTime.Now.Ticks;
                 var lastTicks = ticksStart - _lastTypeStart;
                 switch (_lastType)
                 {
@@ -131,6 +129,7 @@ namespace OsmSharp.Streams.Filters
 
                     if ((_node % _nodeInterval) == 0)
                     {
+                        var ticksStart = DateTime.Now.Ticks;
                         var nodeSpan = new TimeSpan(_nodeTicks + (ticksStart - _lastTypeStart));
                         var nodePerSecond = System.Math.Round((double)_node / nodeSpan.TotalSeconds, 0);
                         Logging.Logger.Log("StreamProgress", TraceEventType.Verbose,
@@ -142,6 +141,7 @@ namespace OsmSharp.Streams.Filters
 
                     if ((_relation % _relationInterval) == 0)
                     {
+                        var ticksStart = DateTime.Now.Ticks;
                         var relationSpan = new TimeSpan(_relationTicks + (ticksStart - _lastTypeStart));
                         var relationPerSecond = System.Math.Round((double)_relation / relationSpan.TotalSeconds, 2);
                         Logging.Logger.Log("StreamProgress", TraceEventType.Verbose,
@@ -153,6 +153,7 @@ namespace OsmSharp.Streams.Filters
 
                     if ((_way % _wayInterval) == 0)
                     {
+                        var ticksStart = DateTime.Now.Ticks;
                         var waySpan = new TimeSpan(_wayTicks + (ticksStart - _lastTypeStart));
                         var wayPerSecond = System.Math.Round((double)_way / waySpan.TotalSeconds, 2);
                         Logging.Logger.Log("StreamProgress", TraceEventType.Verbose,

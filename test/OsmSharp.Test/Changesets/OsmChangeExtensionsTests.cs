@@ -240,5 +240,47 @@ namespace OsmSharp.Test.Changesets
             Assert.AreEqual("OsmSharp", squashed.Generator);
             Assert.AreEqual(6, squashed.Version);
         }
+
+        /// <summary>
+        /// Tests modifying a modification.
+        /// </summary>
+        [Test]
+        public void TestSquashModifyModification()
+        {
+            var changeset1 = new OsmChange()
+            {
+                Modify = new OsmGeo[]
+                {
+                    new Node()
+                    {
+                        Id = 1,
+                        Version = 2
+                    },
+                    new Node()
+                    {
+                        Id = 1,
+                        Version = 3
+                    }
+                },
+                Generator = "OsmSharp",
+                Version = 6
+            };
+
+            // doing the squashing, should modify the creation.
+            var squashed = new[] { changeset1 }.Squash();
+
+            Assert.IsNotNull(squashed.Modify);
+            Assert.AreEqual(1, squashed.Modify.Length);
+            Assert.AreEqual(OsmGeoType.Node, squashed.Modify[0].Type);
+            Assert.AreEqual(1, squashed.Modify[0].Id);
+            Assert.AreEqual(3, squashed.Modify[0].Version);
+            Assert.IsNotNull(squashed.Delete);
+            Assert.AreEqual(0, squashed.Delete.Length);
+            Assert.IsNotNull(squashed.Create);
+            Assert.AreEqual(0, squashed.Create.Length);
+
+            Assert.AreEqual("OsmSharp", squashed.Generator);
+            Assert.AreEqual(6, squashed.Version);
+        }
     }
 }

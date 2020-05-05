@@ -36,60 +36,91 @@ namespace OsmSharp.Changesets
         /// </summary>
         public static OsmChange Squash(this IEnumerable<OsmChange> changes)
         {
-            var deletions = new Dictionary<OsmGeoVersionKey, OsmGeo>();
-            var modifications = new Dictionary<OsmGeoVersionKey, OsmGeo>();
-            var creations = new Dictionary<OsmGeoVersionKey, OsmGeo>();
+            // keep mutations:
+            // type: 
+            // - null: DELETE
+            // - true: CREATE
+            // - false: MODIFY.
+            
+            // - deletes overrules everything, any create or modify is ignored.
+            // - we keep the object with the highest version #.
+            
+            var mutations = new Dictionary<OsmGeoKey, (OsmGeo osmGeo, bool create, bool delete)>();
 
-            foreach(var change in changes)
+            foreach (var change in changes)
             {
-                if (change.Create != null)
+                if (change.Delete == null) continue;
+                
+                foreach (var del in change.Delete)
                 {
-                    foreach(var create in change.Create)
-                    { // just add all creates as normal.
-                        creations[new OsmGeoVersionKey(create)] = create;
-                    }
+                    mutations[new OsmGeoKey(del)] = (del, false, true);
                 }
+            }
 
-                if (change.Modify != null)
+            foreach (var change in changes)
+            {
+                if (change.Create == null) continue;
+                
+                foreach(var create in change.Create)
                 {
-                    foreach(var mod in change.Modify)
+                    var key = new OsmGeoKey(create);
+                    if (mutations.TryGetValue(key, out var _))
                     {
-                        OsmGeo creationOfMod;
-                        var key = new OsmGeoVersionKey(mod);
-                        if (creations.TryGetPreviousVersion(key, out creationOfMod))
-                        { // don't modify a new creation, create it properly once.
-                            creations.Remove(new OsmGeoVersionKey(creationOfMod));
-                            creations[key] = mod;
+                        // was deleted already, set the create flag.
+                        mutations[key] = (create, true, true);
+                        continue;
+                    }
+
+                    mutations.Add(key, (create, true, false));
+                }
+            }
+
+            foreach (var change in changes)
+            {
+                if (change.Modify == null) continue;
+                
+                foreach (var mod in change.Modify)
+                {
+                    var key = new OsmGeoKey(mod);
+                    if (mutations.TryGetValue(key, out var current))
+                    {
+                        if (current.delete)
+                        {
+                            // was deleted already, ignore modification.
+                            continue;
+                        }
+
+                        if (current.create)
+                        {
+                            // was already modified/created.
+                            if (current.osmGeo.Version < mod.Version)
+                            {
+                                // create created, replace by modification.
+                                mutations[key] = (mod, true, false);
+                            }
                         }
                         else
-                        { // add to modifications as normal.
-                            modifications[key] = mod;
+                        {
+                            // was already modified.
+                            if (current.osmGeo.Version < mod.Version)
+                            {
+                                // this version is higher, replace the current one.
+                                mutations[key] = (mod, false, false);
+                            }
                         }
                     }
-                }
-
-                if (change.Delete != null)
-                {
-                    foreach(var del in change.Delete)
+                    else
                     {
-                        var key = new OsmGeoVersionKey(del);
-                        if (creations.ContainsKey(key))
-                        { // don't delete after create, just don't create.
-                            creations.Remove(key);
-                        }
-                        else
-                        { // add delete as normal.
-                            deletions[new OsmGeoVersionKey(del)] = del;
-                        }
+                        mutations[key] = (mod, false, false);
                     }
                 }
             }
 
             return new OsmChange()
             {
-                Create = creations.Values.ToArray(),
-                Delete = deletions.Values.ToArray(),
-                Modify = modifications.Values.ToArray(),
+                Create = mutations.Values.Where(x => x.create == true && x.delete == false).Select(x => x.osmGeo).ToArray(),
+                Delete = mutations.Values.Where(x => x.create == false && x.delete == true).Select(x => x.osmGeo).ToArray(),
+                Modify = mutations.Values.Where(x => x.create == false && x.delete == false).Select(x => x.osmGeo).ToArray(),
                 Generator = "OsmSharp",
                 Version = 6
             };

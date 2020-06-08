@@ -21,6 +21,8 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OsmSharp.Complete
 {
@@ -86,6 +88,72 @@ namespace OsmSharp.Complete
                 }
             }
             return relation;
+        }
+
+        public override OsmGeo[] ToSimpleWithChildren()
+        {
+            var elements = ToSimpleWithChildrenCircularSafe(new HashSet<long>());
+            return elements.GroupBy(e => new OsmGeoKey(e)).Select(g => g.First()).ToArray();
+        }
+
+        // Recursive, safe against circular references.
+        private IEnumerable<OsmGeo> ToSimpleWithChildrenCircularSafe(HashSet<long> skipRelationIds)
+        {
+            if (skipRelationIds.Contains(this.Id))
+            {
+                return Enumerable.Empty<OsmGeo>();
+            }
+            else
+            {
+                skipRelationIds.Add(this.Id);
+            }
+
+            var relation = new Relation();
+            relation.Id = this.Id;
+            relation.ChangeSetId = this.ChangeSetId;
+            relation.Tags = this.Tags;
+            relation.TimeStamp = this.TimeStamp;
+            relation.UserId = this.UserId;
+            relation.UserName = this.UserName;
+            relation.Version = this.Version;
+            relation.Visible = this.Visible;
+
+            var children = new HashSet<OsmGeo>();
+
+            if (this.Members != null)
+            {
+                relation.Members = new RelationMember[this.Members.Length];
+                for (var i = 0; i < relation.Members.Length; i++)
+                {
+                    var member = this.Members[i];
+                    if (member == null)
+                    {
+                        continue;
+                    }
+
+                    var simpleMember = new RelationMember();
+                    simpleMember.Id = member.Member.Id;
+                    simpleMember.Role = member.Role;
+                    simpleMember.Type = member.Member.Type;
+
+                    relation.Members[i] = simpleMember;
+
+                    if (member.Member is Node memberNode)
+                    {
+                        children.Add(memberNode);
+                    }
+                    else if (member.Member is CompleteWay memberWay)
+                    {
+                        children.UnionWith(memberWay.ToSimpleWithChildren());
+                    }
+                    else if (member.Member is CompleteRelation r)
+                    {
+                        children.UnionWith(r.ToSimpleWithChildrenCircularSafe(skipRelationIds));
+                    }
+                }
+            }
+
+            return children.Append(relation);
         }
 
         /// <summary>

@@ -77,6 +77,12 @@ namespace OsmSharp.Complete
         public abstract OsmGeo ToSimple();
 
         /// <summary>
+        /// Gets the simple equivalent of this element and child elements.
+        /// </summary>
+        /// <returns></returns>
+        public abstract OsmGeo[] ToSimpleWithChildren();
+
+        /// <summary>
         /// Gets or sets the tags.
         /// </summary>
         public TagsCollectionBase Tags { get; set; }

@@ -69,5 +69,17 @@ namespace OsmSharp.Complete
         /// Gets or sets the version.
         /// </summary>
         long? Version { get; set; }
+
+        /// <summary>
+        /// Gets the simple equivalent.
+        /// </summary>
+        /// <returns></returns>
+        OsmGeo ToSimple();
+
+        /// <summary>
+        /// Gets the simple equivalent of this element and child elements.
+        /// </summary>
+        /// <returns></returns>
+        OsmGeo[] ToSimpleWithChildren();
     }
 }

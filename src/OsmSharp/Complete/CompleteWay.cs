@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Linq;
 
 namespace OsmSharp.Complete
 {
@@ -73,6 +74,31 @@ namespace OsmSharp.Complete
             }
 
             return way;
+        }
+
+        /// <summary>
+        /// Converts this way into it's simple counterpart with simple child nodes.
+        /// </summary>
+        /// <returns></returns>
+        public override OsmGeo[] ToSimpleWithChildren()
+        {
+            var way = new Way();
+            way.Id = this.Id;
+            way.ChangeSetId = this.ChangeSetId;
+            way.Tags = this.Tags;
+            way.TimeStamp = this.TimeStamp;
+            way.UserId = this.UserId;
+            way.UserName = this.UserName;
+            way.Version = this.Version;
+            way.Visible = this.Visible;
+
+            way.Nodes = new long[this.Nodes.Length];
+            for (var i = 0; i < this.Nodes.Length; i++)
+            {
+                way.Nodes[i] = this.Nodes[i].Id.Value;
+            }
+
+            return Nodes.GroupBy(e => e.Id).Select(g => g.First()).Append<OsmGeo>(way).ToArray();
         }
 
         /// <summary>

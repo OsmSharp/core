@@ -36,5 +36,15 @@ namespace OsmSharp
                 return this.Id.Value;
             }
         }
+
+        OsmGeo ICompleteOsmGeo.ToSimple()
+        {
+            return this;
+        }
+
+        OsmGeo[] ICompleteOsmGeo.ToSimpleWithChildren()
+        {
+            return new[] { this };
+        }
     }
 }

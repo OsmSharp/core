@@ -69,11 +69,5 @@ namespace OsmSharp.Complete
         /// Gets or sets the version.
         /// </summary>
         long? Version { get; set; }
-
-        /// <summary>
-        /// Gets the simple equivalent.
-        /// </summary>
-        /// <returns></returns>
-        OsmGeo ToSimple();
     }
 }

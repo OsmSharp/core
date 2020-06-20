@@ -41,10 +41,5 @@ namespace OsmSharp
         {
             return this;
         }
-
-        OsmGeo[] ICompleteOsmGeo.ToSimpleWithChildren()
-        {
-            return new[] { this };
-        }
     }
 }

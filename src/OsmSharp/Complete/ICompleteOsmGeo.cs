@@ -75,11 +75,5 @@ namespace OsmSharp.Complete
         /// </summary>
         /// <returns></returns>
         OsmGeo ToSimple();
-
-        /// <summary>
-        /// Gets the simple equivalent of this element and child elements.
-        /// </summary>
-        /// <returns></returns>
-        OsmGeo[] ToSimpleWithChildren();
     }
 }

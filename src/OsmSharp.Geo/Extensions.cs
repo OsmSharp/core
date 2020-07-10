@@ -118,7 +118,7 @@ namespace OsmSharp.Geo
                 {
                     return false;
                 }
-                return polygon.Contains(new Point(n.Longitude.Value, n.Latitude.Value));
+                return polygon.Covers(new Point(n.Longitude.Value, n.Latitude.Value));
             }, completeWays);
             nodeFilter.RegisterSource(source);
             return nodeFilter;

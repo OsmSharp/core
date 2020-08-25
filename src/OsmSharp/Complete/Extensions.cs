@@ -24,6 +24,7 @@ using OsmSharp.Db;
 using OsmSharp.Tags;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OsmSharp.Complete
 {
@@ -184,6 +185,96 @@ namespace OsmSharp.Complete
             return way.Nodes != null &&
                 way.Nodes.Length > 1 &&
                 way.Nodes[0].Id == way.Nodes[way.Nodes.Length - 1].Id;
+        }
+
+        /// <summary>
+        /// Converts these complete elements into their simple counterparts,
+        /// including the simple versions of their component elements.
+        /// Resulting elements will be distinct.
+        /// </summary>
+        public static OsmGeo[] ToSimpleWithChildren(this IEnumerable<ICompleteOsmGeo> completes)
+        {
+            return completes.SelectMany(e => e.ToSimpleWithChildren()).DistinctByGeoKey().ToArray();
+        }
+
+        /// <summary>
+        /// Converts a complete element into its simple counterpart,
+        /// including the simple versions of its component elements.
+        /// </summary>
+        public static OsmGeo[] ToSimpleWithChildren(this ICompleteOsmGeo complete)
+        {
+            switch (complete)
+            {
+                case Node node:
+                    return new [] { node };
+                case CompleteWay way:
+                    return way.ToSimpleWithChildren();
+                case CompleteRelation relation:
+                    return relation.ToSimpleWithChildren();
+                default:
+                    throw new Exception("Unknown Complete Element Type.");
+            }
+        }
+
+        /// <summary>
+        /// Converts a complete way into its simple counterpart,
+        /// including the simple versions of nodes.
+        /// </summary>
+        public static OsmGeo[] ToSimpleWithChildren(this CompleteWay way)
+        {
+            return way.Nodes.DistinctByGeoKey().Append(way.ToSimple()).ToArray();
+        }
+
+        /// <summary>
+        /// Converts a complete relation into its simple counterpart,
+        /// including the simple versions of all members, and their components, recursively.
+        /// </summary>
+        public static OsmGeo[] ToSimpleWithChildren(this CompleteRelation relation)
+        {
+            var withChildren = relation.ToSimpleWithChildrenCircularSafe(new HashSet<OsmGeoKey>());
+            return withChildren.DistinctByGeoKey().ToArray();
+        }
+
+        // Recursive, safe against circular references, may return duplciate nodes.
+        private static IEnumerable<OsmGeo> ToSimpleWithChildrenCircularSafe(
+            this CompleteRelation complete, HashSet<OsmGeoKey> seenGeoKeys)
+        {
+            if (complete.Members == null)
+            {
+                return new[] { complete.ToSimple() };
+            }
+
+            var children = new List<OsmGeo>();
+
+            foreach (var completeMember in complete.Members.Where(m => m != null))
+            {
+                var key = new OsmGeoKey(completeMember.Member.Type, completeMember.Member.Id);
+
+                if (seenGeoKeys.Add(key)) // Returns true if element was not already present
+                {
+                    switch (completeMember.Member)
+                    {
+                        case Node node:
+                            children.Add(node);
+                            break;
+                        case CompleteWay way:
+                            children.AddRange(way.ToSimpleWithChildren());
+                            break;
+                        case CompleteRelation relation:
+                            children.AddRange(relation.ToSimpleWithChildrenCircularSafe(seenGeoKeys));
+                            break;
+                        default:
+                            throw new Exception("Unknown Complete Element Type.");
+                    }
+                }
+            }
+
+            return children.Append(complete.ToSimple());
+        }
+
+        private static IEnumerable<OsmGeo> DistinctByGeoKey(this IEnumerable<OsmGeo> elements)
+        {
+            return elements.GroupBy(e => new OsmGeoKey(e)).Select(g => g.First());
         }
     }
 }

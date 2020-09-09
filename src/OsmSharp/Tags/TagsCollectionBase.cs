@@ -96,6 +96,26 @@ namespace OsmSharp.Tags
         }
 
         /// <summary>
+        /// Tries to add a key-value-pair to this collection.
+        /// If the value already exist, the addition fails and returns false
+        /// </summary>
+        /// <param name="key">The key of the tag</param>
+        /// <param name="value">The value of the tag</param>
+        /// <returns>true if the addition was successful</returns>
+        public abstract bool TryAdd(string key, string value);
+        
+        /// <summary>
+        /// Tries to add a key-value-pair to this collection.
+        /// If the value already exist, the addition fails and returns false
+        /// </summary>
+        /// <param name="tag">The tag to add</param>
+        /// <returns>true if the addition was successful</returns>
+        public bool TryAdd(Tag tag)
+        {
+            return TryAdd(tag.Key, tag.Value);
+        }
+
+        /// <summary>
         /// Returns true if the given tag exists.
         /// </summary>
         public bool ContainsKey(string key)

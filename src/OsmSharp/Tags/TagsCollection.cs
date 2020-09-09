@@ -112,6 +112,17 @@ namespace OsmSharp.Tags
         {
             _tags[tag.Key] = tag.Value;
         }
+        
+        public override bool TryAdd(string key, string value)
+        {
+            // TODO use _tags.TryAdd when OsmSharp ever uses netstandard 2.1
+            if (_tags.ContainsKey(key))
+            {
+                return false;
+            }
+            _tags.Add(key, value);
+            return true;
+        }
 
         /// <summary>
         /// Clears all tags.

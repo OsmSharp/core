@@ -19,6 +19,7 @@
 using OsmSharp.Tags;
 using System;
 using System.Collections.Generic;
+using OsmSharp.Logging;
 
 namespace OsmSharp.IO.PBF
 {
@@ -345,11 +346,14 @@ namespace OsmSharp.IO.PBF
             node.Longitude = Encoder.DecodeLatLon(pbfNode.lon, block.lon_offset, block.granularity);
             for (var i = 0; i < pbfNode.keys.Count; i++)
             {
-                node.Tags.Add(new Tag()
+                var key = System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int) pbfNode.keys[i]]);
+                var value = System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int) pbfNode.vals[i]]);
+                if (!node.Tags.TryAdd(key, value))
                 {
-                    Key = System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfNode.keys[i]]),
-                    Value = System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfNode.vals[i]])
-                });
+                    // Addition of the tag failed
+                    Logger.Log("invalid tag", TraceEventType.Error,
+                        $"Could not add tag `{key}={value}` to the tagscollection of osm.org/node/{node.Id} - possible duplicate keys?");
+                }
             }
             if (pbfNode.info != null)
             { // add the metadata if any.
@@ -516,8 +520,12 @@ namespace OsmSharp.IO.PBF
                 {
                     var key = System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfWay.keys[i]]);
                     var value = System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfWay.vals[i]]);
-
-                    way.Tags.Add(new Tag(key, value));
+                    if (!way.Tags.TryAdd(key, value))
+                    {
+                        // Addition of the tag failed
+                        Logger.Log("invalid tag", TraceEventType.Error,
+                            $"Could not add tag `{key}={value}` to the tagscollection of osm.org/way/{way.Id} - possible duplicate keys?");
+                    }
                 }
             }
             if (pbfWay.info != null)
@@ -638,10 +646,14 @@ namespace OsmSharp.IO.PBF
             }
             for (int i = 0; i < pbfRelation.keys.Count; i++)
             {
-                string key = System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfRelation.keys[i]]);
-                string value = System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfRelation.vals[i]]);
-
-                relation.Tags.Add(new Tag(key, value));
+                var key = System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfRelation.keys[i]]);
+                var value = System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfRelation.vals[i]]);
+                if (!relation.Tags.TryAdd(key, value))
+                {
+                    // Addition of the tag failed
+                    Logger.Log("invalid tag", TraceEventType.Error,
+                        $"Could not add tag `{key}={value}` to the tagscollection of osm.org/relation/{relation.Id} - possible duplicate keys?");
+                }
             }
             if (pbfRelation.info != null)
             { // read metadata if any.

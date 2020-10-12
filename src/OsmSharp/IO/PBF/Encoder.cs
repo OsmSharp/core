@@ -1,18 +1,18 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
 // Copyright (C) 2017 Abelshausen Ben
-// 
+//
 // This file is part of OsmSharp.
-// 
+//
 // OsmSharp is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 2 of the License, or
 // (at your option) any later version.
-// 
+//
 // OsmSharp is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
@@ -40,7 +40,7 @@ namespace OsmSharp.IO.PBF
         /// <summary>
         /// Decodes the block.
         /// </summary>
-        public static bool Decode(this PrimitiveBlock block, IPBFOsmPrimitiveConsumer primitivesConsumer, 
+        public static bool Decode(this PrimitiveBlock block, IPBFOsmPrimitiveConsumer primitivesConsumer,
             bool ignoreNodes, bool ignoreWays, bool ignoreRelations, out bool hasNodes, out bool hasWays, out bool hasRelations)
         {
             var success = false;
@@ -169,7 +169,7 @@ namespace OsmSharp.IO.PBF
         {
             var groupIdx = 0;
             var i = 0;
-            
+
             if(block.stringtable != null &&
                block.stringtable.s != null)
             {
@@ -293,7 +293,7 @@ namespace OsmSharp.IO.PBF
             var previousLon = Encoder.EncodeLatLon(previous.Longitude.Value, block.lat_offset, block.granularity);
             groupDense.lat.Add(currentLat - previousLat);
             groupDense.lon.Add(currentLon - previousLon);
-            
+
             if (current.Tags != null)
             {
                 foreach (var nodeTag in current.Tags)
@@ -345,7 +345,7 @@ namespace OsmSharp.IO.PBF
             node.Longitude = Encoder.DecodeLatLon(pbfNode.lon, block.lon_offset, block.granularity);
             for (var i = 0; i < pbfNode.keys.Count; i++)
             {
-                node.Tags.Add(new Tag()
+                node.Tags.AddOrReplace(new Tag()
                 {
                     Key = System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfNode.keys[i]]),
                     Value = System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfNode.vals[i]])
@@ -572,7 +572,7 @@ namespace OsmSharp.IO.PBF
                 }
             }
 
-            if (way.Nodes != null && 
+            if (way.Nodes != null &&
                 way.Nodes.Length > 0)
             {
                 pbfWay.refs.Add(way.Nodes[0]);
@@ -714,7 +714,7 @@ namespace OsmSharp.IO.PBF
                 }
                 for (var i = 1; i < relation.Members.Length; i++)
                 {
-                    pbfRelation.memids.Add(relation.Members[i].Id - 
+                    pbfRelation.memids.Add(relation.Members[i].Id -
                         relation.Members[i - 1].Id);
                     pbfRelation.roles_sid.Add(Encoder.EncodeString(block, reverseStringTable, relation.Members[i].Role));
                     switch(relation.Members[i].Type)

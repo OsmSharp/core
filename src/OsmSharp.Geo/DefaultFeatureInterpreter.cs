@@ -291,13 +291,13 @@ namespace OsmSharp.Geo
                 {
                     var yPolygon = new Polygon(rings[y].Value);
                     try
-	                {
-	                    containsFlags[x][y] = xPolygon.Contains(yPolygon);
-		            }
-	                catch (TopologyException)
-		            {
-	                    return null;
-        	        }
+	            {
+	            	containsFlags[x][y] = xPolygon.Contains(yPolygon);
+		    }
+	            catch (TopologyException)
+		    {
+	            	return null;
+        	    }
                 }
             }
             var used = new bool[rings.Count];

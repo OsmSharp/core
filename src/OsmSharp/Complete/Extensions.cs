@@ -149,6 +149,8 @@ namespace OsmSharp.Complete
                             }
                             break;
                         case OsmGeoType.Relation:
+                            if (relation.Id == memberId)                                
+                                continue;
                             var relationMember = osmGeoSource.GetRelation(memberId);
                             if (relationMember == null)
                             {

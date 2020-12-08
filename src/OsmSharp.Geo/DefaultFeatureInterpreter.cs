@@ -290,8 +290,14 @@ namespace OsmSharp.Geo
                 for (var y = 0; y < rings.Count; y++)
                 {
                     var yPolygon = new Polygon(rings[y].Value);
-                    containsFlags[x][y] =
-                        xPolygon.Contains(yPolygon);
+                    try
+	                {
+	                    containsFlags[x][y] = xPolygon.Contains(yPolygon);
+		            }
+	                catch (TopologyException)
+		            {
+	                    return null;
+        	        }
                 }
             }
             var used = new bool[rings.Count];

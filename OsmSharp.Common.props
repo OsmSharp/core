@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  
+  <!--- Package information, Version -->
+  <PropertyGroup>
+    <PackageVersion>7.0.0-pre017</PackageVersion>
+    <LangVersion>latest</LangVersion>
+    <Company>Itinero BV</Company>
+    <Authors>OsmSharp Contributors</Authors>
+    <Copyright>Itinero BV</Copyright>
+    <PackageProjectUrl>http://www.osmsharp.com/</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/OsmSharp/core/develop/LICENSE.md</PackageLicenseUrl>
+    <PackageIconUrl>http://www.osmsharp.com/logos/osmsharp_logo64.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/osmsharp/core</RepositoryUrl>
+  </PropertyGroup>
+</Project>

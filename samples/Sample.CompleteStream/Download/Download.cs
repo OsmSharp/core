@@ -39,11 +39,9 @@ namespace Sample.CompleteStream.Staging
             if (!File.Exists(filename))
             {
                 var client = new HttpClient();
-                using (var stream = await client.GetStreamAsync(url))
-                using (var outputStream = File.OpenWrite(filename))
-                {
-                    stream.CopyTo(outputStream);
-                }
+                await using var stream = await client.GetStreamAsync(url);
+                await using var outputStream = File.OpenWrite(filename);
+                await stream.CopyToAsync(outputStream);
             }
         }
     }

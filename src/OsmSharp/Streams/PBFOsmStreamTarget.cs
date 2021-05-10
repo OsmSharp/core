@@ -45,16 +45,7 @@ namespace OsmSharp.Streams
         /// <summary>
         /// Creates a new PBF stream target.
         /// </summary>
-        public PBFOsmStreamTarget(Stream stream)
-            : this(stream, false)
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new PBF stream target.
-        /// </summary>
-        public PBFOsmStreamTarget(Stream stream, bool compress = false)
+        public PBFOsmStreamTarget(Stream stream, bool compress = true)
         {
             _stream = stream;
 

@@ -52,3 +52,6 @@ jobs:
     - name: Nuget Pack
       run: dotnet pack -c release
       working-directory: ./src/OsmSharp.Geo/
+    - name: Nuget push
+      run: dotnet nuget push **/*.nupkg --skip-duplicate -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/osmsharp/index.json
+      working-directory: ./src/

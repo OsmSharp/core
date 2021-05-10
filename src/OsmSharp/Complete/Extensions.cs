@@ -120,7 +120,7 @@ namespace OsmSharp.Complete
                             var memberNode = osmGeoSource.GetNode(memberId);
                             if (memberNode == null)
                             {
-                                return null;
+                                continue;
                             }
                             var completeMemberNode = memberNode;
                             if (completeMemberNode != null)
@@ -129,14 +129,14 @@ namespace OsmSharp.Complete
                             }
                             else
                             {
-                                return null;
+                                continue;
                             }
                             break;
                         case OsmGeoType.Way:
                             var memberWay = osmGeoSource.GetWay(memberId);
                             if (memberWay == null)
                             {
-                                return null;
+                                continue;
                             }
                             var completeMemberWay = memberWay.CreateComplete(osmGeoSource);
                             if (completeMemberWay != null)
@@ -145,7 +145,7 @@ namespace OsmSharp.Complete
                             }
                             else
                             {
-                                return null;
+                                continue;
                             }
                             break;
                         case OsmGeoType.Relation:
@@ -154,7 +154,7 @@ namespace OsmSharp.Complete
                             var relationMember = osmGeoSource.GetRelation(memberId);
                             if (relationMember == null)
                             {
-                                return null;
+                                continue;
                             }
                             var completeMemberRelation = relationMember.CreateComplete(osmGeoSource);
                             if (completeMemberRelation != null)
@@ -163,7 +163,7 @@ namespace OsmSharp.Complete
                             }
                             else
                             {
-                                return null;
+                                continue;
                             }
                             break;
                     }

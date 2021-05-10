@@ -5,7 +5,7 @@ namespace OsmSharp
     /// <summary>
     /// A unique identifier including types and version #.
     /// </summary>
-    public class OsmGeoVersionKey : IEquatable<OsmGeoVersionKey>
+    public class OsmGeoVersionKey : IEquatable<OsmGeoVersionKey>, IComparable<OsmGeoVersionKey>
     {
         /// <summary>
         /// Creates a version key.
@@ -77,6 +77,41 @@ namespace OsmSharp
             return other.Id == this.Id &&
                 other.Type == this.Type &&
                 other.Version == this.Version;
+        }
+
+        public int CompareTo(OsmGeoVersionKey other)
+        {
+            if (other == null) { throw new ArgumentNullException("other"); }
+
+            if (this.Type == other.Type)
+            {
+                if (this.Id == other.Id)
+                {
+                    return this.Version.CompareTo(other.Version);
+                }
+                if (this.Id < 0 && other.Id < 0)
+                {
+                    return other.Id.CompareTo(this.Id);
+                }
+                return this.Id.CompareTo(other.Id);
+            }
+            switch (this.Type)
+            {
+                case OsmGeoType.Node:
+                    return -1;
+                case OsmGeoType.Way:
+                    switch (other.Type)
+                    {
+                        case OsmGeoType.Node:
+                            return 1;
+                        case OsmGeoType.Relation:
+                            return -1;
+                    }
+                    throw new Exception("Invalid OsmGeoType.");
+                case OsmGeoType.Relation:
+                    return 1;
+            }
+            throw new Exception("Invalid OsmGeoType.");
         }
 
         /// <summary>

@@ -25,62 +25,60 @@ using NetTopologySuite.Geometries;
 using OsmSharp;
 using OsmSharp.Geo;
 using OsmSharp.Streams;
-using Sample.GeometryStream.Staging;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sample.GeometryStream
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             // let's show you what's going on.
             OsmSharp.Logging.Logger.LogAction = (origin, level, message, parameters) =>
             {
-                Console.WriteLine(string.Format("[{0}] {1} - {2}", origin, level, message));
+                Console.WriteLine($"[{origin}] {level} - {message}");
             };
 
-            Download.ToFile("http://files.itinero.tech/data/OSM/planet/europe/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf").Wait();
+            await Download.Download.ToFile("http://planet.anyways.eu/planet/europe/luxembourg/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf");
+            await using var fileStream = File.OpenRead("luxembourg-latest.osm.pbf");
+            
+            // create source stream.
+            var source = new PBFOsmStreamSource(fileStream);
 
-            using (var fileStream = File.OpenRead("luxembourg-latest.osm.pbf"))
+            // show progress.
+            var progress = source.ShowProgress();
+
+            // filter all power lines and keep all nodes.
+            var filtered = from osmGeo in progress
+                where osmGeo.Type == OsmSharp.OsmGeoType.Node ||
+                      (osmGeo.Type == OsmSharp.OsmGeoType.Way && osmGeo.Tags != null && osmGeo.Tags.Contains("power", "line"))
+                select osmGeo;
+
+            // convert to a feature stream.
+            // WARNING: nodes that are part of power lines will be kept in-memory.
+            //          it's important to filter only the objects you need **before** 
+            //          you convert to a feature stream otherwise all objects will 
+            //          be kept in-memory.
+            var features = filtered.ToFeatureSource();
+
+            // filter out only linestrings.
+            var lineStrings = from feature in features
+                where feature.Geometry is LineString
+                select feature;
+
+            // build feature collection.
+            var featureCollection = new FeatureCollection();
+            foreach (var feature in lineStrings)
             {
-                // create source stream.
-                var source = new PBFOsmStreamSource(fileStream);
-
-                // show progress.
-                var progress = source.ShowProgress();
-
-                // filter all powerlines and keep all nodes.
-                var filtered = from osmGeo in progress
-                               where osmGeo.Type == OsmSharp.OsmGeoType.Node ||
-                                     (osmGeo.Type == OsmSharp.OsmGeoType.Way && osmGeo.Tags != null && osmGeo.Tags.Contains("power", "line"))
-                               select osmGeo;
-
-                // convert to a feature stream.
-                // WARNING: nodes that are partof powerlines will be kept in-memory.
-                //          it's important to filter only the objects you need **before** 
-                //          you convert to a feature stream otherwise all objects will 
-                //          be kept in-memory.
-                var features = filtered.ToFeatureSource();
-
-                // filter out only linestrings.
-                var lineStrings = from feature in features
-                                  where feature.Geometry is LineString
-                                  select feature;
-
-                // build feature collection.
-                var featureCollection = new FeatureCollection();
-                foreach (var feature in lineStrings)
-                {
-                    featureCollection.Add(feature);
-                }
-
-                // convert to geojson.
-                var json = ToJson(featureCollection);
-                File.WriteAllText("output.geojson", json);
+                featureCollection.Add(feature);
             }
+
+            // convert to geojson.
+            var json = ToJson(featureCollection);
+            await File.WriteAllTextAsync("output.geojson", json);
         }
 
         private static string ToJson(FeatureCollection featureCollection)

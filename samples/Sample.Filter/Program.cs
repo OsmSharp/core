@@ -21,29 +21,28 @@
 // THE SOFTWARE.
 
 using OsmSharp.Streams;
-using Sample.Filter.Staging;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sample.Filter
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Download.ToFile("http://files.itinero.tech/data/OSM/planet/europe/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf").Wait();
+            await Download.Download.ToFile("http://planet.anyways.eu/planet/europe/luxembourg/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf");
 
-            using (var fileStream = File.OpenRead("luxembourg-latest.osm.pbf"))
+            await using var fileStream = File.OpenRead("luxembourg-latest.osm.pbf");
+            
+            var source = new PBFOsmStreamSource(fileStream); // create source stream.
+            var filtered = from osmGeo in source 
+                where osmGeo.Id % 100000 == 0 // let's use linq to leave only objects with and id dividable by 100000.
+                select osmGeo;  
+            foreach(var osmGeo in filtered)
             {
-                var source = new PBFOsmStreamSource(fileStream); // create source stream.
-                var filtered = from osmGeo in source where 
-                               osmGeo.UserName == "Javier Gutiérrez" // let's use linq to leave only objects last touched by the given mapper.
-                               select osmGeo;  
-                foreach(var osmGeo in filtered)
-                {
-                    Console.WriteLine(osmGeo.ToString());
-                }
+                Console.WriteLine(osmGeo.ToString());
             }
         }
     }

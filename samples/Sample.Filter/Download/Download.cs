@@ -24,7 +24,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Sample.Filter.Staging
+namespace Sample.Filter.Download
 {
     /// <summary>
     /// Contains code to download test files.
@@ -39,11 +39,9 @@ namespace Sample.Filter.Staging
             if (!File.Exists(filename))
             {
                 var client = new HttpClient();
-                using (var stream = await client.GetStreamAsync(url))
-                using (var outputStream = File.OpenWrite(filename))
-                {
-                    stream.CopyTo(outputStream);
-                }
+                await using var stream = await client.GetStreamAsync(url);
+                await using var outputStream = File.OpenWrite(filename);
+                await stream.CopyToAsync(outputStream);
             }
         }
     }

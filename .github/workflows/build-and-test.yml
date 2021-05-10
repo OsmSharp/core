@@ -31,6 +31,21 @@ jobs:
     - name: Functional tests.
       run: dotnet run -c release
       working-directory: ./test/OsmSharp.Test.Functional/
+    - name: Sample.CompleteStream
+      run: dotnet run -c release
+      working-directory: ./samples/Sample.CompleteStream/
+    - name: Sample.Filter
+      run: dotnet run -c release
+      working-directory: ./samples/Sample.Filter/
+    - name: Sample.GeoFilter
+      run: dotnet run -c release
+      working-directory: ./samples/Sample.GeoFilter/
+    - name: Sample.GeometryStream
+      run: dotnet run -c release
+      working-directory: ./samples/Sample.GeometryStream/
+    - name: Sample.GeometryStream.Shape
+      run: dotnet run -c release
+      working-directory: ./samples/Sample.GeometryStream.Shape/
     - name: Nuget Pack
       run: dotnet pack -c release
       working-directory: ./src/OsmSharp/

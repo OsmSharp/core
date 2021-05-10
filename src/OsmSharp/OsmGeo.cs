@@ -28,7 +28,7 @@ namespace OsmSharp
     /// <summary>
     /// Primive used as a base class for any osm object that has a meaning on the map (Nodes, Ways and Relations).
     /// </summary>
-    public abstract class OsmGeo
+    public abstract class OsmGeo : IComparable<OsmGeo>
     {
         /// <summary>
         /// Gets or sets the id.
@@ -74,5 +74,42 @@ namespace OsmSharp
         /// Gets or sets the username.
         /// </summary>
         public string UserName { get; set; }
+
+        public int CompareTo(OsmGeo other)
+        {
+            if (other == null) { throw new ArgumentNullException("other"); }
+            if (this.Id == null || this.Version == null) { throw new ArgumentException("To compare objects must have id and version set."); }
+            if (other.Id == null || other.Version == null) { throw new ArgumentException("To compare objects must have id and version set."); }
+
+            if (this.Type == other.Type)
+            {
+                if (this.Id == other.Id)
+                {
+                    return this.Version.Value.CompareTo(other.Version.Value);
+                }
+                if (this.Id < 0 && other.Id < 0)
+                {
+                    return other.Id.Value.CompareTo(this.Id.Value);
+                }
+                return this.Id.Value.CompareTo(other.Id.Value);
+            }
+            switch (this.Type)
+            {
+                case OsmGeoType.Node:
+                    return -1;
+                case OsmGeoType.Way:
+                    switch (other.Type)
+                    {
+                        case OsmGeoType.Node:
+                            return 1;
+                        case OsmGeoType.Relation:
+                            return -1;
+                    }
+                    throw new Exception("Invalid OsmGeoType.");
+                case OsmGeoType.Relation:
+                    return 1;
+            }
+            throw new Exception("Invalid OsmGeoType.");
+        }
     }
 }

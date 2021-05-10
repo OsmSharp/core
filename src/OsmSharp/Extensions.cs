@@ -45,40 +45,7 @@ namespace OsmSharp
         /// </summary>
         public static int CompareByIdVersionAndType(this OsmGeo osmGeo, OsmGeo other)
         {
-            if (osmGeo == null) { throw new ArgumentNullException("osmGeo"); }
-            if (other == null) { throw new ArgumentNullException("other"); }
-            if (osmGeo.Id == null || osmGeo.Version == null) { throw new ArgumentException("To compare objects must have id and version set."); }
-            if (other.Id == null || other.Version == null) { throw new ArgumentException("To compare objects must have id and version set."); }
-
-            if (osmGeo.Type == other.Type)
-            {
-                if (osmGeo.Id == other.Id)
-                {
-                    return osmGeo.Version.Value.CompareTo(other.Version.Value);
-                }
-                if (osmGeo.Id < 0 && other.Id < 0)
-                {
-                    return other.Id.Value.CompareTo(osmGeo.Id.Value);
-                }
-                return osmGeo.Id.Value.CompareTo(other.Id.Value);
-            }
-            switch (osmGeo.Type)
-            {
-                case OsmGeoType.Node:
-                    return -1;
-                case OsmGeoType.Way:
-                    switch (other.Type)
-                    {
-                        case OsmGeoType.Node:
-                            return 1;
-                        case OsmGeoType.Relation:
-                            return -1;
-                    }
-                    throw new Exception("Invalid OsmGeoType.");
-                case OsmGeoType.Relation:
-                    return 1;
-            }
-            throw new Exception("Invalid OsmGeoType.");
+            return osmGeo.CompareTo(other);
         }
 
         /// <summary>

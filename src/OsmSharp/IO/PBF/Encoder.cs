@@ -289,11 +289,15 @@ namespace OsmSharp.IO.PBF
         {
             groupDense.id.Add(current.Id.Value - previous.Id.Value);
             var currentLat = Encoder.EncodeLatLon(current.Latitude.Value, block.lat_offset, block.granularity);
-            var currentLon = Encoder.EncodeLatLon(current.Longitude.Value, block.lat_offset, block.granularity);
+            var currentLon = Encoder.EncodeLatLon(current.Longitude.Value, block.lon_offset, block.granularity);
             var previousLat = Encoder.EncodeLatLon(previous.Latitude.Value, block.lat_offset, block.granularity);
-            var previousLon = Encoder.EncodeLatLon(previous.Longitude.Value, block.lat_offset, block.granularity);
-            groupDense.lat.Add(currentLat - previousLat);
-            groupDense.lon.Add(currentLon - previousLon);
+            var previousLon = Encoder.EncodeLatLon(previous.Longitude.Value, block.lon_offset, block.granularity);
+            // Note that the offsets are actually cancelled out by the subtraction below
+            // LatDiff equals (current.Latitude - previous.Latitude) * 100000000 / granularity
+            var latDiff = currentLat - previousLat;
+            var lonDiff = currentLon - previousLon;
+            groupDense.lat.Add(latDiff);
+            groupDense.lon.Add(lonDiff);
             
             if (current.Tags != null)
             {

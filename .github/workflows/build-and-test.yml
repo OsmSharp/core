@@ -1,0 +1,39 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  build-and-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'true'
+    - name: Setup .NET Core 3.1
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Setup .NET Core 5.
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.101
+    - name: Restore packages.
+      run: dotnet restore
+    - name: Build all projects.
+      run: dotnet build --configuration Release --no-restore
+    - name: Unittests.
+      run: dotnet test
+      working-directory: ./test/OsmSharp.Test/
+    - name: Functional tests.
+      run: dotnet run -c release
+      working-directory: ./test/OsmSharp.Test.Functional/
+    - name: Nuget Pack
+      run: dotnet pack -c release
+      working-directory: ./src/OsmSharp/
+    - name: Nuget Pack
+      run: dotnet pack -c release
+      working-directory: ./src/OsmSharp.Geo/

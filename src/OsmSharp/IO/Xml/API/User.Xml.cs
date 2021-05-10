@@ -149,16 +149,22 @@ namespace OsmSharp.API
             writer.WriteAttribute("count", this.TraceCount);
             writer.WriteEndElement();
             writer.WriteStartElement("blocks");
-            foreach (var block in this.BlocksReceived)
+            if (this.BlocksReceived != null)
             {
-                writer.WriteElement("received", block);
+                foreach (var block in this.BlocksReceived)
+                {
+                    writer.WriteElement("received", block);
+                }
             }
             writer.WriteEndElement();
             writer.WriteElement("home", this.Home);
             writer.WriteStartElement("languages");
-            foreach (var laguage in this.Languages)
+            if (this.Languages != null)
             {
-                writer.WriteElementString("lang", laguage);
+                foreach (var language in this.Languages)
+                {
+                    writer.WriteElementString("lang", language);
+                }
             }
             writer.WriteEndElement();
             writer.WriteElement("messages", this.Messages);

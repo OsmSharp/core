@@ -5,7 +5,7 @@
 - OsmSharp: [![NuGet Badge](https://buildstats.info/nuget/OsmSharp)](https://www.nuget.org/packages/OsmSharp/) [![NuGet Badge](https://buildstats.info/nuget/OsmSharp?includePreReleases=true)](https://www.nuget.org/packages/OsmSharp)  
 - OsmSharp.Geo: [![NuGet Badge](https://buildstats.info/nuget/OsmSharp.Geo)](https://www.nuget.org/packages/OsmSharp.Geo) [![NuGet Badge](https://buildstats.info/nuget/OsmSharp.Geo?includePreReleases=true)](https://www.nuget.org/packages/OsmSharp.Geo)  
 
-OsmSharp enables you to work directly with OSM-data in .NET. Most important features are:
+OsmSharp enables you to work directly with OpenStreetMap (OSM) data in .NET. Most important features are:
 
 - Read/Write OSM-XML.
 - Read/Write OSM-PBF.

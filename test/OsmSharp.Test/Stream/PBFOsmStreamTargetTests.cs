@@ -48,7 +48,11 @@ namespace OsmSharp.Test.Stream
             {
                 Id = 1,
                 Latitude = 1.1f,
-                Longitude = 1.2f
+                Longitude = 1.2f,
+                ChangeSetId = 1092,
+                TimeStamp = DateTime.UnixEpoch,
+                UserId = 9034,
+                Version = 12
             };
             var sourceObjects = new OsmGeo[] {
                 sourceNode
@@ -68,11 +72,11 @@ namespace OsmSharp.Test.Stream
                 Assert.AreEqual(1, resultObjects.Count);
 
                 Assert.AreEqual(sourceObjects[0].Id, resultObjects[0].Id);
-                Assert.AreEqual(0, resultObjects[0].ChangeSetId);
+                Assert.AreEqual(1092, resultObjects[0].ChangeSetId);
                 Assert.AreEqual(OsmSharp.IO.PBF.PBFExtensions.FromUnixTime(0), resultObjects[0].TimeStamp);
-                Assert.AreEqual(0, resultObjects[0].UserId);
+                Assert.AreEqual(9034, resultObjects[0].UserId);
                 Assert.AreEqual(sourceObjects[0].UserName, resultObjects[0].UserName);
-                Assert.AreEqual(0, resultObjects[0].Version);
+                Assert.AreEqual(12, resultObjects[0].Version);
 
                 var resultNode = resultObjects[0] as Node;
                 Assert.AreEqual(sourceNode.Latitude.Value, resultNode.Latitude.Value, .0001f);
@@ -84,7 +88,11 @@ namespace OsmSharp.Test.Stream
             {
                 Id = 1,
                 Latitude = 1.1f,
-                Longitude = 1.2f
+                Longitude = 1.2f,
+                ChangeSetId = 1092,
+                TimeStamp = DateTime.UnixEpoch,
+                UserId = 9034,
+                Version = 12
             };
             sourceNode.Tags = new TagsCollection();
             sourceNode.Tags.Add("highway", "residential");
@@ -106,11 +114,11 @@ namespace OsmSharp.Test.Stream
                 Assert.AreEqual(1, resultObjects.Count);
 
                 Assert.AreEqual(sourceObjects[0].Id, resultObjects[0].Id);
-                Assert.AreEqual(0, resultObjects[0].ChangeSetId);
+                Assert.AreEqual(1092, resultObjects[0].ChangeSetId);
                 Assert.AreEqual(OsmSharp.IO.PBF.PBFExtensions.FromUnixTime(0), resultObjects[0].TimeStamp);
-                Assert.AreEqual(0, resultObjects[0].UserId);
+                Assert.AreEqual(9034, resultObjects[0].UserId);
                 Assert.AreEqual(string.Empty, resultObjects[0].UserName);
-                Assert.AreEqual(0, resultObjects[0].Version);
+                Assert.AreEqual(12, resultObjects[0].Version);
                 Assert.AreEqual(sourceObjects[0].Tags.Count, resultObjects[0].Tags.Count);
                 Assert.IsTrue(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()));
 
@@ -124,7 +132,11 @@ namespace OsmSharp.Test.Stream
             {
                 Id = 1,
                 Latitude = 1.1f,
-                Longitude = 1.2f
+                Longitude = 1.2f,
+                ChangeSetId = 1092,
+                TimeStamp = DateTime.UnixEpoch,
+                UserId = 9034,
+                Version = 12
             };
             sourceNode.Tags = new TagsCollection();
             sourceNode.Tags.Add("highway", "residential");

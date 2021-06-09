@@ -32,7 +32,7 @@ namespace Sample.Filter
     {
         static void Main(string[] args)
         {
-            Download.ToFile("http://files.itinero.tech/data/OSM/planet/europe/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf").Wait();
+            Download.ToFile("http://planet.anyways.eu/planet/europe/luxembourg/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf").Wait();
 
             using (var fileStream = File.OpenRead("luxembourg-latest.osm.pbf"))
             {

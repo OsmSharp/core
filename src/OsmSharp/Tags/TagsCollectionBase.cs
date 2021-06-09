@@ -23,12 +23,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using OsmSharp.IO.Json.Converters;
 
 namespace OsmSharp.Tags
 {
     /// <summary>
     /// Abstract representation of a tags collection.
     /// </summary>
+    [JsonConverter(typeof(TagsCollectionConvertor))]
     public abstract class TagsCollectionBase : IEnumerable<Tag>
     {
         /// <summary>

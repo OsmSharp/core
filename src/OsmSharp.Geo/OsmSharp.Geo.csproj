@@ -2,7 +2,7 @@
   <Import Project="../../OsmSharp.Common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.3;net45;netstandard2.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>OsmSharp.Geo</AssemblyName>
     <PackageId>OsmSharp.Geo</PackageId>
   </PropertyGroup>

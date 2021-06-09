@@ -22,12 +22,15 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
+using OsmSharp.IO.Json.Converters;
 
 namespace OsmSharp.Tags
 {
     /// <summary>
     /// A tags collection.
     /// </summary>
+    [JsonConverter(typeof(TagsCollectionConvertor))]
     public class TagsCollection : TagsCollectionBase
     {
         private readonly Dictionary<string, string> _tags;

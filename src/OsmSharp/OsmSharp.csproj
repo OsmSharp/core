@@ -2,7 +2,7 @@
   <Import Project="../../OsmSharp.Common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.3;net45;netstandard2.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>OsmSharp</AssemblyName>
     <PackageId>OsmSharp</PackageId>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">1.6.1</NetStandardImplicitPackageVersion>
@@ -24,6 +24,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="protobuf-net" Version="2.3.7" />
+      <PackageReference Include="System.Text.Json" Version="5.0.2" />
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Properties" />

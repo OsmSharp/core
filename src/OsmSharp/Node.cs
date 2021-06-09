@@ -20,13 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Text.Json.Serialization;
 using System.Xml.Serialization;
+using OsmSharp.IO.Json.Converters;
 
 namespace OsmSharp
 {
     /// <summary>
     /// Represents a node.
     /// </summary>
+    [JsonConverter(typeof(NodeJsonConverter))]
     public partial class Node : OsmGeo
     {
         /// <summary>

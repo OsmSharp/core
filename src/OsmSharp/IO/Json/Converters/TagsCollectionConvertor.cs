@@ -38,7 +38,14 @@ namespace OsmSharp.IO.Json.Converters
 
         public override void Write(Utf8JsonWriter writer, TagsCollectionBase value, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            writer.WriteStartObject();
+            
+            foreach (var t in value)
+            {
+                writer.WriteString(t.Key, t.Value);   
+            }
+            
+            writer.WriteEndObject();
         }
 
         public override bool CanConvert(Type typeToConvert)

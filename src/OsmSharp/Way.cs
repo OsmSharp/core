@@ -21,12 +21,15 @@
 // THE SOFTWARE.
 
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using OsmSharp.IO.Json.Converters;
 
 namespace OsmSharp
 {
     /// <summary>
     /// Represents a way.
     /// </summary>
+    [JsonConverter(typeof(WayJsonConverter))]
     public partial class Way : OsmGeo
     {
         /// <summary>

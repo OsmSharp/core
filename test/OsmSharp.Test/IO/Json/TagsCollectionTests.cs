@@ -17,6 +17,15 @@ namespace OsmSharp.Test.IO.Json
         }
         
         [Test]
+        public void TagsCollection_ToJson_OneTag_ShouldReturnJsonWithOneTag()
+        {
+            var tagsCollection = new TagsCollection();
+            tagsCollection.AddOrReplace("highway", "residential");
+
+            Assert.AreEqual("{\"highway\":\"residential\"}", JsonSerializer.Serialize(tagsCollection));
+        }
+        
+        [Test]
         public void TagsCollection_FromJson_Empty_ShouldReturnEmpty()
         {
             var tagsCollection = JsonSerializer.Deserialize<TagsCollectionBase>("{}");

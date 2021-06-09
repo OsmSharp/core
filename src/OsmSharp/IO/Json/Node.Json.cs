@@ -3,7 +3,6 @@ using OsmSharp.IO.Json.Converters;
 
 namespace OsmSharp
 {
-    [JsonConverter(typeof(NodeJsonConverter))]
     public partial class Node
     {
         

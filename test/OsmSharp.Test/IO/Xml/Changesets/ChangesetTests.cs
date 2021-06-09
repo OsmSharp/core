@@ -47,7 +47,7 @@ namespace OsmSharp.Test.IO.Xml.Changesets
                 MinLatitude = 49.2785426f,
                 MinLongitude = 7.0191821f,
                 MaxLatitude = 49.2793101f,
-                MaxLongitude = 7.0197485f,
+                MaxLongitude = 7.019749f,
                 Open = true,
                 CreatedAt = new System.DateTime(2008, 11, 08, 19, 07, 39),
                 UserId = 123,

@@ -32,6 +32,7 @@ namespace OsmSharp.IO.Json.Converters
             {
                 if (reader.TokenType == JsonTokenType.EndObject)
                 {
+                    reader.Read();
                     if (type == null) throw new InvalidDataException("Type not found.");
                     
                     // create the appropriate object.
@@ -196,6 +197,8 @@ namespace OsmSharp.IO.Json.Converters
 
                         foreach (var member in r.Members)
                         {
+                            writer.WriteStartObject();
+                            
                             switch (member.Type)
                             {
                                 case OsmGeoType.Node:
@@ -212,6 +215,8 @@ namespace OsmSharp.IO.Json.Converters
                             }
                             writer.WriteNumber("ref", member.Id);
                             writer.WriteString("role", member.Role);
+                            
+                            writer.WriteEndObject();
                         }
                         
                         writer.WriteEndArray();

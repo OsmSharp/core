@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build.sh = build.sh
 		LICENSE.md = LICENSE.md
 		README.md = README.md
-		SharedAssemblyVersion.cs = SharedAssemblyVersion.cs
+		OsmSharp.Common.props = OsmSharp.Common.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{8B983F9F-62A4-428E-BEAB-73EB6D4EF1A8}"

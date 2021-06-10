@@ -86,7 +86,8 @@ namespace OsmSharp.Test.IO.Json
             };
 
             var serialized = JsonSerializer.Serialize(relation);
-            Assert.AreEqual("{\"type\":\"relation\",\"members\":[\"type\":\"node\",\"ref\":1,\"role\":\"role1\",\"type\":\"way\",\"ref\":10,\"role\":\"role2\",\"type\":\"relation\",\"ref\":100,\"role\":\"role3\"],\"id\":1,\"tags\":{\"amenity\":\"something\",\"key\":\"some_value\"},\"timestamp\":\"2008-09-12T21:37:45\",\"version\":1,\"user\":\"ben\",\"uid\":1}", serialized);
+            Assert.AreEqual("{\"type\":\"relation\",\"members\":[{\"type\":\"node\",\"ref\":1,\"role\":\"role1\"},{\"type\":\"way\",\"ref\":10,\"role\":\"role2\"},{\"type\":\"relation\",\"ref\":100,\"role\":\"role3\"}],\"id\":1,\"tags\":{\"amenity\":\"something\",\"key\":\"some_value\"},\"timestamp\":\"2008-09-12T21:37:45\",\"version\":1,\"user\":\"ben\",\"uid\":1}", 
+                serialized);
         }
     }
 }

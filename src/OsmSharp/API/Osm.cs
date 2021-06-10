@@ -20,13 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Text.Json.Serialization;
 using OsmSharp.Changesets;
+using OsmSharp.IO.Json.Converters;
 
 namespace OsmSharp.API
 {
     /// <summary>
     /// Represents the root-object for all API-related communication.
     /// </summary>
+    [JsonConverter(typeof(OsmJsonConverter))]
     public partial class Osm
     {
         /// <summary>

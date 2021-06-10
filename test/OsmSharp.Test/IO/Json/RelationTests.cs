@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Text.Json;
 using NUnit.Framework;
+using OsmSharp.Tags;
 
 namespace OsmSharp.Test.IO.Json
 {
@@ -61,6 +62,31 @@ namespace OsmSharp.Test.IO.Json
             Assert.AreEqual(OsmGeoType.Relation, r.Members[2].Type);
             Assert.AreEqual("relation-role", r.Members[2].Role);
             Assert.AreEqual(211334453, r.Members[2].Id);
+        }
+
+        [Test]
+        public void Relation_ToJson_Complete_ShouldReturnCompleteJson()
+        {
+            var relation = new Relation()
+            {
+                Id = 1,
+                Version = 1,
+                UserName = "ben",
+                UserId = 1,
+                TimeStamp = new System.DateTime(2008, 09, 12, 21, 37, 45),
+                Tags = new TagsCollection(
+                    new Tag("amenity", "something"),
+                    new Tag("key", "some_value")),
+                Members = new RelationMember[]
+                {
+                    new RelationMember(1, "role1", OsmGeoType.Node),
+                    new RelationMember(10, "role2", OsmGeoType.Way),
+                    new RelationMember(100, "role3", OsmGeoType.Relation)
+                }
+            };
+
+            var serialized = JsonSerializer.Serialize(relation);
+            Assert.AreEqual("{\"type\":\"relation\",\"members\":[\"type\":\"node\",\"ref\":1,\"role\":\"role1\",\"type\":\"way\",\"ref\":10,\"role\":\"role2\",\"type\":\"relation\",\"ref\":100,\"role\":\"role3\"],\"id\":1,\"tags\":{\"amenity\":\"something\",\"key\":\"some_value\"},\"timestamp\":\"2008-09-12T21:37:45\",\"version\":1,\"user\":\"ben\",\"uid\":1}", serialized);
         }
     }
 }

@@ -189,6 +189,33 @@ namespace OsmSharp.IO.Json.Converters
                     break;
                 case Relation r:
                     writer.WriteString("type", "relation");
+                    if (r.Members != null)
+                    {
+                        writer.WritePropertyName("members");
+                        writer.WriteStartArray();
+
+                        foreach (var member in r.Members)
+                        {
+                            switch (member.Type)
+                            {
+                                case OsmGeoType.Node:
+                                    writer.WriteString("type", "node");
+                                    break;
+                                case OsmGeoType.Way:
+                                    writer.WriteString("type", "way");
+                                    break;
+                                case OsmGeoType.Relation:
+                                    writer.WriteString("type", "relation");
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+                            writer.WriteNumber("ref", member.Id);
+                            writer.WriteString("role", member.Role);
+                        }
+                        
+                        writer.WriteEndArray();
+                    }
                     break;
             }
             

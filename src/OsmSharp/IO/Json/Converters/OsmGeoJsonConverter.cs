@@ -26,7 +26,7 @@ namespace OsmSharp.IO.Json.Converters
             TagsCollectionBase tags = null;
             var visible = true;
             List<long> nodes = null;
-            RelationMember[] members = null;
+            List<RelationMember> members = null;
             
             while (reader.Read())
             {
@@ -61,7 +61,7 @@ namespace OsmSharp.IO.Json.Converters
                             way.Nodes = nodes?.ToArray();
                             return way;
                         case Relation relation:
-                            relation.Members = members;
+                            relation.Members = members?.ToArray();
                             return relation;
                     }
                 }
@@ -115,6 +115,42 @@ namespace OsmSharp.IO.Json.Converters
                             while (reader.TokenType != JsonTokenType.EndArray)
                             {
                                 nodes.Add(reader.GetInt64());
+                                reader.Read();
+                            }
+                            break;
+                        case "members":
+                            members = new List<RelationMember>();
+                            
+                            reader.Read();
+                            while (reader.TokenType != JsonTokenType.EndArray)
+                            {
+                                reader.Read();
+                                var member = new RelationMember();
+                                while (reader.TokenType != JsonTokenType.EndObject)
+                                {
+                                    var memberPropertyName = reader.GetString();
+                                    reader.Read();
+                                    switch (memberPropertyName)
+                                    {
+                                        case "type":
+                                            member.Type = reader.GetString() switch
+                                            {
+                                                "node" => OsmGeoType.Node,
+                                                "way" => OsmGeoType.Way,
+                                                "relation" => OsmGeoType.Relation,
+                                                _ => member.Type
+                                            };
+                                            break;
+                                        case "ref":
+                                            member.Id = reader.GetInt64();
+                                            break;
+                                        case "role":
+                                            member.Role = reader.GetString();
+                                            break;
+                                    }
+                                    reader.Read();
+                                }
+                                members.Add(member);
                                 reader.Read();
                             }
                             break;

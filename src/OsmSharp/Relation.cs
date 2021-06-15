@@ -20,11 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Text.Json.Serialization;
+using OsmSharp.IO.Json.Converters;
+
 namespace OsmSharp
 {
     /// <summary>
     /// Represents a relation.
     /// </summary>
+    [JsonConverter(typeof(RelationJsonConverter))]
     public partial class Relation : OsmGeo
     {
         /// <summary>

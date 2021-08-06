@@ -85,6 +85,7 @@ namespace OsmSharp.Streams
 
             // create blob.
             var blob = new Blob();
+            blob.raw_size = blockHeaderData.Length;
             if (_compress)
             {
                 using (var target = new MemoryStream())

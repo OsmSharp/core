@@ -36,6 +36,8 @@ namespace OsmSharp.Test.IO.Xml.API
     [TestFixture]
     public class OsmTests
     {
+        private static readonly CultureInfo DefaultCultureInfo = new CultureInfo("en-US");
+
         /// <summary>
         /// Tests serialization.
         /// </summary>
@@ -197,10 +199,10 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.IsNull(osm.Api);
 
             Assert.IsNotNull(osm.Bounds);
-            Assert.AreEqual(float.Parse("38.9070200"), osm.Bounds.MinLatitude);
-            Assert.AreEqual(float.Parse("-77.0371900"), osm.Bounds.MinLongitude);
-            Assert.AreEqual(float.Parse("38.9077300"), osm.Bounds.MaxLatitude);
-            Assert.AreEqual(float.Parse("-77.0360000"), osm.Bounds.MaxLongitude);
+            Assert.AreEqual(float.Parse("38.9070200", DefaultCultureInfo), osm.Bounds.MinLatitude);
+            Assert.AreEqual(float.Parse("-77.0371900", DefaultCultureInfo), osm.Bounds.MinLongitude);
+            Assert.AreEqual(float.Parse("38.9077300", DefaultCultureInfo), osm.Bounds.MaxLatitude);
+            Assert.AreEqual(float.Parse("-77.0360000", DefaultCultureInfo), osm.Bounds.MaxLongitude);
 
             Assert.IsNotNull(osm.Nodes);
             Assert.AreEqual(2, osm.Nodes.Length);

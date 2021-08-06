@@ -60,7 +60,7 @@ namespace OsmSharp.IO.PBF
 
         private readonly PrimitiveBlock _block = new PrimitiveBlock();
         private readonly BlobHeader _header = new BlobHeader();
-        
+
         /// <summary>
         /// Moves to the next primitive block, returns null at the end.
         /// </summary>
@@ -78,7 +78,7 @@ namespace OsmSharp.IO.PBF
             { // continue if there is still data but not a primitiveblock.
                 notFoundBut = false; // not found.
                 if (!Serializer.TryReadLengthPrefix(_stream, PrefixStyle.Fixed32BigEndian, out var length)) continue;
-                
+
                 // TODO: remove some of the v1 specific code.
                 // TODO: this means also to use the built-in capped streams.
 
@@ -89,13 +89,13 @@ namespace OsmSharp.IO.PBF
                 // actually need the other way around (network byte order):
                 // length = IntLittleEndianToBigEndian((uint)length);
 
-                
+
                 // again, v2 has capped-streams built in, but I'm deliberately
                 // limiting myself to v1 features
                 BlobHeader header;
                 using (var tmp = new LimitedStream(_stream, length))
                 {
-                    header = _runtimeTypeModel.Deserialize(tmp, _header, _blockHeaderType) as BlobHeader;
+                    header = _runtimeTypeModel.Deserialize<BlobHeader>(tmp, _header, _blockHeaderType);
                 }
                 Blob blob;
                 using (var tmp = new LimitedStream(_stream, header.datasize))
@@ -126,7 +126,7 @@ namespace OsmSharp.IO.PBF
 
                     if (header.type == Encoder.OSMData)
                     {
-                        block = _runtimeTypeModel.Deserialize(sourceStream, _block, _primitiveBlockType) as PrimitiveBlock;
+                        block = _runtimeTypeModel.Deserialize<PrimitiveBlock>(sourceStream, _block, _primitiveBlockType);
                     }
                 }
             }
@@ -196,7 +196,7 @@ namespace OsmSharp.IO.PBF
     }
     class ZLibStreamWrapper : InputStream
     {
-        private InflaterInputStream reader; 
+        private InflaterInputStream reader;
         public ZLibStreamWrapper(Stream stream)
         {
             reader = new InflaterInputStream(stream);

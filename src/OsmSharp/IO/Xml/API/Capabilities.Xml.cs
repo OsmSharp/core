@@ -238,7 +238,7 @@ namespace OsmSharp.API
     }
 
     /// <summary>
-    /// Represents the API-changesets capabilitiy.
+    /// Represents the API-changesets capability.
     /// </summary>
     [XmlRoot("changesets")]
     public partial class Changesets : IXmlSerializable

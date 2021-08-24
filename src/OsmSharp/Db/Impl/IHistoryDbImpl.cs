@@ -52,7 +52,7 @@ namespace OsmSharp.Db.Impl
         IEnumerable<OsmGeo> Get(IEnumerable<OsmGeoVersionKey> keys);
 
         /// <summary>
-        /// Gets allobjects with the given keys.
+        /// Gets all objects with the given keys.
         /// </summary>
         /// <returns>
         /// Objects sorted by type (node, way, relation) and then id and then version ascending.

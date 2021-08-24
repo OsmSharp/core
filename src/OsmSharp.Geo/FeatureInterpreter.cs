@@ -65,7 +65,7 @@ namespace OsmSharp.Geo
         public abstract bool IsPotentiallyArea(TagsCollectionBase tags);
 
         /// <summary>
-        /// Interprets an OSM-object and returns the correctponding geometry.
+        /// Interprets an OSM-object and returns the corresponding geometry.
         /// </summary>
         public virtual FeatureCollection Interpret(OsmGeo osmGeo, ISnapshotDb data)
         {

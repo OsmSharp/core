@@ -90,7 +90,7 @@ namespace OsmSharp.API
     public partial class Area
     {
         /// <summary>
-        /// Gets or sets the maxium.
+        /// Gets or sets the maximum.
         /// </summary>
         public double? Maximum { get; set; }
     }
@@ -101,7 +101,7 @@ namespace OsmSharp.API
     public partial class NoteArea
     {
         /// <summary>
-        /// Gets or sets the maxium.
+        /// Gets or sets the maximum.
         /// </summary>
         public double? Maximum { get; set; }
     }
@@ -129,7 +129,7 @@ namespace OsmSharp.API
     }
 
     /// <summary>
-    /// Represents the API-changesets capabilitiy.
+    /// Represents the API-changesets capability.
     /// </summary>
     public partial class Changesets
     {

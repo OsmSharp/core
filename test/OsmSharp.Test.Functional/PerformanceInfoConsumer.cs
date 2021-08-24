@@ -28,7 +28,7 @@ using System.Linq;
 namespace OsmSharp.Test.Functional
 {
     /// <summary>
-    /// A class that consumes perfomance information.
+    /// A class that consumes performance information.
     /// </summary>
     public class PerformanceInfoConsumer
     {
@@ -38,7 +38,7 @@ namespace OsmSharp.Test.Functional
         private long _memoryUsageLoggingDuration = 0; // Holds the time spent on logging memory usage.
 
         /// <summary>
-        /// Creates the a new performance info consumer.
+        /// Creates a new performance info consumer.
         /// </summary>
         public PerformanceInfoConsumer(string name)
         {
@@ -46,7 +46,7 @@ namespace OsmSharp.Test.Functional
         }
 
         /// <summary>
-        /// Creates the a new performance info consumer.
+        /// Creates a new performance info consumer.
         /// </summary>
         public PerformanceInfoConsumer(string name, int memUseLoggingInterval)
         {

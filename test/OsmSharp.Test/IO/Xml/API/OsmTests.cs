@@ -376,7 +376,7 @@ namespace OsmSharp.Test.IO.Xml.API
         }
 
         /// <summary>
-        /// Test deserialization of XML that contains perferences.
+        /// Test deserialization of XML that contains preferences.
         /// </summary>
         [Test]
         public void TestDeserializePreferences()

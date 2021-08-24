@@ -126,8 +126,8 @@ namespace OsmSharp.Streams.Filters
         }
 
         private OsmGeo _current;
-        private bool? _source1Status = null; // false when finished, true when there is data, null when unintialized.
-        private bool? _source2Status = null; // false when finished, true when there is data, null when unintialized.
+        private bool? _source1Status = null; // false when finished, true when there is data, null when uninitialized.
+        private bool? _source2Status = null; // false when finished, true when there is data, null when uninitialized.
         private readonly ConflictResolutionType _resolutionType;
 
         /// <summary>

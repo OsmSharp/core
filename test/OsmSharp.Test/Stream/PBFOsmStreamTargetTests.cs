@@ -58,7 +58,7 @@ namespace OsmSharp.Test.Stream
                 sourceNode
             };
 
-            // build pfb stream target.
+            // build PBF stream target.
             using (var stream = new MemoryStream())
             {
                 var target = new PBFOsmStreamTarget(stream);
@@ -100,7 +100,7 @@ namespace OsmSharp.Test.Stream
                 sourceNode
             };
 
-            // build pfb stream target.
+            // build PBF stream target.
             using (var stream = new MemoryStream())
             {
                 var target = new PBFOsmStreamTarget(stream);
@@ -150,7 +150,7 @@ namespace OsmSharp.Test.Stream
                 sourceNode
             };
 
-            // build pfb stream target.
+            // build PBF stream target.
             using (var stream = new MemoryStream())
             {
                 var target = new PBFOsmStreamTarget(stream);
@@ -194,7 +194,7 @@ namespace OsmSharp.Test.Stream
                 sourceWay
             };
 
-            // build pfb stream target.
+            // build PBF stream target.
             using (var stream = new MemoryStream())
             {
                 var target = new PBFOsmStreamTarget(stream);
@@ -232,7 +232,7 @@ namespace OsmSharp.Test.Stream
                 sourceWay
             };
 
-            // build pfb stream target.
+            // build PBF stream target.
             using (var stream = new MemoryStream())
             {
                 var target = new PBFOsmStreamTarget(stream);
@@ -278,7 +278,7 @@ namespace OsmSharp.Test.Stream
                 sourceWay
             };
 
-            // build pfb stream target.
+            // build PBF stream target.
             using (var stream = new MemoryStream())
             {
                 var target = new PBFOsmStreamTarget(stream);
@@ -337,7 +337,7 @@ namespace OsmSharp.Test.Stream
                 sourceRelation
             };
 
-            // build pfb stream target.
+            // build PBF stream target.
             using (var stream = new MemoryStream())
             {
                 var target = new PBFOsmStreamTarget(stream);
@@ -393,7 +393,7 @@ namespace OsmSharp.Test.Stream
                 sourceRelation
             };
 
-            // build pfb stream target.
+            // build PBF stream target.
             using (var stream = new MemoryStream())
             {
                 var target = new PBFOsmStreamTarget(stream);
@@ -457,7 +457,7 @@ namespace OsmSharp.Test.Stream
                 sourceRelation
             };
 
-            // build pfb stream target.
+            // build PBF stream target.
             using (var stream = new MemoryStream())
             {
                 var target = new PBFOsmStreamTarget(stream);
@@ -559,7 +559,7 @@ namespace OsmSharp.Test.Stream
                 sourceRelation
             };
 
-            // build pfb stream target.
+            // build PBF stream target.
             using (var stream = new MemoryStream())
             {
                 var target = new PBFOsmStreamTarget(stream);

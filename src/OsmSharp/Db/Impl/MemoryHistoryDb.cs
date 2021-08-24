@@ -190,7 +190,7 @@ namespace OsmSharp.Db.Impl
         }
 
         /// <summary>
-        /// Gets all visbible objects within the given bounding box.
+        /// Gets all visible objects within the given bounding box.
         /// </summary>
         public IEnumerable<OsmGeo> Get(double minLatitude, double minLongitude, double maxLatitude, double maxLongitude)
         {
@@ -406,7 +406,7 @@ namespace OsmSharp.Db.Impl
                         return x.Id == id;
                     }).OrderBy(x => -x.Version).FirstOrDefault();
             }
-            throw new Exception(string.Format("Uknown OsmGeoType: {0}.",
+            throw new Exception(string.Format("Unknown OsmGeoType: {0}.",
                 type.ToInvariantString()));
         }
 
@@ -441,7 +441,7 @@ namespace OsmSharp.Db.Impl
                     }
                     return relation;
             }
-            throw new Exception(string.Format("Uknown OsmGeoType: {0}.",
+            throw new Exception(string.Format("Unknown OsmGeoType: {0}.",
                 type.ToInvariantString()));
         }
         

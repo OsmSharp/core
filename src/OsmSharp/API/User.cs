@@ -80,7 +80,7 @@ namespace OsmSharp.API
         public int TraceCount { get; set; }
 
         /// <summary>
-        /// Gets or sets the blocks recieved.
+        /// Gets or sets the blocks received.
         /// </summary>
         public Block[] BlocksReceived { get; set; }
 

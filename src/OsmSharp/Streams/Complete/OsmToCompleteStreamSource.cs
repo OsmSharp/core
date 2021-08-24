@@ -84,7 +84,7 @@ namespace OsmSharp.Streams.Complete
 
             if (!_simpleSource.CanReset)
             { // the simple source cannot be reset, each object can be a child, no other option than caching everything!
-                // TODO: support this scenario, can be usefull when streaming data from a non-seekable stream.
+                // TODO: support this scenario, can be useful when streaming data from a non-seekable stream.
                 throw new NotSupportedException("Creating a complete stream from a non-resettable simple stream is not supported. Wrap the source stream and create a resettable stream.");
             }
             else
@@ -149,7 +149,7 @@ namespace OsmSharp.Streams.Complete
                         }
                         break;
                     case OsmGeoType.Relation:
-                        // create complate relation.
+                        // create complete relation.
                         _current = (currentSimple as Relation).CreateComplete(_dataCache);
 
                         if (!_relationsToInclude.Contains(currentSimple.Id.Value))

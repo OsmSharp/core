@@ -126,9 +126,9 @@ namespace OsmSharp.Geo
                     {
                         if (isArea)
                         { // area tags leads to simple polygon
-                            var lineairRing = new Feature(new LinearRing(coordinates.
+                            var linearRing = new Feature(new LinearRing(coordinates.
                                 ToArray<Coordinate>()), TagsAndIdToAttributes(osmObject));
-                            collection.Add(lineairRing);
+                            collection.Add(linearRing);
                         }
                         else
                         { // no area tag leads to just a line.
@@ -339,7 +339,7 @@ namespace OsmSharp.Geo
                     if (multiPolygon == null &&
                         inners.Count == 0 &&
                         unused)
-                    { // there is just one lineair ring.
+                    { // there is just one linear ring.
                         geometry = outer;
                         break;
                     }
@@ -424,7 +424,7 @@ namespace OsmSharp.Geo
         }
 
         /// <summary>
-        /// Creates a new lineair ring from the given way and updates the assigned flags array.
+        /// Creates a new linear ring from the given way and updates the assigned flags array.
         /// </summary>
         private bool AssignRing(List<KeyValuePair<bool, CompleteWay>> ways, int way, bool[] assignedFlags, out LinearRing ring)
         {

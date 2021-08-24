@@ -42,7 +42,7 @@ namespace OsmSharp.Streams
         }
 
         /// <summary>
-        /// Registers a source but keeps only the objects that satify a given condition.
+        /// Registers a source but keeps only the objects that satisfy a given condition.
         /// </summary>
         public static void RegisterSource(this IOsmStreamTarget target, IEnumerable<OsmGeo> source, Func<OsmGeo, bool> keep)
         {

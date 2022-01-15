@@ -129,8 +129,8 @@ namespace OsmSharp.Streams
         #region PBF Blocks Reader
         
         private PBFReader _reader;
-        private long? _firstWayPosition = null;
-        private long? _firstRelationPosition = null;
+        private long _firstWayPosition = -1;
+        private long _firstRelationPosition = -1;
 
         /// <summary>
         /// Initializes the PBF reader.
@@ -152,26 +152,26 @@ namespace OsmSharp.Streams
             if (next.Value == null)
             { // decode another block.
                 // move to first way/relation position if they are known and nodes and or ways are to be skipped.
-                if (_firstWayPosition != null && ignoreNodes && !ignoreWays)
+                if (_firstWayPosition > 0 && ignoreNodes && !ignoreWays)
                 { // if nodes have to be ignored, there was already a first pass and ways are not to be ignored jump to the first way.
                     if (_stream.Position <= _firstWayPosition)
                     { // only just to the first way if that hasn't happened yet.
-                        _stream.Seek(_firstWayPosition.Value, SeekOrigin.Begin);
+                        _stream.Seek(_firstWayPosition, SeekOrigin.Begin);
                     }
                 }
 
-                if (_firstRelationPosition != null && ignoreNodes && ignoreWays && !ignoreRelations)
+                if (_firstRelationPosition > 0 && ignoreNodes && ignoreWays && !ignoreRelations)
                 {
                     // if nodes and ways have to be ignored, there was already a first pass and ways are not be ignored jump to the first relation.
                     if (_stream.Position < _firstRelationPosition)
                     {
                         // only just to the first relation if that hasn't happened yet.
-                        _stream.Seek(_firstRelationPosition.Value, SeekOrigin.Begin);
+                        _stream.Seek(_firstRelationPosition, SeekOrigin.Begin);
                     }
                 }
 
                 // just to the next block.
-                long? beforeBlockPosition = null;
+                long beforeBlockPosition = -1;
                 if (_stream.CanSeek) beforeBlockPosition = _stream.Position;
                 var block = _reader.MoveNext();
                 bool hasWays = false, hasRelations = false;

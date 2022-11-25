@@ -12,8 +12,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        submodules: 'true'
-    - name: Setup .NET Core 5.
+        submodules: 'true'   
+    - name: Setup .NET Core 3.1
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    - name: Setup .NET 6.
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x

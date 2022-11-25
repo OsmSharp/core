@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.Db;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -41,16 +41,16 @@ namespace OsmSharp.Changesets
             // - null: DELETE
             // - true: CREATE
             // - false: MODIFY.
-            
+
             // - deletes overrules everything, any create or modify is ignored.
             // - we keep the object with the highest version #.
-            
+
             var mutations = new Dictionary<OsmGeoKey, (OsmGeo osmGeo, bool create, bool delete)>();
 
             foreach (var change in changes)
             {
                 if (change.Delete == null) continue;
-                
+
                 foreach (var del in change.Delete)
                 {
                     mutations[new OsmGeoKey(del)] = (del, false, true);
@@ -60,8 +60,8 @@ namespace OsmSharp.Changesets
             foreach (var change in changes)
             {
                 if (change.Create == null) continue;
-                
-                foreach(var create in change.Create)
+
+                foreach (var create in change.Create)
                 {
                     var key = new OsmGeoKey(create);
                     if (mutations.TryGetValue(key, out var _))
@@ -78,7 +78,7 @@ namespace OsmSharp.Changesets
             foreach (var change in changes)
             {
                 if (change.Modify == null) continue;
-                
+
                 foreach (var mod in change.Modify)
                 {
                     var key = new OsmGeoKey(mod);
@@ -118,9 +118,12 @@ namespace OsmSharp.Changesets
 
             return new OsmChange()
             {
-                Create = mutations.Values.Where(x => x.create == true && x.delete == false).Select(x => x.osmGeo).ToArray(),
-                Delete = mutations.Values.Where(x => x.create == false && x.delete == true).Select(x => x.osmGeo).ToArray(),
-                Modify = mutations.Values.Where(x => x.create == false && x.delete == false).Select(x => x.osmGeo).ToArray(),
+                Create = mutations.Values.Where(x => x.create == true && x.delete == false).Select(x => x.osmGeo)
+                    .ToArray(),
+                Delete = mutations.Values.Where(x => x.create == false && x.delete == true).Select(x => x.osmGeo)
+                    .ToArray(),
+                Modify = mutations.Values.Where(x => x.create == false && x.delete == false).Select(x => x.osmGeo)
+                    .ToArray(),
                 Generator = "OsmSharp",
                 Version = 6
             };
@@ -129,7 +132,8 @@ namespace OsmSharp.Changesets
         /// <summary>
         /// Returns true if the given key is in the dictionary.
         /// </summary>
-        private static bool ContainsPreviousVersion(this Dictionary<OsmGeoVersionKey, OsmGeo> data, OsmGeoVersionKey key)
+        private static bool ContainsPreviousVersion(this Dictionary<OsmGeoVersionKey, OsmGeo> data,
+            OsmGeoVersionKey key)
         {
             OsmGeo result;
             return data.TryGetPreviousVersion(key, out result);
@@ -153,7 +157,96 @@ namespace OsmSharp.Changesets
                     return false;
                 }
             }
+
             return true;
+        }
+
+        /// <summary>
+        /// True if change set is empty.
+        /// </summary>
+        /// <param name="change"></param>
+        /// <returns></returns>
+        public static bool IsEmpty(this OsmChange change)
+        {
+            return (change.Create == null || change.Create.Length == 0) &&
+                   (change.Modify == null || change.Modify.Length == 0) &&
+                   (change.Delete == null || change.Delete.Length == 0);
+        }
+
+        /// <summary>
+        /// Generates a diff representing the changes between to two streams. Assumes the streams are sorted.
+        /// </summary>
+        /// <param name="source">The source stream..</param>
+        /// <param name="target">The target stream.</param>
+        /// <returns>A change object.</returns>
+        /// <exception cref="Exception"></exception>
+        public static OsmChange Diff(this IEnumerable<OsmGeo> source, IEnumerable<OsmGeo> target)
+        {
+            var delete = new List<OsmGeo>();
+            var modify = new List<OsmGeo>();
+            var create = new List<OsmGeo>();
+
+            using var sourceEnumerator = source.GetEnumerator();
+            var sourceHasNext = sourceEnumerator.MoveNext();
+            using var targetEnumerator = target.GetEnumerator();
+            var targetHasNext = targetEnumerator.MoveNext();
+
+            while (sourceHasNext || targetHasNext)
+            {
+                // ReSharper disable once ConvertIfStatementToSwitchStatement
+                if (sourceHasNext && targetHasNext)
+                {
+                    var sourceCurrent = sourceEnumerator.Current;
+                    var targetCurrent = targetEnumerator.Current;
+                    switch (sourceCurrent.CompareByIdAndType(targetCurrent))
+                    {
+                        case 0:
+                            if (sourceCurrent.Version < targetCurrent.Version)
+                            {
+                                modify.Add(targetCurrent);
+                                targetHasNext = targetEnumerator.MoveNext();
+                            }
+                            else if (sourceCurrent.Version > targetCurrent.Version)
+                            {
+                                throw new Exception("Source has newer data");
+                            }
+                            else
+                            {
+                                sourceHasNext = sourceEnumerator.MoveNext();
+                                targetHasNext = targetEnumerator.MoveNext();
+                            }
+
+                            break;
+                        case < 0:
+                            delete.Add(sourceCurrent);
+                            sourceHasNext = sourceEnumerator.MoveNext();
+                            break;
+                        case > 0:
+                            create.Add(targetCurrent);
+                            targetHasNext = targetEnumerator.MoveNext();
+                            break;
+                    }
+                }
+                else if (sourceHasNext)
+                {
+                    delete.Add(sourceEnumerator.Current);
+                    sourceHasNext = sourceEnumerator.MoveNext();
+                }
+                else
+                {
+                    create.Add(targetEnumerator.Current);
+                    targetHasNext = targetEnumerator.MoveNext();
+                }
+            }
+
+            return new OsmChange()
+            {
+                Generator = "OsmSharp",
+                Version = 6,
+                Create = create.ToArray(),
+                Delete = delete.ToArray(),
+                Modify = modify.ToArray()
+            };
         }
     }
 }

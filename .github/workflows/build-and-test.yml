@@ -13,14 +13,10 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: 'true'
-    - name: Setup .NET Core 3.1
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.301
     - name: Setup .NET Core 5.
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.101
+        dotnet-version: 6.0.x
     - name: Restore packages.
       run: dotnet restore
     - name: Build all projects.

@@ -1,0 +1,60 @@
+name: Prerelease
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  build-and-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'true'   
+    - name: Setup .NET Core 3.1
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    - name: Setup .NET 6.
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore packages.
+      run: dotnet restore
+    - name: Build all projects.
+      run: dotnet build --configuration Release --no-restore
+    - name: Unittests.
+      run: dotnet test
+      working-directory: ./test/OsmSharp.Test/
+    - name: Functional tests.
+      run: dotnet run -c release
+      working-directory: ./test/OsmSharp.Test.Functional/
+    - name: Sample.CompleteStream
+      run: dotnet run -c release
+      working-directory: ./samples/Sample.CompleteStream/
+    - name: Sample.Filter
+      run: dotnet run -c release
+      working-directory: ./samples/Sample.Filter/
+    - name: Sample.GeoFilter
+      run: dotnet run -c release
+      working-directory: ./samples/Sample.GeoFilter/
+    - name: Sample.GeometryStream
+      run: dotnet run -c release
+      working-directory: ./samples/Sample.GeometryStream/
+    - name: Sample.GeometryStream.Shape
+      run: dotnet run -c release
+      working-directory: ./samples/Sample.GeometryStream.Shape/
+    - name: Nuget Pack
+      run: dotnet pack -c release
+      working-directory: ./src/OsmSharp/
+    - name: Nuget Pack
+      run: dotnet pack -c release
+      working-directory: ./src/OsmSharp.Geo/
+    - name: Nuget push Github Packages
+      run: dotnet nuget push **/*.nupkg --skip-duplicate -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/osmsharp/index.json
+      working-directory: ./src/
+    - name: Nuget push Nuget.org
+      run: dotnet nuget push **/*.nupkg --skip-duplicate -k ${{ secrets.NUGET_TOKEN }} -s https://api.nuget.org/v3/index.json
+      working-directory: ./src/

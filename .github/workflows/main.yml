@@ -1,8 +1,8 @@
-name: .NET Core
+name: Prerelease
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ main ]
 
 jobs:
   build-and-test:

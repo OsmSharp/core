@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>Sample.GeometryStream.Shape</AssemblyName>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
@@ -9,6 +9,6 @@
     <ProjectReference Include="..\..\src\OsmSharp.Geo\OsmSharp.Geo.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetTopologySuite.IO.ShapeFile" Version="2.0.0" />
+    <PackageReference Include="NetTopologySuite.IO.ShapeFile" Version="2.1.0" />
   </ItemGroup>
 </Project>

@@ -3,14 +3,14 @@
   
   <!--- Package information, Version -->
   <PropertyGroup>
-    <PackageVersion>7.0.0-pre019</PackageVersion>
+    <PackageVersion>7.0.0-pre020</PackageVersion>
     <LangVersion>latest</LangVersion>
     <Company>Itinero BV</Company>
     <Authors>OsmSharp Contributors</Authors>
     <Copyright>Itinero BV</Copyright>
-    <PackageProjectUrl>http://www.osmsharp.com/</PackageProjectUrl>
+    <PackageProjectUrl>https://www.osmsharp.com/</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/OsmSharp/core/develop/LICENSE.md</PackageLicenseUrl>
-    <PackageIconUrl>http://www.osmsharp.com/logos/osmsharp_logo64.png</PackageIconUrl>
+    <PackageIconUrl>https://www.osmsharp.com/logos/osmsharp_logo64.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/osmsharp/core</RepositoryUrl>
   </PropertyGroup>
 </Project>

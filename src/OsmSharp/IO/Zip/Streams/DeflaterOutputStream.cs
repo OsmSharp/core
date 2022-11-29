@@ -30,6 +30,11 @@ namespace OsmSharp.IO.Zip.Streams
     /// </summary>
     public class DeflaterOutputStream : Stream
     {
+        /// <summary>
+        /// The default buffer size value in bytes.
+        /// </summary>
+        public const int DefaultBufferSize = 512;
+
         #region Constructors
         /// <summary>
         /// Creates a new DeflaterOutputStream with a default Deflater and default buffer size.
@@ -38,7 +43,7 @@ namespace OsmSharp.IO.Zip.Streams
         /// the output stream where deflated output should be written.
         /// </param>
         public DeflaterOutputStream(Stream baseOutputStream)
-            : this(baseOutputStream, new Deflater(), 512)
+            : this(baseOutputStream, new Deflater(), DefaultBufferSize)
         {
         }
 
@@ -53,7 +58,7 @@ namespace OsmSharp.IO.Zip.Streams
         /// the underlying deflater.
         /// </param>
         public DeflaterOutputStream(Stream baseOutputStream, Deflater deflater)
-            : this(baseOutputStream, deflater, 512)
+            : this(baseOutputStream, deflater, DefaultBufferSize)
         {
         }
 
@@ -96,7 +101,7 @@ namespace OsmSharp.IO.Zip.Streams
                 throw new ArgumentNullException(nameof(deflater));
             }
 
-            if (bufferSize < 512)
+            if (bufferSize < DefaultBufferSize)
             {
                 throw new ArgumentOutOfRangeException(nameof(bufferSize));
             }

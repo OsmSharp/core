@@ -311,13 +311,13 @@ namespace OsmSharp.IO.PBF
 
             if (groupDense.denseinfo != null)
             {
-                groupDense.denseinfo.changeset.Add(current.ChangeSetId.Value - previous.ChangeSetId.Value);
+                groupDense.denseinfo.changeset.Add((current.ChangeSetId ?? 0) - previous.ChangeSetId.Value);
                 var currentTimeStamp = Encoder.EncodeTimestamp(current.TimeStamp.Value, block.date_granularity);
                 var previousTimeStamp = previous.TimeStamp == null
                     ? 0
                     : Encoder.EncodeTimestamp(previous.TimeStamp.Value, block.date_granularity);
                 groupDense.denseinfo.timestamp.Add(currentTimeStamp - previousTimeStamp);
-                groupDense.denseinfo.uid.Add((int)(current.UserId.Value - previous.UserId.Value));
+                groupDense.denseinfo.uid.Add((int)((current.UserId ?? 0) - previous.UserId.Value));
                 groupDense.denseinfo.version.Add((int)(current.Version.Value - previous.Version.Value));
                 var previousUserNameId = previous.UserName == null
                     ? 0

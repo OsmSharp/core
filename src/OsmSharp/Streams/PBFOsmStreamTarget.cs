@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 using OsmSharp.IO.PBF;
+using OsmSharp.IO.Zip;
 using OsmSharp.IO.Zip.Streams;
 using ProtoBuf.Meta;
 using System;
@@ -41,11 +42,22 @@ namespace OsmSharp.Streams
         private readonly Type _primitiveBlockType = typeof(PrimitiveBlock);
         private readonly Type _headerBlockType = typeof(HeaderBlock);
         private readonly bool _compress;
+        private readonly int _level;
+        private readonly int _bufferSize;
 
         /// <summary>
         /// Creates a new PBF stream target.
         /// </summary>
-        public PBFOsmStreamTarget(Stream stream, bool compress = true)
+        /// <param name="stream">The output stream.</param>
+        /// <param name="compress">if set to <c>true</c> use compression.</param>
+        /// <param name="compressionLevel">The compression level, a value between <see cref="Deflater.NO_COMPRESSION" />
+        /// and <see cref="Deflater.BEST_COMPRESSION" />, or <see cref="Deflater.DEFAULT_COMPRESSION" />.</param>
+        /// <param name="bufferSize">The buffer size in bytes to use when deflating (minimum value <see cref="DeflaterOutputStream.DefaultBufferSize"/>).</param>
+        public PBFOsmStreamTarget(
+            Stream stream, 
+            bool compress = true, 
+            int? compressionLevel = Deflater.DEFAULT_COMPRESSION, 
+            int? bufferSize = DeflaterOutputStream.DefaultBufferSize)
         {
             _stream = stream;
 
@@ -58,7 +70,10 @@ namespace OsmSharp.Streams
             _runtimeTypeModel.Add(_blobType, true);
             _runtimeTypeModel.Add(_primitiveBlockType, true);
             _runtimeTypeModel.Add(_headerBlockType, true);
+
             _compress = compress;
+            _level = compressionLevel ?? Deflater.DEFAULT_COMPRESSION;
+            _bufferSize = bufferSize ?? DeflaterOutputStream.DefaultBufferSize;
         }
 
         private List<OsmGeo> _currentEntities;
@@ -85,6 +100,7 @@ namespace OsmSharp.Streams
 
             // create blob.
             var blob = new Blob();
+            blob.raw_size = blockHeaderData.Length;
             if (_compress)
             {
                 using (var target = new MemoryStream())
@@ -143,7 +159,7 @@ namespace OsmSharp.Streams
                 using (var target = new MemoryStream())
                 {
                     using (var source = new MemoryStream(blockBytes))
-                    using (var deflate = new DeflaterOutputStream(target))
+                    using (var deflate = new DeflaterOutputStream(target, new Deflater(_level), _bufferSize))
                     {
                         source.CopyTo(deflate);
                     }

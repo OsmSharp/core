@@ -28,7 +28,7 @@ using OsmSharp.IO.Json.Converters;
 namespace OsmSharp
 {
     /// <summary>
-    /// Primive used as a base class for any osm object that has a meaning on the map (Nodes, Ways and Relations).
+    /// Primitive used as a base class for any osm object that has a meaning on the map (Nodes, Ways and Relations).
     /// </summary>
     [JsonConverter(typeof(OsmGeoJsonConverter))]
     public abstract class OsmGeo : IComparable<OsmGeo>

@@ -31,7 +31,7 @@ namespace OsmSharp.Geo.Streams
     public interface IFeatureStreamTarget
     {
         /// <summary>
-        /// Intializes this target.
+        /// Initializes this target.
         /// </summary>
         /// <rremarks>Has to be called before starting to add objects.</rremarks>
         void Initialize();

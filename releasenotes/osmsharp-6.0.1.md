@@ -8,7 +8,7 @@ New features:
 - Changed lat/lon to doubles instead of floats.
 - Writing compressed PBF.
 - Added other concepts apart from Nodes, Ways and Relations like Users to be better able to handle interactions with the OSM-API.
-- OsmSharp now includes .NET standard support, we now support `netstandard1.3` and `netstandard2.0`. We removed the PCL profiles because it was only there for Xamarin but that is now convered by .NET standard.
+- OsmSharp now includes .NET standard support, we now support `netstandard1.3` and `netstandard2.0`. We removed the PCL profiles because it was only there for Xamarin but that is now covered by .NET standard.
 - OsmSharp.Geo for now only supports .NET Framework 4.5 and up. Support for .NET standard is coming as soon as [NTS](https://github.com/NetTopologySuite/NetTopologySuite) releases a stable with support.
 - Support for extra root attributes in OSM-XML.
 - Better support for changesets:

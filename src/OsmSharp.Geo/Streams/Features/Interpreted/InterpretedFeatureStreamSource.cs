@@ -107,7 +107,7 @@ namespace OsmSharp.Geo.Streams.Features.Interpreted
         }
 
         /// <summary>
-        /// Diposes of all native resource associated with this stream.
+        /// Disposes of all native resource associated with this stream.
         /// </summary>
         public void Dispose()
         {
@@ -115,7 +115,7 @@ namespace OsmSharp.Geo.Streams.Features.Interpreted
         }
 
         /// <summary>
-        /// Returns a bounding box if avaible.
+        /// Returns a bounding box if available.
         /// </summary>
         /// <returns></returns>
         public Envelope GetBounds()

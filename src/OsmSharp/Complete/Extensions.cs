@@ -237,7 +237,7 @@ namespace OsmSharp.Complete
             return withChildren.DistinctByGeoKey().ToArray();
         }
 
-        // Recursive, safe against circular references, may return duplciate nodes.
+        // Recursive, safe against circular references, may return duplicate nodes.
         private static IEnumerable<OsmGeo> ToSimpleWithChildrenCircularSafe(
             this CompleteRelation complete, HashSet<OsmGeoKey> seenGeoKeys)
         {

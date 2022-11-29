@@ -32,7 +32,7 @@ namespace OsmSharp.Test.Changesets
     public class OsmChangeExtensionsTests
     {
         /// <summary>
-        /// Tests squasing a single changeset.
+        /// Tests squashing a single changeset.
         /// </summary>
         [Test]
         public void TestSquashOneSet()

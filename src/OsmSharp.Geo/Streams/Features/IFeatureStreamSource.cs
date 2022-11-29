@@ -32,7 +32,7 @@ namespace OsmSharp.Geo.Streams
     public interface IFeatureStreamSource : IEnumerator<IFeature>, IEnumerable<IFeature>
     {
         /// <summary>
-        /// Intializes this source.
+        /// Initializes this source.
         /// </summary>
         /// <rremarks>Has to be called before starting read objects.</rremarks>
         void Initialize();

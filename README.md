@@ -1,6 +1,6 @@
 # OsmSharp
 
-[![Build status](http://build.itinero.tech:8080/app/rest/builds/buildType:(id:OsmSharp_CoreDevelop)/statusIcon)](https://build.itinero.tech/viewType.html?buildTypeId=OsmSharp_CoreDevelop)[![Visit our website](https://img.shields.io/badge/website-osmsharp.com-020031.svg) ](http://www.osmsharp.com/)[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/OsmSharp/core/blob/develop/LICENSE.md)  
+[![Prerelease](https://github.com/OsmSharp/core/actions/workflows/develop.yml/badge.svg)](https://github.com/OsmSharp/core/actions/workflows/develop.yml)[![Visit our website](https://img.shields.io/badge/website-osmsharp.com-020031.svg) ](http://www.osmsharp.com/)[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/OsmSharp/core/blob/develop/LICENSE.md)  
 
 - OsmSharp: [![NuGet Badge](https://buildstats.info/nuget/OsmSharp)](https://www.nuget.org/packages/OsmSharp/) [![NuGet Badge](https://buildstats.info/nuget/OsmSharp?includePreReleases=true)](https://www.nuget.org/packages/OsmSharp)  
 - OsmSharp.Geo: [![NuGet Badge](https://buildstats.info/nuget/OsmSharp.Geo)](https://www.nuget.org/packages/OsmSharp.Geo) [![NuGet Badge](https://buildstats.info/nuget/OsmSharp.Geo?includePreReleases=true)](https://www.nuget.org/packages/OsmSharp.Geo)  

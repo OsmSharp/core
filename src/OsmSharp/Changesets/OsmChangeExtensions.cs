@@ -204,17 +204,15 @@ namespace OsmSharp.Changesets
                             if (sourceCurrent.Version < targetCurrent.Version)
                             {
                                 modify.Add(targetCurrent);
-                                targetHasNext = targetEnumerator.MoveNext();
                             }
                             else if (sourceCurrent.Version > targetCurrent.Version)
                             {
                                 throw new Exception("Source has newer data");
                             }
-                            else
-                            {
-                                sourceHasNext = sourceEnumerator.MoveNext();
-                                targetHasNext = targetEnumerator.MoveNext();
-                            }
+
+                            sourceHasNext = sourceEnumerator.MoveNext();
+                            targetHasNext = targetEnumerator.MoveNext();
+
 
                             break;
                         case < 0:

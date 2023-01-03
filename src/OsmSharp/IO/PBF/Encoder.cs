@@ -318,7 +318,7 @@ namespace OsmSharp.IO.PBF
                     : Encoder.EncodeTimestamp(previous.TimeStamp.Value, block.date_granularity);
                 groupDense.denseinfo.timestamp.Add(currentTimeStamp - previousTimeStamp);
                 groupDense.denseinfo.uid.Add((int)((current.UserId ?? 0) - previous.UserId.Value));
-                groupDense.denseinfo.version.Add((int)(current.Version.Value - previous.Version.Value));
+                groupDense.denseinfo.version.Add((int)current.Version.Value);
                 var previousUserNameId = previous.UserName == null
                     ? 0
                     : Encoder.EncodeString(block, reverseStringTable, previous.UserName);

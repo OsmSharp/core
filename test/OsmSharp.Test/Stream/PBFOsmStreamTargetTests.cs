@@ -176,6 +176,52 @@ namespace OsmSharp.Test.Stream
                 Assert.AreEqual(sourceNode.Latitude.Value, resultNode.Latitude.Value, .0001f);
                 Assert.AreEqual(sourceNode.Longitude.Value, resultNode.Longitude.Value, .0001f);
             }
+
+            sourceObjects = new OsmGeo[] {
+                new Node()
+                {
+                    Id = 1,
+                    Latitude = 1f,
+                    Longitude = 1f,
+                    ChangeSetId = 1092,
+                    TimeStamp = DateTime.UnixEpoch,
+                    UserId = 9034,
+                    Version = 12
+                },
+                new Node()
+                {
+                    Id = 2,
+                    Latitude = 2f,
+                    Longitude = 2f,
+                    ChangeSetId = 1093,
+                    TimeStamp = DateTime.Now,
+                    UserId = 9035,
+                    Version = 13
+                },
+                new Node()
+                {
+                    Id = 3,
+                    Latitude = 3f,
+                    Longitude = 3f,
+                    ChangeSetId = 1094,
+                    TimeStamp = DateTime.UtcNow,
+                    UserId = 9036,
+                    Version = 14
+                }
+            };
+
+            // build PBF stream target.
+            using (var stream = new MemoryStream())
+            {
+                var target = new PBFOsmStreamTarget(stream);
+                target.RegisterSource(sourceObjects);
+                target.Pull();
+
+                stream.Seek(0, SeekOrigin.Begin);
+                var resultObjects = new List<OsmGeo>(new PBFOsmStreamSource(stream));
+
+                AreEqual(sourceObjects, resultObjects);
+            }
         }
 
         /// <summary>
@@ -636,5 +682,62 @@ namespace OsmSharp.Test.Stream
                 Assert.AreEqual(1715, new PBFOsmStreamSource(memoryStream).Count(n => n is Node));
             }
         }
+
+
+        /// <summary>
+        /// Test helper to test if 2 OsmGeo arrays are equal.
+        /// </summary>
+        private static void AreEqual(IEnumerable<OsmGeo> sourceObjects, IEnumerable<OsmGeo> resultObjects)
+        {
+            Assert.IsNotNull(resultObjects);
+            var sourceArray = sourceObjects.ToArray();
+            var resultArray = resultObjects.ToArray();
+            Assert.AreEqual(sourceArray.Length, resultArray.Length);
+            for (int i = 0; i < sourceArray.Length; i++)
+            {
+                AreEqual(sourceArray[i], resultArray[i]);
+            }
+        }
+
+        /// <summary>
+        /// Test helper to test if 2 OsmGeos are equal.
+        /// </summary>
+        private static void AreEqual(OsmGeo sourceObject, OsmGeo resultObject)
+        {
+            Assert.AreEqual(sourceObject.Id, resultObject.Id);
+            Assert.AreEqual(sourceObject.ChangeSetId, resultObject.ChangeSetId);
+            Assert.AreEqual(sourceObject.TimeStamp.Value.Ticks, resultObject.TimeStamp.Value.Ticks, 10000000);
+            Assert.AreEqual(sourceObject.UserId, resultObject.UserId);
+            Assert.AreEqual(sourceObject.UserName, resultObject.UserName);
+            Assert.AreEqual(sourceObject.Version, resultObject.Version);
+            Assert.AreEqual(sourceObject.Tags?.Count ?? 0, resultObject.Tags?.Count ?? 0);
+            foreach (var sourceTag in sourceObject.Tags ?? new TagsCollection())
+            {
+                Assert.IsTrue(resultObject.Tags.Contains(sourceTag));
+            }
+            switch (sourceObject)
+            {
+                case Node sourceNode:
+                    var resultNode = (Node)resultObject;
+                    Assert.AreEqual(sourceNode.Latitude.Value, resultNode.Latitude.Value, .0001f);
+                    Assert.AreEqual(sourceNode.Longitude.Value, resultNode.Longitude.Value, .0001f);
+                    break;
+                case Way sourceWay:
+                    var resultWay = (Way)resultObject;
+                    Assert.IsTrue(sourceWay.Nodes.SequenceEqual(resultWay.Nodes));
+                    break;
+                case Relation sourceRelation:
+                    var resultRelation = (Relation)resultObject;
+                    Assert.AreEqual(sourceRelation.Members.Length, resultRelation.Members.Length);
+                    for (int i = 0; i < sourceRelation.Members.Length; i++)
+                    {
+                        Assert.AreEqual(sourceRelation.Members[i].Type, resultRelation.Members[i].Type);
+                        Assert.AreEqual(sourceRelation.Members[i].Id, resultRelation.Members[i].Id);
+                        Assert.AreEqual(sourceRelation.Members[i].Role, resultRelation.Members[i].Role);
+                    }
+                    break;
+            }
+        }
+
     }
 }

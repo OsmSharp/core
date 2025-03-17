@@ -9,6 +9,6 @@
     <ProjectReference Include="..\..\src\OsmSharp.Geo\OsmSharp.Geo.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetTopologySuite.IO.ShapeFile" Version="2.1.0" />
+    <PackageReference Include="NetTopologySuite.IO.Esri.Shapefile" Version="1.2.0" />
   </ItemGroup>
 </Project>

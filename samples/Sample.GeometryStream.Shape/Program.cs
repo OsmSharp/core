@@ -23,6 +23,7 @@
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
+using NetTopologySuite.IO.Esri;
 using OsmSharp;
 using OsmSharp.Geo;
 using OsmSharp.Streams;
@@ -79,12 +80,7 @@ namespace Sample.GeometryStream.Shape
             }
 
             // convert to shape.
-            var header = ShapefileDataWriter.GetHeader(featureCollection.First(), featureCollection.Count);
-            var shapeWriter = new ShapefileDataWriter("luxembourg.shp", new GeometryFactory())
-            {
-                Header = header
-            };
-            shapeWriter.Write(featureCollection);
+            Shapefile.WriteAllFeatures(featureCollection.Take(1), "luxembourg.shp");
         }
     }
 }

@@ -186,7 +186,7 @@ namespace OsmSharp.Test.Complete
             }
 
             var others = osmGeos.Except(ways).Except(nodes).ToArray();
-            CollectionAssert.IsEmpty(others);
+            NUnit.Framework.Legacy.CollectionAssert.IsEmpty(others);
         }
     }
 }

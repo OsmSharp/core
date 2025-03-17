@@ -204,7 +204,7 @@ namespace OsmSharp.Test.Complete
             Assert.That(resultWay.Id, Is.EqualTo(expectedWay.Id));
             Assert.That(resultWay.Version, Is.EqualTo(expectedWay.Version));
             Assert.That(resultWay.Nodes, Is.Not.Null);
-            CollectionAssert.AreEqual(expectedWay.Nodes.Select(n => n.Id), resultWay.Nodes);
+            NUnit.Framework.Legacy.CollectionAssert.AreEqual(expectedWay.Nodes.Select(n => n.Id), resultWay.Nodes);
 
             var relations = osmGeos.OfType<Relation>().Where(r => !r.Members.Any(m => m.Type == OsmGeoType.Relation)).ToArray();
             Assert.That(relations.Length, Is.EqualTo(1));
@@ -235,7 +235,7 @@ namespace OsmSharp.Test.Complete
             }
 
             var others = osmGeos.Except(nodes).Except(ways).Except(relations).Except(superRelations).ToArray();
-            CollectionAssert.IsEmpty(others);
+            NUnit.Framework.Legacy.CollectionAssert.IsEmpty(others);
         }
     }
 }

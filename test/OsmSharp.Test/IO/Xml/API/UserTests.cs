@@ -99,7 +99,7 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.That(osm.User.AccountCreated, Is.EqualTo(new DateTime(2000, 1, 1, 0, 0, 0)));
             Assert.That(osm.User.Description, Is.EqualTo("Hello"));
             Assert.That(osm.User.ContributorTermsAgreed, Is.True);
-            Assert.IsFalse(osm.User.ContributorTermsPublicDomain);
+            Assert.That(osm.User.ContributorTermsPublicDomain, Is.False);
             Assert.That(osm.User.Image, Is.EqualTo("Image"));
             Assert.That(osm.User.ChangeSetCount, Is.EqualTo(1));
             Assert.That(osm.User.TraceCount, Is.EqualTo(2));

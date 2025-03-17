@@ -81,7 +81,7 @@ namespace OsmSharp.Test.Geo
             Assert.That(features, Is.Not.Null);
             Assert.That(features.Count, Is.EqualTo(1));
             var feature = features[0];
-            Assert.IsInstanceOf<LinearRing>(feature.Geometry);
+            Assert.That(feature.Geometry, Is.InstanceOf<LinearRing>());
             Assert.That(feature.Attributes.Contains("area", "yes"), Is.True);
         }
 
@@ -129,7 +129,7 @@ namespace OsmSharp.Test.Geo
             Assert.That(features, Is.Not.Null);
             Assert.That(features.Count, Is.EqualTo(1));
             var feature = features[0];
-            Assert.IsInstanceOf<LinearRing>(feature.Geometry);
+            Assert.That(feature.Geometry, Is.InstanceOf<LinearRing>());
             Assert.That(feature.Attributes.Contains("natural", "water"), Is.True);
         }
 
@@ -191,7 +191,7 @@ namespace OsmSharp.Test.Geo
             Assert.That(features, Is.Not.Null);
             Assert.That(features.Count, Is.EqualTo(1));
             var feature = features[0];
-            Assert.IsInstanceOf<LinearRing>(feature.Geometry);
+            Assert.That(feature.Geometry, Is.InstanceOf<LinearRing>());
             Assert.That(feature.Attributes.Contains("type", "multipolygon"), Is.True);
         }
 
@@ -296,7 +296,7 @@ namespace OsmSharp.Test.Geo
             Assert.That(features, Is.Not.Null);
             Assert.That(features.Count, Is.EqualTo(1));
             var feature = features[0];
-            Assert.IsInstanceOf<Polygon>(feature.Geometry);
+            Assert.That(feature.Geometry, Is.InstanceOf<Polygon>());
             var polygon = feature.Geometry as Polygon;
             Assert.That(polygon.Holes, Is.Not.Null);
             Assert.That(polygon.Holes.Count(), Is.EqualTo(1));
@@ -442,7 +442,7 @@ namespace OsmSharp.Test.Geo
             Assert.That(features, Is.Not.Null);
             Assert.That(features.Count, Is.EqualTo(1));
             var feature = features[0];
-            Assert.IsInstanceOf<Polygon>(feature.Geometry);
+            Assert.That(feature.Geometry, Is.InstanceOf<Polygon>());
             Polygon polygon = feature.Geometry as Polygon;
             Assert.That(polygon.Holes, Is.Not.Null);
             Assert.That(polygon.Holes.Count(), Is.EqualTo(2));
@@ -564,7 +564,7 @@ namespace OsmSharp.Test.Geo
             Assert.That(features, Is.Not.Null);
             Assert.That(features.Count, Is.EqualTo(1));
             var feature = features[0];
-            Assert.IsInstanceOf<Polygon>(feature.Geometry);
+            Assert.That(feature.Geometry, Is.InstanceOf<Polygon>());
             Polygon polygon = feature.Geometry as Polygon;
             Assert.That(polygon.Holes, Is.Not.Null);
             Assert.That(polygon.Holes.Count(), Is.EqualTo(1));

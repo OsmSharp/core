@@ -71,7 +71,7 @@ namespace OsmSharp.Test.Complete
 
             var osmGeo = completeWay.ToSimple();
             Assert.That(osmGeo, Is.Not.Null);
-            Assert.IsInstanceOf<Way>(osmGeo);
+            Assert.That(osmGeo, Is.InstanceOf<Way>());
 
             var way = osmGeo as Way;
             Assert.That(way.Id, Is.EqualTo(completeWay.Id));

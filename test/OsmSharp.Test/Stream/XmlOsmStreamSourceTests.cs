@@ -52,7 +52,7 @@ namespace OsmSharp.Test.Stream
             // check results.
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Count, Is.EqualTo(1));
-            Assert.IsInstanceOf<Node>(result[0]);
+            Assert.That(result[0], Is.InstanceOf<Node>());
             var node = result[0] as Node;
             Assert.That(node.Id, Is.EqualTo(471625991));
             Assert.That(node.Latitude, Is.EqualTo(51.2704712));
@@ -87,7 +87,7 @@ namespace OsmSharp.Test.Stream
             // check results.
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Count, Is.EqualTo(1));
-            Assert.IsInstanceOf<Way>(result[0]);
+            Assert.That(result[0], Is.InstanceOf<Way>());
             var way = result[0] as Way;
             Assert.That(way.Id, Is.EqualTo(88310427));
             Assert.That(way.UserName, Is.EqualTo("Ben Abelshausen"));
@@ -125,7 +125,7 @@ namespace OsmSharp.Test.Stream
             // check results.
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Count, Is.EqualTo(1));
-            Assert.IsInstanceOf<Relation>(result[0]);
+            Assert.That(result[0], Is.InstanceOf<Relation>());
             var relation = result[0] as Relation;
             Assert.That(relation.Id, Is.EqualTo(214314));
             Assert.That(relation.UserName, Is.EqualTo("marc12"));

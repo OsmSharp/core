@@ -83,7 +83,7 @@ namespace OsmSharp.Test.Complete
 
             var osmGeo = completeRelation.ToSimple();
             Assert.That(osmGeo, Is.Not.Null);
-            Assert.IsInstanceOf<Relation>(osmGeo);
+            Assert.That(osmGeo, Is.InstanceOf<Relation>());
 
             var relation = osmGeo as Relation;
             Assert.That(relation.Id, Is.EqualTo(completeRelation.Id));

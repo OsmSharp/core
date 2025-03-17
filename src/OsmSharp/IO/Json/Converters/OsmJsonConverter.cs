@@ -9,7 +9,7 @@ namespace OsmSharp.IO.Json.Converters
     public class OsmJsonConverter : JsonConverter<Osm>
     {
         private readonly OsmGeoJsonConverter _osmGeoJsonConverter = new OsmGeoJsonConverter();
-        
+
         public override Osm Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType != JsonTokenType.StartObject)
@@ -21,7 +21,7 @@ namespace OsmSharp.IO.Json.Converters
             List<Node> nodes = null;
             List<Way> ways = null;
             List<Relation> relations = null;
-            
+
             while (reader.Read())
             {
                 if (reader.TokenType == JsonTokenType.EndObject)
@@ -41,11 +41,11 @@ namespace OsmSharp.IO.Json.Converters
                     switch (propertyName)
                     {
                         case "version":
-                            osm.Version = reader.GetDouble();
+                            osm.Version = System.Version.Parse(Math.Round(reader.GetDouble(), 1).ToInvariantString());
                             break;
                         case "generator":
                             osm.Generator = reader.GetString();
-                            break; 
+                            break;
                         case "elements":
                             reader.Read();
                             while (reader.TokenType != JsonTokenType.EndArray)
@@ -82,16 +82,19 @@ namespace OsmSharp.IO.Json.Converters
         public override void Write(Utf8JsonWriter writer, Osm value, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
-            
-            if (value.Version.HasValue) writer.WriteNumber("version", value.Version.Value);
+
+            if (value.Version != null) {
+                writer.WritePropertyName("version");
+                writer.WriteRawValue(value.Version.ToString());
+            };
             if (value.Generator != null) writer.WriteString("generator", value.Generator);
 
             if (value.Nodes != null || value.Ways != null || value.Relations != null)
             {
                 writer.WritePropertyName("elements");
-                
+
                 writer.WriteStartArray();
-                
+
                 if (value.Nodes != null)
                 {
                     foreach (var n in value.Nodes)
@@ -99,7 +102,7 @@ namespace OsmSharp.IO.Json.Converters
                         _osmGeoJsonConverter.Write(writer, n, options);
                     }
                 }
-                
+
                 if (value.Ways != null)
                 {
                     foreach (var w in value.Ways)
@@ -107,7 +110,7 @@ namespace OsmSharp.IO.Json.Converters
                         _osmGeoJsonConverter.Write(writer, w, options);
                     }
                 }
-                
+
                 if (value.Relations != null)
                 {
                     foreach (var r in value.Relations)
@@ -115,10 +118,10 @@ namespace OsmSharp.IO.Json.Converters
                         _osmGeoJsonConverter.Write(writer, r, options);
                     }
                 }
-                
+
                 writer.WriteEndArray();
             }
-            
+
             writer.WriteEndObject();
         }
     }

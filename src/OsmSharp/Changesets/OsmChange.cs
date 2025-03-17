@@ -50,7 +50,7 @@ namespace OsmSharp.Changesets
         /// <summary>
         /// Gets or sets the version.
         /// </summary>
-        public double? Version { get; set; }
+        public System.Version Version { get; set; }
 
         /// <summary>
         /// Gets or sets the create change array.

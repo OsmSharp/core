@@ -138,7 +138,7 @@ namespace OsmSharp.Test.IO.Xml.API
             var serializer = new XmlSerializer(typeof(Osm));
             var osm = serializer.Deserialize(new StringReader(xml)) as Osm;
             Assert.That(osm, Is.Not.Null);
-            Assert.That(osm.Version, Is.EqualTo(.6));
+            Assert.That(osm.Version, Is.EqualTo(System.Version.Parse("0.6")));
             Assert.That(osm.Generator, Is.EqualTo("Overpass API 0.7.55.7 8b86ff77"));
 
             Assert.That(osm.Ways, Is.Null);
@@ -189,7 +189,7 @@ namespace OsmSharp.Test.IO.Xml.API
             var serializer = new XmlSerializer(typeof(Osm));
             var osm = serializer.Deserialize(new StringReader(xml)) as Osm;
             Assert.That(osm, Is.Not.Null);
-            Assert.That(osm.Version, Is.EqualTo(.6));
+            Assert.That(osm.Version, Is.EqualTo(System.Version.Parse("0.6")));
             Assert.That(osm.Generator, Is.EqualTo("CGImap 0.7.5 (5035 errol.openstreetmap.org)"));
 
             Assert.That(osm.Relations, Is.Null);
@@ -282,7 +282,7 @@ namespace OsmSharp.Test.IO.Xml.API
             var serializer = new XmlSerializer(typeof(Osm));
             var osm = serializer.Deserialize(new StringReader(xml)) as Osm;
             Assert.That(osm, Is.Not.Null);
-            Assert.That(osm.Version, Is.EqualTo(.6));
+            Assert.That(osm.Version, Is.EqualTo(System.Version.Parse("0.6")));
             Assert.That(osm.Generator, Is.EqualTo("OpenStreetMap server"));
 
             Assert.That(osm.Relations, Is.Null);

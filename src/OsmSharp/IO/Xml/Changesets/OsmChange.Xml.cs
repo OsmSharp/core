@@ -44,8 +44,10 @@ namespace OsmSharp.Changesets
         {
             reader.MoveToContent();
 
+            var version = reader.GetAttribute("version");
+            if (!string.IsNullOrWhiteSpace(version))
+                this.Version = System.Version.Parse(version);
             this.Generator = reader.GetAttribute("generator");
-            this.Version = reader.GetAttributeDouble("version");
             this.Copyright = reader.GetAttribute("copyright");
             this.Attribution = reader.GetAttribute("attribution");
             this.License = reader.GetAttribute("license");
@@ -58,11 +60,11 @@ namespace OsmSharp.Changesets
                 new Tuple<string, Action>(
                     "create", () =>
                     {
-						if (reader.IsEmptyElement)
-						{
-							reader.Read();
-							return;
-						}
+                        if (reader.IsEmptyElement)
+                        {
+                            reader.Read();
+                            return;
+                        }
                         reader.Read();
                         while ((reader.Name == "node" ||
                              reader.Name == "way" ||
@@ -81,11 +83,11 @@ namespace OsmSharp.Changesets
                 new Tuple<string, Action>(
                     "modify", () =>
                     {
-						if (reader.IsEmptyElement)
-						{
-							reader.Read();
-							return;
-						}
+                        if (reader.IsEmptyElement)
+                        {
+                            reader.Read();
+                            return;
+                        }
                         reader.Read();
                         while ((reader.Name == "node" ||
                              reader.Name == "way" ||
@@ -104,11 +106,11 @@ namespace OsmSharp.Changesets
                 new Tuple<string, Action>(
                     "delete", () =>
                     {
-						if (reader.IsEmptyElement)
-						{
-							reader.Read();
-							return;
-						}
+                        if (reader.IsEmptyElement)
+                        {
+                            reader.Read();
+                            return;
+                        }
                         reader.Read();
                         while ((reader.Name == "node" ||
                              reader.Name == "way" ||
@@ -152,7 +154,7 @@ namespace OsmSharp.Changesets
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
             writer.WriteAttribute("generator", this.Generator);
-            writer.WriteAttribute("version", this.Version);
+            writer.WriteAttribute("version", this.Version.ToInvariantString());
             writer.WriteAttribute("copyright", this.Copyright);
             writer.WriteAttribute("attribution", this.Attribution);
             writer.WriteAttribute("license", this.License);

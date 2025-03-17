@@ -64,7 +64,7 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
 
             // doing the squashing, nothing should happen.
@@ -81,7 +81,7 @@ namespace OsmSharp.Test.Changesets
             Assert.That(squashed.Modify[0].Type, Is.EqualTo(OsmGeoType.Relation));
 
             Assert.That(squashed.Generator, Is.EqualTo("OsmSharp"));
-            Assert.That(squashed.Version, Is.EqualTo(6));
+            Assert.That(squashed.Version, Is.EqualTo(System.Version.Parse("0.6")));
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
             var changeset2 = new OsmChange()
             {
@@ -114,7 +114,7 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
 
             // doing the squashing, should modify the creation.
@@ -131,7 +131,7 @@ namespace OsmSharp.Test.Changesets
             Assert.That(squashed.Modify.Length, Is.EqualTo(0));
 
             Assert.That(squashed.Generator, Is.EqualTo("OsmSharp"));
-            Assert.That(squashed.Version, Is.EqualTo(6));
+            Assert.That(squashed.Version, Is.EqualTo(System.Version.Parse("0.6")));
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
             var changeset2 = new OsmChange()
             {
@@ -164,7 +164,7 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
 
             // doing the squashing, should undo the creation.
@@ -178,7 +178,7 @@ namespace OsmSharp.Test.Changesets
             Assert.That(squashed.Modify.Length, Is.EqualTo(0));
 
             Assert.That(squashed.Generator, Is.EqualTo("OsmSharp"));
-            Assert.That(squashed.Version, Is.EqualTo(6));
+            Assert.That(squashed.Version, Is.EqualTo(System.Version.Parse("0.6")));
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
             var changeset2 = new OsmChange()
             {
@@ -211,7 +211,7 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
             var changeset3 = new OsmChange()
             {
@@ -224,7 +224,7 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
 
             // doing the squashing, should undo the creation that was modified.
@@ -238,7 +238,7 @@ namespace OsmSharp.Test.Changesets
             Assert.That(squashed.Modify.Length, Is.EqualTo(0));
 
             Assert.That(squashed.Generator, Is.EqualTo("OsmSharp"));
-            Assert.That(squashed.Version, Is.EqualTo(6));
+            Assert.That(squashed.Version, Is.EqualTo(System.Version.Parse("0.6")));
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
 
             // doing the squashing, should modify the creation.
@@ -280,7 +280,7 @@ namespace OsmSharp.Test.Changesets
             Assert.That(squashed.Create.Length, Is.EqualTo(0));
 
             Assert.That(squashed.Generator, Is.EqualTo("OsmSharp"));
-            Assert.That(squashed.Version, Is.EqualTo(6));
+            Assert.That(squashed.Version, Is.EqualTo(System.Version.Parse("0.6")));
         }
     }
 }

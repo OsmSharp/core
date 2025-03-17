@@ -42,7 +42,7 @@ namespace OsmSharp.Test.IO.Xml.API
         {
             var osm = new Osm
             {
-                Version = 0.6,
+                Version = System.Version.Parse("0.6"),
                 Generator = "OpenStreetMap server",
                 GpxFiles = new [] {new GpxFile
                     {

@@ -42,7 +42,7 @@ namespace OsmSharp.Test.IO.Xml.Changesets
         {
             var osmChange = new OsmChange()
             {
-                Version = 0.6,
+                Version = System.Version.Parse("0.6"),
                 Generator = "OsmSharp",
                 Create = new OsmGeo[]
                 {
@@ -109,7 +109,7 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             Assert.That(osmChange.Create.Length, Is.EqualTo(0));
             Assert.That(osmChange.Delete.Length, Is.EqualTo(0));
             Assert.That(osmChange.Modify.Length, Is.EqualTo(0));
-            Assert.That(osmChange.Version, Is.EqualTo(0.6));
+            Assert.That(osmChange.Version, Is.EqualTo(System.Version.Parse("0.6")));
             Assert.That(osmChange.Generator, Is.Null);
             Assert.That(osmChange.Copyright, Is.Null);
             Assert.That(osmChange.Attribution, Is.Null);
@@ -126,7 +126,7 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             Assert.That(osmChange.Create.Length, Is.EqualTo(0));
             Assert.That(osmChange.Delete.Length, Is.EqualTo(0));
             Assert.That(osmChange.Modify.Length, Is.EqualTo(0));
-            Assert.That(osmChange.Version, Is.EqualTo(0.6));
+            Assert.That(osmChange.Version, Is.EqualTo(System.Version.Parse("0.6")));
             Assert.That(osmChange.Generator, Is.EqualTo("OsmSharp"));
             Assert.That(osmChange.Copyright, Is.EqualTo("OpenStreetMap and contributors"));
             Assert.That(osmChange.Attribution, Is.EqualTo("http://www.openstreetmap.org/copyright"));
@@ -169,7 +169,7 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             Assert.That(osmChange.Delete[2].Id, Is.EqualTo(300));
             Assert.That(osmChange.Delete[2].Type, Is.EqualTo(OsmGeoType.Relation));
 
-            Assert.That(osmChange.Version, Is.EqualTo(0.6));
+            Assert.That(osmChange.Version, Is.EqualTo(System.Version.Parse("0.6")));
             Assert.That(osmChange.Generator, Is.EqualTo("OsmSharp"));
 
         }
@@ -189,7 +189,7 @@ namespace OsmSharp.Test.IO.Xml.Changesets
 			Assert.That(osmChange.Modify[0].Id, Is.EqualTo(1014872736));
 			Assert.That(osmChange.Modify[0].Type, Is.EqualTo(OsmGeoType.Node));
 			Assert.That(osmChange.Delete.Length, Is.EqualTo(0));
-			Assert.That(osmChange.Version, Is.EqualTo(0.6));
+			Assert.That(osmChange.Version, Is.EqualTo(System.Version.Parse("0.6")));
 			Assert.That(osmChange.Generator, Is.EqualTo("iD"));
         }
 

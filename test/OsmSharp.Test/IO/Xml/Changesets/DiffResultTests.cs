@@ -42,7 +42,7 @@ namespace OsmSharp.Test.IO.Xml.Changesets
         {
             var diffResult = new DiffResult()
             {
-                Version = 0.6,
+                Version = System.Version.Parse("0.6"),
                 Generator = "OsmSharp",
                 Results = new OsmGeoResult[]
                 {
@@ -77,14 +77,14 @@ namespace OsmSharp.Test.IO.Xml.Changesets
                 new StringReader("<diffResult version=\"0.6\"></diffResult>")) as DiffResult;
             Assert.That(diffResult, Is.Not.Null);
             Assert.That(diffResult.Results, Is.Null);
-            Assert.That(diffResult.Version, Is.EqualTo(0.6));
+            Assert.That(diffResult.Version, Is.EqualTo(System.Version.Parse("0.6")));
             Assert.That(diffResult.Generator, Is.Null);
 
             diffResult = serializer.Deserialize(
                 new StringReader("<diffResult generator=\"OsmSharp\" version=\"0.6\"></diffResult>")) as DiffResult;
             Assert.That(diffResult, Is.Not.Null);
             Assert.That(diffResult.Results, Is.Null);
-            Assert.That(diffResult.Version, Is.EqualTo(0.6));
+            Assert.That(diffResult.Version, Is.EqualTo(System.Version.Parse("0.6")));
             Assert.That(diffResult.Generator, Is.EqualTo("OsmSharp"));
 
             diffResult = serializer.Deserialize(
@@ -93,7 +93,7 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             Assert.That(diffResult.Results.Length, Is.EqualTo(2));
             Assert.That(diffResult.Results[0].OldId, Is.EqualTo(1));
             Assert.That(diffResult.Results[1].OldId, Is.EqualTo(3));
-            Assert.That(diffResult.Version, Is.EqualTo(0.6));
+            Assert.That(diffResult.Version, Is.EqualTo(System.Version.Parse("0.6")));
             Assert.That(diffResult.Generator, Is.EqualTo("OsmSharp"));
         }
     }

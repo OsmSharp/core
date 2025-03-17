@@ -157,9 +157,9 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.That(node.Longitude, Is.EqualTo(-70.111));
             Assert.That(node.Tags, Is.Not.Null);
             Assert.That(node.Tags.Count, Is.EqualTo(2));
-            Assert.True(node.Tags.ContainsKey("addr:housenumber"));
+            Assert.That(node.Tags.ContainsKey("addr:housenumber"), Is.True);
             Assert.That(node.Tags["addr:housenumber"], Is.EqualTo("11"));
-            Assert.True(node.Tags.ContainsKey("addr:street"));
+            Assert.That(node.Tags.ContainsKey("addr:street"), Is.True);
             Assert.That(node.Tags["addr:street"], Is.EqualTo("Main Street"));
         }
 
@@ -244,9 +244,9 @@ namespace OsmSharp.Test.IO.Xml.API
             Assert.That(way.Nodes[1], Is.EqualTo(4294969575));
             Assert.That(way.Tags, Is.Not.Null);
             Assert.That(way.Tags.Count, Is.EqualTo(2));
-            Assert.True(way.Tags.ContainsKey("highway"));
+            Assert.That(way.Tags.ContainsKey("highway"), Is.True);
             Assert.That(way.Tags["highway"], Is.EqualTo("residential"));
-            Assert.True(way.Tags.ContainsKey("maxspeed:practical"));
+            Assert.That(way.Tags.ContainsKey("maxspeed:practical"), Is.True);
             Assert.That(way.Tags["maxspeed:practical"], Is.EqualTo("12.910093541777924"));
         }
 

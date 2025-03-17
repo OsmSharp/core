@@ -9,122 +9,122 @@ namespace OsmSharp.Test.Db
         [Test]
         public void OsmGeoKey_CompareTo_TypeNode_ShouldCompareId()
         {
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 1).CompareTo(new OsmGeoKey(OsmGeoType.Node, 2)) < 0);
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 2).CompareTo(new OsmGeoKey(OsmGeoType.Node, 1)) > 0);
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 1).CompareTo(new OsmGeoKey(OsmGeoType.Node, 1)) == 0);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1).CompareTo(new OsmGeoKey(OsmGeoType.Node, 2)) < 0, Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 2).CompareTo(new OsmGeoKey(OsmGeoType.Node, 1)) > 0, Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1).CompareTo(new OsmGeoKey(OsmGeoType.Node, 1)) == 0, Is.True);
         }
         
         [Test]
         public void OsmGeoKey_CompareTo_TypeWay_ShouldCompareId()
         {
-            Assert.True(new OsmGeoKey(OsmGeoType.Way, 1).CompareTo(new OsmGeoKey(OsmGeoType.Way, 2)) < 0);
-            Assert.True(new OsmGeoKey(OsmGeoType.Way, 2).CompareTo(new OsmGeoKey(OsmGeoType.Way, 1)) > 0);
-            Assert.True(new OsmGeoKey(OsmGeoType.Way, 1).CompareTo(new OsmGeoKey(OsmGeoType.Way, 1)) == 0);
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 1).CompareTo(new OsmGeoKey(OsmGeoType.Way, 2)) < 0, Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 2).CompareTo(new OsmGeoKey(OsmGeoType.Way, 1)) > 0, Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 1).CompareTo(new OsmGeoKey(OsmGeoType.Way, 1)) == 0, Is.True);
         }
             
         [Test]
         public void OsmGeoKey_CompareTo_TypeRelation_ShouldCompareId()
         {
-            Assert.True(new OsmGeoKey(OsmGeoType.Relation, 1).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 2)) < 0);
-            Assert.True(new OsmGeoKey(OsmGeoType.Relation, 2).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 1)) > 0);
-            Assert.True(new OsmGeoKey(OsmGeoType.Relation, 1).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 1)) == 0);
+            Assert.That(new OsmGeoKey(OsmGeoType.Relation, 1).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 2)) < 0, Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Relation, 2).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 1)) > 0, Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Relation, 1).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 1)) == 0, Is.True);
         }
 
         [Test]
         public void OsmGeoKey_CompareTo_TypeNode_ShouldSmallerThanWay()
         {
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 1).CompareTo(new OsmGeoKey(OsmGeoType.Way, 2)) < 0);
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 2).CompareTo(new OsmGeoKey(OsmGeoType.Way, 1)) < 0);
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 1).CompareTo(new OsmGeoKey(OsmGeoType.Way, 1)) < 0);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1).CompareTo(new OsmGeoKey(OsmGeoType.Way, 2)) < 0, Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 2).CompareTo(new OsmGeoKey(OsmGeoType.Way, 1)) < 0, Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1).CompareTo(new OsmGeoKey(OsmGeoType.Way, 1)) < 0, Is.True);
         }
 
         [Test]
         public void OsmGeoKey_CompareTo_TypeNode_ShouldSmallerThanRelation()
         {
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 1).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 2)) < 0);
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 2).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 1)) < 0);
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 1).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 1)) < 0);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 2)) < 0, Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 2).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 1)) < 0, Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 1)) < 0, Is.True);
         }
 
         [Test]
         public void OsmGeoKey_CompareTo_TypeWay_ShouldSmallerThanRelation()
         {
-            Assert.True(new OsmGeoKey(OsmGeoType.Way, 1).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 2)) < 0);
-            Assert.True(new OsmGeoKey(OsmGeoType.Way, 2).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 1)) < 0);
-            Assert.True(new OsmGeoKey(OsmGeoType.Way, 1).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 1)) < 0);
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 1).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 2)) < 0, Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 2).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 1)) < 0, Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 1).CompareTo(new OsmGeoKey(OsmGeoType.Relation, 1)) < 0, Is.True);
         }
         
         [Test]
         public void OsmGeoKey_CompareOperators_TypeNode_ShouldSmallerThanWay()
         {
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 1) < new OsmGeoKey(OsmGeoType.Way, 2));
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 2) < new OsmGeoKey(OsmGeoType.Way, 1));
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 1) < new OsmGeoKey(OsmGeoType.Way, 1));
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) < new OsmGeoKey(OsmGeoType.Way, 2), Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 2) < new OsmGeoKey(OsmGeoType.Way, 1), Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) < new OsmGeoKey(OsmGeoType.Way, 1), Is.True);
             
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 1) <= new OsmGeoKey(OsmGeoType.Way, 2));
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 2) <= new OsmGeoKey(OsmGeoType.Way, 1));
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 1) <= new OsmGeoKey(OsmGeoType.Way, 1));
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) <= new OsmGeoKey(OsmGeoType.Way, 2), Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 2) <= new OsmGeoKey(OsmGeoType.Way, 1), Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) <= new OsmGeoKey(OsmGeoType.Way, 1), Is.True);
             
-            Assert.False(new OsmGeoKey(OsmGeoType.Node, 1) > new OsmGeoKey(OsmGeoType.Way, 2));
-            Assert.False(new OsmGeoKey(OsmGeoType.Node, 2) > new OsmGeoKey(OsmGeoType.Way, 1));
-            Assert.False(new OsmGeoKey(OsmGeoType.Node, 1) > new OsmGeoKey(OsmGeoType.Way, 1));
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) > new OsmGeoKey(OsmGeoType.Way, 2), Is.False);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 2) > new OsmGeoKey(OsmGeoType.Way, 1), Is.False);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) > new OsmGeoKey(OsmGeoType.Way, 1), Is.False);
             
-            Assert.False(new OsmGeoKey(OsmGeoType.Node, 1) >= new OsmGeoKey(OsmGeoType.Way, 2));
-            Assert.False(new OsmGeoKey(OsmGeoType.Node, 2) >= new OsmGeoKey(OsmGeoType.Way, 1));
-            Assert.False(new OsmGeoKey(OsmGeoType.Node, 1) >= new OsmGeoKey(OsmGeoType.Way, 1));
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) >= new OsmGeoKey(OsmGeoType.Way, 2), Is.False);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 2) >= new OsmGeoKey(OsmGeoType.Way, 1), Is.False);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) >= new OsmGeoKey(OsmGeoType.Way, 1), Is.False);
         }
 
         [Test]
         public void OsmGeoKey_CompareOperators_TypeNode_ShouldSmallerThanRelation()
         {
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 1) < new OsmGeoKey(OsmGeoType.Relation, 2));
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 2) < new OsmGeoKey(OsmGeoType.Relation, 1));
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 1) < new OsmGeoKey(OsmGeoType.Relation, 1));
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) < new OsmGeoKey(OsmGeoType.Relation, 2), Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 2) < new OsmGeoKey(OsmGeoType.Relation, 1), Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) < new OsmGeoKey(OsmGeoType.Relation, 1), Is.True);
             
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 1) <= new OsmGeoKey(OsmGeoType.Relation, 2));
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 2) <= new OsmGeoKey(OsmGeoType.Relation, 1));
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 1) <= new OsmGeoKey(OsmGeoType.Relation, 1));
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) <= new OsmGeoKey(OsmGeoType.Relation, 2), Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 2) <= new OsmGeoKey(OsmGeoType.Relation, 1), Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) <= new OsmGeoKey(OsmGeoType.Relation, 1), Is.True);
             
-            Assert.False(new OsmGeoKey(OsmGeoType.Node, 1) > new OsmGeoKey(OsmGeoType.Relation, 2));
-            Assert.False(new OsmGeoKey(OsmGeoType.Node, 2) > new OsmGeoKey(OsmGeoType.Relation, 1));
-            Assert.False(new OsmGeoKey(OsmGeoType.Node, 1) > new OsmGeoKey(OsmGeoType.Relation, 1));
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) > new OsmGeoKey(OsmGeoType.Relation, 2), Is.False);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 2) > new OsmGeoKey(OsmGeoType.Relation, 1), Is.False);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) > new OsmGeoKey(OsmGeoType.Relation, 1), Is.False);
             
-            Assert.False(new OsmGeoKey(OsmGeoType.Node, 1) > new OsmGeoKey(OsmGeoType.Relation, 2));
-            Assert.False(new OsmGeoKey(OsmGeoType.Node, 2) > new OsmGeoKey(OsmGeoType.Relation, 1));
-            Assert.False(new OsmGeoKey(OsmGeoType.Node, 1) > new OsmGeoKey(OsmGeoType.Relation, 1));
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) > new OsmGeoKey(OsmGeoType.Relation, 2), Is.False);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 2) > new OsmGeoKey(OsmGeoType.Relation, 1), Is.False);
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) > new OsmGeoKey(OsmGeoType.Relation, 1), Is.False);
         }
 
         [Test]
         public void OsmGeoKey_CompareOperators_TypeWay_ShouldSmallerThanRelation()
         {
-            Assert.True(new OsmGeoKey(OsmGeoType.Way, 1) < new OsmGeoKey(OsmGeoType.Relation, 2));
-            Assert.True(new OsmGeoKey(OsmGeoType.Way, 2) < new OsmGeoKey(OsmGeoType.Relation, 1));
-            Assert.True(new OsmGeoKey(OsmGeoType.Way, 1) < new OsmGeoKey(OsmGeoType.Relation, 1));
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 1) < new OsmGeoKey(OsmGeoType.Relation, 2), Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 2) < new OsmGeoKey(OsmGeoType.Relation, 1), Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 1) < new OsmGeoKey(OsmGeoType.Relation, 1), Is.True);
             
-            Assert.True(new OsmGeoKey(OsmGeoType.Way, 1) <= new OsmGeoKey(OsmGeoType.Relation, 2));
-            Assert.True(new OsmGeoKey(OsmGeoType.Way, 2) <= new OsmGeoKey(OsmGeoType.Relation, 1));
-            Assert.True(new OsmGeoKey(OsmGeoType.Way, 1) <= new OsmGeoKey(OsmGeoType.Relation, 1));
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 1) <= new OsmGeoKey(OsmGeoType.Relation, 2), Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 2) <= new OsmGeoKey(OsmGeoType.Relation, 1), Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 1) <= new OsmGeoKey(OsmGeoType.Relation, 1), Is.True);
             
-            Assert.False(new OsmGeoKey(OsmGeoType.Way, 1) > new OsmGeoKey(OsmGeoType.Relation, 2));
-            Assert.False(new OsmGeoKey(OsmGeoType.Way, 2) > new OsmGeoKey(OsmGeoType.Relation, 1));
-            Assert.False(new OsmGeoKey(OsmGeoType.Way, 1) > new OsmGeoKey(OsmGeoType.Relation, 1));
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 1) > new OsmGeoKey(OsmGeoType.Relation, 2), Is.False);
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 2) > new OsmGeoKey(OsmGeoType.Relation, 1), Is.False);
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 1) > new OsmGeoKey(OsmGeoType.Relation, 1), Is.False);
             
-            Assert.False(new OsmGeoKey(OsmGeoType.Way, 1) >= new OsmGeoKey(OsmGeoType.Relation, 2));
-            Assert.False(new OsmGeoKey(OsmGeoType.Way, 2) >= new OsmGeoKey(OsmGeoType.Relation, 1));
-            Assert.False(new OsmGeoKey(OsmGeoType.Way, 1) >= new OsmGeoKey(OsmGeoType.Relation, 1));
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 1) >= new OsmGeoKey(OsmGeoType.Relation, 2), Is.False);
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 2) >= new OsmGeoKey(OsmGeoType.Relation, 1), Is.False);
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 1) >= new OsmGeoKey(OsmGeoType.Relation, 1), Is.False);
         }
 
         [Test]
         public void OsmGeoKey_CompareOperators_WhenEqual_ShouldSmallerThanOrEqual()
         {
             // ReSharper disable EqualExpressionComparison
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 1) <= new OsmGeoKey(OsmGeoType.Node, 1));
-            Assert.True(new OsmGeoKey(OsmGeoType.Way, 1) <= new OsmGeoKey(OsmGeoType.Way, 1));
-            Assert.True(new OsmGeoKey(OsmGeoType.Relation, 1) <= new OsmGeoKey(OsmGeoType.Relation, 1));
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) <= new OsmGeoKey(OsmGeoType.Node, 1), Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 1) <= new OsmGeoKey(OsmGeoType.Way, 1), Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Relation, 1) <= new OsmGeoKey(OsmGeoType.Relation, 1), Is.True);
             
-            Assert.True(new OsmGeoKey(OsmGeoType.Node, 1) >= new OsmGeoKey(OsmGeoType.Node, 1));
-            Assert.True(new OsmGeoKey(OsmGeoType.Way, 1) >= new OsmGeoKey(OsmGeoType.Way, 1));
-            Assert.True(new OsmGeoKey(OsmGeoType.Relation, 1) <= new OsmGeoKey(OsmGeoType.Relation, 1));
+            Assert.That(new OsmGeoKey(OsmGeoType.Node, 1) >= new OsmGeoKey(OsmGeoType.Node, 1), Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Way, 1) >= new OsmGeoKey(OsmGeoType.Way, 1), Is.True);
+            Assert.That(new OsmGeoKey(OsmGeoType.Relation, 1) <= new OsmGeoKey(OsmGeoType.Relation, 1), Is.True);
         }
     }
 }

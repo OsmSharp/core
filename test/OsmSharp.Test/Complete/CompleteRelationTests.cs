@@ -188,7 +188,7 @@ namespace OsmSharp.Test.Complete
             {
                 Assert.That(osmGeo.Tags, Is.Not.Null);
                 Assert.That(osmGeo.Tags.Count, Is.EqualTo(1));
-                Assert.True(osmGeo.Tags.ContainsKey("type"));
+                Assert.That(osmGeo.Tags.ContainsKey("type"), Is.True);
                 Assert.That(osmGeo.Tags["type"], Is.EqualTo(osmGeo.Type.ToString()));
             }
 

@@ -32,6 +32,8 @@ namespace OsmSharp.API
     [JsonConverter(typeof(OsmJsonConverter))]
     public partial class Osm
     {
+        public const int MAX_DECIMAL_PRECISION = 7;
+
         /// <summary>
         /// Gets or sets the generator.
         /// </summary>

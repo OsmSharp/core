@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using OsmSharp.API;
 using OsmSharp.Tags;
 
 namespace OsmSharp.IO.Json.Converters
@@ -170,8 +171,15 @@ namespace OsmSharp.IO.Json.Converters
             {
                 case Node n:
                     writer.WriteString("type", "node");
-                    if (n.Latitude.HasValue) writer.WriteNumber("lat", n.Latitude.Value);
-                    if (n.Longitude.HasValue) writer.WriteNumber("lon", n.Longitude.Value);
+                    if (n.Latitude.HasValue) {
+                        writer.WritePropertyName("lat");
+                        writer.WriteRawValue(Math.Round(n.Latitude.Value, Osm.MAX_DECIMAL_PRECISION).ToInvariantString());
+                    }
+                    if (n.Longitude.HasValue)
+                    {
+                        writer.WritePropertyName("lon");
+                        writer.WriteRawValue(Math.Round(n.Longitude.Value, Osm.MAX_DECIMAL_PRECISION).ToInvariantString());
+                    }
                     break;
                 case Way w:
                     writer.WriteString("type", "way");

@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using OsmSharp.API;
 using OsmSharp.IO.Xml;
 using OsmSharp.Tags;
 
@@ -100,10 +101,22 @@ namespace OsmSharp.Changesets
             writer.WriteAttribute("created_at", this.CreatedAt);
             writer.WriteAttribute("closed_at", this.ClosedAt);
             writer.WriteAttribute("open", this.Open);
-            writer.WriteAttribute("min_lon", this.MinLongitude);
-            writer.WriteAttribute("min_lat", this.MinLatitude);
-            writer.WriteAttribute("max_lon", this.MaxLongitude);
-            writer.WriteAttribute("max_lat", this.MaxLatitude);
+            if (this.MinLongitude.HasValue)
+            {
+                writer.WriteAttribute("min_lon", Math.Round(this.MinLongitude.Value, Osm.MAX_DECIMAL_PRECISION).ToInvariantString());
+            }
+            if (this.MinLatitude.HasValue)
+            {
+                writer.WriteAttribute("min_lat", Math.Round(this.MinLatitude.Value, Osm.MAX_DECIMAL_PRECISION).ToInvariantString());
+            }
+            if (this.MaxLongitude.HasValue)
+            {
+                writer.WriteAttribute("max_lon", Math.Round(this.MaxLongitude.Value, Osm.MAX_DECIMAL_PRECISION).ToInvariantString());
+            }
+            if (this.MaxLatitude.HasValue)
+            {
+                writer.WriteAttribute("max_lat", Math.Round(this.MaxLatitude.Value, Osm.MAX_DECIMAL_PRECISION).ToInvariantString());
+            }
             writer.WriteAttribute("comments_count", this.CommentsCount);
             writer.WriteAttribute("changes_count", this.ChangesCount);
 

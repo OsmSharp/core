@@ -57,7 +57,7 @@ namespace OsmSharp.Test.IO.Xml
                 UserName = "ben",
                 UserId = 1
             };
-            Assert.That(node.SerializeToXml(), Is.EqualTo("<node id=\"1\" lat=\"54.099998474121094\" lon=\"12.199999809265137\" user=\"ben\" uid=\"1\" version=\"1\" />"));
+            Assert.That(node.SerializeToXml(), Is.EqualTo("<node id=\"1\" lat=\"54.0999985\" lon=\"12.1999998\" user=\"ben\" uid=\"1\" version=\"1\" />"));
             node = new Node()
             {
                 Id = 1,
@@ -71,7 +71,7 @@ namespace OsmSharp.Test.IO.Xml
                     new Tag("amenity", "something"),
                     new Tag("key", "some_value"))
             };
-            Assert.That(node.SerializeToXml(), Is.EqualTo("<node id=\"1\" lat=\"54.099998474121094\" lon=\"12.199999809265137\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></node>"));
+            Assert.That(node.SerializeToXml(), Is.EqualTo("<node id=\"1\" lat=\"54.0999985\" lon=\"12.1999998\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></node>"));
         }
 
         /// <summary>

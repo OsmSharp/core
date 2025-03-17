@@ -1,19 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../../OsmSharp.Common.props" />
-  
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <AssemblyName>OsmSharp.Geo</AssemblyName>
-    <PackageId>OsmSharp.Geo</PackageId>
-    <Title>OsmSharp.Geo</Title>
-    <Description> OsmSharp.Geo enables using OSM-data in NTS.</Description>
-    <PackageTags>openstreetmap, osm, NTS</PackageTags>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OsmSharp\OsmSharp.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="NetTopologySuite" Version="2.5.0" />
-    <PackageReference Include="NetTopologySuite.Features" Version="2.1.0" />
-  </ItemGroup>
+	<Import Project="../../OsmSharp.Common.props" />
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<AssemblyName>OsmSharp.Geo</AssemblyName>
+		<PackageId>OsmSharp.Geo</PackageId>
+		<Title>OsmSharp.Geo</Title>
+		<Description> OsmSharp.Geo enables using OSM-data in NTS.</Description>
+		<PackageTags>openstreetmap, osm, NTS</PackageTags>
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\OsmSharp\OsmSharp.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="NetTopologySuite" Version="2.6.0" />
+		<PackageReference Include="NetTopologySuite.Features" Version="2.2.0" />
+	</ItemGroup>
 </Project>

@@ -18,8 +18,8 @@ namespace OsmSharp.Test.Geo
                 Version = 0,
             };
 
-            Assert.AreEqual(-1, n1.CompareTo(n2));
-            Assert.AreEqual(1, n2.CompareTo(n1));
+            Assert.That(n1.CompareTo(n2), Is.EqualTo(-1));
+            Assert.That(n2.CompareTo(n1), Is.EqualTo(1));
 
         }
         
@@ -36,8 +36,8 @@ namespace OsmSharp.Test.Geo
                 Version = 0,
             };
 
-            Assert.AreEqual(-1, n1.CompareTo(n2));
-            Assert.AreEqual(1, n2.CompareTo(n1));
+            Assert.That(n1.CompareTo(n2), Is.EqualTo(-1));
+            Assert.That(n2.CompareTo(n1), Is.EqualTo(1));
 
         }
         
@@ -54,8 +54,8 @@ namespace OsmSharp.Test.Geo
                 Version = 0,
             };
 
-            Assert.AreEqual(1, n1.CompareTo(n2));
-            Assert.AreEqual(-1, n2.CompareTo(n1));
+            Assert.That(n1.CompareTo(n2), Is.EqualTo(1));
+            Assert.That(n2.CompareTo(n1), Is.EqualTo(-1));
 
         }
         
@@ -66,8 +66,8 @@ namespace OsmSharp.Test.Geo
 
             var n2 = new OsmGeoKey(OsmGeoType.Node, 43);
 
-            Assert.AreEqual(-1, n1.CompareTo(n2));
-            Assert.AreEqual(1, n2.CompareTo(n1));
+            Assert.That(n1.CompareTo(n2), Is.EqualTo(-1));
+            Assert.That(n2.CompareTo(n1), Is.EqualTo(1));
 
         }
         
@@ -78,8 +78,8 @@ namespace OsmSharp.Test.Geo
 
             var n2 = new OsmGeoKey(OsmGeoType.Way, 43);
 
-            Assert.AreEqual(-1, n1.CompareTo(n2));
-            Assert.AreEqual(1, n2.CompareTo(n1));
+            Assert.That(n1.CompareTo(n2), Is.EqualTo(-1));
+            Assert.That(n2.CompareTo(n1), Is.EqualTo(1));
 
         }
         
@@ -90,8 +90,8 @@ namespace OsmSharp.Test.Geo
 
             var n2 = new OsmGeoKey(OsmGeoType.Way, 0);
 
-            Assert.AreEqual(-1, n1.CompareTo(n2));
-            Assert.AreEqual(1, n2.CompareTo(n1));
+            Assert.That(n1.CompareTo(n2), Is.EqualTo(-1));
+            Assert.That(n2.CompareTo(n1), Is.EqualTo(1));
 
         }
         
@@ -102,8 +102,8 @@ namespace OsmSharp.Test.Geo
 
             var n2 = new OsmGeoVersionKey(OsmGeoType.Node, 42, 1);
 
-            Assert.AreEqual(-1, n1.CompareTo(n2));
-            Assert.AreEqual(1, n2.CompareTo(n1));
+            Assert.That(n1.CompareTo(n2), Is.EqualTo(-1));
+            Assert.That(n2.CompareTo(n1), Is.EqualTo(1));
 
         }
         
@@ -114,8 +114,8 @@ namespace OsmSharp.Test.Geo
 
             var n2 = new OsmGeoVersionKey(OsmGeoType.Node, 43, 0);
 
-            Assert.AreEqual(-1, n1.CompareTo(n2));
-            Assert.AreEqual(1, n2.CompareTo(n1));
+            Assert.That(n1.CompareTo(n2), Is.EqualTo(-1));
+            Assert.That(n2.CompareTo(n1), Is.EqualTo(1));
 
         }
         
@@ -126,8 +126,8 @@ namespace OsmSharp.Test.Geo
 
             var n2 = new OsmGeoVersionKey(OsmGeoType.Way, 43, 0);
 
-            Assert.AreEqual(-1, n1.CompareTo(n2));
-            Assert.AreEqual(1, n2.CompareTo(n1));
+            Assert.That(n1.CompareTo(n2), Is.EqualTo(-1));
+            Assert.That(n2.CompareTo(n1), Is.EqualTo(1));
 
         }
         
@@ -138,8 +138,8 @@ namespace OsmSharp.Test.Geo
 
             var n2 = new OsmGeoVersionKey(OsmGeoType.Way, 0, 0);
 
-            Assert.AreEqual(-1, n1.CompareTo(n2));
-            Assert.AreEqual(1, n2.CompareTo(n1));
+            Assert.That(n1.CompareTo(n2), Is.EqualTo(-1));
+            Assert.That(n2.CompareTo(n1), Is.EqualTo(1));
 
         }
     }

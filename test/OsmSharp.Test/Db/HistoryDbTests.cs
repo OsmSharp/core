@@ -79,34 +79,34 @@ namespace OsmSharp.Test.Db
 
             var results = historyDb.ApplyChangeset(1, osmChange);
 
-            Assert.IsNotNull(results);
-            Assert.IsNotNull(results.Result);
-            Assert.IsNotNull(results.Result.Results);
-            Assert.AreEqual(3, results.Result.Results.Length);
+            Assert.That(results, Is.Not.Null);
+            Assert.That(results.Result, Is.Not.Null);
+            Assert.That(results.Result.Results, Is.Not.Null);
+            Assert.That(results.Result.Results.Length, Is.EqualTo(3));
             var result = results.Result.Results[0];
             Assert.IsInstanceOf<NodeResult>(result);
-            Assert.AreEqual(3, result.NewId);
-            Assert.AreEqual(-1, result.OldId);
-            Assert.AreEqual(1, result.NewVersion);
+            Assert.That(result.NewId, Is.EqualTo(3));
+            Assert.That(result.OldId, Is.EqualTo(-1));
+            Assert.That(result.NewVersion, Is.EqualTo(1));
             result = results.Result.Results[1];
             Assert.IsInstanceOf<NodeResult>(result);
-            Assert.AreEqual(4, result.NewId);
-            Assert.AreEqual(-2, result.OldId);
-            Assert.AreEqual(1, result.NewVersion);
+            Assert.That(result.NewId, Is.EqualTo(4));
+            Assert.That(result.OldId, Is.EqualTo(-2));
+            Assert.That(result.NewVersion, Is.EqualTo(1));
             result = results.Result.Results[2];
             Assert.IsInstanceOf<WayResult>(result);
-            Assert.AreEqual(1, result.NewId);
-            Assert.AreEqual(-1, result.OldId);
-            Assert.AreEqual(1, result.NewVersion);
+            Assert.That(result.NewId, Is.EqualTo(1));
+            Assert.That(result.OldId, Is.EqualTo(-1));
+            Assert.That(result.NewVersion, Is.EqualTo(1));
 
             var way = historyDb.Get(OsmGeoType.Way, 1) as Way;
-            Assert.IsNotNull(way);
-            Assert.IsNotNull(way.Nodes);
-            Assert.AreEqual(4, way.Nodes.Length);
-            Assert.AreEqual(1, way.Nodes[0]);
-            Assert.AreEqual(3, way.Nodes[1]);
-            Assert.AreEqual(4, way.Nodes[2]);
-            Assert.AreEqual(2, way.Nodes[3]);
+            Assert.That(way, Is.Not.Null);
+            Assert.That(way.Nodes, Is.Not.Null);
+            Assert.That(way.Nodes.Length, Is.EqualTo(4));
+            Assert.That(way.Nodes[0], Is.EqualTo(1));
+            Assert.That(way.Nodes[1], Is.EqualTo(3));
+            Assert.That(way.Nodes[2], Is.EqualTo(4));
+            Assert.That(way.Nodes[3], Is.EqualTo(2));
         }
 
         /// <summary>
@@ -167,34 +167,34 @@ namespace OsmSharp.Test.Db
 
             var results = historyDb.ApplyChangeset(1, osmChange);
 
-            Assert.IsNotNull(results);
-            Assert.IsNotNull(results.Result);
-            Assert.IsNotNull(results.Result.Results);
-            Assert.AreEqual(3, results.Result.Results.Length);
+            Assert.That(results, Is.Not.Null);
+            Assert.That(results.Result, Is.Not.Null);
+            Assert.That(results.Result.Results, Is.Not.Null);
+            Assert.That(results.Result.Results.Length, Is.EqualTo(3));
             var result = results.Result.Results[0];
             Assert.IsInstanceOf<NodeResult>(result);
-            Assert.AreEqual(3, result.NewId);
-            Assert.AreEqual(-1, result.OldId);
-            Assert.AreEqual(1, result.NewVersion);
+            Assert.That(result.NewId, Is.EqualTo(3));
+            Assert.That(result.OldId, Is.EqualTo(-1));
+            Assert.That(result.NewVersion, Is.EqualTo(1));
             result = results.Result.Results[1];
             Assert.IsInstanceOf<NodeResult>(result);
-            Assert.AreEqual(4, result.NewId);
-            Assert.AreEqual(-2, result.OldId);
-            Assert.AreEqual(1, result.NewVersion);
+            Assert.That(result.NewId, Is.EqualTo(4));
+            Assert.That(result.OldId, Is.EqualTo(-2));
+            Assert.That(result.NewVersion, Is.EqualTo(1));
             result = results.Result.Results[2];
             Assert.IsInstanceOf<WayResult>(result);
-            Assert.AreEqual(1, result.NewId);
-            Assert.AreEqual(1, result.OldId);
-            Assert.AreEqual(2, result.NewVersion);
+            Assert.That(result.NewId, Is.EqualTo(1));
+            Assert.That(result.OldId, Is.EqualTo(1));
+            Assert.That(result.NewVersion, Is.EqualTo(2));
 
             var way = historyDb.Get(OsmGeoType.Way, 1) as Way;
-            Assert.IsNotNull(way);
-            Assert.IsNotNull(way.Nodes);
-            Assert.AreEqual(4, way.Nodes.Length);
-            Assert.AreEqual(1, way.Nodes[0]);
-            Assert.AreEqual(3, way.Nodes[1]);
-            Assert.AreEqual(4, way.Nodes[2]);
-            Assert.AreEqual(2, way.Nodes[3]);
+            Assert.That(way, Is.Not.Null);
+            Assert.That(way.Nodes, Is.Not.Null);
+            Assert.That(way.Nodes.Length, Is.EqualTo(4));
+            Assert.That(way.Nodes[0], Is.EqualTo(1));
+            Assert.That(way.Nodes[1], Is.EqualTo(3));
+            Assert.That(way.Nodes[2], Is.EqualTo(4));
+            Assert.That(way.Nodes[3], Is.EqualTo(2));
         }
     }
 }

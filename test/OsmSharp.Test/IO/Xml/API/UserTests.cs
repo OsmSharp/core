@@ -80,8 +80,7 @@ namespace OsmSharp.Test.IO.Xml.API
             };
             var osmString = osm.SerializeToXml();
 
-            Assert.AreEqual("<osm version=\"0.6\" generator=\"OpenStreetMap server\"><user id=\"1\" display_name=\"DisplayName\" account_created=\"2000-01-01T00:00:00Z\"><description>Description</description><contributor-terms agreed=\"false\" pd=\"true\" /><img href=\"Image\" /><roles></roles><changesets count=\"2\" /><traces count=\"6\" /><blocks><received count=\"8\" active=\"7\" /></blocks><home lat=\"3\" lon=\"4\" zoom=\"5.5\" /><languages><lang>en-US</lang></languages><messages><received count=\"9\" unread=\"10\" /><sent count=\"11\" /></messages></user></osm>",
-                osmString);
+            Assert.That(osmString, Is.EqualTo("<osm version=\"0.6\" generator=\"OpenStreetMap server\"><user id=\"1\" display_name=\"DisplayName\" account_created=\"2000-01-01T00:00:00Z\"><description>Description</description><contributor-terms agreed=\"false\" pd=\"true\" /><img href=\"Image\" /><roles></roles><changesets count=\"2\" /><traces count=\"6\" /><blocks><received count=\"8\" active=\"7\" /></blocks><home lat=\"3\" lon=\"4\" zoom=\"5.5\" /><languages><lang>en-US</lang></languages><messages><received count=\"9\" unread=\"10\" /><sent count=\"11\" /></messages></user></osm>"));
         }
 
         /// <summary>
@@ -94,27 +93,27 @@ namespace OsmSharp.Test.IO.Xml.API
             var osm = serializer.Deserialize(
                 new StringReader("<osm version=\"0.6\" generator=\"OpenStreetMap server\"><user id=\"111\" display_name=\"Test\" account_created=\"2000-01-01T00:00:00Z\"><description>Hello</description><contributor-terms agreed=\"true\" pd=\"false\"/><img href=\"Image\"/><roles></roles><changesets count=\"1\"/><traces count=\"2\"/><blocks><received count=\"3\" active=\"4\"/></blocks><home lat=\"5.5\" lon=\"6.6\" zoom=\"7.7\"/><languages><lang>he</lang><lang>en-US</lang><lang>en</lang></languages><messages><received count=\"8\" unread=\"9\"/><sent count=\"10\"/></messages></user></osm>"))
                     as Osm;
-            Assert.IsNotNull(osm.User);
-            Assert.AreEqual(111, osm.User.Id);
-            Assert.AreEqual("Test", osm.User.DisplayName);
-            Assert.AreEqual(new DateTime(2000, 1, 1, 0, 0, 0), osm.User.AccountCreated);
-            Assert.AreEqual("Hello", osm.User.Description);
-            Assert.IsTrue(osm.User.ContributorTermsAgreed);
+            Assert.That(osm.User, Is.Not.Null);
+            Assert.That(osm.User.Id, Is.EqualTo(111));
+            Assert.That(osm.User.DisplayName, Is.EqualTo("Test"));
+            Assert.That(osm.User.AccountCreated, Is.EqualTo(new DateTime(2000, 1, 1, 0, 0, 0)));
+            Assert.That(osm.User.Description, Is.EqualTo("Hello"));
+            Assert.That(osm.User.ContributorTermsAgreed, Is.True);
             Assert.IsFalse(osm.User.ContributorTermsPublicDomain);
-            Assert.AreEqual("Image", osm.User.Image);
-            Assert.AreEqual(1, osm.User.ChangeSetCount);
-            Assert.AreEqual(2, osm.User.TraceCount);
-            Assert.AreEqual(1, osm.User.BlocksReceived.Length);
-            Assert.AreEqual(3, osm.User.BlocksReceived.First().Count);
-            Assert.AreEqual(4, osm.User.BlocksReceived.First().Active);
-            Assert.AreEqual(5.5f, osm.User.Home.Latitude);
-            Assert.AreEqual(6.6f, osm.User.Home.Longitude);
-            Assert.AreEqual(7.7f, osm.User.Home.Zoom);
-            Assert.AreEqual(3, osm.User.Languages.Length);
-            Assert.AreEqual("he", osm.User.Languages.First());
-            Assert.AreEqual(8, osm.User.Messages.Received);
-            Assert.AreEqual(9, osm.User.Messages.Unread);
-            Assert.AreEqual(10, osm.User.Messages.Sent);
+            Assert.That(osm.User.Image, Is.EqualTo("Image"));
+            Assert.That(osm.User.ChangeSetCount, Is.EqualTo(1));
+            Assert.That(osm.User.TraceCount, Is.EqualTo(2));
+            Assert.That(osm.User.BlocksReceived.Length, Is.EqualTo(1));
+            Assert.That(osm.User.BlocksReceived.First().Count, Is.EqualTo(3));
+            Assert.That(osm.User.BlocksReceived.First().Active, Is.EqualTo(4));
+            Assert.That(osm.User.Home.Latitude, Is.EqualTo(5.5f));
+            Assert.That(osm.User.Home.Longitude, Is.EqualTo(6.6f));
+            Assert.That(osm.User.Home.Zoom, Is.EqualTo(7.7f));
+            Assert.That(osm.User.Languages.Length, Is.EqualTo(3));
+            Assert.That(osm.User.Languages.First(), Is.EqualTo("he"));
+            Assert.That(osm.User.Messages.Received, Is.EqualTo(8));
+            Assert.That(osm.User.Messages.Unread, Is.EqualTo(9));
+            Assert.That(osm.User.Messages.Sent, Is.EqualTo(10));
         }
     }
 }

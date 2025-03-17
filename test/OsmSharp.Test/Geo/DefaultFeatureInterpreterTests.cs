@@ -78,11 +78,11 @@ namespace OsmSharp.Test.Geo
             var interpreter = new DefaultFeatureInterpreter();
             var features = interpreter.Interpret(way, source);
 
-            Assert.IsNotNull(features);
-            Assert.AreEqual(1, features.Count);
+            Assert.That(features, Is.Not.Null);
+            Assert.That(features.Count, Is.EqualTo(1));
             var feature = features[0];
             Assert.IsInstanceOf<LinearRing>(feature.Geometry);
-            Assert.IsTrue(feature.Attributes.Contains("area", "yes"));
+            Assert.That(feature.Attributes.Contains("area", "yes"), Is.True);
         }
 
         /// <summary>
@@ -126,11 +126,11 @@ namespace OsmSharp.Test.Geo
             var interpreter = new DefaultFeatureInterpreter();
             var features = interpreter.Interpret(way, source);
 
-            Assert.IsNotNull(features);
-            Assert.AreEqual(1, features.Count);
+            Assert.That(features, Is.Not.Null);
+            Assert.That(features.Count, Is.EqualTo(1));
             var feature = features[0];
             Assert.IsInstanceOf<LinearRing>(feature.Geometry);
-            Assert.IsTrue(feature.Attributes.Contains("natural", "water"));
+            Assert.That(feature.Attributes.Contains("natural", "water"), Is.True);
         }
 
         /// <summary>
@@ -188,11 +188,11 @@ namespace OsmSharp.Test.Geo
 
             var interpreter = new DefaultFeatureInterpreter();
             var features = interpreter.Interpret(source.GetRelation(1), source);
-            Assert.IsNotNull(features);
-            Assert.AreEqual(1, features.Count);
+            Assert.That(features, Is.Not.Null);
+            Assert.That(features.Count, Is.EqualTo(1));
             var feature = features[0];
             Assert.IsInstanceOf<LinearRing>(feature.Geometry);
-            Assert.IsTrue(feature.Attributes.Contains("type", "multipolygon"));
+            Assert.That(feature.Attributes.Contains("type", "multipolygon"), Is.True);
         }
 
         /// <summary>
@@ -293,14 +293,14 @@ namespace OsmSharp.Test.Geo
 
             var interpreter = new DefaultFeatureInterpreter();
             var features = interpreter.Interpret(source.GetRelation(1), source);
-            Assert.IsNotNull(features);
-            Assert.AreEqual(1, features.Count);
+            Assert.That(features, Is.Not.Null);
+            Assert.That(features.Count, Is.EqualTo(1));
             var feature = features[0];
             Assert.IsInstanceOf<Polygon>(feature.Geometry);
             var polygon = feature.Geometry as Polygon;
-            Assert.IsNotNull(polygon.Holes);
-            Assert.AreEqual(1, polygon.Holes.Count());
-            Assert.IsTrue(feature.Attributes.Contains("type", "multipolygon"));
+            Assert.That(polygon.Holes, Is.Not.Null);
+            Assert.That(polygon.Holes.Count(), Is.EqualTo(1));
+            Assert.That(feature.Attributes.Contains("type", "multipolygon"), Is.True);
         }
 
         /// <summary>
@@ -439,14 +439,14 @@ namespace OsmSharp.Test.Geo
 
             var interpreter = new DefaultFeatureInterpreter();
             var features = interpreter.Interpret(source.GetRelation(1), source);
-            Assert.IsNotNull(features);
-            Assert.AreEqual(1, features.Count);
+            Assert.That(features, Is.Not.Null);
+            Assert.That(features.Count, Is.EqualTo(1));
             var feature = features[0];
             Assert.IsInstanceOf<Polygon>(feature.Geometry);
             Polygon polygon = feature.Geometry as Polygon;
-            Assert.IsNotNull(polygon.Holes);
-            Assert.AreEqual(2, polygon.Holes.Count());
-            Assert.IsTrue(feature.Attributes.Contains("type", "multipolygon"));
+            Assert.That(polygon.Holes, Is.Not.Null);
+            Assert.That(polygon.Holes.Count(), Is.EqualTo(2));
+            Assert.That(feature.Attributes.Contains("type", "multipolygon"), Is.True);
         }
 
         /// <summary>
@@ -561,14 +561,14 @@ namespace OsmSharp.Test.Geo
 
             var interpreter = new DefaultFeatureInterpreter();
             var features = interpreter.Interpret(source.GetRelation(1), source);
-            Assert.IsNotNull(features);
-            Assert.AreEqual(1, features.Count);
+            Assert.That(features, Is.Not.Null);
+            Assert.That(features.Count, Is.EqualTo(1));
             var feature = features[0];
             Assert.IsInstanceOf<Polygon>(feature.Geometry);
             Polygon polygon = feature.Geometry as Polygon;
-            Assert.IsNotNull(polygon.Holes);
-            Assert.AreEqual(1, polygon.Holes.Count());
-            Assert.IsTrue(feature.Attributes.Contains("type", "multipolygon"));
+            Assert.That(polygon.Holes, Is.Not.Null);
+            Assert.That(polygon.Holes.Count(), Is.EqualTo(1));
+            Assert.That(feature.Attributes.Contains("type", "multipolygon"), Is.True);
         }
     }
 }

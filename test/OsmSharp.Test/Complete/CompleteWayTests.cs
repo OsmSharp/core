@@ -70,22 +70,22 @@ namespace OsmSharp.Test.Complete
             };
 
             var osmGeo = completeWay.ToSimple();
-            Assert.IsNotNull(osmGeo);
+            Assert.That(osmGeo, Is.Not.Null);
             Assert.IsInstanceOf<Way>(osmGeo);
 
             var way = osmGeo as Way;
-            Assert.AreEqual(completeWay.Id, way.Id);
-            Assert.AreEqual(completeWay.ChangeSetId, way.ChangeSetId);
-            Assert.AreEqual(completeWay.TimeStamp, way.TimeStamp);
-            Assert.AreEqual(completeWay.UserName, way.UserName);
-            Assert.AreEqual(completeWay.UserId, way.UserId);
-            Assert.AreEqual(completeWay.Version, way.Version);
-            Assert.AreEqual(completeWay.Visible, way.Visible);
-            Assert.IsNotNull(way.Nodes);
-            Assert.AreEqual(completeWay.Nodes.Length, way.Nodes.Length);
+            Assert.That(way.Id, Is.EqualTo(completeWay.Id));
+            Assert.That(way.ChangeSetId, Is.EqualTo(completeWay.ChangeSetId));
+            Assert.That(way.TimeStamp, Is.EqualTo(completeWay.TimeStamp));
+            Assert.That(way.UserName, Is.EqualTo(completeWay.UserName));
+            Assert.That(way.UserId, Is.EqualTo(completeWay.UserId));
+            Assert.That(way.Version, Is.EqualTo(completeWay.Version));
+            Assert.That(way.Visible, Is.EqualTo(completeWay.Visible));
+            Assert.That(way.Nodes, Is.Not.Null);
+            Assert.That(way.Nodes.Length, Is.EqualTo(completeWay.Nodes.Length));
             for (var i = 0; i < completeWay.Nodes.Length; i++)
             {
-                Assert.AreEqual(completeWay.Nodes[i].Id, way.Nodes[i]);
+                Assert.That(way.Nodes[i], Is.EqualTo(completeWay.Nodes[i].Id));
             }
         }
 
@@ -149,40 +149,40 @@ namespace OsmSharp.Test.Complete
             };
 
             var osmGeos = completeWay.ToSimpleWithChildren();
-            Assert.IsNotNull(osmGeos);
+            Assert.That(osmGeos, Is.Not.Null);
 
             var ways = osmGeos.OfType<Way>().ToArray();
-            Assert.AreEqual(1, ways.Length);
+            Assert.That(ways.Length, Is.EqualTo(1));
             var way = ways[0];
-            Assert.AreEqual(completeWay.Id, way.Id);
-            Assert.AreEqual(completeWay.ChangeSetId, way.ChangeSetId);
-            Assert.AreEqual(completeWay.TimeStamp, way.TimeStamp);
-            Assert.AreEqual(completeWay.UserName, way.UserName);
-            Assert.AreEqual(completeWay.UserId, way.UserId);
-            Assert.AreEqual(completeWay.Version, way.Version);
-            Assert.AreEqual(completeWay.Visible, way.Visible);
-            Assert.IsNotNull(way.Nodes);
-            Assert.AreEqual(completeWay.Nodes.Length, way.Nodes.Length);
+            Assert.That(way.Id, Is.EqualTo(completeWay.Id));
+            Assert.That(way.ChangeSetId, Is.EqualTo(completeWay.ChangeSetId));
+            Assert.That(way.TimeStamp, Is.EqualTo(completeWay.TimeStamp));
+            Assert.That(way.UserName, Is.EqualTo(completeWay.UserName));
+            Assert.That(way.UserId, Is.EqualTo(completeWay.UserId));
+            Assert.That(way.Version, Is.EqualTo(completeWay.Version));
+            Assert.That(way.Visible, Is.EqualTo(completeWay.Visible));
+            Assert.That(way.Nodes, Is.Not.Null);
+            Assert.That(way.Nodes.Length, Is.EqualTo(completeWay.Nodes.Length));
             for (var i = 0; i < completeWay.Nodes.Length; i++)
             {
-                Assert.AreEqual(completeWay.Nodes[i].Id, way.Nodes[i]);
+                Assert.That(way.Nodes[i], Is.EqualTo(completeWay.Nodes[i].Id));
             }
 
             var nodes = osmGeos.OfType<Node>().ToArray();
-            Assert.AreEqual(3, nodes.Length);
+            Assert.That(nodes.Length, Is.EqualTo(3));
             for (int i = 0; i < 3; i++)
             {
                 var node = nodes[i];
                 var expected = i + 1;
-                Assert.AreEqual(expected, node.Id);
-                Assert.AreEqual(expected, node.Version);
-                Assert.AreEqual(expected, node.Latitude);
-                Assert.AreEqual(expected, node.Longitude);
-                Assert.AreEqual(expected, node.UserId);
-                Assert.IsNotNull(node.Tags);
-                Assert.AreEqual(1, node.Tags.Count);
-                Assert.IsTrue(node.Tags.ContainsKey("id"));
-                Assert.AreEqual(node.Tags["id"], expected.ToString());
+                Assert.That(node.Id, Is.EqualTo(expected));
+                Assert.That(node.Version, Is.EqualTo(expected));
+                Assert.That(node.Latitude, Is.EqualTo(expected));
+                Assert.That(node.Longitude, Is.EqualTo(expected));
+                Assert.That(node.UserId, Is.EqualTo(expected));
+                Assert.That(node.Tags, Is.Not.Null);
+                Assert.That(node.Tags.Count, Is.EqualTo(1));
+                Assert.That(node.Tags.ContainsKey("id"), Is.True);
+                Assert.That(expected.ToString(), Is.EqualTo(node.Tags["id"]));
             }
 
             var others = osmGeos.Except(ways).Except(nodes).ToArray();

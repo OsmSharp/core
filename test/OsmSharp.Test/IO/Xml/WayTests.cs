@@ -46,7 +46,7 @@ namespace OsmSharp.Test.IO.Xml
                 Id = 1
             };
 
-            Assert.AreEqual("<way id=\"1\" />", way.SerializeToXml());
+            Assert.That(way.SerializeToXml(), Is.EqualTo("<way id=\"1\" />"));
 
             way = new Way()
             {
@@ -55,8 +55,7 @@ namespace OsmSharp.Test.IO.Xml
                 UserName = "ben",
                 UserId = 1
             };
-            Assert.AreEqual("<way id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" />",
-                way.SerializeToXml());
+            Assert.That(way.SerializeToXml(), Is.EqualTo("<way id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" />"));
             way = new Way()
             {
                 Id = 1,
@@ -72,8 +71,7 @@ namespace OsmSharp.Test.IO.Xml
                     1, 2, 3
                 }
             };
-            Assert.AreEqual("<way id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><nd ref=\"1\" /><nd ref=\"2\" /><nd ref=\"3\" /><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></way>",
-                way.SerializeToXml());
+            Assert.That(way.SerializeToXml(), Is.EqualTo("<way id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><nd ref=\"1\" /><nd ref=\"2\" /><nd ref=\"3\" /><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></way>"));
         }
 
         /// <summary>
@@ -86,45 +84,45 @@ namespace OsmSharp.Test.IO.Xml
 
             var way = serializer.Deserialize(
                 new StringReader("<way id=\"1\" />")) as Way;
-            Assert.IsNotNull(way);
-            Assert.AreEqual(1, way.Id);
+            Assert.That(way, Is.Not.Null);
+            Assert.That(way.Id, Is.EqualTo(1));
 
             way = serializer.Deserialize(
                 new StringReader("<way id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" />")) as Way;
-            Assert.IsNotNull(way);
-            Assert.AreEqual(1, way.Id);
-            Assert.AreEqual("ben", way.UserName);
-            Assert.AreEqual(1, way.UserId);
-            Assert.AreEqual(1, way.Version);
+            Assert.That(way, Is.Not.Null);
+            Assert.That(way.Id, Is.EqualTo(1));
+            Assert.That(way.UserName, Is.EqualTo("ben"));
+            Assert.That(way.UserId, Is.EqualTo(1));
+            Assert.That(way.Version, Is.EqualTo(1));
 
             way = serializer.Deserialize(
                 new StringReader("<way id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></way>")) as Way;
-            Assert.IsNotNull(way);
-            Assert.AreEqual(1, way.Id);
-            Assert.AreEqual("ben", way.UserName);
-            Assert.AreEqual(1, way.UserId);
-            Assert.AreEqual(1, way.Version);
-            Assert.AreEqual(new System.DateTime(2008, 09, 12, 21, 37, 45), way.TimeStamp.Value.ToUniversalTime());
-            Assert.IsNotNull(way.Tags);
-            Assert.IsTrue(way.Tags.Contains("amenity", "something"));
-            Assert.IsTrue(way.Tags.Contains("key", "some_value"));
+            Assert.That(way, Is.Not.Null);
+            Assert.That(way.Id, Is.EqualTo(1));
+            Assert.That(way.UserName, Is.EqualTo("ben"));
+            Assert.That(way.UserId, Is.EqualTo(1));
+            Assert.That(way.Version, Is.EqualTo(1));
+            Assert.That(way.TimeStamp.Value.ToUniversalTime(), Is.EqualTo(new System.DateTime(2008, 09, 12, 21, 37, 45)));
+            Assert.That(way.Tags, Is.Not.Null);
+            Assert.That(way.Tags.Contains("amenity", "something"), Is.True);
+            Assert.That(way.Tags.Contains("key", "some_value"), Is.True);
 
             way = serializer.Deserialize(
                 new StringReader("<way id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><nd ref=\"1\" /><nd ref=\"2\" /><nd ref=\"3\" /><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></way>")) as Way;
-            Assert.IsNotNull(way);
-            Assert.AreEqual(1, way.Id);
-            Assert.AreEqual("ben", way.UserName);
-            Assert.AreEqual(1, way.UserId);
-            Assert.AreEqual(1, way.Version);
-            Assert.AreEqual(new System.DateTime(2008, 09, 12, 21, 37, 45), way.TimeStamp.Value.ToUniversalTime());
-            Assert.IsNotNull(way.Tags);
-            Assert.IsTrue(way.Tags.Contains("amenity", "something"));
-            Assert.IsTrue(way.Tags.Contains("key", "some_value"));
-            Assert.IsNotNull(way.Nodes);
-            Assert.AreEqual(3, way.Nodes.Length);
-            Assert.AreEqual(1, way.Nodes[0]);
-            Assert.AreEqual(2, way.Nodes[1]);
-            Assert.AreEqual(3, way.Nodes[2]);
+            Assert.That(way, Is.Not.Null);
+            Assert.That(way.Id, Is.EqualTo(1));
+            Assert.That(way.UserName, Is.EqualTo("ben"));
+            Assert.That(way.UserId, Is.EqualTo(1));
+            Assert.That(way.Version, Is.EqualTo(1));
+            Assert.That(way.TimeStamp.Value.ToUniversalTime(), Is.EqualTo(new System.DateTime(2008, 09, 12, 21, 37, 45)));
+            Assert.That(way.Tags, Is.Not.Null);
+            Assert.That(way.Tags.Contains("amenity", "something"), Is.True);
+            Assert.That(way.Tags.Contains("key", "some_value"), Is.True);
+            Assert.That(way.Nodes, Is.Not.Null);
+            Assert.That(way.Nodes.Length, Is.EqualTo(3));
+            Assert.That(way.Nodes[0], Is.EqualTo(1));
+            Assert.That(way.Nodes[1], Is.EqualTo(2));
+            Assert.That(way.Nodes[2], Is.EqualTo(3));
         }
 
         /// <summary>
@@ -141,16 +139,16 @@ namespace OsmSharp.Test.IO.Xml
                                      "<way id=\"2\" user=\"ben\" uid=\"1\" version=\"1\" />" +
                                  "</osm>")) as Osm;
 
-            Assert.IsNotNull(osm);
-            Assert.IsNotNull(osm.Ways);
-            Assert.AreEqual(2, osm.Ways.Length);
+            Assert.That(osm, Is.Not.Null);
+            Assert.That(osm.Ways, Is.Not.Null);
+            Assert.That(osm.Ways.Length, Is.EqualTo(2));
 
             osm = serializer.Deserialize(
                 new StringReader("<?xml version=\"1.0\" encoding=\"utf - 8\"?><osm version=\"0.6\"><way id=\"1\"><nd ref=\"11\" /><nd ref=\"12\" /><nd ref=\"13\" /></way><way id=\"2\"><nd ref=\"21\" /><nd ref=\"22\" /><nd ref=\"23\" /></way><way id=\"3\"><nd ref=\"31\" /><nd ref=\"32\" /><nd ref=\"33\" /></way></osm>")) as Osm;
             
-            Assert.IsNotNull(osm);
-            Assert.IsNotNull(osm.Ways);
-            Assert.AreEqual(3, osm.Ways.Length);
+            Assert.That(osm, Is.Not.Null);
+            Assert.That(osm.Ways, Is.Not.Null);
+            Assert.That(osm.Ways.Length, Is.EqualTo(3));
         }
     }
 }

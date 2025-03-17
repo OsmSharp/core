@@ -75,7 +75,7 @@ namespace OsmSharp.Test.IO.Xml.API
                 }
             };
 
-            Assert.AreEqual("<api><version minimum=\"0.6\" maximum=\"0.6\" /><area maximum=\"0.25\" /><tracepoints per_page=\"5000\" /><waynodes maximum=\"2000\" /><changesets maximum_elements=\"50000\" /><timeout seconds=\"300\" /><status api=\"online\" database=\"online\" gpx=\"online\" /></api>", capabilities.SerializeToXml());
+            Assert.That(capabilities.SerializeToXml(), Is.EqualTo("<api><version minimum=\"0.6\" maximum=\"0.6\" /><area maximum=\"0.25\" /><tracepoints per_page=\"5000\" /><waynodes maximum=\"2000\" /><changesets maximum_elements=\"50000\" /><timeout seconds=\"300\" /><status api=\"online\" database=\"online\" gpx=\"online\" /></api>"));
         }
 
         /// <summary>
@@ -88,24 +88,24 @@ namespace OsmSharp.Test.IO.Xml.API
 
             var capabilities = serializer.Deserialize(
                 new StringReader("<api><version minimum=\"0.6\" maximum=\"0.6\" /><area maximum=\"0.25\" /><tracepoints per_page=\"5000\" /><waynodes maximum=\"2000\" /><changesets maximum_elements=\"50000\" /><timeout seconds=\"300\" /><status api=\"online\" database=\"online\" gpx=\"online\" /></api>")) as Capabilities;
-            Assert.IsNotNull(capabilities);
-            Assert.IsNotNull(capabilities.Version);
-            Assert.AreEqual(0.6, capabilities.Version.Minimum);
-            Assert.AreEqual(0.6, capabilities.Version.Maximum);
-            Assert.IsNotNull(capabilities.Area);
-            Assert.AreEqual(0.25, capabilities.Area.Maximum);
-            Assert.IsNotNull(capabilities.Changesets);
-            Assert.AreEqual(50000, capabilities.Changesets.MaximumElements);
-            Assert.IsNotNull(capabilities.Status);
-            Assert.AreEqual(Status.ServiceStatus.online, capabilities.Status.Api);
-            Assert.AreEqual(Status.ServiceStatus.online, capabilities.Status.Database);
-            Assert.AreEqual(Status.ServiceStatus.online, capabilities.Status.Gpx);
-            Assert.IsNotNull(capabilities.Timeout);
-            Assert.AreEqual(300, capabilities.Timeout.Seconds);
-            Assert.IsNotNull(capabilities.Tracepoints);
-            Assert.AreEqual(5000, capabilities.Tracepoints.PerPage);
-            Assert.IsNotNull(capabilities.WayNodes);
-            Assert.AreEqual(2000, capabilities.WayNodes.Maximum);
+            Assert.That(capabilities, Is.Not.Null);
+            Assert.That(capabilities.Version, Is.Not.Null);
+            Assert.That(capabilities.Version.Minimum, Is.EqualTo(0.6));
+            Assert.That(capabilities.Version.Maximum, Is.EqualTo(0.6));
+            Assert.That(capabilities.Area, Is.Not.Null);
+            Assert.That(capabilities.Area.Maximum, Is.EqualTo(0.25));
+            Assert.That(capabilities.Changesets, Is.Not.Null);
+            Assert.That(capabilities.Changesets.MaximumElements, Is.EqualTo(50000));
+            Assert.That(capabilities.Status, Is.Not.Null);
+            Assert.That(capabilities.Status.Api, Is.EqualTo(Status.ServiceStatus.online));
+            Assert.That(capabilities.Status.Database, Is.EqualTo(Status.ServiceStatus.online));
+            Assert.That(capabilities.Status.Gpx, Is.EqualTo(Status.ServiceStatus.online));
+            Assert.That(capabilities.Timeout, Is.Not.Null);
+            Assert.That(capabilities.Timeout.Seconds, Is.EqualTo(300));
+            Assert.That(capabilities.Tracepoints, Is.Not.Null);
+            Assert.That(capabilities.Tracepoints.PerPage, Is.EqualTo(5000));
+            Assert.That(capabilities.WayNodes, Is.Not.Null);
+            Assert.That(capabilities.WayNodes.Maximum, Is.EqualTo(2000));
         }
     }
 }

@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.IO;
 
 namespace OsmSharp.Test
@@ -37,6 +38,29 @@ namespace OsmSharp.Test
             stream.Seek(0, SeekOrigin.Begin);
             var streamReader = new StreamReader(stream);
             return streamReader.ReadToEnd();
+        }
+    }
+
+
+    public static class DateTimeHelpers
+    {
+        public static DateTime UnixEpoch()
+        {
+#if NET462
+            return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+#else
+            return DateTime.UnixEpoch;
+#endif
+        }
+
+        public static DateTime FromMillisecondsSinceUnixEpoch(long milliseconds)
+        {
+            return UnixEpoch().AddMilliseconds(milliseconds).ToLocalTime();
+        }
+
+        public static long ToMillisecondsSinceUnixEpoch(DateTime dateTime)
+        {
+            return (long)(dateTime - UnixEpoch()).TotalMilliseconds;
         }
     }
 }

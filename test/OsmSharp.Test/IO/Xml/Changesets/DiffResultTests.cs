@@ -62,8 +62,7 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             };
 
             var result = diffResult.SerializeToXml();
-            Assert.AreEqual("<diffResult generator=\"OsmSharp\" version=\"0.6\"><node old_id=\"1\" new_id=\"2\" new_version=\"2\" /><node old_id=\"3\" new_id=\"4\" new_version=\"4\" /></diffResult>",
-                result);
+            Assert.That(result, Is.EqualTo("<diffResult generator=\"OsmSharp\" version=\"0.6\"><node old_id=\"1\" new_id=\"2\" new_version=\"2\" /><node old_id=\"3\" new_id=\"4\" new_version=\"4\" /></diffResult>"));
         }
 
         /// <summary>
@@ -76,26 +75,26 @@ namespace OsmSharp.Test.IO.Xml.Changesets
 
             var diffResult = serializer.Deserialize(
                 new StringReader("<diffResult version=\"0.6\"></diffResult>")) as DiffResult;
-            Assert.IsNotNull(diffResult);
-            Assert.IsNull(diffResult.Results);
-            Assert.AreEqual(0.6, diffResult.Version);
-            Assert.IsNull(diffResult.Generator);
+            Assert.That(diffResult, Is.Not.Null);
+            Assert.That(diffResult.Results, Is.Null);
+            Assert.That(diffResult.Version, Is.EqualTo(0.6));
+            Assert.That(diffResult.Generator, Is.Null);
 
             diffResult = serializer.Deserialize(
                 new StringReader("<diffResult generator=\"OsmSharp\" version=\"0.6\"></diffResult>")) as DiffResult;
-            Assert.IsNotNull(diffResult);
-            Assert.IsNull(diffResult.Results);
-            Assert.AreEqual(0.6, diffResult.Version);
-            Assert.AreEqual("OsmSharp", diffResult.Generator);
+            Assert.That(diffResult, Is.Not.Null);
+            Assert.That(diffResult.Results, Is.Null);
+            Assert.That(diffResult.Version, Is.EqualTo(0.6));
+            Assert.That(diffResult.Generator, Is.EqualTo("OsmSharp"));
 
             diffResult = serializer.Deserialize(
                 new StringReader("<diffResult generator=\"OsmSharp\" version=\"0.6\"><node old_id=\"1\" new_id=\"2\" new_version=\"2\" /><node old_id=\"3\" new_id=\"4\" new_version=\"4\" /></diffResult>")) as DiffResult;
-            Assert.IsNotNull(diffResult);
-            Assert.AreEqual(2, diffResult.Results.Length);
-            Assert.AreEqual(1, diffResult.Results[0].OldId);
-            Assert.AreEqual(3, diffResult.Results[1].OldId);
-            Assert.AreEqual(0.6, diffResult.Version);
-            Assert.AreEqual("OsmSharp", diffResult.Generator);
+            Assert.That(diffResult, Is.Not.Null);
+            Assert.That(diffResult.Results.Length, Is.EqualTo(2));
+            Assert.That(diffResult.Results[0].OldId, Is.EqualTo(1));
+            Assert.That(diffResult.Results[1].OldId, Is.EqualTo(3));
+            Assert.That(diffResult.Version, Is.EqualTo(0.6));
+            Assert.That(diffResult.Generator, Is.EqualTo("OsmSharp"));
         }
     }
 }

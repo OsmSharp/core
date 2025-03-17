@@ -43,7 +43,7 @@ namespace OsmSharp.API
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
-            this.Version = reader.GetAttributeDouble("version");
+            this.Version = System.Version.Parse(reader.GetAttribute("version"));
             this.Generator = reader.GetAttribute("generator");
 
             List<Node> nodes = null;

@@ -352,7 +352,7 @@ namespace OsmSharp.Db
             {
                 Results = results.ToArray(),
                 Generator = "OsmSharp",
-                Version = 0.6f
+                Version = System.Version.Parse("0.6")
             }, DiffResultStatus.BestEffortOK);
         }
 

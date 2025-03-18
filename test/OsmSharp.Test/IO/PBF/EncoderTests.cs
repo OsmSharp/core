@@ -35,13 +35,13 @@ namespace OsmSharp.Test.IO.PBF
         [Test]
         public void TestEncodeLatLon()
         {
-            Assert.AreEqual(0, Encoder.EncodeLatLon(0, 0, 100));
-            Assert.AreEqual(900000000, Encoder.EncodeLatLon(90, 0, 100));
-            Assert.AreEqual(-900000000, Encoder.EncodeLatLon(-90, 0, 100));
+            Assert.That(Encoder.EncodeLatLon(0, 0, 100), Is.EqualTo(0));
+            Assert.That(Encoder.EncodeLatLon(90, 0, 100), Is.EqualTo(900000000));
+            Assert.That(Encoder.EncodeLatLon(-90, 0, 100), Is.EqualTo(-900000000));
 
-            Assert.AreEqual(0, Encoder.EncodeLatLon(0, 0, 100));
-            Assert.AreEqual(1800000000, Encoder.EncodeLatLon(180, 0, 100));
-            Assert.AreEqual(-1800000000, Encoder.EncodeLatLon(-180, 0, 100));
+            Assert.That(Encoder.EncodeLatLon(0, 0, 100), Is.EqualTo(0));
+            Assert.That(Encoder.EncodeLatLon(180, 0, 100), Is.EqualTo(1800000000));
+            Assert.That(Encoder.EncodeLatLon(-180, 0, 100), Is.EqualTo(-1800000000));
         }
 
         /// <summary>
@@ -50,13 +50,13 @@ namespace OsmSharp.Test.IO.PBF
         [Test]
         public void TestDecodeLatLon()
         {
-            Assert.AreEqual(0, Encoder.DecodeLatLon(0, 0, 100));
-            Assert.AreEqual(90, Encoder.DecodeLatLon(900000000, 0, 100));
-            Assert.AreEqual(-90, Encoder.DecodeLatLon(-900000000, 0, 100));
+            Assert.That(Encoder.DecodeLatLon(0, 0, 100), Is.EqualTo(0));
+            Assert.That(Encoder.DecodeLatLon(900000000, 0, 100), Is.EqualTo(90));
+            Assert.That(Encoder.DecodeLatLon(-900000000, 0, 100), Is.EqualTo(-90));
 
-            Assert.AreEqual(0, Encoder.DecodeLatLon(0, 0, 100));
-            Assert.AreEqual(180, Encoder.DecodeLatLon(1800000000, 0, 100));
-            Assert.AreEqual(-180, Encoder.DecodeLatLon(-1800000000, 0, 100));
+            Assert.That(Encoder.DecodeLatLon(0, 0, 100), Is.EqualTo(0));
+            Assert.That(Encoder.DecodeLatLon(1800000000, 0, 100), Is.EqualTo(180));
+            Assert.That(Encoder.DecodeLatLon(-1800000000, 0, 100), Is.EqualTo(-180));
         }
 
         /// <summary>
@@ -67,13 +67,13 @@ namespace OsmSharp.Test.IO.PBF
         {
             var block = new PrimitiveBlock();
             var reverseStringTable = new Dictionary<string, int>();
-            Assert.AreEqual(1, Encoder.EncodeString(block, reverseStringTable, "Ben"));
-            Assert.AreEqual(2, Encoder.EncodeString(block, reverseStringTable, "highway"));
-            Assert.AreEqual(3, Encoder.EncodeString(block, reverseStringTable, "residential"));
-            Assert.AreEqual(1, Encoder.EncodeString(block, reverseStringTable, "Ben"));
-            Assert.AreEqual(2, Encoder.EncodeString(block, reverseStringTable, "highway"));
-            Assert.AreEqual(4, Encoder.EncodeString(block, reverseStringTable, "Some other string"));
-            Assert.AreEqual(5, Encoder.EncodeString(block, reverseStringTable, "Ban"));
+            Assert.That(Encoder.EncodeString(block, reverseStringTable, "Ben"), Is.EqualTo(1));
+            Assert.That(Encoder.EncodeString(block, reverseStringTable, "highway"), Is.EqualTo(2));
+            Assert.That(Encoder.EncodeString(block, reverseStringTable, "residential"), Is.EqualTo(3));
+            Assert.That(Encoder.EncodeString(block, reverseStringTable, "Ben"), Is.EqualTo(1));
+            Assert.That(Encoder.EncodeString(block, reverseStringTable, "highway"), Is.EqualTo(2));
+            Assert.That(Encoder.EncodeString(block, reverseStringTable, "Some other string"), Is.EqualTo(4));
+            Assert.That(Encoder.EncodeString(block, reverseStringTable, "Ban"), Is.EqualTo(5));
         }
 
         /// <summary>
@@ -111,16 +111,16 @@ namespace OsmSharp.Test.IO.PBF
             pbfNode.vals.Add(2);
 
             var node = Encoder.DecodeNode(block, pbfNode);
-            Assert.IsNotNull(node);
-            Assert.AreEqual(1, node.Id);
-            Assert.AreEqual(10, node.ChangeSetId);
-            Assert.AreEqual(10.9, node.Latitude);
-            Assert.AreEqual(11.0, node.Longitude);
-            Assert.AreEqual(PBFExtensions.FromUnixTime(10000), node.TimeStamp);
-            Assert.AreEqual(OsmSharp.OsmGeoType.Node, node.Type);
-            Assert.AreEqual(100, node.UserId);
-            Assert.AreEqual("Ben", node.UserName);
-            Assert.AreEqual(2, node.Version);
+            Assert.That(node, Is.Not.Null);
+            Assert.That(node.Id, Is.EqualTo(1));
+            Assert.That(node.ChangeSetId, Is.EqualTo(10));
+            Assert.That(node.Latitude, Is.EqualTo(10.9));
+            Assert.That(node.Longitude, Is.EqualTo(11.0));
+            Assert.That(node.TimeStamp, Is.EqualTo(PBFExtensions.FromUnixTime(10000)));
+            Assert.That(node.Type, Is.EqualTo(OsmSharp.OsmGeoType.Node));
+            Assert.That(node.UserId, Is.EqualTo(100));
+            Assert.That(node.UserName, Is.EqualTo("Ben"));
+            Assert.That(node.Version, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -149,19 +149,19 @@ namespace OsmSharp.Test.IO.PBF
             node.Visible = true;
 
             var pbfNode = Encoder.EncodeNode(block, new Dictionary<string, int>(), node);
-            Assert.IsNotNull(pbfNode);
-            Assert.AreEqual(1, pbfNode.id);
-            Assert.AreEqual(Encoder.EncodeLatLon(10, block.lat_offset, block.granularity), pbfNode.lat);
-            Assert.AreEqual(Encoder.EncodeLatLon(11, block.lon_offset, block.granularity), pbfNode.lon);
-            Assert.AreEqual(1, pbfNode.info.changeset);
-            Assert.AreEqual(Encoder.EncodeTimestamp(node.TimeStamp.Value, block.date_granularity), pbfNode.info.timestamp);
-            Assert.AreEqual(1, pbfNode.info.uid);
-            Assert.AreEqual("Ben", System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfNode.info.user_sid]));
-            Assert.AreEqual(1, pbfNode.info.version);
-            Assert.AreEqual(1, pbfNode.keys.Count);
-            Assert.AreEqual("name", System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfNode.keys[0]]));
-            Assert.AreEqual(1, pbfNode.vals.Count);
-            Assert.AreEqual("Ben", System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfNode.vals[0]]));
+            Assert.That(pbfNode, Is.Not.Null);
+            Assert.That(pbfNode.id, Is.EqualTo(1));
+            Assert.That(pbfNode.lat, Is.EqualTo(Encoder.EncodeLatLon(10, block.lat_offset, block.granularity)));
+            Assert.That(pbfNode.lon, Is.EqualTo(Encoder.EncodeLatLon(11, block.lon_offset, block.granularity)));
+            Assert.That(pbfNode.info.changeset, Is.EqualTo(1));
+            Assert.That(pbfNode.info.timestamp, Is.EqualTo(Encoder.EncodeTimestamp(node.TimeStamp.Value, block.date_granularity)));
+            Assert.That(pbfNode.info.uid, Is.EqualTo(1));
+            Assert.That(System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfNode.info.user_sid]), Is.EqualTo("Ben"));
+            Assert.That(pbfNode.info.version, Is.EqualTo(1));
+            Assert.That(pbfNode.keys.Count, Is.EqualTo(1));
+            Assert.That(System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfNode.keys[0]]), Is.EqualTo("name"));
+            Assert.That(pbfNode.vals.Count, Is.EqualTo(1));
+            Assert.That(System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfNode.vals[0]]), Is.EqualTo("Ben"));
         }
 
         /// <summary>
@@ -199,17 +199,17 @@ namespace OsmSharp.Test.IO.PBF
             pbfWay.refs.Add(1);
 
             var way = Encoder.DecodeWay(block, pbfWay);
-            Assert.IsNotNull(way);
-            Assert.AreEqual(1, way.Id);
-            Assert.AreEqual(10, way.ChangeSetId);
-            Assert.AreEqual(PBFExtensions.FromUnixTime(10000), way.TimeStamp);
-            Assert.AreEqual(OsmSharp.OsmGeoType.Way, way.Type);
-            Assert.AreEqual(100, way.UserId);
-            Assert.AreEqual("Ben", way.UserName);
-            Assert.AreEqual(2, way.Version);
-            Assert.AreEqual(2, way.Nodes.Length);
-            Assert.AreEqual(0, way.Nodes[0]);
-            Assert.AreEqual(1, way.Nodes[1]);
+            Assert.That(way, Is.Not.Null);
+            Assert.That(way.Id, Is.EqualTo(1));
+            Assert.That(way.ChangeSetId, Is.EqualTo(10));
+            Assert.That(way.TimeStamp, Is.EqualTo(PBFExtensions.FromUnixTime(10000)));
+            Assert.That(way.Type, Is.EqualTo(OsmSharp.OsmGeoType.Way));
+            Assert.That(way.UserId, Is.EqualTo(100));
+            Assert.That(way.UserName, Is.EqualTo("Ben"));
+            Assert.That(way.Version, Is.EqualTo(2));
+            Assert.That(way.Nodes.Length, Is.EqualTo(2));
+            Assert.That(way.Nodes[0], Is.EqualTo(0));
+            Assert.That(way.Nodes[1], Is.EqualTo(1));
         }
 
         /// <summary>
@@ -242,20 +242,20 @@ namespace OsmSharp.Test.IO.PBF
             way.Nodes = new long[] { 1, 2 };
 
             var pbfWay = Encoder.EncodeWay(block, new Dictionary<string, int>(), way);
-            Assert.IsNotNull(pbfWay);
-            Assert.AreEqual(1, pbfWay.id);
-            Assert.AreEqual(2, pbfWay.refs.Count);
-            Assert.AreEqual(1, pbfWay.refs[0]);
-            Assert.AreEqual(1, pbfWay.refs[1]);
-            Assert.AreEqual(1, pbfWay.info.changeset);
-            Assert.AreEqual(Encoder.EncodeTimestamp(way.TimeStamp.Value, block.date_granularity), pbfWay.info.timestamp);
-            Assert.AreEqual(1, pbfWay.info.uid);
-            Assert.AreEqual("Ben", System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfWay.info.user_sid]));
-            Assert.AreEqual(1, pbfWay.info.version);
-            Assert.AreEqual(1, pbfWay.keys.Count);
-            Assert.AreEqual("name", System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfWay.keys[0]]));
-            Assert.AreEqual(1, pbfWay.vals.Count);
-            Assert.AreEqual("Ben", System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfWay.vals[0]]));
+            Assert.That(pbfWay, Is.Not.Null);
+            Assert.That(pbfWay.id, Is.EqualTo(1));
+            Assert.That(pbfWay.refs.Count, Is.EqualTo(2));
+            Assert.That(pbfWay.refs[0], Is.EqualTo(1));
+            Assert.That(pbfWay.refs[1], Is.EqualTo(1));
+            Assert.That(pbfWay.info.changeset, Is.EqualTo(1));
+            Assert.That(pbfWay.info.timestamp, Is.EqualTo(Encoder.EncodeTimestamp(way.TimeStamp.Value, block.date_granularity)));
+            Assert.That(pbfWay.info.uid, Is.EqualTo(1));
+            Assert.That(System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfWay.info.user_sid]), Is.EqualTo("Ben"));
+            Assert.That(pbfWay.info.version, Is.EqualTo(1));
+            Assert.That(pbfWay.keys.Count, Is.EqualTo(1));
+            Assert.That(System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfWay.keys[0]]), Is.EqualTo("name"));
+            Assert.That(pbfWay.vals.Count, Is.EqualTo(1));
+            Assert.That(System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfWay.vals[0]]), Is.EqualTo("Ben"));
         }
 
         /// <summary>
@@ -298,21 +298,21 @@ namespace OsmSharp.Test.IO.PBF
             pbfRelation.types.Add(OsmSharp.IO.PBF.Relation.MemberType.WAY);
 
             var relation = Encoder.DecodeRelation(block, pbfRelation);
-            Assert.IsNotNull(relation);
-            Assert.AreEqual(1, relation.Id);
-            Assert.AreEqual(10, relation.ChangeSetId);
-            Assert.AreEqual(PBFExtensions.FromUnixTime(10000), relation.TimeStamp);
-            Assert.AreEqual(OsmSharp.OsmGeoType.Relation, relation.Type);
-            Assert.AreEqual(100, relation.UserId);
-            Assert.AreEqual("Ben", relation.UserName);
-            Assert.AreEqual(2, relation.Version);
-            Assert.AreEqual(2, relation.Members.Length);
-            Assert.AreEqual(10, relation.Members[0].Id);
-            Assert.AreEqual(OsmSharp.OsmGeoType.Node, relation.Members[0].Type);
-            Assert.AreEqual("fake role", relation.Members[0].Role);
-            Assert.AreEqual(11, relation.Members[1].Id);
-            Assert.AreEqual(OsmSharp.OsmGeoType.Way, relation.Members[1].Type);
-            Assert.AreEqual("fake role", relation.Members[1].Role);
+            Assert.That(relation, Is.Not.Null);
+            Assert.That(relation.Id, Is.EqualTo(1));
+            Assert.That(relation.ChangeSetId, Is.EqualTo(10));
+            Assert.That(relation.TimeStamp, Is.EqualTo(PBFExtensions.FromUnixTime(10000)));
+            Assert.That(relation.Type, Is.EqualTo(OsmSharp.OsmGeoType.Relation));
+            Assert.That(relation.UserId, Is.EqualTo(100));
+            Assert.That(relation.UserName, Is.EqualTo("Ben"));
+            Assert.That(relation.Version, Is.EqualTo(2));
+            Assert.That(relation.Members.Length, Is.EqualTo(2));
+            Assert.That(relation.Members[0].Id, Is.EqualTo(10));
+            Assert.That(relation.Members[0].Type, Is.EqualTo(OsmSharp.OsmGeoType.Node));
+            Assert.That(relation.Members[0].Role, Is.EqualTo("fake role"));
+            Assert.That(relation.Members[1].Id, Is.EqualTo(11));
+            Assert.That(relation.Members[1].Type, Is.EqualTo(OsmSharp.OsmGeoType.Way));
+            Assert.That(relation.Members[1].Role, Is.EqualTo("fake role"));
         }
 
         /// <summary>
@@ -359,26 +359,26 @@ namespace OsmSharp.Test.IO.PBF
             };
 
             var pbfRelation = Encoder.EncodeRelation(block, new Dictionary<string, int>(), relation);
-            Assert.IsNotNull(pbfRelation);
-            Assert.AreEqual(1, pbfRelation.id);
-            Assert.AreEqual(2, pbfRelation.memids.Count);
-            Assert.AreEqual(1, pbfRelation.memids[0]);
-            Assert.AreEqual(1, pbfRelation.memids[1]);
-            Assert.AreEqual(2, pbfRelation.roles_sid.Count);
-            Assert.AreEqual("fake role1", System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfRelation.roles_sid[0]]));
-            Assert.AreEqual("fake role2", System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfRelation.roles_sid[1]]));
-            Assert.AreEqual(2, pbfRelation.types.Count);
-            Assert.AreEqual(OsmSharp.IO.PBF.Relation.MemberType.NODE, pbfRelation.types[0]);
-            Assert.AreEqual(OsmSharp.IO.PBF.Relation.MemberType.RELATION, pbfRelation.types[1]);
-            Assert.AreEqual(1, pbfRelation.info.changeset);
-            Assert.AreEqual(Encoder.EncodeTimestamp(relation.TimeStamp.Value, block.date_granularity), pbfRelation.info.timestamp);
-            Assert.AreEqual(1, pbfRelation.info.uid);
-            Assert.AreEqual("Ben", System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfRelation.info.user_sid]));
-            Assert.AreEqual(1, pbfRelation.info.version);
-            Assert.AreEqual(1, pbfRelation.keys.Count);
-            Assert.AreEqual("name", System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfRelation.keys[0]]));
-            Assert.AreEqual(1, pbfRelation.vals.Count);
-            Assert.AreEqual("Ben", System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfRelation.vals[0]]));
+            Assert.That(pbfRelation, Is.Not.Null);
+            Assert.That(pbfRelation.id, Is.EqualTo(1));
+            Assert.That(pbfRelation.memids.Count, Is.EqualTo(2));
+            Assert.That(pbfRelation.memids[0], Is.EqualTo(1));
+            Assert.That(pbfRelation.memids[1], Is.EqualTo(1));
+            Assert.That(pbfRelation.roles_sid.Count, Is.EqualTo(2));
+            Assert.That(System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfRelation.roles_sid[0]]), Is.EqualTo("fake role1"));
+            Assert.That(System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfRelation.roles_sid[1]]), Is.EqualTo("fake role2"));
+            Assert.That(pbfRelation.types.Count, Is.EqualTo(2));
+            Assert.That(pbfRelation.types[0], Is.EqualTo(OsmSharp.IO.PBF.Relation.MemberType.NODE));
+            Assert.That(pbfRelation.types[1], Is.EqualTo(OsmSharp.IO.PBF.Relation.MemberType.RELATION));
+            Assert.That(pbfRelation.info.changeset, Is.EqualTo(1));
+            Assert.That(pbfRelation.info.timestamp, Is.EqualTo(Encoder.EncodeTimestamp(relation.TimeStamp.Value, block.date_granularity)));
+            Assert.That(pbfRelation.info.uid, Is.EqualTo(1));
+            Assert.That(System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfRelation.info.user_sid]), Is.EqualTo("Ben"));
+            Assert.That(pbfRelation.info.version, Is.EqualTo(1));
+            Assert.That(pbfRelation.keys.Count, Is.EqualTo(1));
+            Assert.That(System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfRelation.keys[0]]), Is.EqualTo("name"));
+            Assert.That(pbfRelation.vals.Count, Is.EqualTo(1));
+            Assert.That(System.Text.Encoding.UTF8.GetString(block.stringtable.s[(int)pbfRelation.vals[0]]), Is.EqualTo("Ben"));
         }
 
         /// <summary>
@@ -421,9 +421,9 @@ namespace OsmSharp.Test.IO.PBF
             var primitivesConsumer = new PrimitivesConsumerMock();
             block.Decode(primitivesConsumer, false, false, false);
 
-            Assert.AreEqual(1, primitivesConsumer.Nodes.Count);
-            Assert.AreEqual(0, primitivesConsumer.Ways.Count);
-            Assert.AreEqual(0, primitivesConsumer.Relations.Count);
+            Assert.That(primitivesConsumer.Nodes.Count, Is.EqualTo(1));
+            Assert.That(primitivesConsumer.Ways.Count, Is.EqualTo(0));
+            Assert.That(primitivesConsumer.Relations.Count, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -497,46 +497,46 @@ namespace OsmSharp.Test.IO.PBF
             var primitivesConsumer = new PrimitivesConsumerMock();
             block.Decode(primitivesConsumer, false, false, false);
 
-            Assert.AreEqual(3, primitivesConsumer.Nodes.Count);
-            Assert.AreEqual(0, primitivesConsumer.Ways.Count);
-            Assert.AreEqual(0, primitivesConsumer.Relations.Count);
+            Assert.That(primitivesConsumer.Nodes.Count, Is.EqualTo(3));
+            Assert.That(primitivesConsumer.Ways.Count, Is.EqualTo(0));
+            Assert.That(primitivesConsumer.Relations.Count, Is.EqualTo(0));
 
             var node = primitivesConsumer.Nodes[0];
-            Assert.IsNotNull(node);
-            Assert.AreEqual(1, node.id);
-            Assert.AreEqual(10, node.info.changeset);
-            Assert.AreEqual(10, node.info.timestamp);
-            Assert.AreEqual(1, node.info.uid);
-            Assert.AreEqual(3, node.info.user_sid);
-            Assert.AreEqual(1, node.info.version);
-            Assert.AreEqual(1, node.keys.Count);
-            Assert.AreEqual(1, node.keys[0]);
-            Assert.AreEqual(1, node.vals.Count);
-            Assert.AreEqual(2, node.vals[0]);
+            Assert.That(node, Is.Not.Null);
+            Assert.That(node.id, Is.EqualTo(1));
+            Assert.That(node.info.changeset, Is.EqualTo(10));
+            Assert.That(node.info.timestamp, Is.EqualTo(10));
+            Assert.That(node.info.uid, Is.EqualTo(1));
+            Assert.That(node.info.user_sid, Is.EqualTo(3));
+            Assert.That(node.info.version, Is.EqualTo(1));
+            Assert.That(node.keys.Count, Is.EqualTo(1));
+            Assert.That(node.keys[0], Is.EqualTo(1));
+            Assert.That(node.vals.Count, Is.EqualTo(1));
+            Assert.That(node.vals[0], Is.EqualTo(2));
 
             node = primitivesConsumer.Nodes[1];
-            Assert.IsNotNull(node);
-            Assert.AreEqual(2, node.id);
-            Assert.AreEqual(11, node.info.changeset);
-            Assert.AreEqual(11, node.info.timestamp);
-            Assert.AreEqual(1, node.info.uid);
-            Assert.AreEqual(3, node.info.user_sid);
-            Assert.AreEqual(1, node.info.version);
-            Assert.AreEqual(1, node.keys.Count);
-            Assert.AreEqual(1, node.keys[0]);
-            Assert.AreEqual(1, node.vals.Count);
-            Assert.AreEqual(4, node.vals[0]);
+            Assert.That(node, Is.Not.Null);
+            Assert.That(node.id, Is.EqualTo(2));
+            Assert.That(node.info.changeset, Is.EqualTo(11));
+            Assert.That(node.info.timestamp, Is.EqualTo(11));
+            Assert.That(node.info.uid, Is.EqualTo(1));
+            Assert.That(node.info.user_sid, Is.EqualTo(3));
+            Assert.That(node.info.version, Is.EqualTo(1));
+            Assert.That(node.keys.Count, Is.EqualTo(1));
+            Assert.That(node.keys[0], Is.EqualTo(1));
+            Assert.That(node.vals.Count, Is.EqualTo(1));
+            Assert.That(node.vals[0], Is.EqualTo(4));
 
             node = primitivesConsumer.Nodes[2];
-            Assert.IsNotNull(node);
-            Assert.AreEqual(3, node.id);
-            Assert.AreEqual(12, node.info.changeset);
-            Assert.AreEqual(12, node.info.timestamp);
-            Assert.AreEqual(1, node.info.uid);
-            Assert.AreEqual(3, node.info.user_sid);
-            Assert.AreEqual(3, node.info.version);
-            Assert.AreEqual(0, node.keys.Count);
-            Assert.AreEqual(0, node.vals.Count);
+            Assert.That(node, Is.Not.Null);
+            Assert.That(node.id, Is.EqualTo(3));
+            Assert.That(node.info.changeset, Is.EqualTo(12));
+            Assert.That(node.info.timestamp, Is.EqualTo(12));
+            Assert.That(node.info.uid, Is.EqualTo(1));
+            Assert.That(node.info.user_sid, Is.EqualTo(3));
+            Assert.That(node.info.version, Is.EqualTo(3));
+            Assert.That(node.keys.Count, Is.EqualTo(0));
+            Assert.That(node.vals.Count, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -579,9 +579,9 @@ namespace OsmSharp.Test.IO.PBF
             var primitivesConsumer = new PrimitivesConsumerMock();
             block.Decode(primitivesConsumer, false, false, false);
 
-            Assert.AreEqual(0, primitivesConsumer.Nodes.Count);
-            Assert.AreEqual(1, primitivesConsumer.Ways.Count);
-            Assert.AreEqual(0, primitivesConsumer.Relations.Count);
+            Assert.That(primitivesConsumer.Nodes.Count, Is.EqualTo(0));
+            Assert.That(primitivesConsumer.Ways.Count, Is.EqualTo(1));
+            Assert.That(primitivesConsumer.Relations.Count, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -628,9 +628,9 @@ namespace OsmSharp.Test.IO.PBF
             var primitivesConsumer = new PrimitivesConsumerMock();
             block.Decode(primitivesConsumer, false, false, false);
 
-            Assert.AreEqual(0, primitivesConsumer.Nodes.Count);
-            Assert.AreEqual(0, primitivesConsumer.Ways.Count);
-            Assert.AreEqual(1, primitivesConsumer.Relations.Count);
+            Assert.That(primitivesConsumer.Nodes.Count, Is.EqualTo(0));
+            Assert.That(primitivesConsumer.Ways.Count, Is.EqualTo(0));
+            Assert.That(primitivesConsumer.Relations.Count, Is.EqualTo(1));
         }
     }
 }

@@ -46,7 +46,7 @@ namespace OsmSharp.Test.IO.Xml
                 Id = 1
             };
 
-            Assert.AreEqual("<node id=\"1\" />", node.SerializeToXml());
+            Assert.That(node.SerializeToXml(), Is.EqualTo("<node id=\"1\" />"));
 
             node = new Node()
             {
@@ -57,8 +57,7 @@ namespace OsmSharp.Test.IO.Xml
                 UserName = "ben",
                 UserId = 1
             };
-            Assert.AreEqual("<node id=\"1\" lat=\"54.099998474121094\" lon=\"12.199999809265137\" user=\"ben\" uid=\"1\" version=\"1\" />",
-                node.SerializeToXml());
+            Assert.That(node.SerializeToXml(), Is.EqualTo("<node id=\"1\" lat=\"54.0999985\" lon=\"12.1999998\" user=\"ben\" uid=\"1\" version=\"1\" />"));
             node = new Node()
             {
                 Id = 1,
@@ -72,8 +71,7 @@ namespace OsmSharp.Test.IO.Xml
                     new Tag("amenity", "something"),
                     new Tag("key", "some_value"))
             };
-            Assert.AreEqual("<node id=\"1\" lat=\"54.099998474121094\" lon=\"12.199999809265137\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></node>",
-                node.SerializeToXml());
+            Assert.That(node.SerializeToXml(), Is.EqualTo("<node id=\"1\" lat=\"54.0999985\" lon=\"12.1999998\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></node>"));
         }
 
         /// <summary>
@@ -86,32 +84,32 @@ namespace OsmSharp.Test.IO.Xml
 
             var node = serializer.Deserialize(
                 new StringReader("<node id=\"1\" />")) as Node;
-            Assert.IsNotNull(node);
-            Assert.AreEqual(1, node.Id);
+            Assert.That(node, Is.Not.Null);
+            Assert.That(node.Id, Is.EqualTo(1));
 
             node = serializer.Deserialize(
                 new StringReader("<node id=\"1\" lat=\"54.1\" lon=\"12.2\" user=\"ben\" uid=\"1\" version=\"1\" />")) as Node;
-            Assert.IsNotNull(node);
-            Assert.AreEqual(1, node.Id);
-            Assert.AreEqual(54.1, node.Latitude, float.Epsilon);
-            Assert.AreEqual(12.2, node.Longitude, float.Epsilon);
-            Assert.AreEqual("ben", node.UserName);
-            Assert.AreEqual(1, node.UserId);
-            Assert.AreEqual(1, node.Version);
+            Assert.That(node, Is.Not.Null);
+            Assert.That(node.Id, Is.EqualTo(1));
+            Assert.That(node.Latitude, Is.EqualTo(54.1).Within(float.Epsilon));
+            Assert.That(node.Longitude, Is.EqualTo(12.2).Within(float.Epsilon));
+            Assert.That(node.UserName, Is.EqualTo("ben"));
+            Assert.That(node.UserId, Is.EqualTo(1));
+            Assert.That(node.Version, Is.EqualTo(1));
 
             node = serializer.Deserialize(
                 new StringReader("<node id=\"1\" lat=\"54.1\" lon=\"12.2\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></node>")) as Node;
-            Assert.IsNotNull(node);
-            Assert.AreEqual(1, node.Id);
-            Assert.AreEqual(54.1, node.Latitude, float.Epsilon);
-            Assert.AreEqual(12.2, node.Longitude, float.Epsilon);
-            Assert.AreEqual("ben", node.UserName);
-            Assert.AreEqual(1, node.UserId);
-            Assert.AreEqual(1, node.Version);
-            Assert.AreEqual(new System.DateTime(2008, 09, 12, 21, 37, 45), node.TimeStamp.Value.ToUniversalTime());
-            Assert.IsNotNull(node.Tags);
-            Assert.IsTrue(node.Tags.Contains("amenity", "something"));
-            Assert.IsTrue(node.Tags.Contains("key", "some_value"));
+            Assert.That(node, Is.Not.Null);
+            Assert.That(node.Id, Is.EqualTo(1));
+            Assert.That(node.Latitude, Is.EqualTo(54.1).Within(float.Epsilon));
+            Assert.That(node.Longitude, Is.EqualTo(12.2).Within(float.Epsilon));
+            Assert.That(node.UserName, Is.EqualTo("ben"));
+            Assert.That(node.UserId, Is.EqualTo(1));
+            Assert.That(node.Version, Is.EqualTo(1));
+            Assert.That(node.TimeStamp.Value.ToUniversalTime(), Is.EqualTo(new System.DateTime(2008, 09, 12, 21, 37, 45)));
+            Assert.That(node.Tags, Is.Not.Null);
+            Assert.That(node.Tags.Contains("amenity", "something"), Is.True);
+            Assert.That(node.Tags.Contains("key", "some_value"), Is.True);
         }
 
         /// <summary>
@@ -128,9 +126,9 @@ namespace OsmSharp.Test.IO.Xml
                                      "<node id=\"2\" lat=\"54.1\" lon=\"12.2\" user=\"ben\" uid=\"2\" version=\"1\" />" +
                                  "</osm>")) as Osm;
 
-            Assert.IsNotNull(osm);
-            Assert.IsNotNull(osm.Nodes);
-            Assert.AreEqual(2, osm.Nodes.Length);
+            Assert.That(osm, Is.Not.Null);
+            Assert.That(osm.Nodes, Is.Not.Null);
+            Assert.That(osm.Nodes.Length, Is.EqualTo(2));
         }
     }
 }

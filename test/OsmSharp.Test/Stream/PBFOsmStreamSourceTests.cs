@@ -98,7 +98,7 @@ namespace OsmSharp.Test.Stream
                     wechel.AddRange(reader);
                 }
 
-                Assert.AreEqual(13978, wechel.Count);
+                Assert.That(wechel.Count, Is.EqualTo(13978));
             }
         }
 
@@ -117,7 +117,7 @@ namespace OsmSharp.Test.Stream
                     wechel.AddRange(reader);
                 }
 
-                Assert.AreEqual(13978, wechel.Count);
+                Assert.That(wechel.Count, Is.EqualTo(13978));
             }
         }
 
@@ -142,7 +142,7 @@ namespace OsmSharp.Test.Stream
                 wechel.AddRange(reader);
             }
 
-            Assert.AreEqual(13978, wechel.Count);
+            Assert.That(wechel.Count, Is.EqualTo(13978));
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace OsmSharp.Test.Stream
                 wechel.AddRange(reader);
             }
 
-            Assert.AreEqual(13978, wechel.Count);
+            Assert.That(wechel.Count, Is.EqualTo(13978));
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace OsmSharp.Test.Stream
                     wechel.AddRange(reader);
                 }
 
-                Assert.AreEqual(13978, wechel.Count);
+                Assert.That(wechel.Count, Is.EqualTo(13978));
             }
         }
     }

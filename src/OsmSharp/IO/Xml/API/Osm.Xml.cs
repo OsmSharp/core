@@ -43,7 +43,9 @@ namespace OsmSharp.API
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
-            this.Version = reader.GetAttributeDouble("version");
+            var version = reader.GetAttribute("version");
+            if (!string.IsNullOrWhiteSpace(version))
+                this.Version = System.Version.Parse(version);
             this.Generator = reader.GetAttribute("generator");
 
             List<Node> nodes = null;
@@ -205,7 +207,7 @@ namespace OsmSharp.API
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
-            writer.WriteAttribute("version", this.Version);
+            writer.WriteAttribute("version", this.Version?.ToInvariantString());
             writer.WriteAttribute("generator", this.Generator);
 
             writer.WriteElement("user", this.User);

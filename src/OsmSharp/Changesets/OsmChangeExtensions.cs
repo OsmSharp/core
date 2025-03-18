@@ -125,7 +125,7 @@ namespace OsmSharp.Changesets
                 Modify = mutations.Values.Where(x => x.create == false && x.delete == false).Select(x => x.osmGeo)
                     .ToArray(),
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
         }
 
@@ -240,7 +240,7 @@ namespace OsmSharp.Changesets
             return new OsmChange()
             {
                 Generator = "OsmSharp",
-                Version = 6,
+                Version = System.Version.Parse("0.6"),
                 Create = create.ToArray(),
                 Delete = delete.ToArray(),
                 Modify = modify.ToArray()

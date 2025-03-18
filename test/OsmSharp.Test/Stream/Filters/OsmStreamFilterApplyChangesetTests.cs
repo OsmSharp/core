@@ -90,23 +90,23 @@ namespace OsmSharp.Test.Stream.Filters
             filter.RegisterSource(source);
 
             var result = new List<OsmGeo>(filter);
-            Assert.AreEqual(7, result.Count);
-            Assert.AreEqual(1, result[0].Id);
-            Assert.AreEqual(OsmGeoType.Node, result[0].Type);
-            Assert.AreEqual(2, result[1].Id);
-            Assert.AreEqual(OsmGeoType.Node, result[1].Type);
-            Assert.AreEqual(3, result[2].Id);
-            Assert.AreEqual(OsmGeoType.Node, result[2].Type);
+            Assert.That(result.Count, Is.EqualTo(7));
+            Assert.That(result[0].Id, Is.EqualTo(1));
+            Assert.That(result[0].Type, Is.EqualTo(OsmGeoType.Node));
+            Assert.That(result[1].Id, Is.EqualTo(2));
+            Assert.That(result[1].Type, Is.EqualTo(OsmGeoType.Node));
+            Assert.That(result[2].Id, Is.EqualTo(3));
+            Assert.That(result[2].Type, Is.EqualTo(OsmGeoType.Node));
 
-            Assert.AreEqual(2, result[3].Id);
-            Assert.AreEqual(OsmGeoType.Way, result[3].Type);
-            Assert.AreEqual(3, result[4].Id);
-            Assert.AreEqual(OsmGeoType.Way, result[4].Type);
+            Assert.That(result[3].Id, Is.EqualTo(2));
+            Assert.That(result[3].Type, Is.EqualTo(OsmGeoType.Way));
+            Assert.That(result[4].Id, Is.EqualTo(3));
+            Assert.That(result[4].Type, Is.EqualTo(OsmGeoType.Way));
 
-            Assert.AreEqual(3, result[5].Id);
-            Assert.AreEqual(OsmGeoType.Relation, result[5].Type);
-            Assert.AreEqual(4, result[6].Id);
-            Assert.AreEqual(OsmGeoType.Relation, result[6].Type);
+            Assert.That(result[5].Id, Is.EqualTo(3));
+            Assert.That(result[5].Type, Is.EqualTo(OsmGeoType.Relation));
+            Assert.That(result[6].Id, Is.EqualTo(4));
+            Assert.That(result[6].Type, Is.EqualTo(OsmGeoType.Relation));
         }
 
         /// <summary>
@@ -179,30 +179,30 @@ namespace OsmSharp.Test.Stream.Filters
             filter.RegisterSource(source);
 
             var result = new List<OsmGeo>(filter);
-            Assert.AreEqual(7, result.Count);
-            Assert.AreEqual(1, result[0].Id);
-            Assert.AreEqual(1, result[0].Version);
-            Assert.AreEqual(OsmGeoType.Node, result[0].Type);
-            Assert.AreEqual(2, result[1].Id);
-            Assert.AreEqual(1, result[1].Version);
-            Assert.AreEqual(OsmGeoType.Node, result[1].Type);
-            Assert.AreEqual(3, result[2].Id);
-            Assert.AreEqual(2, result[2].Version);
-            Assert.AreEqual(OsmGeoType.Node, result[2].Type);
+            Assert.That(result.Count, Is.EqualTo(7));
+            Assert.That(result[0].Id, Is.EqualTo(1));
+            Assert.That(result[0].Version, Is.EqualTo(1));
+            Assert.That(result[0].Type, Is.EqualTo(OsmGeoType.Node));
+            Assert.That(result[1].Id, Is.EqualTo(2));
+            Assert.That(result[1].Version, Is.EqualTo(1));
+            Assert.That(result[1].Type, Is.EqualTo(OsmGeoType.Node));
+            Assert.That(result[2].Id, Is.EqualTo(3));
+            Assert.That(result[2].Version, Is.EqualTo(2));
+            Assert.That(result[2].Type, Is.EqualTo(OsmGeoType.Node));
 
-            Assert.AreEqual(2, result[3].Id);
-            Assert.AreEqual(2, result[3].Version);
-            Assert.AreEqual(OsmGeoType.Way, result[3].Type);
-            Assert.AreEqual(3, result[4].Id);
-            Assert.AreEqual(1, result[4].Version);
-            Assert.AreEqual(OsmGeoType.Way, result[4].Type);
+            Assert.That(result[3].Id, Is.EqualTo(2));
+            Assert.That(result[3].Version, Is.EqualTo(2));
+            Assert.That(result[3].Type, Is.EqualTo(OsmGeoType.Way));
+            Assert.That(result[4].Id, Is.EqualTo(3));
+            Assert.That(result[4].Version, Is.EqualTo(1));
+            Assert.That(result[4].Type, Is.EqualTo(OsmGeoType.Way));
 
-            Assert.AreEqual(3, result[5].Id);
-            Assert.AreEqual(1, result[5].Version);
-            Assert.AreEqual(OsmGeoType.Relation, result[5].Type);
-            Assert.AreEqual(4, result[6].Id);
-            Assert.AreEqual(2, result[6].Version);
-            Assert.AreEqual(OsmGeoType.Relation, result[6].Type);
+            Assert.That(result[5].Id, Is.EqualTo(3));
+            Assert.That(result[5].Version, Is.EqualTo(1));
+            Assert.That(result[5].Type, Is.EqualTo(OsmGeoType.Relation));
+            Assert.That(result[6].Id, Is.EqualTo(4));
+            Assert.That(result[6].Version, Is.EqualTo(2));
+            Assert.That(result[6].Type, Is.EqualTo(OsmGeoType.Relation));
         }
 
         /// <summary>
@@ -275,21 +275,21 @@ namespace OsmSharp.Test.Stream.Filters
             filter.RegisterSource(source);
 
             var result = new List<OsmGeo>(filter);
-            Assert.AreEqual(4, result.Count);
-            Assert.AreEqual(1, result[0].Id);
-            Assert.AreEqual(1, result[0].Version);
-            Assert.AreEqual(OsmGeoType.Node, result[0].Type);
-            Assert.AreEqual(2, result[1].Id);
-            Assert.AreEqual(1, result[1].Version);
-            Assert.AreEqual(OsmGeoType.Node, result[1].Type);
+            Assert.That(result.Count, Is.EqualTo(4));
+            Assert.That(result[0].Id, Is.EqualTo(1));
+            Assert.That(result[0].Version, Is.EqualTo(1));
+            Assert.That(result[0].Type, Is.EqualTo(OsmGeoType.Node));
+            Assert.That(result[1].Id, Is.EqualTo(2));
+            Assert.That(result[1].Version, Is.EqualTo(1));
+            Assert.That(result[1].Type, Is.EqualTo(OsmGeoType.Node));
             
-            Assert.AreEqual(3, result[2].Id);
-            Assert.AreEqual(1, result[2].Version);
-            Assert.AreEqual(OsmGeoType.Way, result[2].Type);
+            Assert.That(result[2].Id, Is.EqualTo(3));
+            Assert.That(result[2].Version, Is.EqualTo(1));
+            Assert.That(result[2].Type, Is.EqualTo(OsmGeoType.Way));
 
-            Assert.AreEqual(3, result[3].Id);
-            Assert.AreEqual(1, result[3].Version);
-            Assert.AreEqual(OsmGeoType.Relation, result[3].Type);
+            Assert.That(result[3].Id, Is.EqualTo(3));
+            Assert.That(result[3].Version, Is.EqualTo(1));
+            Assert.That(result[3].Type, Is.EqualTo(OsmGeoType.Relation));
         }
     }
 }

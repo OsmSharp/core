@@ -9,6 +9,6 @@
         <ProjectReference Include="..\..\src\OsmSharp.Geo\OsmSharp.Geo.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="3.0.0" />
+        <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="4.0.0" />
     </ItemGroup>
 </Project>

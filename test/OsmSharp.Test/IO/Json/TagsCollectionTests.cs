@@ -13,7 +13,7 @@ namespace OsmSharp.Test.IO.Json
         {
             var tagsCollection = new TagsCollection();
 
-            Assert.AreEqual("{}", JsonSerializer.Serialize(tagsCollection));
+            Assert.That(JsonSerializer.Serialize(tagsCollection), Is.EqualTo("{}"));
         }
         
         [Test]
@@ -22,7 +22,7 @@ namespace OsmSharp.Test.IO.Json
             var tagsCollection = new TagsCollection();
             tagsCollection.AddOrReplace("highway", "residential");
 
-            Assert.AreEqual("{\"highway\":\"residential\"}", JsonSerializer.Serialize(tagsCollection));
+            Assert.That(JsonSerializer.Serialize(tagsCollection), Is.EqualTo("{\"highway\":\"residential\"}"));
         }
         
         [Test]
@@ -30,7 +30,7 @@ namespace OsmSharp.Test.IO.Json
         {
             var tagsCollection = JsonSerializer.Deserialize<TagsCollectionBase>("{}");
 
-            Assert.AreEqual(0, tagsCollection.Count);
+            Assert.That(tagsCollection.Count, Is.EqualTo(0));
         }
         
         [Test]
@@ -38,9 +38,9 @@ namespace OsmSharp.Test.IO.Json
         {
             var tagsCollection = JsonSerializer.Deserialize<TagsCollectionBase>("{\"highway\": \"residential\"}");
 
-            Assert.AreEqual(1, tagsCollection.Count);
-            Assert.AreEqual("highway", tagsCollection.First().Key);
-            Assert.AreEqual("residential", tagsCollection.First().Value);
+            Assert.That(tagsCollection.Count, Is.EqualTo(1));
+            Assert.That(tagsCollection.First().Key, Is.EqualTo("highway"));
+            Assert.That(tagsCollection.First().Value, Is.EqualTo("residential"));
         }
     }
 }

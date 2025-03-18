@@ -71,10 +71,10 @@ namespace OsmSharp.Test.Geo.Streams.Features.Interpreted
             };
 
             var features = source.ToFeatureSource();
-            Assert.IsNotNull(features);
+            Assert.That(features, Is.Not.Null);
             var featuresList = features.ToList();
-            Assert.IsNotNull(featuresList);
-            Assert.AreEqual(1, featuresList.Count);
+            Assert.That(featuresList, Is.Not.Null);
+            Assert.That(featuresList.Count, Is.EqualTo(1));
         }
     }
 }

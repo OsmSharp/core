@@ -47,7 +47,7 @@ namespace OsmSharp.Test.IO.Xml
                 Id = 1
             };
 
-            Assert.AreEqual("<relation id=\"1\" />", relation.SerializeToXml());
+            Assert.That(relation.SerializeToXml(), Is.EqualTo("<relation id=\"1\" />"));
 
             relation = new Relation()
             {
@@ -56,8 +56,7 @@ namespace OsmSharp.Test.IO.Xml
                 UserName = "ben",
                 UserId = 1
             };
-            Assert.AreEqual("<relation id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" />",
-                relation.SerializeToXml());
+            Assert.That(relation.SerializeToXml(), Is.EqualTo("<relation id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" />"));
 
             relation = new Relation()
             {
@@ -70,8 +69,7 @@ namespace OsmSharp.Test.IO.Xml
                     new Tag("amenity", "something"),
                     new Tag("key", "some_value"))
             };
-            Assert.AreEqual("<relation id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></relation>",
-                relation.SerializeToXml());
+            Assert.That(relation.SerializeToXml(), Is.EqualTo("<relation id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></relation>"));
 
             relation = new Relation()
             {
@@ -90,8 +88,7 @@ namespace OsmSharp.Test.IO.Xml
                     new RelationMember(100, "role3", OsmGeoType.Relation)
                 }
             };
-            Assert.AreEqual("<relation id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><member type=\"node\" ref=\"1\" role=\"role1\" /><member type=\"way\" ref=\"10\" role=\"role2\" /><member type=\"relation\" ref=\"100\" role=\"role3\" /><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></relation>",
-                relation.SerializeToXml());
+            Assert.That(relation.SerializeToXml(), Is.EqualTo("<relation id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><member type=\"node\" ref=\"1\" role=\"role1\" /><member type=\"way\" ref=\"10\" role=\"role2\" /><member type=\"relation\" ref=\"100\" role=\"role3\" /><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></relation>"));
         }
 
         /// <summary>
@@ -104,44 +101,44 @@ namespace OsmSharp.Test.IO.Xml
 
             var relation = serializer.Deserialize(
                 new StringReader("<relation id=\"1\" />")) as Relation;
-            Assert.IsNotNull(relation);
-            Assert.AreEqual(1, relation.Id);
+            Assert.That(relation, Is.Not.Null);
+            Assert.That(relation.Id, Is.EqualTo(1));
 
             relation = serializer.Deserialize(
                 new StringReader("<relation id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" />")) as Relation;
-            Assert.IsNotNull(relation);
-            Assert.AreEqual(1, relation.Id);
-            Assert.AreEqual("ben", relation.UserName);
-            Assert.AreEqual(1, relation.UserId);
-            Assert.AreEqual(1, relation.Version);
+            Assert.That(relation, Is.Not.Null);
+            Assert.That(relation.Id, Is.EqualTo(1));
+            Assert.That(relation.UserName, Is.EqualTo("ben"));
+            Assert.That(relation.UserId, Is.EqualTo(1));
+            Assert.That(relation.Version, Is.EqualTo(1));
 
             relation = serializer.Deserialize(
                 new StringReader("<relation id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></relation>")) as Relation;
-            Assert.IsNotNull(relation);
-            Assert.AreEqual(1, relation.Id);
-            Assert.AreEqual("ben", relation.UserName);
-            Assert.AreEqual(1, relation.UserId);
-            Assert.AreEqual(1, relation.Version);
-            Assert.AreEqual(new System.DateTime(2008, 09, 12, 21, 37, 45), relation.TimeStamp.Value.ToUniversalTime());
-            Assert.IsNotNull(relation.Tags);
-            Assert.IsTrue(relation.Tags.Contains("amenity", "something"));
-            Assert.IsTrue(relation.Tags.Contains("key", "some_value"));
+            Assert.That(relation, Is.Not.Null);
+            Assert.That(relation.Id, Is.EqualTo(1));
+            Assert.That(relation.UserName, Is.EqualTo("ben"));
+            Assert.That(relation.UserId, Is.EqualTo(1));
+            Assert.That(relation.Version, Is.EqualTo(1));
+            Assert.That(relation.TimeStamp.Value.ToUniversalTime(), Is.EqualTo(new System.DateTime(2008, 09, 12, 21, 37, 45)));
+            Assert.That(relation.Tags, Is.Not.Null);
+            Assert.That(relation.Tags.Contains("amenity", "something"), Is.True);
+            Assert.That(relation.Tags.Contains("key", "some_value"), Is.True);
 
             relation = serializer.Deserialize(
                 new StringReader("<relation id=\"1\" user=\"ben\" uid=\"1\" version=\"1\" timestamp=\"2008-09-12T21:37:45Z\"><member type=\"node\" ref=\"1\" role=\"role1\" /><member type=\"way\" ref=\"10\" role=\"role2\" /><member type=\"relation\" ref=\"100\" role=\"role3\" /><tag k=\"amenity\" v=\"something\" /><tag k=\"key\" v=\"some_value\" /></relation>")) as Relation;
-            Assert.IsNotNull(relation);
-            Assert.AreEqual(1, relation.Id);
-            Assert.AreEqual("ben", relation.UserName);
-            Assert.AreEqual(1, relation.UserId);
-            Assert.AreEqual(1, relation.Version);
-            Assert.AreEqual(new System.DateTime(2008, 09, 12, 21, 37, 45), relation.TimeStamp.Value.ToUniversalTime());
-            Assert.IsNotNull(relation.Tags);
-            Assert.IsTrue(relation.Tags.Contains("amenity", "something"));
-            Assert.IsTrue(relation.Tags.Contains("key", "some_value"));
-            Assert.IsNotNull(relation.Members);
-            Assert.IsTrue(relation.Members.Any(x => x.Id == 1 && x.Role == "role1" && x.Type == OsmGeoType.Node));
-            Assert.IsTrue(relation.Members.Any(x => x.Id == 10 && x.Role == "role2" && x.Type == OsmGeoType.Way));
-            Assert.IsTrue(relation.Members.Any(x => x.Id == 100 && x.Role == "role3" && x.Type == OsmGeoType.Relation));
+            Assert.That(relation, Is.Not.Null);
+            Assert.That(relation.Id, Is.EqualTo(1));
+            Assert.That(relation.UserName, Is.EqualTo("ben"));
+            Assert.That(relation.UserId, Is.EqualTo(1));
+            Assert.That(relation.Version, Is.EqualTo(1));
+            Assert.That(relation.TimeStamp.Value.ToUniversalTime(), Is.EqualTo(new System.DateTime(2008, 09, 12, 21, 37, 45)));
+            Assert.That(relation.Tags, Is.Not.Null);
+            Assert.That(relation.Tags.Contains("amenity", "something"), Is.True);
+            Assert.That(relation.Tags.Contains("key", "some_value"), Is.True);
+            Assert.That(relation.Members, Is.Not.Null);
+            Assert.That(relation.Members.Any(x => x.Id == 1 && x.Role == "role1" && x.Type == OsmGeoType.Node), Is.True);
+            Assert.That(relation.Members.Any(x => x.Id == 10 && x.Role == "role2" && x.Type == OsmGeoType.Way), Is.True);
+            Assert.That(relation.Members.Any(x => x.Id == 100 && x.Role == "role3" && x.Type == OsmGeoType.Relation), Is.True);
         }
 
         /// <summary>
@@ -158,9 +155,9 @@ namespace OsmSharp.Test.IO.Xml
                                      "<relation id=\"2\" user=\"ben\" uid=\"1\" version=\"1\" />" +
                                  "</osm>")) as Osm;
 
-            Assert.IsNotNull(osm);
-            Assert.IsNotNull(osm.Relations);
-            Assert.AreEqual(2, osm.Relations.Length);
+            Assert.That(osm, Is.Not.Null);
+            Assert.That(osm.Relations, Is.Not.Null);
+            Assert.That(osm.Relations.Length, Is.EqualTo(2));
         }
     }
 }

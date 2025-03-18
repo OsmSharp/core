@@ -14,7 +14,7 @@ namespace OsmSharp.Test.IO.Json.API
         {
             var osm = new Osm()
             {
-                Version = 0.6,
+                Version = System.Version.Parse("0.6"),
                 Generator = "OsmSharp",
                 Nodes = new []{new Node
                 {
@@ -63,8 +63,7 @@ namespace OsmSharp.Test.IO.Json.API
             };
 
             var serialized = JsonSerializer.Serialize(osm);
-            Assert.AreEqual("{\"version\":0.6,\"generator\":\"OsmSharp\",\"elements\":[{\"type\":\"node\",\"lat\":58.4215544,\"lon\":15.6182983,\"id\":100000,\"tags\":{\"highway\":\"residential\"},\"timestamp\":\"2017-04-17T18:31:21Z\",\"version\":3,\"changeset\":47881103,\"user\":\"riiga\",\"uid\":83501},{\"type\":\"way\",\"nodes\":[1,2,3],\"id\":1,\"tags\":{\"amenity\":\"something\",\"key\":\"some_value\"},\"timestamp\":\"2008-09-12T21:37:45\",\"version\":1,\"user\":\"ben\",\"uid\":1},{\"type\":\"relation\",\"members\":[{\"type\":\"node\",\"ref\":1,\"role\":\"role1\"},{\"type\":\"way\",\"ref\":10,\"role\":\"role2\"},{\"type\":\"relation\",\"ref\":100,\"role\":\"role3\"}],\"id\":1,\"tags\":{\"amenity\":\"something\",\"key\":\"some_value\"},\"timestamp\":\"2008-09-12T21:37:45\",\"version\":1,\"user\":\"ben\",\"uid\":1}]}", 
-                serialized);
+            Assert.That(serialized, Is.EqualTo("{\"version\":0.6,\"generator\":\"OsmSharp\",\"elements\":[{\"type\":\"node\",\"lat\":58.4215544,\"lon\":15.6182983,\"id\":100000,\"tags\":{\"highway\":\"residential\"},\"timestamp\":\"2017-04-17T18:31:21Z\",\"version\":3,\"changeset\":47881103,\"user\":\"riiga\",\"uid\":83501},{\"type\":\"way\",\"nodes\":[1,2,3],\"id\":1,\"tags\":{\"amenity\":\"something\",\"key\":\"some_value\"},\"timestamp\":\"2008-09-12T21:37:45\",\"version\":1,\"user\":\"ben\",\"uid\":1},{\"type\":\"relation\",\"members\":[{\"type\":\"node\",\"ref\":1,\"role\":\"role1\"},{\"type\":\"way\",\"ref\":10,\"role\":\"role2\"},{\"type\":\"relation\",\"ref\":100,\"role\":\"role3\"}],\"id\":1,\"tags\":{\"amenity\":\"something\",\"key\":\"some_value\"},\"timestamp\":\"2008-09-12T21:37:45\",\"version\":1,\"user\":\"ben\",\"uid\":1}]}"));
         }
 
         [Test]
@@ -73,13 +72,13 @@ namespace OsmSharp.Test.IO.Json.API
             var osm = JsonSerializer.Deserialize<Osm>(
                 "{\"version\":0.6,\"generator\":\"OsmSharp\",\"elements\":[{\"type\":\"node\",\"lat\":58.4215544,\"lon\":15.6182983,\"id\":100000,\"tags\":{\"highway\":\"residential\"},\"timestamp\":\"2017-04-17T18:31:21Z\",\"version\":3,\"changeset\":47881103,\"user\":\"riiga\",\"uid\":83501},{\"type\":\"way\",\"nodes\":[1,2,3],\"id\":1,\"tags\":{\"amenity\":\"something\",\"key\":\"some_value\"},\"timestamp\":\"2008-09-12T21:37:45\",\"version\":1,\"user\":\"ben\",\"uid\":1},{\"type\":\"relation\",\"members\":[{\"type\":\"node\",\"ref\":1,\"role\":\"role1\"},{\"type\":\"way\",\"ref\":10,\"role\":\"role2\"},{\"type\":\"relation\",\"ref\":100,\"role\":\"role3\"}],\"id\":1,\"tags\":{\"amenity\":\"something\",\"key\":\"some_value\"},\"timestamp\":\"2008-09-12T21:37:45\",\"version\":1,\"user\":\"ben\",\"uid\":1}]}");
             
-            Assert.NotNull(osm);
-            Assert.AreEqual(0.6, osm.Version);
-            Assert.AreEqual("OsmSharp", osm.Generator);
+            Assert.That(osm, Is.Not.Null);
+            Assert.That(osm.Version, Is.EqualTo(System.Version.Parse("0.6")));
+            Assert.That(osm.Generator, Is.EqualTo("OsmSharp"));
 
-            Assert.AreEqual(1, osm.Nodes.Length);   
-            Assert.AreEqual(1, osm.Ways.Length);   
-            Assert.AreEqual(1, osm.Relations.Length);   
+            Assert.That(osm.Nodes.Length, Is.EqualTo(1));   
+            Assert.That(osm.Ways.Length, Is.EqualTo(1));   
+            Assert.That(osm.Relations.Length, Is.EqualTo(1));   
         }
     }
 }

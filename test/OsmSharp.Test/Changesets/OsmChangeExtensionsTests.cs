@@ -64,24 +64,24 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
 
             // doing the squashing, nothing should happen.
             var squashed = new[] { changeset }.Squash();
 
-            Assert.IsNotNull(squashed.Create);
-            Assert.AreEqual(1, squashed.Create.Length);
-            Assert.AreEqual(OsmGeoType.Node, squashed.Create[0].Type);
-            Assert.IsNotNull(squashed.Delete);
-            Assert.AreEqual(1, squashed.Delete.Length);
-            Assert.AreEqual(OsmGeoType.Way, squashed.Delete[0].Type);
-            Assert.IsNotNull(squashed.Modify);
-            Assert.AreEqual(1, squashed.Modify.Length);
-            Assert.AreEqual(OsmGeoType.Relation, squashed.Modify[0].Type);
+            Assert.That(squashed.Create, Is.Not.Null);
+            Assert.That(squashed.Create.Length, Is.EqualTo(1));
+            Assert.That(squashed.Create[0].Type, Is.EqualTo(OsmGeoType.Node));
+            Assert.That(squashed.Delete, Is.Not.Null);
+            Assert.That(squashed.Delete.Length, Is.EqualTo(1));
+            Assert.That(squashed.Delete[0].Type, Is.EqualTo(OsmGeoType.Way));
+            Assert.That(squashed.Modify, Is.Not.Null);
+            Assert.That(squashed.Modify.Length, Is.EqualTo(1));
+            Assert.That(squashed.Modify[0].Type, Is.EqualTo(OsmGeoType.Relation));
 
-            Assert.AreEqual("OsmSharp", squashed.Generator);
-            Assert.AreEqual(6, squashed.Version);
+            Assert.That(squashed.Generator, Is.EqualTo("OsmSharp"));
+            Assert.That(squashed.Version, Is.EqualTo(System.Version.Parse("0.6")));
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
             var changeset2 = new OsmChange()
             {
@@ -114,24 +114,24 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
 
             // doing the squashing, should modify the creation.
             var squashed = new[] { changeset1, changeset2 }.Squash();
 
-            Assert.IsNotNull(squashed.Create);
-            Assert.AreEqual(1, squashed.Create.Length);
-            Assert.AreEqual(OsmGeoType.Node, squashed.Create[0].Type);
-            Assert.AreEqual(1, squashed.Create[0].Id);
-            Assert.AreEqual(3, squashed.Create[0].Version);
-            Assert.IsNotNull(squashed.Delete);
-            Assert.AreEqual(0, squashed.Delete.Length);
-            Assert.IsNotNull(squashed.Modify);
-            Assert.AreEqual(0, squashed.Modify.Length);
+            Assert.That(squashed.Create, Is.Not.Null);
+            Assert.That(squashed.Create.Length, Is.EqualTo(1));
+            Assert.That(squashed.Create[0].Type, Is.EqualTo(OsmGeoType.Node));
+            Assert.That(squashed.Create[0].Id, Is.EqualTo(1));
+            Assert.That(squashed.Create[0].Version, Is.EqualTo(3));
+            Assert.That(squashed.Delete, Is.Not.Null);
+            Assert.That(squashed.Delete.Length, Is.EqualTo(0));
+            Assert.That(squashed.Modify, Is.Not.Null);
+            Assert.That(squashed.Modify.Length, Is.EqualTo(0));
 
-            Assert.AreEqual("OsmSharp", squashed.Generator);
-            Assert.AreEqual(6, squashed.Version);
+            Assert.That(squashed.Generator, Is.EqualTo("OsmSharp"));
+            Assert.That(squashed.Version, Is.EqualTo(System.Version.Parse("0.6")));
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
             var changeset2 = new OsmChange()
             {
@@ -164,21 +164,21 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
 
             // doing the squashing, should undo the creation.
             var squashed = new[] { changeset1, changeset2 }.Squash();
 
-            Assert.IsNotNull(squashed.Create);
-            Assert.AreEqual(0, squashed.Create.Length);
-            Assert.IsNotNull(squashed.Delete);
-            Assert.AreEqual(0, squashed.Delete.Length);
-            Assert.IsNotNull(squashed.Modify);
-            Assert.AreEqual(0, squashed.Modify.Length);
+            Assert.That(squashed.Create, Is.Not.Null);
+            Assert.That(squashed.Create.Length, Is.EqualTo(0));
+            Assert.That(squashed.Delete, Is.Not.Null);
+            Assert.That(squashed.Delete.Length, Is.EqualTo(0));
+            Assert.That(squashed.Modify, Is.Not.Null);
+            Assert.That(squashed.Modify.Length, Is.EqualTo(0));
 
-            Assert.AreEqual("OsmSharp", squashed.Generator);
-            Assert.AreEqual(6, squashed.Version);
+            Assert.That(squashed.Generator, Is.EqualTo("OsmSharp"));
+            Assert.That(squashed.Version, Is.EqualTo(System.Version.Parse("0.6")));
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
             var changeset2 = new OsmChange()
             {
@@ -211,7 +211,7 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
             var changeset3 = new OsmChange()
             {
@@ -224,21 +224,21 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
 
             // doing the squashing, should undo the creation that was modified.
             var squashed = new[] { changeset1, changeset2, changeset3 }.Squash();
 
-            Assert.IsNotNull(squashed.Create);
-            Assert.AreEqual(0, squashed.Create.Length);
-            Assert.IsNotNull(squashed.Delete);
-            Assert.AreEqual(0, squashed.Delete.Length);
-            Assert.IsNotNull(squashed.Modify);
-            Assert.AreEqual(0, squashed.Modify.Length);
+            Assert.That(squashed.Create, Is.Not.Null);
+            Assert.That(squashed.Create.Length, Is.EqualTo(0));
+            Assert.That(squashed.Delete, Is.Not.Null);
+            Assert.That(squashed.Delete.Length, Is.EqualTo(0));
+            Assert.That(squashed.Modify, Is.Not.Null);
+            Assert.That(squashed.Modify.Length, Is.EqualTo(0));
 
-            Assert.AreEqual("OsmSharp", squashed.Generator);
-            Assert.AreEqual(6, squashed.Version);
+            Assert.That(squashed.Generator, Is.EqualTo("OsmSharp"));
+            Assert.That(squashed.Version, Is.EqualTo(System.Version.Parse("0.6")));
         }
 
         /// <summary>
@@ -263,24 +263,24 @@ namespace OsmSharp.Test.Changesets
                     }
                 },
                 Generator = "OsmSharp",
-                Version = 6
+                Version = System.Version.Parse("0.6")
             };
 
             // doing the squashing, should modify the creation.
             var squashed = new[] { changeset1 }.Squash();
 
-            Assert.IsNotNull(squashed.Modify);
-            Assert.AreEqual(1, squashed.Modify.Length);
-            Assert.AreEqual(OsmGeoType.Node, squashed.Modify[0].Type);
-            Assert.AreEqual(1, squashed.Modify[0].Id);
-            Assert.AreEqual(3, squashed.Modify[0].Version);
-            Assert.IsNotNull(squashed.Delete);
-            Assert.AreEqual(0, squashed.Delete.Length);
-            Assert.IsNotNull(squashed.Create);
-            Assert.AreEqual(0, squashed.Create.Length);
+            Assert.That(squashed.Modify, Is.Not.Null);
+            Assert.That(squashed.Modify.Length, Is.EqualTo(1));
+            Assert.That(squashed.Modify[0].Type, Is.EqualTo(OsmGeoType.Node));
+            Assert.That(squashed.Modify[0].Id, Is.EqualTo(1));
+            Assert.That(squashed.Modify[0].Version, Is.EqualTo(3));
+            Assert.That(squashed.Delete, Is.Not.Null);
+            Assert.That(squashed.Delete.Length, Is.EqualTo(0));
+            Assert.That(squashed.Create, Is.Not.Null);
+            Assert.That(squashed.Create.Length, Is.EqualTo(0));
 
-            Assert.AreEqual("OsmSharp", squashed.Generator);
-            Assert.AreEqual(6, squashed.Version);
+            Assert.That(squashed.Generator, Is.EqualTo("OsmSharp"));
+            Assert.That(squashed.Version, Is.EqualTo(System.Version.Parse("0.6")));
         }
     }
 }

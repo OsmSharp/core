@@ -50,7 +50,7 @@ namespace OsmSharp.Test.Stream
                 Latitude = 1.1f,
                 Longitude = 1.2f,
                 ChangeSetId = 1092,
-                TimeStamp = DateTime.UnixEpoch,
+                TimeStamp = DateTimeHelpers.UnixEpoch(),
                 UserId = 9034,
                 Version = 12
             };
@@ -68,19 +68,19 @@ namespace OsmSharp.Test.Stream
                 stream.Seek(0, SeekOrigin.Begin);
                 var resultObjects = new List<OsmGeo>(new PBFOsmStreamSource(stream));
 
-                Assert.IsNotNull(resultObjects);
-                Assert.AreEqual(1, resultObjects.Count);
+                Assert.That(resultObjects, Is.Not.Null);
+                Assert.That(resultObjects.Count, Is.EqualTo(1));
 
-                Assert.AreEqual(sourceObjects[0].Id, resultObjects[0].Id);
-                Assert.AreEqual(1092, resultObjects[0].ChangeSetId);
-                Assert.AreEqual(OsmSharp.IO.PBF.PBFExtensions.FromUnixTime(0), resultObjects[0].TimeStamp);
-                Assert.AreEqual(9034, resultObjects[0].UserId);
-                Assert.AreEqual(sourceObjects[0].UserName, resultObjects[0].UserName);
-                Assert.AreEqual(12, resultObjects[0].Version);
+                Assert.That(resultObjects[0].Id, Is.EqualTo(sourceObjects[0].Id));
+                Assert.That(resultObjects[0].ChangeSetId, Is.EqualTo(1092));
+                Assert.That(resultObjects[0].TimeStamp, Is.EqualTo(OsmSharp.IO.PBF.PBFExtensions.FromUnixTime(0)));
+                Assert.That(resultObjects[0].UserId, Is.EqualTo(9034));
+                Assert.That(resultObjects[0].UserName, Is.EqualTo(sourceObjects[0].UserName));
+                Assert.That(resultObjects[0].Version, Is.EqualTo(12));
 
                 var resultNode = resultObjects[0] as Node;
-                Assert.AreEqual(sourceNode.Latitude.Value, resultNode.Latitude.Value, .0001f);
-                Assert.AreEqual(sourceNode.Longitude.Value, resultNode.Longitude.Value, .0001f);
+                Assert.That(resultNode.Latitude.Value, Is.EqualTo(sourceNode.Latitude.Value).Within(.0001f));
+                Assert.That(resultNode.Longitude.Value, Is.EqualTo(sourceNode.Longitude.Value).Within(.0001f));
             }
 
             // build source stream.
@@ -90,7 +90,7 @@ namespace OsmSharp.Test.Stream
                 Latitude = 1.1f,
                 Longitude = 1.2f,
                 ChangeSetId = 1092,
-                TimeStamp = DateTime.UnixEpoch,
+                TimeStamp = DateTimeHelpers.UnixEpoch(),
                 UserId = 9034,
                 Version = 12
             };
@@ -110,21 +110,21 @@ namespace OsmSharp.Test.Stream
                 stream.Seek(0, SeekOrigin.Begin);
                 var resultObjects = new List<OsmGeo>(new PBFOsmStreamSource(stream));
 
-                Assert.IsNotNull(resultObjects);
-                Assert.AreEqual(1, resultObjects.Count);
+                Assert.That(resultObjects, Is.Not.Null);
+                Assert.That(resultObjects.Count, Is.EqualTo(1));
 
-                Assert.AreEqual(sourceObjects[0].Id, resultObjects[0].Id);
-                Assert.AreEqual(1092, resultObjects[0].ChangeSetId);
-                Assert.AreEqual(OsmSharp.IO.PBF.PBFExtensions.FromUnixTime(0), resultObjects[0].TimeStamp);
-                Assert.AreEqual(9034, resultObjects[0].UserId);
-                Assert.AreEqual(string.Empty, resultObjects[0].UserName);
-                Assert.AreEqual(12, resultObjects[0].Version);
-                Assert.AreEqual(sourceObjects[0].Tags.Count, resultObjects[0].Tags.Count);
-                Assert.IsTrue(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()));
+                Assert.That(resultObjects[0].Id, Is.EqualTo(sourceObjects[0].Id));
+                Assert.That(resultObjects[0].ChangeSetId, Is.EqualTo(1092));
+                Assert.That(resultObjects[0].TimeStamp, Is.EqualTo(OsmSharp.IO.PBF.PBFExtensions.FromUnixTime(0)));
+                Assert.That(resultObjects[0].UserId, Is.EqualTo(9034));
+                Assert.That(resultObjects[0].UserName, Is.EqualTo(string.Empty));
+                Assert.That(resultObjects[0].Version, Is.EqualTo(12));
+                Assert.That(resultObjects[0].Tags.Count, Is.EqualTo(sourceObjects[0].Tags.Count));
+                Assert.That(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()), Is.True);
 
                 var resultNode = resultObjects[0] as Node;
-                Assert.AreEqual(sourceNode.Latitude.Value, resultNode.Latitude.Value, .0001f);
-                Assert.AreEqual(sourceNode.Longitude.Value, resultNode.Longitude.Value, .0001f);
+                Assert.That(resultNode.Latitude.Value, Is.EqualTo(sourceNode.Latitude.Value).Within(.0001f));
+                Assert.That(resultNode.Longitude.Value, Is.EqualTo(sourceNode.Longitude.Value).Within(.0001f));
             }
 
             // build source stream.
@@ -134,7 +134,7 @@ namespace OsmSharp.Test.Stream
                 Latitude = 1.1f,
                 Longitude = 1.2f,
                 ChangeSetId = 1092,
-                TimeStamp = DateTime.UnixEpoch,
+                TimeStamp = DateTimeHelpers.UnixEpoch(),
                 UserId = 9034,
                 Version = 12
             };
@@ -160,21 +160,21 @@ namespace OsmSharp.Test.Stream
                 stream.Seek(0, SeekOrigin.Begin);
                 var resultObjects = new List<OsmGeo>(new PBFOsmStreamSource(stream));
 
-                Assert.IsNotNull(resultObjects);
-                Assert.AreEqual(1, resultObjects.Count);
+                Assert.That(resultObjects, Is.Not.Null);
+                Assert.That(resultObjects.Count, Is.EqualTo(1));
 
-                Assert.AreEqual(sourceObjects[0].Id, resultObjects[0].Id);
-                Assert.AreEqual(sourceObjects[0].ChangeSetId, resultObjects[0].ChangeSetId);
-                Assert.AreEqual(sourceObjects[0].TimeStamp.Value.Ticks, resultObjects[0].TimeStamp.Value.Ticks, 10000000);
-                Assert.AreEqual(sourceObjects[0].UserId, resultObjects[0].UserId);
-                Assert.AreEqual(sourceObjects[0].UserName, resultObjects[0].UserName);
-                Assert.AreEqual(sourceObjects[0].Version, resultObjects[0].Version);
-                Assert.AreEqual(sourceObjects[0].Tags.Count, resultObjects[0].Tags.Count);
-                Assert.IsTrue(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()));
+                Assert.That(resultObjects[0].Id, Is.EqualTo(sourceObjects[0].Id));
+                Assert.That(resultObjects[0].ChangeSetId, Is.EqualTo(sourceObjects[0].ChangeSetId));
+                Assert.That(resultObjects[0].TimeStamp.Value.Ticks, Is.EqualTo(sourceObjects[0].TimeStamp.Value.Ticks).Within(10000000));
+                Assert.That(resultObjects[0].UserId, Is.EqualTo(sourceObjects[0].UserId));
+                Assert.That(resultObjects[0].UserName, Is.EqualTo(sourceObjects[0].UserName));
+                Assert.That(resultObjects[0].Version, Is.EqualTo(sourceObjects[0].Version));
+                Assert.That(resultObjects[0].Tags.Count, Is.EqualTo(sourceObjects[0].Tags.Count));
+                Assert.That(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()), Is.True);
 
                 var resultNode = resultObjects[0] as Node;
-                Assert.AreEqual(sourceNode.Latitude.Value, resultNode.Latitude.Value, .0001f);
-                Assert.AreEqual(sourceNode.Longitude.Value, resultNode.Longitude.Value, .0001f);
+                Assert.That(resultNode.Latitude.Value, Is.EqualTo(sourceNode.Latitude.Value).Within(.0001f));
+                Assert.That(resultNode.Longitude.Value, Is.EqualTo(sourceNode.Longitude.Value).Within(.0001f));
             }
         }
 
@@ -204,20 +204,20 @@ namespace OsmSharp.Test.Stream
                 stream.Seek(0, SeekOrigin.Begin);
                 var resultObjects = new List<OsmGeo>(new PBFOsmStreamSource(stream));
 
-                Assert.IsNotNull(resultObjects);
-                Assert.AreEqual(1, resultObjects.Count);
+                Assert.That(resultObjects, Is.Not.Null);
+                Assert.That(resultObjects.Count, Is.EqualTo(1));
 
-                Assert.AreEqual(sourceObjects[0].Id, resultObjects[0].Id);
-                Assert.AreEqual(0, resultObjects[0].ChangeSetId);
-                Assert.AreEqual(OsmSharp.IO.PBF.PBFExtensions.FromUnixTime(0), resultObjects[0].TimeStamp);
-                Assert.AreEqual(0, resultObjects[0].UserId);
-                Assert.AreEqual(sourceObjects[0].UserName, resultObjects[0].UserName);
-                Assert.AreEqual(0, resultObjects[0].Version);
+                Assert.That(resultObjects[0].Id, Is.EqualTo(sourceObjects[0].Id));
+                Assert.That(resultObjects[0].ChangeSetId, Is.EqualTo(0));
+                Assert.That(resultObjects[0].TimeStamp, Is.EqualTo(OsmSharp.IO.PBF.PBFExtensions.FromUnixTime(0)));
+                Assert.That(resultObjects[0].UserId, Is.EqualTo(0));
+                Assert.That(resultObjects[0].UserName, Is.EqualTo(sourceObjects[0].UserName));
+                Assert.That(resultObjects[0].Version, Is.EqualTo(0));
 
                 var resultWay = resultObjects[0] as Way;
-                Assert.AreEqual(sourceWay.Nodes.Length, resultWay.Nodes.Length);
-                Assert.AreEqual(sourceWay.Nodes[0], resultWay.Nodes[0]);
-                Assert.AreEqual(sourceWay.Nodes[1], resultWay.Nodes[1]);
+                Assert.That(resultWay.Nodes.Length, Is.EqualTo(sourceWay.Nodes.Length));
+                Assert.That(resultWay.Nodes[0], Is.EqualTo(sourceWay.Nodes[0]));
+                Assert.That(resultWay.Nodes[1], Is.EqualTo(sourceWay.Nodes[1]));
             }
 
             // build source stream.
@@ -242,22 +242,22 @@ namespace OsmSharp.Test.Stream
                 stream.Seek(0, SeekOrigin.Begin);
                 var resultObjects = new List<OsmGeo>(new PBFOsmStreamSource(stream));
 
-                Assert.IsNotNull(resultObjects);
-                Assert.AreEqual(1, resultObjects.Count);
+                Assert.That(resultObjects, Is.Not.Null);
+                Assert.That(resultObjects.Count, Is.EqualTo(1));
 
-                Assert.AreEqual(sourceObjects[0].Id, resultObjects[0].Id);
-                Assert.AreEqual(0, resultObjects[0].ChangeSetId);
-                Assert.AreEqual(OsmSharp.IO.PBF.PBFExtensions.FromUnixTime(0), resultObjects[0].TimeStamp);
-                Assert.AreEqual(0, resultObjects[0].UserId);
-                Assert.AreEqual(string.Empty, resultObjects[0].UserName);
-                Assert.AreEqual(0, resultObjects[0].Version);
-                Assert.AreEqual(sourceObjects[0].Tags.Count, resultObjects[0].Tags.Count);
-                Assert.IsTrue(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()));
+                Assert.That(resultObjects[0].Id, Is.EqualTo(sourceObjects[0].Id));
+                Assert.That(resultObjects[0].ChangeSetId, Is.EqualTo(0));
+                Assert.That(resultObjects[0].TimeStamp, Is.EqualTo(OsmSharp.IO.PBF.PBFExtensions.FromUnixTime(0)));
+                Assert.That(resultObjects[0].UserId, Is.EqualTo(0));
+                Assert.That(resultObjects[0].UserName, Is.EqualTo(string.Empty));
+                Assert.That(resultObjects[0].Version, Is.EqualTo(0));
+                Assert.That(resultObjects[0].Tags.Count, Is.EqualTo(sourceObjects[0].Tags.Count));
+                Assert.That(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()), Is.True);
 
                 var resultWay = resultObjects[0] as Way;
-                Assert.AreEqual(sourceWay.Nodes.Length, resultWay.Nodes.Length);
-                Assert.AreEqual(sourceWay.Nodes[0], resultWay.Nodes[0]);
-                Assert.AreEqual(sourceWay.Nodes[1], resultWay.Nodes[1]);
+                Assert.That(resultWay.Nodes.Length, Is.EqualTo(sourceWay.Nodes.Length));
+                Assert.That(resultWay.Nodes[0], Is.EqualTo(sourceWay.Nodes[0]));
+                Assert.That(resultWay.Nodes[1], Is.EqualTo(sourceWay.Nodes[1]));
             }
 
             // build source stream.
@@ -288,22 +288,22 @@ namespace OsmSharp.Test.Stream
                 stream.Seek(0, SeekOrigin.Begin);
                 var resultObjects = new List<OsmGeo>(new PBFOsmStreamSource(stream));
 
-                Assert.IsNotNull(resultObjects);
-                Assert.AreEqual(1, resultObjects.Count);
+                Assert.That(resultObjects, Is.Not.Null);
+                Assert.That(resultObjects.Count, Is.EqualTo(1));
 
-                Assert.AreEqual(sourceObjects[0].Id, resultObjects[0].Id);
-                Assert.AreEqual(sourceObjects[0].ChangeSetId, resultObjects[0].ChangeSetId);
-                Assert.AreEqual(sourceObjects[0].TimeStamp.Value.Ticks, resultObjects[0].TimeStamp.Value.Ticks, 10000000);
-                Assert.AreEqual(sourceObjects[0].UserId, resultObjects[0].UserId);
-                Assert.AreEqual(sourceObjects[0].UserName, resultObjects[0].UserName);
-                Assert.AreEqual(sourceObjects[0].Version, resultObjects[0].Version);
-                Assert.AreEqual(sourceObjects[0].Tags.Count, resultObjects[0].Tags.Count);
-                Assert.IsTrue(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()));
+                Assert.That(resultObjects[0].Id, Is.EqualTo(sourceObjects[0].Id));
+                Assert.That(resultObjects[0].ChangeSetId, Is.EqualTo(sourceObjects[0].ChangeSetId));
+                Assert.That(resultObjects[0].TimeStamp.Value.Ticks, Is.EqualTo(sourceObjects[0].TimeStamp.Value.Ticks).Within(10000000));
+                Assert.That(resultObjects[0].UserId, Is.EqualTo(sourceObjects[0].UserId));
+                Assert.That(resultObjects[0].UserName, Is.EqualTo(sourceObjects[0].UserName));
+                Assert.That(resultObjects[0].Version, Is.EqualTo(sourceObjects[0].Version));
+                Assert.That(resultObjects[0].Tags.Count, Is.EqualTo(sourceObjects[0].Tags.Count));
+                Assert.That(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()), Is.True);
 
                 var resultWay = resultObjects[0] as Way;
-                Assert.AreEqual(sourceWay.Nodes.Length, resultWay.Nodes.Length);
-                Assert.AreEqual(sourceWay.Nodes[0], resultWay.Nodes[0]);
-                Assert.AreEqual(sourceWay.Nodes[1], resultWay.Nodes[1]);
+                Assert.That(resultWay.Nodes.Length, Is.EqualTo(sourceWay.Nodes.Length));
+                Assert.That(resultWay.Nodes[0], Is.EqualTo(sourceWay.Nodes[0]));
+                Assert.That(resultWay.Nodes[1], Is.EqualTo(sourceWay.Nodes[1]));
             }
         }
 
@@ -347,24 +347,24 @@ namespace OsmSharp.Test.Stream
                 stream.Seek(0, SeekOrigin.Begin);
                 var resultObjects = new List<OsmGeo>(new PBFOsmStreamSource(stream));
 
-                Assert.IsNotNull(resultObjects);
-                Assert.AreEqual(1, resultObjects.Count);
+                Assert.That(resultObjects, Is.Not.Null);
+                Assert.That(resultObjects.Count, Is.EqualTo(1));
 
-                Assert.AreEqual(sourceObjects[0].Id, resultObjects[0].Id);
-                Assert.AreEqual(0, resultObjects[0].ChangeSetId);
-                Assert.AreEqual(OsmSharp.IO.PBF.PBFExtensions.FromUnixTime(0), resultObjects[0].TimeStamp);
-                Assert.AreEqual(0, resultObjects[0].UserId);
-                Assert.AreEqual(string.Empty, resultObjects[0].UserName);
-                Assert.AreEqual(0, resultObjects[0].Version);
+                Assert.That(resultObjects[0].Id, Is.EqualTo(sourceObjects[0].Id));
+                Assert.That(resultObjects[0].ChangeSetId, Is.EqualTo(0));
+                Assert.That(resultObjects[0].TimeStamp, Is.EqualTo(OsmSharp.IO.PBF.PBFExtensions.FromUnixTime(0)));
+                Assert.That(resultObjects[0].UserId, Is.EqualTo(0));
+                Assert.That(resultObjects[0].UserName, Is.EqualTo(string.Empty));
+                Assert.That(resultObjects[0].Version, Is.EqualTo(0));
 
                 var resultRelation = resultObjects[0] as Relation;
-                Assert.AreEqual(sourceRelation.Members.Length, resultRelation.Members.Length);
-                Assert.AreEqual(sourceRelation.Members[0].Id, resultRelation.Members[0].Id);
-                Assert.AreEqual(sourceRelation.Members[0].Role, resultRelation.Members[0].Role);
-                Assert.AreEqual(sourceRelation.Members[0].Type, resultRelation.Members[0].Type);
-                Assert.AreEqual(sourceRelation.Members[1].Id, resultRelation.Members[1].Id);
-                Assert.AreEqual(sourceRelation.Members[1].Role, resultRelation.Members[1].Role);
-                Assert.AreEqual(sourceRelation.Members[1].Type, resultRelation.Members[1].Type);
+                Assert.That(resultRelation.Members.Length, Is.EqualTo(sourceRelation.Members.Length));
+                Assert.That(resultRelation.Members[0].Id, Is.EqualTo(sourceRelation.Members[0].Id));
+                Assert.That(resultRelation.Members[0].Role, Is.EqualTo(sourceRelation.Members[0].Role));
+                Assert.That(resultRelation.Members[0].Type, Is.EqualTo(sourceRelation.Members[0].Type));
+                Assert.That(resultRelation.Members[1].Id, Is.EqualTo(sourceRelation.Members[1].Id));
+                Assert.That(resultRelation.Members[1].Role, Is.EqualTo(sourceRelation.Members[1].Role));
+                Assert.That(resultRelation.Members[1].Type, Is.EqualTo(sourceRelation.Members[1].Type));
             }
 
             // build source stream.
@@ -403,26 +403,26 @@ namespace OsmSharp.Test.Stream
                 stream.Seek(0, SeekOrigin.Begin);
                 var resultObjects = new List<OsmGeo>(new PBFOsmStreamSource(stream));
 
-                Assert.IsNotNull(resultObjects);
-                Assert.AreEqual(1, resultObjects.Count);
+                Assert.That(resultObjects, Is.Not.Null);
+                Assert.That(resultObjects.Count, Is.EqualTo(1));
 
-                Assert.AreEqual(sourceObjects[0].Id, resultObjects[0].Id);
-                Assert.AreEqual(0, resultObjects[0].ChangeSetId);
-                Assert.AreEqual(OsmSharp.IO.PBF.PBFExtensions.FromUnixTime(0), resultObjects[0].TimeStamp);
-                Assert.AreEqual(0, resultObjects[0].UserId);
-                Assert.AreEqual(string.Empty, resultObjects[0].UserName);
-                Assert.AreEqual(0, resultObjects[0].Version);
-                Assert.AreEqual(sourceObjects[0].Tags.Count, resultObjects[0].Tags.Count);
-                Assert.IsTrue(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()));
+                Assert.That(resultObjects[0].Id, Is.EqualTo(sourceObjects[0].Id));
+                Assert.That(resultObjects[0].ChangeSetId, Is.EqualTo(0));
+                Assert.That(resultObjects[0].TimeStamp, Is.EqualTo(OsmSharp.IO.PBF.PBFExtensions.FromUnixTime(0)));
+                Assert.That(resultObjects[0].UserId, Is.EqualTo(0));
+                Assert.That(resultObjects[0].UserName, Is.EqualTo(string.Empty));
+                Assert.That(resultObjects[0].Version, Is.EqualTo(0));
+                Assert.That(resultObjects[0].Tags.Count, Is.EqualTo(sourceObjects[0].Tags.Count));
+                Assert.That(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()), Is.True);
 
                 var resultRelation = resultObjects[0] as Relation;
-                Assert.AreEqual(sourceRelation.Members.Length, resultRelation.Members.Length);
-                Assert.AreEqual(sourceRelation.Members[0].Id, resultRelation.Members[0].Id);
-                Assert.AreEqual(sourceRelation.Members[0].Role, resultRelation.Members[0].Role);
-                Assert.AreEqual(sourceRelation.Members[0].Type, resultRelation.Members[0].Type);
-                Assert.AreEqual(sourceRelation.Members[1].Id, resultRelation.Members[1].Id);
-                Assert.AreEqual(sourceRelation.Members[1].Role, resultRelation.Members[1].Role);
-                Assert.AreEqual(sourceRelation.Members[1].Type, resultRelation.Members[1].Type);
+                Assert.That(resultRelation.Members.Length, Is.EqualTo(sourceRelation.Members.Length));
+                Assert.That(resultRelation.Members[0].Id, Is.EqualTo(sourceRelation.Members[0].Id));
+                Assert.That(resultRelation.Members[0].Role, Is.EqualTo(sourceRelation.Members[0].Role));
+                Assert.That(resultRelation.Members[0].Type, Is.EqualTo(sourceRelation.Members[0].Type));
+                Assert.That(resultRelation.Members[1].Id, Is.EqualTo(sourceRelation.Members[1].Id));
+                Assert.That(resultRelation.Members[1].Role, Is.EqualTo(sourceRelation.Members[1].Role));
+                Assert.That(resultRelation.Members[1].Type, Is.EqualTo(sourceRelation.Members[1].Type));
             }
 
             // build source stream.
@@ -467,26 +467,26 @@ namespace OsmSharp.Test.Stream
                 stream.Seek(0, SeekOrigin.Begin);
                 var resultObjects = new List<OsmGeo>(new PBFOsmStreamSource(stream));
 
-                Assert.IsNotNull(resultObjects);
-                Assert.AreEqual(1, resultObjects.Count);
+                Assert.That(resultObjects, Is.Not.Null);
+                Assert.That(resultObjects.Count, Is.EqualTo(1));
 
-                Assert.AreEqual(sourceObjects[0].Id, resultObjects[0].Id);
-                Assert.AreEqual(sourceObjects[0].ChangeSetId, resultObjects[0].ChangeSetId);
-                Assert.AreEqual(sourceObjects[0].TimeStamp.Value.Ticks, resultObjects[0].TimeStamp.Value.Ticks, 10000000);
-                Assert.AreEqual(sourceObjects[0].UserId, resultObjects[0].UserId);
-                Assert.AreEqual(sourceObjects[0].UserName, resultObjects[0].UserName);
-                Assert.AreEqual(sourceObjects[0].Version, resultObjects[0].Version);
-                Assert.AreEqual(sourceObjects[0].Tags.Count, resultObjects[0].Tags.Count);
-                Assert.IsTrue(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()));
+                Assert.That(resultObjects[0].Id, Is.EqualTo(sourceObjects[0].Id));
+                Assert.That(resultObjects[0].ChangeSetId, Is.EqualTo(sourceObjects[0].ChangeSetId));
+                Assert.That(resultObjects[0].TimeStamp.Value.Ticks, Is.EqualTo(sourceObjects[0].TimeStamp.Value.Ticks).Within(10000000));
+                Assert.That(resultObjects[0].UserId, Is.EqualTo(sourceObjects[0].UserId));
+                Assert.That(resultObjects[0].UserName, Is.EqualTo(sourceObjects[0].UserName));
+                Assert.That(resultObjects[0].Version, Is.EqualTo(sourceObjects[0].Version));
+                Assert.That(resultObjects[0].Tags.Count, Is.EqualTo(sourceObjects[0].Tags.Count));
+                Assert.That(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()), Is.True);
 
                 var resultRelation = resultObjects[0] as Relation;
-                Assert.AreEqual(sourceRelation.Members.Length, resultRelation.Members.Length);
-                Assert.AreEqual(sourceRelation.Members[0].Id, resultRelation.Members[0].Id);
-                Assert.AreEqual(sourceRelation.Members[0].Role, resultRelation.Members[0].Role);
-                Assert.AreEqual(sourceRelation.Members[0].Type, resultRelation.Members[0].Type);
-                Assert.AreEqual(sourceRelation.Members[1].Id, resultRelation.Members[1].Id);
-                Assert.AreEqual(sourceRelation.Members[1].Role, resultRelation.Members[1].Role);
-                Assert.AreEqual(sourceRelation.Members[1].Type, resultRelation.Members[1].Type);
+                Assert.That(resultRelation.Members.Length, Is.EqualTo(sourceRelation.Members.Length));
+                Assert.That(resultRelation.Members[0].Id, Is.EqualTo(sourceRelation.Members[0].Id));
+                Assert.That(resultRelation.Members[0].Role, Is.EqualTo(sourceRelation.Members[0].Role));
+                Assert.That(resultRelation.Members[0].Type, Is.EqualTo(sourceRelation.Members[0].Type));
+                Assert.That(resultRelation.Members[1].Id, Is.EqualTo(sourceRelation.Members[1].Id));
+                Assert.That(resultRelation.Members[1].Role, Is.EqualTo(sourceRelation.Members[1].Role));
+                Assert.That(resultRelation.Members[1].Type, Is.EqualTo(sourceRelation.Members[1].Type));
             }
         }
 
@@ -569,53 +569,53 @@ namespace OsmSharp.Test.Stream
                 stream.Seek(0, SeekOrigin.Begin);
                 var resultObjects = new List<OsmGeo>(new PBFOsmStreamSource(stream));
 
-                Assert.IsNotNull(resultObjects);
-                Assert.AreEqual(3, resultObjects.Count);
+                Assert.That(resultObjects, Is.Not.Null);
+                Assert.That(resultObjects.Count, Is.EqualTo(3));
 
-                Assert.AreEqual(sourceObjects[0].Id, resultObjects[0].Id);
-                Assert.AreEqual(sourceObjects[0].ChangeSetId, resultObjects[0].ChangeSetId);
-                Assert.AreEqual(sourceObjects[0].TimeStamp.Value.Ticks, resultObjects[0].TimeStamp.Value.Ticks, 10000000);
-                Assert.AreEqual(sourceObjects[0].UserId, resultObjects[0].UserId);
-                Assert.AreEqual(sourceObjects[0].UserName, resultObjects[0].UserName);
-                Assert.AreEqual(sourceObjects[0].Version, resultObjects[0].Version);
-                Assert.AreEqual(sourceObjects[0].Tags.Count, resultObjects[0].Tags.Count);
-                Assert.IsTrue(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()));
+                Assert.That(resultObjects[0].Id, Is.EqualTo(sourceObjects[0].Id));
+                Assert.That(resultObjects[0].ChangeSetId, Is.EqualTo(sourceObjects[0].ChangeSetId));
+                Assert.That(resultObjects[0].TimeStamp.Value.Ticks, Is.EqualTo(sourceObjects[0].TimeStamp.Value.Ticks).Within(10000000));
+                Assert.That(resultObjects[0].UserId, Is.EqualTo(sourceObjects[0].UserId));
+                Assert.That(resultObjects[0].UserName, Is.EqualTo(sourceObjects[0].UserName));
+                Assert.That(resultObjects[0].Version, Is.EqualTo(sourceObjects[0].Version));
+                Assert.That(resultObjects[0].Tags.Count, Is.EqualTo(sourceObjects[0].Tags.Count));
+                Assert.That(resultObjects[0].Tags.Contains(sourceObjects[0].Tags.First<Tag>()), Is.True);
 
                 var resultNode = resultObjects[0] as Node;
-                Assert.AreEqual(sourceNode.Latitude.Value, resultNode.Latitude.Value, .0001f);
-                Assert.AreEqual(sourceNode.Longitude.Value, resultNode.Longitude.Value, .0001f);
+                Assert.That(resultNode.Latitude.Value, Is.EqualTo(sourceNode.Latitude.Value).Within(.0001f));
+                Assert.That(resultNode.Longitude.Value, Is.EqualTo(sourceNode.Longitude.Value).Within(.0001f));
 
-                Assert.AreEqual(sourceObjects[1].Id, resultObjects[1].Id);
-                Assert.AreEqual(sourceObjects[1].ChangeSetId, resultObjects[1].ChangeSetId);
-                Assert.AreEqual(sourceObjects[1].TimeStamp.Value.Ticks, resultObjects[1].TimeStamp.Value.Ticks, 10000000);
-                Assert.AreEqual(sourceObjects[1].UserId, resultObjects[1].UserId);
-                Assert.AreEqual(sourceObjects[1].UserName, resultObjects[1].UserName);
-                Assert.AreEqual(sourceObjects[1].Version, resultObjects[1].Version);
-                Assert.AreEqual(sourceObjects[1].Tags.Count, resultObjects[1].Tags.Count);
-                Assert.IsTrue(resultObjects[1].Tags.Contains(sourceObjects[1].Tags.First<Tag>()));
+                Assert.That(resultObjects[1].Id, Is.EqualTo(sourceObjects[1].Id));
+                Assert.That(resultObjects[1].ChangeSetId, Is.EqualTo(sourceObjects[1].ChangeSetId));
+                Assert.That(resultObjects[1].TimeStamp.Value.Ticks, Is.EqualTo(sourceObjects[1].TimeStamp.Value.Ticks).Within(10000000));
+                Assert.That(resultObjects[1].UserId, Is.EqualTo(sourceObjects[1].UserId));
+                Assert.That(resultObjects[1].UserName, Is.EqualTo(sourceObjects[1].UserName));
+                Assert.That(resultObjects[1].Version, Is.EqualTo(sourceObjects[1].Version));
+                Assert.That(resultObjects[1].Tags.Count, Is.EqualTo(sourceObjects[1].Tags.Count));
+                Assert.That(resultObjects[1].Tags.Contains(sourceObjects[1].Tags.First<Tag>()), Is.True);
 
                 var resultWay = resultObjects[1] as Way;
-                Assert.AreEqual(sourceWay.Nodes.Length, resultWay.Nodes.Length);
-                Assert.AreEqual(sourceWay.Nodes[0], resultWay.Nodes[0]);
-                Assert.AreEqual(sourceWay.Nodes[1], resultWay.Nodes[1]);
+                Assert.That(resultWay.Nodes.Length, Is.EqualTo(sourceWay.Nodes.Length));
+                Assert.That(resultWay.Nodes[0], Is.EqualTo(sourceWay.Nodes[0]));
+                Assert.That(resultWay.Nodes[1], Is.EqualTo(sourceWay.Nodes[1]));
 
-                Assert.AreEqual(sourceObjects[2].Id, resultObjects[2].Id);
-                Assert.AreEqual(sourceObjects[2].ChangeSetId, resultObjects[2].ChangeSetId);
-                Assert.AreEqual(sourceObjects[2].TimeStamp.Value.Ticks, resultObjects[2].TimeStamp.Value.Ticks, 10000000);
-                Assert.AreEqual(sourceObjects[2].UserId, resultObjects[2].UserId);
-                Assert.AreEqual(sourceObjects[2].UserName, resultObjects[2].UserName);
-                Assert.AreEqual(sourceObjects[2].Version, resultObjects[2].Version);
-                Assert.AreEqual(sourceObjects[2].Tags.Count, resultObjects[2].Tags.Count);
-                Assert.IsTrue(resultObjects[2].Tags.Contains(sourceObjects[2].Tags.First<Tag>()));
+                Assert.That(resultObjects[2].Id, Is.EqualTo(sourceObjects[2].Id));
+                Assert.That(resultObjects[2].ChangeSetId, Is.EqualTo(sourceObjects[2].ChangeSetId));
+                Assert.That(resultObjects[2].TimeStamp.Value.Ticks, Is.EqualTo(sourceObjects[2].TimeStamp.Value.Ticks).Within(10000000));
+                Assert.That(resultObjects[2].UserId, Is.EqualTo(sourceObjects[2].UserId));
+                Assert.That(resultObjects[2].UserName, Is.EqualTo(sourceObjects[2].UserName));
+                Assert.That(resultObjects[2].Version, Is.EqualTo(sourceObjects[2].Version));
+                Assert.That(resultObjects[2].Tags.Count, Is.EqualTo(sourceObjects[2].Tags.Count));
+                Assert.That(resultObjects[2].Tags.Contains(sourceObjects[2].Tags.First<Tag>()), Is.True);
 
                 var resultRelation = resultObjects[2] as Relation;
-                Assert.AreEqual(sourceRelation.Members.Length, resultRelation.Members.Length);
-                Assert.AreEqual(sourceRelation.Members[0].Id, resultRelation.Members[0].Id);
-                Assert.AreEqual(sourceRelation.Members[0].Role, resultRelation.Members[0].Role);
-                Assert.AreEqual(sourceRelation.Members[0].Type, resultRelation.Members[0].Type);
-                Assert.AreEqual(sourceRelation.Members[1].Id, resultRelation.Members[1].Id);
-                Assert.AreEqual(sourceRelation.Members[1].Role, resultRelation.Members[1].Role);
-                Assert.AreEqual(sourceRelation.Members[1].Type, resultRelation.Members[1].Type);
+                Assert.That(resultRelation.Members.Length, Is.EqualTo(sourceRelation.Members.Length));
+                Assert.That(resultRelation.Members[0].Id, Is.EqualTo(sourceRelation.Members[0].Id));
+                Assert.That(resultRelation.Members[0].Role, Is.EqualTo(sourceRelation.Members[0].Role));
+                Assert.That(resultRelation.Members[0].Type, Is.EqualTo(sourceRelation.Members[0].Type));
+                Assert.That(resultRelation.Members[1].Id, Is.EqualTo(sourceRelation.Members[1].Id));
+                Assert.That(resultRelation.Members[1].Role, Is.EqualTo(sourceRelation.Members[1].Role));
+                Assert.That(resultRelation.Members[1].Type, Is.EqualTo(sourceRelation.Members[1].Type));
             }
         }
 
@@ -633,7 +633,7 @@ namespace OsmSharp.Test.Stream
                 target.Pull();
                 memoryStream.Seek(0, 0);
 
-                Assert.AreEqual(1715, new PBFOsmStreamSource(memoryStream).Count(n => n is Node));
+                Assert.That(new PBFOsmStreamSource(memoryStream).Count(n => n is Node), Is.EqualTo(1715));
             }
         }
     }

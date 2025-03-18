@@ -42,7 +42,7 @@ namespace OsmSharp.Test.IO.Xml.API
         {
             var osm = new Osm
             {
-                Version = 0.6,
+                Version = System.Version.Parse("0.6"),
                 Generator = "OpenStreetMap server",
                 GpxFiles = new [] {new GpxFile
                     {
@@ -61,9 +61,8 @@ namespace OsmSharp.Test.IO.Xml.API
             };
             var osmString = osm.SerializeToXml();
 
-            Assert.AreEqual(
-                "<osm version=\"0.6\" generator=\"OpenStreetMap server\"><gpx_file id=\"1\" name=\"Name\" lat=\"1.1\" lon=\"2.2\" user=\"User\" visibility=\"private\" pending=\"False\" timestamp=\"1947-11-29T12:00:00Z\"><description>Description</description><tag>tag1</tag><tag>tag2</tag></gpx_file></osm>",
-                osmString);
+            Assert.That(
+                osmString, Is.EqualTo("<osm version=\"0.6\" generator=\"OpenStreetMap server\"><gpx_file id=\"1\" name=\"Name\" lat=\"1.1\" lon=\"2.2\" user=\"User\" visibility=\"private\" pending=\"False\" timestamp=\"1947-11-29T12:00:00Z\"><description>Description</description><tag>tag1</tag><tag>tag2</tag></gpx_file></osm>"));
         }
 
         [Test]
@@ -74,19 +73,19 @@ namespace OsmSharp.Test.IO.Xml.API
                     new StringReader(
                         "<osm version=\"0.6\" generator=\"OpenStreetMap server\"><gpx_file id=\"1\" name=\"Name\" lat=\"1.1\" lon=\"2.2\" user=\"User\" visibility=\"private\" pending=\"False\" timestamp=\"1947-11-29T10:00:00Z\"><description>Description</description><tag>tag1</tag><tag>tag2</tag></gpx_file></osm>"))
                 as Osm;
-            Assert.IsNotNull(osm.GpxFiles);
+            Assert.That(osm.GpxFiles, Is.Not.Null);
             var gpxFile = osm.GpxFiles.First();
-            Assert.AreEqual(1, gpxFile.Id);
-            Assert.AreEqual("Name", gpxFile.Name);
-            Assert.AreEqual(1.1, gpxFile.Lat);
-            Assert.AreEqual(2.2, gpxFile.Lon);
-            Assert.AreEqual("User", gpxFile.User);
-            Assert.AreEqual(Visibility.Private, gpxFile.Visibility);
-            Assert.AreEqual(false, gpxFile.Pending);
-            Assert.AreEqual(1947, gpxFile.TimeStamp.Year);
-            Assert.AreEqual("Description", gpxFile.Description);
-            Assert.AreEqual(2, gpxFile.Tags.Length);
-            Assert.AreEqual("tag1", gpxFile.Tags.First());
+            Assert.That(gpxFile.Id, Is.EqualTo(1));
+            Assert.That(gpxFile.Name, Is.EqualTo("Name"));
+            Assert.That(gpxFile.Lat, Is.EqualTo(1.1));
+            Assert.That(gpxFile.Lon, Is.EqualTo(2.2));
+            Assert.That(gpxFile.User, Is.EqualTo("User"));
+            Assert.That(gpxFile.Visibility, Is.EqualTo(Visibility.Private));
+            Assert.That(gpxFile.Pending, Is.EqualTo(false));
+            Assert.That(gpxFile.TimeStamp.Year, Is.EqualTo(1947));
+            Assert.That(gpxFile.Description, Is.EqualTo("Description"));
+            Assert.That(gpxFile.Tags.Length, Is.EqualTo(2));
+            Assert.That(gpxFile.Tags.First(), Is.EqualTo("tag1"));
         }
     }
 }

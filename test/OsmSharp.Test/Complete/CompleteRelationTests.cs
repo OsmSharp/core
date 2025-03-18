@@ -82,24 +82,24 @@ namespace OsmSharp.Test.Complete
             };
 
             var osmGeo = completeRelation.ToSimple();
-            Assert.IsNotNull(osmGeo);
-            Assert.IsInstanceOf<Relation>(osmGeo);
+            Assert.That(osmGeo, Is.Not.Null);
+            Assert.That(osmGeo, Is.InstanceOf<Relation>());
 
             var relation = osmGeo as Relation;
-            Assert.AreEqual(completeRelation.Id, relation.Id);
-            Assert.AreEqual(completeRelation.ChangeSetId, relation.ChangeSetId);
-            Assert.AreEqual(completeRelation.TimeStamp, relation.TimeStamp);
-            Assert.AreEqual(completeRelation.UserName, relation.UserName);
-            Assert.AreEqual(completeRelation.UserId, relation.UserId);
-            Assert.AreEqual(completeRelation.Version, relation.Version);
-            Assert.AreEqual(completeRelation.Visible, relation.Visible);
-            Assert.IsNotNull(relation.Members);
-            Assert.AreEqual(completeRelation.Members.Length, relation.Members.Length);
+            Assert.That(relation.Id, Is.EqualTo(completeRelation.Id));
+            Assert.That(relation.ChangeSetId, Is.EqualTo(completeRelation.ChangeSetId));
+            Assert.That(relation.TimeStamp, Is.EqualTo(completeRelation.TimeStamp));
+            Assert.That(relation.UserName, Is.EqualTo(completeRelation.UserName));
+            Assert.That(relation.UserId, Is.EqualTo(completeRelation.UserId));
+            Assert.That(relation.Version, Is.EqualTo(completeRelation.Version));
+            Assert.That(relation.Visible, Is.EqualTo(completeRelation.Visible));
+            Assert.That(relation.Members, Is.Not.Null);
+            Assert.That(relation.Members.Length, Is.EqualTo(completeRelation.Members.Length));
             for (var i = 0; i < completeRelation.Members.Length; i++)
             {
-                Assert.AreEqual(completeRelation.Members[i].Member.Id, relation.Members[i].Id);
-                Assert.AreEqual(completeRelation.Members[i].Member.Type, relation.Members[i].Type);
-                Assert.AreEqual(completeRelation.Members[i].Role, relation.Members[i].Role);
+                Assert.That(relation.Members[i].Id, Is.EqualTo(completeRelation.Members[i].Member.Id));
+                Assert.That(relation.Members[i].Type, Is.EqualTo(completeRelation.Members[i].Member.Type));
+                Assert.That(relation.Members[i].Role, Is.EqualTo(completeRelation.Members[i].Role));
             }
         }
 
@@ -182,60 +182,60 @@ namespace OsmSharp.Test.Complete
                 };
 
             var osmGeos = expectedSuperRelation.ToSimpleWithChildren();
-            Assert.IsNotNull(osmGeos);
+            Assert.That(osmGeos, Is.Not.Null);
 
             foreach (var osmGeo in osmGeos)
             {
-                Assert.IsNotNull(osmGeo.Tags);
-                Assert.AreEqual(1, osmGeo.Tags.Count);
-                Assert.True(osmGeo.Tags.ContainsKey("type"));
-                Assert.AreEqual(osmGeo.Type.ToString(), osmGeo.Tags["type"]);
+                Assert.That(osmGeo.Tags, Is.Not.Null);
+                Assert.That(osmGeo.Tags.Count, Is.EqualTo(1));
+                Assert.That(osmGeo.Tags.ContainsKey("type"), Is.True);
+                Assert.That(osmGeo.Tags["type"], Is.EqualTo(osmGeo.Type.ToString()));
             }
 
             var nodes = osmGeos.OfType<Node>().ToArray();
-            Assert.AreEqual(1, nodes.Length);
+            Assert.That(nodes.Length, Is.EqualTo(1));
             var resultNode = nodes[0];
-            Assert.AreEqual(expectedNode.Id, resultNode.Id);
-            Assert.AreEqual(expectedNode.Version, resultNode.Version);
+            Assert.That(resultNode.Id, Is.EqualTo(expectedNode.Id));
+            Assert.That(resultNode.Version, Is.EqualTo(expectedNode.Version));
 
             var ways = osmGeos.OfType<Way>().ToArray();
-            Assert.AreEqual(1, ways.Length);
+            Assert.That(ways.Length, Is.EqualTo(1));
             var resultWay = ways[0];
-            Assert.AreEqual(expectedWay.Id, resultWay.Id);
-            Assert.AreEqual(expectedWay.Version, resultWay.Version);
-            Assert.IsNotNull(resultWay.Nodes);
-            CollectionAssert.AreEqual(expectedWay.Nodes.Select(n => n.Id), resultWay.Nodes);
+            Assert.That(resultWay.Id, Is.EqualTo(expectedWay.Id));
+            Assert.That(resultWay.Version, Is.EqualTo(expectedWay.Version));
+            Assert.That(resultWay.Nodes, Is.Not.Null);
+            NUnit.Framework.Legacy.CollectionAssert.AreEqual(expectedWay.Nodes.Select(n => n.Id), resultWay.Nodes);
 
             var relations = osmGeos.OfType<Relation>().Where(r => !r.Members.Any(m => m.Type == OsmGeoType.Relation)).ToArray();
-            Assert.AreEqual(1, relations.Length);
+            Assert.That(relations.Length, Is.EqualTo(1));
             var resultRelation = relations[0];
-            Assert.AreEqual(expectedRelation.Id, resultRelation.Id);
-            Assert.AreEqual(expectedRelation.Version, resultRelation.Version);
-            Assert.AreEqual(expectedRelation.UserId, resultRelation.UserId);
-            Assert.AreEqual(expectedRelation.Members.Length, resultRelation.Members.Length);
+            Assert.That(resultRelation.Id, Is.EqualTo(expectedRelation.Id));
+            Assert.That(resultRelation.Version, Is.EqualTo(expectedRelation.Version));
+            Assert.That(resultRelation.UserId, Is.EqualTo(expectedRelation.UserId));
+            Assert.That(resultRelation.Members.Length, Is.EqualTo(expectedRelation.Members.Length));
             for (int i = 0; i < expectedRelation.Members.Length; i++)
             {
-                Assert.AreEqual(expectedRelation.Members[i].Role, resultRelation.Members[i].Role);
-                Assert.AreEqual(expectedRelation.Members[i].Member.Id, resultRelation.Members[i].Id);
-                Assert.AreEqual(expectedRelation.Members[i].Member.Type, resultRelation.Members[i].Type);
+                Assert.That(resultRelation.Members[i].Role, Is.EqualTo(expectedRelation.Members[i].Role));
+                Assert.That(resultRelation.Members[i].Id, Is.EqualTo(expectedRelation.Members[i].Member.Id));
+                Assert.That(resultRelation.Members[i].Type, Is.EqualTo(expectedRelation.Members[i].Member.Type));
             }
 
             var superRelations = osmGeos.OfType<Relation>().Where(r => r.Members.Any(m => m.Type == OsmGeoType.Relation)).ToArray();
-            Assert.AreEqual(1, superRelations.Length);
+            Assert.That(superRelations.Length, Is.EqualTo(1));
             var resultSuperRelation = superRelations[0];
-            Assert.AreEqual(expectedSuperRelation.Id, resultSuperRelation.Id);
-            Assert.AreEqual(expectedSuperRelation.Version, resultSuperRelation.Version);
-            Assert.AreEqual(expectedSuperRelation.UserId, resultSuperRelation.UserId);
-            Assert.AreEqual(expectedSuperRelation.Members.Length, resultSuperRelation.Members.Length);
+            Assert.That(resultSuperRelation.Id, Is.EqualTo(expectedSuperRelation.Id));
+            Assert.That(resultSuperRelation.Version, Is.EqualTo(expectedSuperRelation.Version));
+            Assert.That(resultSuperRelation.UserId, Is.EqualTo(expectedSuperRelation.UserId));
+            Assert.That(resultSuperRelation.Members.Length, Is.EqualTo(expectedSuperRelation.Members.Length));
             for (int i = 0; i < expectedSuperRelation.Members.Length; i++)
             {
-                Assert.AreEqual(expectedSuperRelation.Members[i].Member.Id, resultSuperRelation.Members[i].Id);
-                Assert.AreEqual(expectedSuperRelation.Members[i].Member.Type, resultSuperRelation.Members[i].Type);
-                Assert.AreEqual(expectedSuperRelation.Members[i].Role, resultSuperRelation.Members[i].Role);
+                Assert.That(resultSuperRelation.Members[i].Id, Is.EqualTo(expectedSuperRelation.Members[i].Member.Id));
+                Assert.That(resultSuperRelation.Members[i].Type, Is.EqualTo(expectedSuperRelation.Members[i].Member.Type));
+                Assert.That(resultSuperRelation.Members[i].Role, Is.EqualTo(expectedSuperRelation.Members[i].Role));
             }
 
             var others = osmGeos.Except(nodes).Except(ways).Except(relations).Except(superRelations).ToArray();
-            CollectionAssert.IsEmpty(others);
+            NUnit.Framework.Legacy.CollectionAssert.IsEmpty(others);
         }
     }
 }

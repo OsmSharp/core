@@ -55,8 +55,7 @@ namespace OsmSharp.Test.Stream
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 var result = (new StreamReader(memoryStream)).ReadToEnd();
-                Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\"><node id=\"1\" /></osm>",
-                    result);
+                Assert.That(result, Is.EqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\"><node id=\"1\" /></osm>"));
             }
         }
 
@@ -82,8 +81,7 @@ namespace OsmSharp.Test.Stream
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 var result = (new StreamReader(memoryStream)).ReadToEnd();
-                Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\"><way id=\"1\" /></osm>",
-                    result);
+                Assert.That(result, Is.EqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\"><way id=\"1\" /></osm>"));
             }
         }
 
@@ -109,8 +107,7 @@ namespace OsmSharp.Test.Stream
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 var result = (new StreamReader(memoryStream)).ReadToEnd();
-                Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\"><relation id=\"1\" /></osm>",
-                    result);
+                Assert.That(result, Is.EqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\"><relation id=\"1\" /></osm>"));
             }
         }
 
@@ -167,8 +164,7 @@ namespace OsmSharp.Test.Stream
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 var result = (new StreamReader(memoryStream)).ReadToEnd();
-                Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\" upload=\"never\"><node id=\"1\" lat=\"1\" lon=\"1.100000023841858\" /><node id=\"2\" lat=\"2\" lon=\"2.0999999046325684\" /><node id=\"3\" lat=\"3\" lon=\"3.0999999046325684\" /><way id=\"1\"><nd ref=\"1\" /><nd ref=\"2\" /><nd ref=\"3\" /></way><relation id=\"1\"><member type=\"node\" ref=\"1\" role=\"\" /></relation></osm>" 
-                    ,result);
+                Assert.That(result, Is.EqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\" upload=\"never\"><node id=\"1\" lat=\"1\" lon=\"1.1\" /><node id=\"2\" lat=\"2\" lon=\"2.0999999\" /><node id=\"3\" lat=\"3\" lon=\"3.0999999\" /><way id=\"1\"><nd ref=\"1\" /><nd ref=\"2\" /><nd ref=\"3\" /></way><relation id=\"1\"><member type=\"node\" ref=\"1\" role=\"\" /></relation></osm>"));
             }
         }
 
@@ -232,8 +228,8 @@ namespace OsmSharp.Test.Stream
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 var result = (new StreamReader(memoryStream)).ReadToEnd();
-                Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\" upload=\"never\"><bounds minlat=\"1\" minlon=\"1.1\" maxlat=\"3\" maxlon=\"3.1\" /><node id=\"1\" lat=\"1\" lon=\"1.100000023841858\" /><node id=\"2\" lat=\"2\" lon=\"2.0999999046325684\" /><node id=\"3\" lat=\"3\" lon=\"3.0999999046325684\" /><way id=\"1\"><nd ref=\"1\" /><nd ref=\"2\" /><nd ref=\"3\" /></way><relation id=\"1\"><member type=\"node\" ref=\"1\" role=\"\" /></relation></osm>"
-                    ,result);
+                Assert.That(result, Is.EqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\" upload=\"never\"><bounds minlat=\"1\" minlon=\"1.1\" maxlat=\"3\" maxlon=\"3.1\" /><node id=\"1\" lat=\"1\" lon=\"1.1\" /><node id=\"2\" lat=\"2\" lon=\"2.0999999\" /><node id=\"3\" lat=\"3\" lon=\"3.0999999\" /><way id=\"1\"><nd ref=\"1\" /><nd ref=\"2\" /><nd ref=\"3\" /></way><relation id=\"1\"><member type=\"node\" ref=\"1\" role=\"\" /></relation></osm>"
+));
             }
         }
     }

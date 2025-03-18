@@ -26,8 +26,7 @@ namespace OsmSharp.Test.IO.Json
             };
 
             var serialized = JsonSerializer.Serialize(n);
-            Assert.AreEqual("{\"type\":\"node\",\"lat\":58.4215544,\"lon\":15.6182983,\"id\":100000,\"tags\":{\"highway\":\"residential\"},\"timestamp\":\"2017-04-17T18:31:21Z\",\"version\":3,\"changeset\":47881103,\"user\":\"riiga\",\"uid\":83501}",
-                serialized);
+            Assert.That(serialized, Is.EqualTo("{\"type\":\"node\",\"lat\":58.4215544,\"lon\":15.6182983,\"id\":100000,\"tags\":{\"highway\":\"residential\"},\"timestamp\":\"2017-04-17T18:31:21Z\",\"version\":3,\"changeset\":47881103,\"user\":\"riiga\",\"uid\":83501}"));
         }
         
         [Test]
@@ -35,7 +34,7 @@ namespace OsmSharp.Test.IO.Json
         {
             var n = JsonSerializer.Deserialize<Node>("{\"type\":\"node\"}");
             
-            Assert.AreEqual(null, n.Id);
+            Assert.That(n.Id, Is.EqualTo(null));
         }
         
         [Test]
@@ -43,25 +42,25 @@ namespace OsmSharp.Test.IO.Json
         {
             var n = JsonSerializer.Deserialize<Node>("{\"type\":\"node\",\"id\": 15441}");
             
-            Assert.AreEqual(15441, n.Id);
+            Assert.That(n.Id, Is.EqualTo(15441));
         }
 
         [Test] public void Node_FromJson_CompleteNode_ShouldSetAll()
         {
             var n = JsonSerializer.Deserialize<Node>("{\"type\":\"node\",\"id\":100000,\"lat\":58.4215544,\"lon\":15.6182983,\"tags\":{\"highway\": \"residential\"},\"timestamp\":\"2017-04-17T18:31:21Z\",\"version\":3,\"changeset\":47881103,\"user\":\"riiga\",\"uid\":83501}");
             
-            Assert.AreEqual(100000, n.Id);
-            Assert.AreEqual(58.4215544, n.Latitude);
-            Assert.AreEqual(15.6182983, n.Longitude);
-            Assert.AreEqual(new DateTime(2017,04,17,18,31,21, DateTimeKind.Utc), n.TimeStamp);
-            Assert.AreEqual(3, n.Version);
-            Assert.AreEqual(47881103, n.ChangeSetId);
-            Assert.AreEqual("riiga", n.UserName);
-            Assert.AreEqual(83501, n.UserId);
-            Assert.NotNull(n.Tags);
-            Assert.AreEqual(1, n.Tags.Count);
-            Assert.AreEqual("highway", n.Tags.First().Key);
-            Assert.AreEqual("residential", n.Tags.First().Value);
+            Assert.That(n.Id, Is.EqualTo(100000));
+            Assert.That(n.Latitude, Is.EqualTo(58.4215544));
+            Assert.That(n.Longitude, Is.EqualTo(15.6182983));
+            Assert.That(n.TimeStamp, Is.EqualTo(new DateTime(2017,04,17,18,31,21, DateTimeKind.Utc)));
+            Assert.That(n.Version, Is.EqualTo(3));
+            Assert.That(n.ChangeSetId, Is.EqualTo(47881103));
+            Assert.That(n.UserName, Is.EqualTo("riiga"));
+            Assert.That(n.UserId, Is.EqualTo(83501));
+            Assert.That(n.Tags, Is.Not.Null);
+            Assert.That(n.Tags.Count, Is.EqualTo(1));
+            Assert.That(n.Tags.First().Key, Is.EqualTo("highway"));
+            Assert.That(n.Tags.First().Value, Is.EqualTo("residential"));
         }
     }
 }

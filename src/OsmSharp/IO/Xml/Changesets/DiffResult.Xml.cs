@@ -45,7 +45,9 @@ namespace OsmSharp.Changesets
         {
             reader.MoveToContent();
 
-            this.Version = reader.GetAttributeDouble("version");
+            var version = reader.GetAttribute("version");
+            if (!string.IsNullOrWhiteSpace(version))
+                this.Version = System.Version.Parse(version);
             this.Generator = reader.GetAttribute("generator");
 
             List<OsmGeoResult> results = null;
@@ -107,9 +109,9 @@ namespace OsmSharp.Changesets
             {
                 writer.WriteAttributeString("generator", this.Generator);
             }
-            if (this.Version.HasValue)
+            if (this.Version != null)
             {
-                writer.WriteAttributeString("version", this.Version.Value.ToInvariantString());
+                writer.WriteAttributeString("version", this.Version.ToInvariantString());
             }
 
             if (this.Results != null)
@@ -200,7 +202,7 @@ namespace OsmSharp.Changesets
         /// </summary>
         public static OsmGeoResult CreateModification(OsmGeo modify, long newVersion)
         {
-            switch(modify.Type)
+            switch (modify.Type)
             {
                 case OsmGeoType.Node:
                     return new NodeResult()

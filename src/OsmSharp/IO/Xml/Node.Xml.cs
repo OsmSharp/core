@@ -20,9 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using OsmSharp.API;
 using OsmSharp.IO.Xml;
 using OsmSharp.Tags;
 
@@ -85,8 +87,14 @@ namespace OsmSharp
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
             writer.WriteAttribute("id", this.Id);
-            writer.WriteAttribute("lat", this.Latitude);
-            writer.WriteAttribute("lon", this.Longitude);
+            if (this.Latitude.HasValue)
+            {
+                writer.WriteAttribute("lat", Math.Round(this.Latitude.Value, Osm.MAX_DECIMAL_PRECISION).ToInvariantString());
+            }
+            if (this.Longitude.HasValue)
+            {
+                writer.WriteAttribute("lon", Math.Round(this.Longitude.Value, Osm.MAX_DECIMAL_PRECISION).ToInvariantString());
+            }
             writer.WriteAttribute("user", this.UserName);
             writer.WriteAttribute("uid", this.UserId);
             writer.WriteAttribute("visible", this.Visible);

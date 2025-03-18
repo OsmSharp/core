@@ -61,8 +61,7 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             };
 
             var result = changeset.SerializeToXml();
-            Assert.AreEqual("<changeset id=\"10\" user=\"fred\" uid=\"123\" created_at=\"2008-11-08T19:07:39Z\" open=\"true\" min_lon=\"7.019182\" min_lat=\"49.27854\" max_lon=\"7.0197487\" max_lat=\"49.27931\"><tag k=\"created_by\" v=\"JOSM 1.61\" /><tag k=\"comment\" v=\"Just adding some streetnames\" /></changeset>",
-                result);
+            Assert.That(result, Is.EqualTo("<changeset id=\"10\" user=\"fred\" uid=\"123\" created_at=\"2008-11-08T19:07:39Z\" open=\"true\" min_lon=\"7.0191822\" min_lat=\"49.2785416\" max_lon=\"7.0197487\" max_lat=\"49.2793083\"><tag k=\"created_by\" v=\"JOSM 1.61\" /><tag k=\"comment\" v=\"Just adding some streetnames\" /></changeset>"));
         }
 
         /// <summary>
@@ -75,29 +74,29 @@ namespace OsmSharp.Test.IO.Xml.Changesets
 
             var changeset = serializer.Deserialize(
                 new StringReader("<changeset id=\"10\"></changeset>")) as Changeset;
-            Assert.IsNotNull(changeset);
-            Assert.AreEqual(10, changeset.Id);
+            Assert.That(changeset, Is.Not.Null);
+            Assert.That(changeset.Id, Is.EqualTo(10));
 
             changeset = serializer.Deserialize(
                 new StringReader("<changeset id=\"10\" user=\"fred\" uid=\"123\" created_at=\"2008-11-08T19:07:39Z\" open=\"true\" min_lon=\"7.019182\" min_lat=\"49.27854\" max_lon=\"7.019749\" max_lat=\"49.27931\"><tag k=\"created_by\" v=\"JOSM 1.61\" /><tag k=\"comment\" v=\"Just adding some streetnames\" /></changeset>")) as Changeset;
-            Assert.IsNotNull(changeset);
-            Assert.AreEqual(10, changeset.Id);
-            Assert.AreEqual(123, changeset.UserId);
-            Assert.AreEqual("fred", changeset.UserName);
-            Assert.AreEqual(new System.DateTime(2008, 11, 08, 19, 07, 39), changeset.CreatedAt.Value.ToUniversalTime());
-            Assert.IsNull(changeset.ClosedAt);
-            Assert.AreEqual(true, changeset.Open);
-            Assert.AreEqual(7.0191821f, changeset.MinLongitude, 0.00001f);
-            Assert.AreEqual(49.2785426f, changeset.MinLatitude, 0.00001f);
-            Assert.AreEqual(7.0197485f, changeset.MaxLongitude, 0.00001f);
-            Assert.AreEqual(49.27931011f, changeset.MaxLatitude, 0.00001f);
+            Assert.That(changeset, Is.Not.Null);
+            Assert.That(changeset.Id, Is.EqualTo(10));
+            Assert.That(changeset.UserId, Is.EqualTo(123));
+            Assert.That(changeset.UserName, Is.EqualTo("fred"));
+            Assert.That(changeset.CreatedAt.Value.ToUniversalTime(), Is.EqualTo(new System.DateTime(2008, 11, 08, 19, 07, 39)));
+            Assert.That(changeset.ClosedAt, Is.Null);
+            Assert.That(changeset.Open, Is.EqualTo(true));
+            Assert.That(changeset.MinLongitude, Is.EqualTo(7.0191821f).Within(0.00001f));
+            Assert.That(changeset.MinLatitude, Is.EqualTo(49.2785426f).Within(0.00001f));
+            Assert.That(changeset.MaxLongitude, Is.EqualTo(7.0197485f).Within(0.00001f));
+            Assert.That(changeset.MaxLatitude, Is.EqualTo(49.27931011f).Within(0.00001f));
 
-            Assert.IsNotNull(changeset.Tags);
-            Assert.AreEqual(2, changeset.Tags.Count);
-            Assert.IsTrue(changeset.Tags.Contains("created_by", "JOSM 1.61"));
-            Assert.IsTrue(changeset.Tags.Contains("comment", "Just adding some streetnames"));
+            Assert.That(changeset.Tags, Is.Not.Null);
+            Assert.That(changeset.Tags.Count, Is.EqualTo(2));
+            Assert.That(changeset.Tags.Contains("created_by", "JOSM 1.61"), Is.True);
+            Assert.That(changeset.Tags.Contains("comment", "Just adding some streetnames"), Is.True);
 
-            Assert.IsNull(changeset.Discussion);
+            Assert.That(changeset.Discussion, Is.Null);
         }
 
         /// <summary>
@@ -128,40 +127,40 @@ namespace OsmSharp.Test.IO.Xml.Changesets
             Func<string, DateTime> parseToUniversalTime =
                 t => DateTime.Parse(t, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal);
 
-            Assert.IsNotNull(osm.Changesets);
-            Assert.AreEqual(1, osm.Changesets.Length);
+            Assert.That(osm.Changesets, Is.Not.Null);
+            Assert.That(osm.Changesets.Length, Is.EqualTo(1));
             var changeset = osm.Changesets[0];
-            Assert.IsNotNull(changeset);
-            Assert.AreEqual(10, changeset.Id);
-            Assert.AreEqual("fred", changeset.UserName);
-            Assert.AreEqual(123, changeset.UserId);
-            Assert.AreEqual(parseToUniversalTime("2008-11-08T19:07:39+01:00"), changeset.CreatedAt);
-            Assert.AreEqual(true, changeset.Open);
-            Assert.AreEqual(7.0191821f, changeset.MinLongitude, 0.00001f);
-            Assert.AreEqual(49.2785426f, changeset.MinLatitude, 0.00001f);
-            Assert.AreEqual(7.0197485f, changeset.MaxLongitude, 0.00001f);
-            Assert.AreEqual(49.27931011f, changeset.MaxLatitude, 0.00001f);
-            Assert.AreEqual(2, changeset.CommentsCount);
-            Assert.AreEqual(5, changeset.ChangesCount);
-            Assert.IsNull(changeset.ClosedAt);
+            Assert.That(changeset, Is.Not.Null);
+            Assert.That(changeset.Id, Is.EqualTo(10));
+            Assert.That(changeset.UserName, Is.EqualTo("fred"));
+            Assert.That(changeset.UserId, Is.EqualTo(123));
+            Assert.That(changeset.CreatedAt, Is.EqualTo(parseToUniversalTime("2008-11-08T19:07:39+01:00")));
+            Assert.That(changeset.Open, Is.EqualTo(true));
+            Assert.That(changeset.MinLongitude, Is.EqualTo(7.0191821f).Within(0.00001f));
+            Assert.That(changeset.MinLatitude, Is.EqualTo(49.2785426f).Within(0.00001f));
+            Assert.That(changeset.MaxLongitude, Is.EqualTo(7.0197485f).Within(0.00001f));
+            Assert.That(changeset.MaxLatitude, Is.EqualTo(49.27931011f).Within(0.00001f));
+            Assert.That(changeset.CommentsCount, Is.EqualTo(2));
+            Assert.That(changeset.ChangesCount, Is.EqualTo(5));
+            Assert.That(changeset.ClosedAt, Is.Null);
 
-            Assert.IsNotNull(changeset.Tags);
-            Assert.AreEqual(2, changeset.Tags.Count);
-            Assert.IsTrue(changeset.Tags.Contains("created_by", "JOSM 1.61"));
-            Assert.IsTrue(changeset.Tags.Contains("comment", "Just adding some streetnames"));
+            Assert.That(changeset.Tags, Is.Not.Null);
+            Assert.That(changeset.Tags.Count, Is.EqualTo(2));
+            Assert.That(changeset.Tags.Contains("created_by", "JOSM 1.61"), Is.True);
+            Assert.That(changeset.Tags.Contains("comment", "Just adding some streetnames"), Is.True);
 
-            Assert.IsNotNull(changeset.Discussion);
-            Assert.IsNotNull(changeset.Discussion.Comments);
+            Assert.That(changeset.Discussion, Is.Not.Null);
+            Assert.That(changeset.Discussion.Comments, Is.Not.Null);
             var comments = changeset.Discussion.Comments;
-            Assert.AreEqual(2, comments.Length);
-            Assert.AreEqual(parseToUniversalTime("2015-01-01T18:56:48Z"), comments[0].Date);
-            Assert.AreEqual(1841, comments[0].UserId);
-            Assert.AreEqual("metaodi", comments[0].UserName);
-            Assert.AreEqual("Did you verify those street names?", comments[0].Text);
-            Assert.AreEqual(parseToUniversalTime("2015-01-01T18:58:03Z"), comments[1].Date);
-            Assert.AreEqual(123, comments[1].UserId);
-            Assert.AreEqual("fred", comments[1].UserName);
-            Assert.AreEqual("sure!", comments[1].Text);
+            Assert.That(comments.Length, Is.EqualTo(2));
+            Assert.That(comments[0].Date, Is.EqualTo(parseToUniversalTime("2015-01-01T18:56:48Z")));
+            Assert.That(comments[0].UserId, Is.EqualTo(1841));
+            Assert.That(comments[0].UserName, Is.EqualTo("metaodi"));
+            Assert.That(comments[0].Text, Is.EqualTo("Did you verify those street names?"));
+            Assert.That(comments[1].Date, Is.EqualTo(parseToUniversalTime("2015-01-01T18:58:03Z")));
+            Assert.That(comments[1].UserId, Is.EqualTo(123));
+            Assert.That(comments[1].UserName, Is.EqualTo("fred"));
+            Assert.That(comments[1].Text, Is.EqualTo("sure!"));
         }
     }
 }

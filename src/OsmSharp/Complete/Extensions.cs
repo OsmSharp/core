@@ -93,18 +93,34 @@ namespace OsmSharp.Complete
         /// </summary>
         public static CompleteRelation CreateComplete(this Relation relation, IOsmGeoSource osmGeoSource)
         {
+            return relation.CreateComplete(osmGeoSource, new Dictionary<long, CompleteRelation>());
+        }
+        
+        private static CompleteRelation CreateComplete(this Relation relation, IOsmGeoSource osmGeoSource, Dictionary<long, CompleteRelation> createdRelations)
+        {
             if (relation == null) throw new ArgumentNullException("relation");
             if (relation.Id == null) throw new Exception("relation.Id is null");
             if (osmGeoSource == null) throw new ArgumentNullException("osmGeoSource");
 
-            var completeRelation = new CompleteRelation();
-            completeRelation.Id = relation.Id.Value;
+            var relationId = relation.Id.Value;
+            
+            // If we've already created this relation, return it (handles circular references)
+            if (createdRelations.TryGetValue(relationId, out var existingRelation))
+            {
+                return existingRelation;
+            }
 
+            // Create the complete relation and add it to the cache immediately
+            var completeRelation = new CompleteRelation();
+            completeRelation.Id = relationId;
             completeRelation.ChangeSetId = relation.ChangeSetId;
             if (relation.Tags != null)
             {
                 completeRelation.Tags = new TagsCollection(relation.Tags);
             }
+            // Add to cache before processing members to handle circular references
+            createdRelations[relationId] = completeRelation;
+
             if (relation.Members != null)
             {
                 var relationMembers = new List<CompleteRelationMember>();
@@ -156,7 +172,7 @@ namespace OsmSharp.Complete
                             {
                                 continue;
                             }
-                            var completeMemberRelation = relationMember.CreateComplete(osmGeoSource);
+                            var completeMemberRelation = relationMember.CreateComplete(osmGeoSource, createdRelations);
                             if (completeMemberRelation != null)
                             {
                                 member.Member = completeMemberRelation;

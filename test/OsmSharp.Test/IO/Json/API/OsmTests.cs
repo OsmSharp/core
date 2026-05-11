@@ -81,5 +81,17 @@ namespace OsmSharp.Test.IO.Json.API
             Assert.AreEqual(1, osm.Ways.Length);   
             Assert.AreEqual(1, osm.Relations.Length);   
         }
+
+       [Test]
+        public void Osm_FromJson_VersionAsString_ShouldReadVersion()
+        {
+            var osm = JsonSerializer.Deserialize<Osm>(
+                "{\"version\":\"0.6\",\"generator\":\"OsmSharp\",\"elements\":[]}"
+            );
+
+            Assert.NotNull(osm);
+            Assert.AreEqual(0.6, osm.Version);
+            Assert.AreEqual("OsmSharp", osm.Generator);
+        }
     }
 }

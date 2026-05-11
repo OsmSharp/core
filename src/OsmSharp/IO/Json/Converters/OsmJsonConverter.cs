@@ -41,7 +41,12 @@ namespace OsmSharp.IO.Json.Converters
                     switch (propertyName)
                     {
                         case "version":
-                            osm.Version = reader.GetDouble();
+                            osm.Version = reader.TokenType switch
+                            {
+                                JsonTokenType.Number => reader.GetDouble(),
+                                JsonTokenType.String => double.Parse(reader.GetString()),
+                                _ => throw new JsonException()
+                            };
                             break;
                         case "generator":
                             osm.Generator = reader.GetString();

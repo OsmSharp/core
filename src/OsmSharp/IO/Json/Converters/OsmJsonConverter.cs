@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using OsmSharp.API;
@@ -41,7 +42,16 @@ public class OsmJsonConverter : JsonConverter<Osm>
                 switch (propertyName)
                 {
                     case "version":
-                        osm.Version = reader.GetDouble();
+                        // The OSM API returns version as a JSON string ("0.6"), not a number.
+                        // Accept both shapes; parse strings with the invariant culture so a
+                        // de-DE/fr-FR host doesn't misinterpret "0.6".
+                        osm.Version = reader.TokenType switch
+                        {
+                            JsonTokenType.Number => reader.GetDouble(),
+                            JsonTokenType.String when double.TryParse(reader.GetString(),
+                                NumberStyles.Float, CultureInfo.InvariantCulture, out var v) => v,
+                            _ => throw new JsonException($"Unexpected token '{reader.TokenType}' for OSM 'version' property.")
+                        };
                         break;
                     case "generator":
                         osm.Generator = reader.GetString();

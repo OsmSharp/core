@@ -80,4 +80,20 @@ public class OsmTests
         Assert.That(osm.Ways.Length, Is.EqualTo(1));
         Assert.That(osm.Relations.Length, Is.EqualTo(1));
     }
+
+    /// <summary>
+    /// Regression: the OSM API returns <c>version</c> as a JSON string ("0.6"), not a number.
+    /// <see cref="OsmJsonConverter"/> must accept both.
+    /// </summary>
+    [Test]
+    public void Osm_FromJson_VersionAsString_ShouldReadVersion()
+    {
+        var osm = JsonSerializer.Deserialize<Osm>(
+            "{\"version\":\"0.6\",\"generator\":\"OsmSharp\",\"elements\":[]}");
+
+        Assert.That(osm, Is.Not.Null);
+        Assert.That(osm.Version, Is.EqualTo(0.6));
+        Assert.That(osm.Generator, Is.EqualTo("OsmSharp"));
+    }
 }
+

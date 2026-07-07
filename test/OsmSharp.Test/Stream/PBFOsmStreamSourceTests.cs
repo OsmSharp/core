@@ -22,8 +22,10 @@
 
 using NUnit.Framework;
 using OsmSharp.Streams;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace OsmSharp.Test.Stream
@@ -34,6 +36,9 @@ namespace OsmSharp.Test.Stream
     [TestFixture]
     class PBFOsmStreamSourceTests
     {
+        private static System.IO.Stream OpenWechel() =>
+            Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.data.pbf.wechel.osm.pbf");
+
         /// <summary>
         /// A regression test on resetting a PBF osm stream.
         /// </summary>
@@ -185,6 +190,280 @@ namespace OsmSharp.Test.Stream
                 }
 
                 Assert.AreEqual(13978, wechel.Count);
+            }
+        }
+
+        /// <summary>
+        /// MoveNext(type, minId) yields elements of the requested type in id-ascending order,
+        /// each with Id &gt;= the requested minId. Successive calls that request "next id after
+        /// current + 1" must reproduce the full ordered list of that type.
+        /// </summary>
+        [Test]
+        public void MoveNext_TypedMinId_MatchesFullWayEnumeration()
+        {
+            List<Way> waysViaFullWalk;
+            using (var stream = OpenWechel())
+            using (var reader = new PBFOsmStreamSource(stream))
+            {
+                waysViaFullWalk = reader.OfType<Way>().ToList();
+            }
+
+            List<Way> waysViaTypedMoveNext;
+            using (var stream = OpenWechel())
+            using (var reader = new PBFOsmStreamSource(stream))
+            {
+                waysViaTypedMoveNext = new List<Way>();
+                long minId = long.MinValue;
+                while (reader.MoveNext(OsmGeoType.Way, minId))
+                {
+                    var w = (Way)reader.Current();
+                    waysViaTypedMoveNext.Add(w);
+                    minId = w.Id.Value + 1;
+                }
+            }
+
+            Assert.AreEqual(waysViaFullWalk.Count, waysViaTypedMoveNext.Count,
+                "typed MoveNext yielded a different way count than the full walk");
+            for (var i = 0; i < waysViaFullWalk.Count; i++)
+            {
+                Assert.AreEqual(waysViaFullWalk[i].Id, waysViaTypedMoveNext[i].Id,
+                    $"way at index {i} differs");
+            }
+        }
+
+        /// <summary>
+        /// Same idea for nodes. Confirms the block-index Tier-2 skip doesn't drop node ids
+        /// on a cold walk.
+        /// </summary>
+        [Test]
+        public void MoveNext_TypedMinId_MatchesFullNodeEnumeration()
+        {
+            List<Node> nodesViaFullWalk;
+            using (var stream = OpenWechel())
+            using (var reader = new PBFOsmStreamSource(stream))
+            {
+                nodesViaFullWalk = reader.OfType<Node>().ToList();
+            }
+
+            List<Node> nodesViaTypedMoveNext;
+            using (var stream = OpenWechel())
+            using (var reader = new PBFOsmStreamSource(stream))
+            {
+                nodesViaTypedMoveNext = new List<Node>();
+                long minId = long.MinValue;
+                while (reader.MoveNext(OsmGeoType.Node, minId))
+                {
+                    var n = (Node)reader.Current();
+                    nodesViaTypedMoveNext.Add(n);
+                    minId = n.Id.Value + 1;
+                }
+            }
+
+            Assert.AreEqual(nodesViaFullWalk.Count, nodesViaTypedMoveNext.Count);
+            for (var i = 0; i < nodesViaFullWalk.Count; i++)
+            {
+                Assert.AreEqual(nodesViaFullWalk[i].Id, nodesViaTypedMoveNext[i].Id);
+            }
+        }
+
+        /// <summary>
+        /// MoveNext(type, minId) with minId equal to a known way id in the fixture must yield
+        /// that way (or the next one if the id doesn't exist). Verifies id-lower-bound semantics.
+        /// </summary>
+        [Test]
+        public void MoveNext_TypedMinId_SeeksToRequestedId()
+        {
+            long midWayId;
+            using (var stream = OpenWechel())
+            using (var reader = new PBFOsmStreamSource(stream))
+            {
+                var ways = reader.OfType<Way>().ToList();
+                Assert.That(ways.Count, Is.GreaterThan(1));
+                midWayId = ways[ways.Count / 2].Id.Value;
+            }
+
+            using (var stream = OpenWechel())
+            using (var reader = new PBFOsmStreamSource(stream))
+            {
+                Assert.IsTrue(reader.MoveNext(OsmGeoType.Way, midWayId));
+                var first = (Way)reader.Current();
+                Assert.AreEqual(midWayId, first.Id);
+            }
+        }
+
+        /// <summary>
+        /// Forward-only contract: once a typed MoveNext has yielded an id, a subsequent typed
+        /// MoveNext for the same type with a smaller minId must throw.
+        /// </summary>
+        [Test]
+        public void MoveNext_TypedMinId_ThrowsWhenCurrentIsPastRequestedId()
+        {
+            using (var stream = OpenWechel())
+            using (var reader = new PBFOsmStreamSource(stream))
+            {
+                Assert.IsTrue(reader.MoveNext(OsmGeoType.Way, long.MinValue));
+                var firstId = reader.Current().Id.Value;
+
+                // advance a few more so the current id is clearly past long.MinValue
+                for (var i = 0; i < 3 && reader.MoveNext(OsmGeoType.Way, reader.Current().Id.Value + 1); i++) { }
+                Assert.That(reader.Current().Id.Value, Is.GreaterThan(firstId));
+
+                Assert.Throws<InvalidOperationException>(
+                    () => reader.MoveNext(OsmGeoType.Way, firstId),
+                    "expected forward-only guard to throw when asked to rewind");
+            }
+        }
+
+        /// <summary>
+        /// Forward-only across types: once we've read a way, asking for a node must throw,
+        /// because nodes come before ways in PBF ordering and can't be reached without a rewind.
+        /// </summary>
+        [Test]
+        public void MoveNext_TypedMinId_ThrowsWhenCurrentIsLaterTypeThanRequested_WayThenNode()
+        {
+            using (var stream = OpenWechel())
+            using (var reader = new PBFOsmStreamSource(stream))
+            {
+                Assert.IsTrue(reader.MoveNextWay(), "fixture should have at least one way");
+                Assert.AreEqual(OsmGeoType.Way, reader.Current().Type);
+
+                Assert.Throws<InvalidOperationException>(
+                    () => reader.MoveNext(OsmGeoType.Node, long.MinValue),
+                    "expected forward-only guard to throw when asking for a node while current is a way");
+            }
+        }
+
+        /// <summary>
+        /// Same, but relation-then-way and relation-then-node.
+        /// </summary>
+        [Test]
+        public void MoveNext_TypedMinId_ThrowsWhenCurrentIsLaterTypeThanRequested_RelationThenEarlier()
+        {
+            using (var stream = OpenWechel())
+            using (var reader = new PBFOsmStreamSource(stream))
+            {
+                if (!reader.MoveNextRelation())
+                {
+                    Assert.Ignore("fixture has no relations, skipping");
+                    return;
+                }
+                Assert.AreEqual(OsmGeoType.Relation, reader.Current().Type);
+
+                Assert.Throws<InvalidOperationException>(
+                    () => reader.MoveNext(OsmGeoType.Node, long.MinValue),
+                    "relation → node should throw");
+                Assert.Throws<InvalidOperationException>(
+                    () => reader.MoveNext(OsmGeoType.Way, long.MinValue),
+                    "relation → way should throw");
+            }
+        }
+
+        /// <summary>
+        /// Warm-path: after a full walk populates the internal block index, a second walk
+        /// (post-Reset) must produce identical output. Regression check that block-index skip
+        /// doesn't drop primitives.
+        /// </summary>
+        [Test]
+        public void WarmPath_ResetAndRewalk_YieldsIdenticalOutput()
+        {
+            using (var stream = OpenWechel())
+            using (var reader = new PBFOsmStreamSource(stream))
+            {
+                var first = reader.Select(g => (g.Type, g.Id)).ToList();
+                Assert.IsTrue(reader.CanReset);
+                reader.Reset();
+                var second = reader.Select(g => (g.Type, g.Id)).ToList();
+
+                Assert.AreEqual(first.Count, second.Count);
+                for (var i = 0; i < first.Count; i++)
+                {
+                    Assert.AreEqual(first[i], second[i]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Warm-path: after a full walk, a subsequent nodes-only walk (post-Reset) must yield
+        /// exactly the same nodes as the first walk did, in the same order — the block-index
+        /// Tier-1 skip must not drop node-bearing blobs.
+        /// </summary>
+        [Test]
+        public void WarmPath_NodesOnlyAfterFullWalk_YieldsSameNodes()
+        {
+            using (var stream = OpenWechel())
+            using (var reader = new PBFOsmStreamSource(stream))
+            {
+                var nodesFirst = reader.OfType<Node>().Select(n => n.Id.Value).ToList();
+
+                Assert.IsTrue(reader.CanReset);
+                reader.Reset();
+
+                var nodesSecond = new List<long>();
+                while (reader.MoveNext(ignoreNodes: false, ignoreWays: true, ignoreRelations: true))
+                {
+                    var n = (Node)reader.Current();
+                    nodesSecond.Add(n.Id.Value);
+                }
+
+                Assert.AreEqual(nodesFirst.Count, nodesSecond.Count);
+                for (var i = 0; i < nodesFirst.Count; i++)
+                {
+                    Assert.AreEqual(nodesFirst[i], nodesSecond[i]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Warm-path: after a full walk, a subsequent ways-only walk (post-Reset) must yield
+        /// exactly the same ways. Also exercises the Tier-1 skip for the (mostly node) blobs
+        /// at the start of the file.
+        /// </summary>
+        [Test]
+        public void WarmPath_WaysOnlyAfterFullWalk_YieldsSameWays()
+        {
+            using (var stream = OpenWechel())
+            using (var reader = new PBFOsmStreamSource(stream))
+            {
+                var waysFirst = reader.OfType<Way>().Select(w => w.Id.Value).ToList();
+
+                Assert.IsTrue(reader.CanReset);
+                reader.Reset();
+
+                var waysSecond = new List<long>();
+                while (reader.MoveNextWay())
+                {
+                    var w = (Way)reader.Current();
+                    waysSecond.Add(w.Id.Value);
+                }
+
+                Assert.AreEqual(waysFirst.Count, waysSecond.Count);
+                for (var i = 0; i < waysFirst.Count; i++)
+                {
+                    Assert.AreEqual(waysFirst[i], waysSecond[i]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Warm-path with typed MoveNext: after a full walk populates Tier-2 (id ranges per
+        /// blob), a subsequent typed walk requesting way ids past the max in the file must
+        /// return false without misbehaving.
+        /// </summary>
+        [Test]
+        public void WarmPath_TypedMoveNext_PastMaxId_ReturnsFalse()
+        {
+            using (var stream = OpenWechel())
+            using (var reader = new PBFOsmStreamSource(stream))
+            {
+                long maxWayId = 0;
+                foreach (var g in reader.OfType<Way>())
+                {
+                    if (g.Id.Value > maxWayId) maxWayId = g.Id.Value;
+                }
+                Assert.That(maxWayId, Is.GreaterThan(0));
+
+                reader.Reset();
+                Assert.IsFalse(reader.MoveNext(OsmGeoType.Way, maxWayId + 1));
             }
         }
     }

@@ -62,6 +62,44 @@ namespace OsmSharp.IO.PBF
         private readonly BlobHeader _header = new BlobHeader();
 
         /// <summary>
+        /// Skips over the next blob without decompressing its payload.
+        /// Reads the length-prefixed BlobHeader (to learn <c>datasize</c>) and then advances the
+        /// underlying stream past the blob body. Returns <c>true</c> when a blob was skipped,
+        /// <c>false</c> on end-of-stream. The blob's contents are NOT decoded — callers relying
+        /// on this must have out-of-band knowledge (e.g. a prior block index) about what's inside.
+        /// </summary>
+        public bool SkipNext()
+        {
+            if (!Serializer.TryReadLengthPrefix(_stream, PrefixStyle.Fixed32BigEndian, out var length)) return false;
+
+            BlobHeader header;
+            using (var tmp = new LimitedStream(_stream, length))
+            {
+                header = _runtimeTypeModel.Deserialize<BlobHeader>(tmp, _header, _blockHeaderType);
+            }
+
+            // Advance past the payload. Prefer Seek when possible; fall back to a read-and-discard
+            // loop for non-seekable streams so the API stays valid even without CanSeek.
+            var datasize = header.datasize;
+            if (_stream.CanSeek)
+            {
+                _stream.Seek(datasize, SeekOrigin.Current);
+            }
+            else
+            {
+                var buffer = new byte[Math.Min(datasize, 64 * 1024)];
+                var remaining = datasize;
+                while (remaining > 0)
+                {
+                    var read = _stream.Read(buffer, 0, Math.Min(remaining, buffer.Length));
+                    if (read <= 0) return false;
+                    remaining -= read;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Moves to the next primitive block, returns null at the end.
         /// </summary>
         /// <returns></returns>

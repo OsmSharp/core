@@ -176,6 +176,54 @@ internal class PBFOsmStreamTargetTests
             Assert.That(resultNode.Latitude.Value, Is.EqualTo(sourceNode.Latitude.Value).Within(.0001f));
             Assert.That(resultNode.Longitude.Value, Is.EqualTo(sourceNode.Longitude.Value).Within(.0001f));
         }
+
+        // Round-trip Version through the dense-node encoder. Regression test for a bug
+        // where EncodeDenseNode wrote version delta-encoded even though the spec (and
+        // decoder) treat it as absolute.
+        sourceObjects = new OsmGeo[] {
+            new Node()
+            {
+                Id = 1,
+                Latitude = 1f,
+                Longitude = 1f,
+                ChangeSetId = 1092,
+                TimeStamp = DateTime.UnixEpoch,
+                UserId = 9034,
+                Version = 12
+            },
+            new Node()
+            {
+                Id = 2,
+                Latitude = 2f,
+                Longitude = 2f,
+                ChangeSetId = 1093,
+                TimeStamp = DateTime.Now,
+                UserId = 9035,
+                Version = 13
+            },
+            new Node()
+            {
+                Id = 3,
+                Latitude = 3f,
+                Longitude = 3f,
+                ChangeSetId = 1094,
+                TimeStamp = DateTime.UtcNow,
+                UserId = 9036,
+                Version = 14
+            }
+        };
+
+        using (var stream = new MemoryStream())
+        {
+            var target = new PBFOsmStreamTarget(stream);
+            target.RegisterSource(sourceObjects);
+            target.Pull();
+
+            stream.Seek(0, SeekOrigin.Begin);
+            var resultObjects = new List<OsmGeo>(new PBFOsmStreamSource(stream));
+
+            AreEqual(sourceObjects, resultObjects);
+        }
     }
 
     /// <summary>
@@ -634,6 +682,62 @@ internal class PBFOsmStreamTargetTests
             memoryStream.Seek(0, 0);
 
             Assert.That(new PBFOsmStreamSource(memoryStream).Count(n => n is Node), Is.EqualTo(1715));
+        }
+    }
+
+    /// <summary>
+    /// Test helper: assert that two OsmGeo sequences are element-wise equal.
+    /// </summary>
+    private static void AreEqual(IEnumerable<OsmGeo> sourceObjects, IEnumerable<OsmGeo> resultObjects)
+    {
+        Assert.IsNotNull(resultObjects);
+        var sourceArray = sourceObjects.ToArray();
+        var resultArray = resultObjects.ToArray();
+        Assert.That(resultArray.Length, Is.EqualTo(sourceArray.Length));
+        for (int i = 0; i < sourceArray.Length; i++)
+        {
+            AreEqual(sourceArray[i], resultArray[i]);
+        }
+    }
+
+    /// <summary>
+    /// Test helper: compare two OsmGeo values with type-appropriate tolerances
+    /// (timestamp seconds-level, coordinate float epsilon).
+    /// </summary>
+    private static void AreEqual(OsmGeo sourceObject, OsmGeo resultObject)
+    {
+        Assert.That(resultObject.Id, Is.EqualTo(sourceObject.Id));
+        Assert.That(resultObject.ChangeSetId, Is.EqualTo(sourceObject.ChangeSetId));
+        Assert.That(resultObject.TimeStamp.Value.Ticks, Is.EqualTo(sourceObject.TimeStamp.Value.Ticks).Within(10000000));
+        Assert.That(resultObject.UserId, Is.EqualTo(sourceObject.UserId));
+        Assert.That(resultObject.UserName, Is.EqualTo(sourceObject.UserName));
+        Assert.That(resultObject.Version, Is.EqualTo(sourceObject.Version));
+        Assert.That(resultObject.Tags?.Count ?? 0, Is.EqualTo(sourceObject.Tags?.Count ?? 0));
+        foreach (var sourceTag in sourceObject.Tags ?? new TagsCollection())
+        {
+            Assert.IsTrue(resultObject.Tags.Contains(sourceTag));
+        }
+        switch (sourceObject)
+        {
+            case Node sourceNode:
+                var resultNode = (Node)resultObject;
+                Assert.That(resultNode.Latitude.Value, Is.EqualTo(sourceNode.Latitude.Value).Within(.0001f));
+                Assert.That(resultNode.Longitude.Value, Is.EqualTo(sourceNode.Longitude.Value).Within(.0001f));
+                break;
+            case Way sourceWay:
+                var resultWay = (Way)resultObject;
+                Assert.IsTrue(sourceWay.Nodes.SequenceEqual(resultWay.Nodes));
+                break;
+            case Relation sourceRelation:
+                var resultRelation = (Relation)resultObject;
+                Assert.That(resultRelation.Members.Length, Is.EqualTo(sourceRelation.Members.Length));
+                for (int i = 0; i < sourceRelation.Members.Length; i++)
+                {
+                    Assert.That(resultRelation.Members[i].Type, Is.EqualTo(sourceRelation.Members[i].Type));
+                    Assert.That(resultRelation.Members[i].Id, Is.EqualTo(sourceRelation.Members[i].Id));
+                    Assert.That(resultRelation.Members[i].Role, Is.EqualTo(sourceRelation.Members[i].Role));
+                }
+                break;
         }
     }
 }

@@ -40,6 +40,10 @@ TestResult.xml
 
 *luxembourg.*
 
+# Sample run outputs
+samples/Sample.GeoFilter/polygon_complete.osm
+samples/Sample.GeometryStream/output.geojson
+
 packages/*
 !packages/repositories.config
 /.vs

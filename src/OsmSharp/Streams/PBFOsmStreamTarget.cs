@@ -23,9 +23,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using OsmSharp.IO.PBF;
-using OsmSharp.IO.Zip;
-using OsmSharp.IO.Zip.Streams;
 using ProtoBuf.Meta;
 
 namespace OsmSharp.Streams;
@@ -42,22 +41,18 @@ public class PBFOsmStreamTarget : OsmStreamTarget
     private readonly Type _primitiveBlockType = typeof(PrimitiveBlock);
     private readonly Type _headerBlockType = typeof(HeaderBlock);
     private readonly bool _compress;
-    private readonly int _level;
-    private readonly int _bufferSize;
+    private readonly CompressionLevel _level;
 
     /// <summary>
     /// Creates a new PBF stream target.
     /// </summary>
     /// <param name="stream">The output stream.</param>
     /// <param name="compress">if set to <c>true</c> use compression.</param>
-    /// <param name="compressionLevel">The compression level, a value between <see cref="Deflater.NO_COMPRESSION" />
-    /// and <see cref="Deflater.BEST_COMPRESSION" />, or <see cref="Deflater.DEFAULT_COMPRESSION" />.</param>
-    /// <param name="bufferSize">The buffer size in bytes to use when deflating (minimum value <see cref="DeflaterOutputStream.DefaultBufferSize"/>).</param>
+    /// <param name="compressionLevel">Compression level applied when <paramref name="compress"/> is true.</param>
     public PBFOsmStreamTarget(
         Stream stream,
         bool compress = true,
-        int? compressionLevel = Deflater.DEFAULT_COMPRESSION,
-        int? bufferSize = DeflaterOutputStream.DefaultBufferSize)
+        CompressionLevel compressionLevel = CompressionLevel.Optimal)
     {
         _stream = stream;
 
@@ -72,8 +67,7 @@ public class PBFOsmStreamTarget : OsmStreamTarget
         _runtimeTypeModel.Add(_headerBlockType, true);
 
         _compress = compress;
-        _level = compressionLevel ?? Deflater.DEFAULT_COMPRESSION;
-        _bufferSize = bufferSize ?? DeflaterOutputStream.DefaultBufferSize;
+        _level = compressionLevel;
     }
 
     private readonly List<OsmGeo> _currentEntities;
@@ -105,10 +99,9 @@ public class PBFOsmStreamTarget : OsmStreamTarget
         {
             using (var target = new MemoryStream())
             {
-                using (var source = new MemoryStream(blockHeaderData))
-                using (var deflate = new DeflaterOutputStream(target))
+                using (var deflate = new ZLibStream(target, _level, leaveOpen: true))
                 {
-                    source.CopyTo(deflate);
+                    deflate.Write(blockHeaderData, 0, blockHeaderData.Length);
                 }
                 blob.zlib_data = target.ToArray();
             }
@@ -158,10 +151,9 @@ public class PBFOsmStreamTarget : OsmStreamTarget
         {
             using (var target = new MemoryStream())
             {
-                using (var source = new MemoryStream(blockBytes))
-                using (var deflate = new DeflaterOutputStream(target, new Deflater(_level), _bufferSize))
+                using (var deflate = new ZLibStream(target, _level, leaveOpen: true))
                 {
-                    source.CopyTo(deflate);
+                    deflate.Write(blockBytes, 0, blockBytes.Length);
                 }
                 blob.zlib_data = target.ToArray();
             }

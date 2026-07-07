@@ -167,15 +167,3 @@ csharp_preserve_single_line_statements = true
 csharp_preserve_single_line_blocks = true
 # namespaces
 csharp_style_namespace_declarations = file_scoped:error
-
-###############################
-# Third-party imports         #
-###############################
-# src/OsmSharp/IO/Zip/** is a vendored copy of SharpZipLib (icsharpcode/SharpZipLib).
-# Its private fields don't follow our _prefix convention, and renaming them would
-# permanently diverge from upstream (making bugfix cherry-picks painful) for code we
-# want to replace with System.IO.Compression.ZLibStream once we can require net6.0+.
-# Disable IDE1006 (naming rule violations) for that tree only. Everything else — including
-# our own first-party code such as IO/PBF/PBFReader.cs — stays under the standard rules.
-[src/OsmSharp/IO/Zip/**.cs]
-dotnet_diagnostic.IDE1006.severity = none

@@ -1,24 +1,24 @@
-﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// OsmSharp - OpenStreetMap (OSM) SDK
 // Copyright (C) 2016 Abelshausen Ben
-// 
+//
 // This file is part of OsmSharp.
-// 
+//
 // OsmSharp is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 2 of the License, or
 // (at your option) any later version.
-// 
+//
 // OsmSharp is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.IO;
-using OsmSharp.IO.Zip.Streams;
+using System.IO.Compression;
 using ProtoBuf;
 using ProtoBuf.Meta;
 
@@ -72,10 +72,11 @@ public class PBFReader
     {
         if (!Serializer.TryReadLengthPrefix(_stream, PrefixStyle.Fixed32BigEndian, out var length)) return false;
 
+        var headerBytes = ReadExact(_stream, length);
         BlobHeader header;
-        using (var tmp = new LimitedStream(_stream, length))
+        using (var ms = new MemoryStream(headerBytes))
         {
-            header = _runtimeTypeModel.Deserialize<BlobHeader>(tmp, _header, _blockHeaderType);
+            header = _runtimeTypeModel.Deserialize<BlobHeader>(ms, _header, _blockHeaderType);
         }
 
         // Advance past the payload. Prefer Seek when possible; fall back to a read-and-discard
@@ -117,40 +118,28 @@ public class PBFReader
             notFoundBut = false; // not found.
             if (!Serializer.TryReadLengthPrefix(_stream, PrefixStyle.Fixed32BigEndian, out var length)) continue;
 
-            // TODO: remove some of the v1 specific code.
-            // TODO: this means also to use the built-in capped streams.
-
-            // code borrowed from: http://stackoverflow.com/questions/4663298/protobuf-net-deserialize-open-street-maps
-
-            // I'm just being lazy and re-using something "close enough" here
-            // note that v2 has a big-endian option, but Fixed32 assumes little-endian - we
-            // actually need the other way around (network byte order):
-            // length = IntLittleEndianToBigEndian((uint)length);
-
-
-            // again, v2 has capped-streams built in, but I'm deliberately
-            // limiting myself to v1 features
+            var headerBytes = ReadExact(_stream, length);
             BlobHeader header;
-            using (var tmp = new LimitedStream(_stream, length))
+            using (var ms = new MemoryStream(headerBytes))
             {
-                header = _runtimeTypeModel.Deserialize<BlobHeader>(tmp, _header, _blockHeaderType);
+                header = _runtimeTypeModel.Deserialize<BlobHeader>(ms, _header, _blockHeaderType);
             }
+            var blobBytes = ReadExact(_stream, header.datasize);
             Blob blob;
-            using (var tmp = new LimitedStream(_stream, header.datasize))
+            using (var ms = new MemoryStream(blobBytes))
             {
-                blob = _runtimeTypeModel.Deserialize(tmp, null, _blobType) as Blob;
+                blob = _runtimeTypeModel.Deserialize(ms, null, _blobType) as Blob;
             }
 
             // construct the source stream, compressed or not.
-            Stream sourceStream = null;
+            Stream sourceStream;
             if (blob.zlib_data == null)
             { // use a regular uncompressed stream.
                 sourceStream = new MemoryStream(blob.raw);
             }
             else
-            { // construct a compressed stream.
-                var ms = new MemoryStream(blob.zlib_data);
-                sourceStream = new ZLibStreamWrapper(ms);
+            { // wrap the zlib blob in ZLibStream — handles the 2-byte header and Adler32 trailer.
+                sourceStream = new ZLibStream(new MemoryStream(blob.zlib_data), CompressionMode.Decompress);
             }
 
             // use the stream to read the block.
@@ -170,98 +159,24 @@ public class PBFReader
         }
         return block;
     }
-}
 
-internal abstract class InputStream : Stream
-{
-    protected abstract int ReadNextBlock(byte[] buffer, int offset, int count);
-    public sealed override int Read(byte[] buffer, int offset, int count)
+    /// <summary>
+    /// Reads exactly <paramref name="count"/> bytes from <paramref name="stream"/> into a
+    /// fresh buffer. Throws <see cref="EndOfStreamException"/> if the stream ends first.
+    /// Replaces the previous <c>LimitedStream</c> wrapper used to cap protobuf deserialization
+    /// reads — with net6+ we just materialize the exact byte slice and wrap it in a
+    /// <see cref="MemoryStream"/>.
+    /// </summary>
+    private static byte[] ReadExact(Stream stream, int count)
     {
-        int bytesRead, totalRead = 0;
-        while (count > 0 && (bytesRead = this.ReadNextBlock(buffer, offset, count)) > 0)
+        var buffer = new byte[count];
+        var total = 0;
+        while (total < count)
         {
-            count -= bytesRead;
-            offset += bytesRead;
-            totalRead += bytesRead;
-            _pos += bytesRead;
+            var read = stream.Read(buffer, total, count - total);
+            if (read == 0) throw new EndOfStreamException($"Expected {count} bytes, got {total}.");
+            total += read;
         }
-        return totalRead;
-    }
-    private long _pos;
-    public override void Write(byte[] buffer, int offset, int count)
-    {
-        throw new NotImplementedException();
-    }
-    public override void SetLength(long value)
-    {
-        throw new NotImplementedException();
-    }
-    public override long Position
-    {
-        get
-        {
-            return _pos;
-        }
-        set
-        {
-            if (_pos != value) throw new NotImplementedException();
-        }
-    }
-    public override long Length
-    {
-        get { throw new NotImplementedException(); }
-    }
-    public override void Flush()
-    {
-        throw new NotImplementedException();
-    }
-    public override bool CanWrite
-    {
-        get { return false; }
-    }
-    public override bool CanRead
-    {
-        get { return true; }
-    }
-    public override bool CanSeek
-    {
-        get { return false; }
-    }
-    public override long Seek(long offset, SeekOrigin origin)
-    {
-        throw new NotImplementedException();
-    }
-}
-internal class ZLibStreamWrapper : InputStream
-{
-    private readonly InflaterInputStream _reader;
-    public ZLibStreamWrapper(Stream stream)
-    {
-        _reader = new InflaterInputStream(stream);
-    }
-    protected override int ReadNextBlock(byte[] buffer, int offset, int count)
-    {
-        return _reader.Read(buffer, offset, count);
-    }
-}
-// deliberately doesn't dispose the base-stream
-internal class LimitedStream : InputStream
-{
-    private readonly Stream _stream;
-    private long _remaining;
-    public LimitedStream(Stream stream, long length)
-    {
-        if (length < 0) throw new ArgumentOutOfRangeException("length");
-        if (stream == null) throw new ArgumentNullException("stream");
-        if (!stream.CanRead) throw new ArgumentException("stream");
-        _stream = stream;
-        _remaining = length;
-    }
-    protected override int ReadNextBlock(byte[] buffer, int offset, int count)
-    {
-        if (count > _remaining) count = (int)_remaining;
-        int bytesRead = _stream.Read(buffer, offset, count);
-        if (bytesRead > 0) _remaining -= bytesRead;
-        return bytesRead;
+        return buffer;
     }
 }

@@ -183,11 +183,11 @@ internal abstract class InputStream : Stream
             count -= bytesRead;
             offset += bytesRead;
             totalRead += bytesRead;
-            pos += bytesRead;
+            _pos += bytesRead;
         }
         return totalRead;
     }
-    private long pos;
+    private long _pos;
     public override void Write(byte[] buffer, int offset, int count)
     {
         throw new NotImplementedException();
@@ -200,11 +200,11 @@ internal abstract class InputStream : Stream
     {
         get
         {
-            return pos;
+            return _pos;
         }
         set
         {
-            if (pos != value) throw new NotImplementedException();
+            if (_pos != value) throw new NotImplementedException();
         }
     }
     public override long Length
@@ -234,34 +234,34 @@ internal abstract class InputStream : Stream
 }
 internal class ZLibStreamWrapper : InputStream
 {
-    private readonly InflaterInputStream reader;
+    private readonly InflaterInputStream _reader;
     public ZLibStreamWrapper(Stream stream)
     {
-        reader = new InflaterInputStream(stream);
+        _reader = new InflaterInputStream(stream);
     }
     protected override int ReadNextBlock(byte[] buffer, int offset, int count)
     {
-        return reader.Read(buffer, offset, count);
+        return _reader.Read(buffer, offset, count);
     }
 }
-// deliberately doesn't dispose the base-stream    
+// deliberately doesn't dispose the base-stream
 internal class LimitedStream : InputStream
 {
-    private readonly Stream stream;
-    private long remaining;
+    private readonly Stream _stream;
+    private long _remaining;
     public LimitedStream(Stream stream, long length)
     {
         if (length < 0) throw new ArgumentOutOfRangeException("length");
         if (stream == null) throw new ArgumentNullException("stream");
         if (!stream.CanRead) throw new ArgumentException("stream");
-        this.stream = stream;
-        remaining = length;
+        _stream = stream;
+        _remaining = length;
     }
     protected override int ReadNextBlock(byte[] buffer, int offset, int count)
     {
-        if (count > remaining) count = (int)remaining;
-        int bytesRead = stream.Read(buffer, offset, count);
-        if (bytesRead > 0) remaining -= bytesRead;
+        if (count > _remaining) count = (int)_remaining;
+        int bytesRead = _stream.Read(buffer, offset, count);
+        if (bytesRead > 0) _remaining -= bytesRead;
         return bytesRead;
     }
 }

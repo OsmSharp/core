@@ -118,7 +118,7 @@ public class PerformanceInfoConsumer
         OsmSharp.Logging.Logger.Log(_name, OsmSharp.Logging.TraceEventType.Information, message, args);
     }
 
-    private int previousPercentage = 0;
+    private int _previousPercentage = 0;
 
     /// <summary>
     /// Reports a message about progress.
@@ -126,10 +126,10 @@ public class PerformanceInfoConsumer
     public void Report(string message, long i, long max)
     {
         var currentPercentage = (int)System.Math.Round((i / (double)max) * 10, 0);
-        if (previousPercentage != currentPercentage)
+        if (_previousPercentage != currentPercentage)
         {
             OsmSharp.Logging.Logger.Log(_name, OsmSharp.Logging.TraceEventType.Information, message, currentPercentage * 10);
-            previousPercentage = currentPercentage;
+            _previousPercentage = currentPercentage;
         }
     }
 

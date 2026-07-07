@@ -20,66 +20,65 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using NetTopologySuite.Features;
 using OsmSharp.Complete;
 using OsmSharp.Db;
 using OsmSharp.Tags;
-using System;
 
-namespace OsmSharp.Geo
+namespace OsmSharp.Geo;
+
+/// <summary>
+/// Represents a geometry interpreter to convert OSM-objects to corresponding geometries.
+/// </summary>
+public abstract class FeatureInterpreter
 {
     /// <summary>
-    /// Represents a geometry interpreter to convert OSM-objects to corresponding geometries.
+    /// Holds the default geometry interpreter.
     /// </summary>
-    public abstract class FeatureInterpreter
+    private static FeatureInterpreter _defaultInterpreter;
+
+    /// <summary>
+    /// Gets/sets the default interpreter.
+    /// </summary>
+    public static FeatureInterpreter DefaultInterpreter
     {
-        /// <summary>
-        /// Holds the default geometry interpreter.
-        /// </summary>
-        private static FeatureInterpreter _defaultInterpreter;
-
-        /// <summary>
-        /// Gets/sets the default interpreter.
-        /// </summary>
-        public static FeatureInterpreter DefaultInterpreter
+        get
         {
-            get
+            if (_defaultInterpreter == null)
             {
-                if (_defaultInterpreter == null)
-                {
-                    _defaultInterpreter = new DefaultFeatureInterpreter();
-                }
-                return _defaultInterpreter;
+                _defaultInterpreter = new DefaultFeatureInterpreter();
             }
-            set => _defaultInterpreter = value;
+            return _defaultInterpreter;
         }
+        set => _defaultInterpreter = value;
+    }
 
-        /// <summary>
-        /// Interprets an OSM-object and returns the corresponding geometry.
-        /// </summary>
-        public abstract FeatureCollection Interpret(ICompleteOsmGeo osmObject);
+    /// <summary>
+    /// Interprets an OSM-object and returns the corresponding geometry.
+    /// </summary>
+    public abstract FeatureCollection Interpret(ICompleteOsmGeo osmObject);
 
-        /// <summary>
-        /// Returns true if the given tags collection contains potential area tags.
-        /// </summary>
-        public abstract bool IsPotentiallyArea(TagsCollectionBase tags);
+    /// <summary>
+    /// Returns true if the given tags collection contains potential area tags.
+    /// </summary>
+    public abstract bool IsPotentiallyArea(TagsCollectionBase tags);
 
-        /// <summary>
-        /// Interprets an OSM-object and returns the corresponding geometry.
-        /// </summary>
-        public virtual FeatureCollection Interpret(OsmGeo osmGeo, ISnapshotDb data)
+    /// <summary>
+    /// Interprets an OSM-object and returns the corresponding geometry.
+    /// </summary>
+    public virtual FeatureCollection Interpret(OsmGeo osmGeo, ISnapshotDb data)
+    {
+        switch (osmGeo.Type)
         {
-            switch (osmGeo.Type)
-            {
-                case OsmGeoType.Node:
-                    return this.Interpret(osmGeo as Node);
-                case OsmGeoType.Way:
-                    return this.Interpret((osmGeo as Way).CreateComplete(data));
-                case OsmGeoType.Relation:
-                    return this.Interpret((osmGeo as Relation).CreateComplete(data));
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            case OsmGeoType.Node:
+                return this.Interpret(osmGeo as Node);
+            case OsmGeoType.Way:
+                return this.Interpret((osmGeo as Way).CreateComplete(data));
+            case OsmGeoType.Relation:
+                return this.Interpret((osmGeo as Relation).CreateComplete(data));
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 }

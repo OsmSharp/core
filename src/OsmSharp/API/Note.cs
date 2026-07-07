@@ -22,122 +22,121 @@
 
 using System;
 
-namespace OsmSharp.API
+namespace OsmSharp.API;
+
+/// <summary>
+/// Represents a Note.
+/// </summary>
+public partial class Note
 {
     /// <summary>
-    /// Represents a Note.
+    /// Gets or sets the id.
     /// </summary>
-    public partial class Note
+    public long? Id { get; set; }
+
+    /// <summary>
+    /// The latitude.
+    /// </summary>
+    public double? Latitude { get; set; }
+
+    /// <summary>
+    /// The longitude.
+    /// </summary>
+    public double? Longitude { get; set; }
+
+    /// <summary>
+    /// The url.
+    /// </summary>
+    public string Url { get; set; }
+
+    /// <summary>
+    /// The comment url.
+    /// </summary>
+    public string CommentUrl { get; set; }
+
+    /// <summary>
+    /// The close url.
+    /// </summary>
+    public string CloseUrl { get; set; }
+
+    /// <summary>
+    /// The creation date.
+    /// </summary>
+    public DateTime? DateCreated { get; set; }
+
+    /// <summary>
+    /// The status.
+    /// </summary>
+    public NoteStatus? Status { get; set; }
+
+    /// <summary>
+    /// The comment.
+    /// </summary>
+    public CommentsContainer Comments { get; set; }
+
+    public enum NoteStatus
+    {
+        Open,
+        Closed
+    }
+
+    /// <summary>
+    /// Represents a set of CommentsContainer.
+    /// </summary>
+    public partial class CommentsContainer
     {
         /// <summary>
-        /// Gets or sets the id.
+        /// The comments.
         /// </summary>
-        public long? Id { get; set; }
+        public Comment[] Comments { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a Comment.
+    /// </summary>
+    public partial class Comment
+    {
+        /// <summary>
+        /// The date.
+        /// </summary>
+        public DateTime? Date { get; set; }
 
         /// <summary>
-        /// The latitude.
+        /// The id of the user that created the comment, or null if the comment is anonymous.
         /// </summary>
-        public double? Latitude { get; set; }
+        public long? UserId { get; set; }
 
         /// <summary>
-        /// The longitude.
+        /// The name of the user that created the comment, or null if the comment is anonymous.
         /// </summary>
-        public double? Longitude { get; set; }
+        public string UserName { get; set; }
 
         /// <summary>
-        /// The url.
+        /// The url of the user that created the comment, or null if the comment is anonymous.
         /// </summary>
-        public string Url { get; set; }
+        public string UserUrl { get; set; }
 
         /// <summary>
-        /// The comment url.
+        /// The action performed with this comment.
         /// </summary>
-        public string CommentUrl { get; set; }
+        public CommentAction? Action { get; set; }
 
         /// <summary>
-        /// The close url.
+        /// The text.
         /// </summary>
-        public string CloseUrl { get; set; }
+        public string Text { get; set; }
 
         /// <summary>
-        /// The creation date.
+        /// The text, styled to be embedded in html.
         /// </summary>
-        public DateTime? DateCreated { get; set; }
+        public string HTML { get; set; }
 
-        /// <summary>
-        /// The status.
-        /// </summary>
-        public NoteStatus? Status { get; set; }
-
-        /// <summary>
-        /// The comment.
-        /// </summary>
-        public CommentsContainer Comments { get; set; }
-
-        public enum NoteStatus
+        public enum CommentAction
         {
-            Open,
-            Closed
-        }
-
-        /// <summary>
-        /// Represents a set of CommentsContainer.
-        /// </summary>
-        public partial class CommentsContainer
-        {
-            /// <summary>
-            /// The comments.
-            /// </summary>
-            public Comment[] Comments { get; set; }
-        }
-
-        /// <summary>
-        /// Represents a Comment.
-        /// </summary>
-        public partial class Comment
-        {
-            /// <summary>
-            /// The date.
-            /// </summary>
-            public DateTime? Date { get; set; }
-
-            /// <summary>
-            /// The id of the user that created the comment, or null if the comment is anonymous.
-            /// </summary>
-            public long? UserId { get; set; }
-
-            /// <summary>
-            /// The name of the user that created the comment, or null if the comment is anonymous.
-            /// </summary>
-            public string UserName { get; set; }
-
-            /// <summary>
-            /// The url of the user that created the comment, or null if the comment is anonymous.
-            /// </summary>
-            public string UserUrl { get; set; }
-
-            /// <summary>
-            /// The action performed with this comment.
-            /// </summary>
-            public CommentAction? Action { get; set; }
-
-            /// <summary>
-            /// The text.
-            /// </summary>
-            public string Text { get; set; }
-
-            /// <summary>
-            /// The text, styled to be embedded in html.
-            /// </summary>
-            public string HTML { get; set; }
-
-            public enum CommentAction
-            {
-                Opened,
-                Commented,
-                Closed,
-                ReOpened
-            }
+            Opened,
+            Commented,
+            Closed,
+            ReOpened
         }
     }
 }

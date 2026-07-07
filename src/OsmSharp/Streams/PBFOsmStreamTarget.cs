@@ -20,222 +20,221 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.Collections.Generic;
+using System.IO;
 using OsmSharp.IO.PBF;
 using OsmSharp.IO.Zip;
 using OsmSharp.IO.Zip.Streams;
 using ProtoBuf.Meta;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
-namespace OsmSharp.Streams
+namespace OsmSharp.Streams;
+
+/// <summary>
+/// A PBF stream target.
+/// </summary>
+public class PBFOsmStreamTarget : OsmStreamTarget
 {
+    private readonly Stream _stream;
+    private readonly RuntimeTypeModel _runtimeTypeModel;
+    private readonly Type _blobHeaderType = typeof(BlobHeader);
+    private readonly Type _blobType = typeof(Blob);
+    private readonly Type _primitiveBlockType = typeof(PrimitiveBlock);
+    private readonly Type _headerBlockType = typeof(HeaderBlock);
+    private readonly bool _compress;
+    private readonly int _level;
+    private readonly int _bufferSize;
+
     /// <summary>
-    /// A PBF stream target.
+    /// Creates a new PBF stream target.
     /// </summary>
-    public class PBFOsmStreamTarget : OsmStreamTarget
+    /// <param name="stream">The output stream.</param>
+    /// <param name="compress">if set to <c>true</c> use compression.</param>
+    /// <param name="compressionLevel">The compression level, a value between <see cref="Deflater.NO_COMPRESSION" />
+    /// and <see cref="Deflater.BEST_COMPRESSION" />, or <see cref="Deflater.DEFAULT_COMPRESSION" />.</param>
+    /// <param name="bufferSize">The buffer size in bytes to use when deflating (minimum value <see cref="DeflaterOutputStream.DefaultBufferSize"/>).</param>
+    public PBFOsmStreamTarget(
+        Stream stream,
+        bool compress = true,
+        int? compressionLevel = Deflater.DEFAULT_COMPRESSION,
+        int? bufferSize = DeflaterOutputStream.DefaultBufferSize)
     {
-        private readonly Stream _stream;
-        private readonly RuntimeTypeModel _runtimeTypeModel;
-        private readonly Type _blobHeaderType = typeof(BlobHeader);
-        private readonly Type _blobType = typeof(Blob);
-        private readonly Type _primitiveBlockType = typeof(PrimitiveBlock);
-        private readonly Type _headerBlockType = typeof(HeaderBlock);
-        private readonly bool _compress;
-        private readonly int _level;
-        private readonly int _bufferSize;
+        _stream = stream;
 
-        /// <summary>
-        /// Creates a new PBF stream target.
-        /// </summary>
-        /// <param name="stream">The output stream.</param>
-        /// <param name="compress">if set to <c>true</c> use compression.</param>
-        /// <param name="compressionLevel">The compression level, a value between <see cref="Deflater.NO_COMPRESSION" />
-        /// and <see cref="Deflater.BEST_COMPRESSION" />, or <see cref="Deflater.DEFAULT_COMPRESSION" />.</param>
-        /// <param name="bufferSize">The buffer size in bytes to use when deflating (minimum value <see cref="DeflaterOutputStream.DefaultBufferSize"/>).</param>
-        public PBFOsmStreamTarget(
-            Stream stream, 
-            bool compress = true, 
-            int? compressionLevel = Deflater.DEFAULT_COMPRESSION, 
-            int? bufferSize = DeflaterOutputStream.DefaultBufferSize)
+        _currentEntities = new List<OsmGeo>();
+        _reverseStringTable = new Dictionary<string, int>();
+        _buffer = new MemoryStream();
+
+        _runtimeTypeModel = RuntimeTypeModel.Create();
+        _runtimeTypeModel.Add(_blobHeaderType, true);
+        _runtimeTypeModel.Add(_blobType, true);
+        _runtimeTypeModel.Add(_primitiveBlockType, true);
+        _runtimeTypeModel.Add(_headerBlockType, true);
+
+        _compress = compress;
+        _level = compressionLevel ?? Deflater.DEFAULT_COMPRESSION;
+        _bufferSize = bufferSize ?? DeflaterOutputStream.DefaultBufferSize;
+    }
+
+    private readonly List<OsmGeo> _currentEntities;
+    private readonly Dictionary<string, int> _reverseStringTable;
+    private readonly MemoryStream _buffer;
+
+    /// <summary>
+    /// Initializes this target.
+    /// </summary>
+    public override void Initialize()
+    {
+        _currentEntities.Clear();
+
+        // write the mandatory header.
+        _buffer.Seek(0, SeekOrigin.Begin);
+
+        // create header block.
+        var blockHeader = new HeaderBlock();
+        blockHeader.required_features.Add("OsmSchema-V0.6");
+        blockHeader.required_features.Add("DenseNodes");
+        _runtimeTypeModel.Serialize(_buffer, blockHeader);
+        var blockHeaderData = _buffer.ToArray();
+        _buffer.SetLength(0);
+
+        // create blob.
+        var blob = new Blob();
+        blob.raw_size = blockHeaderData.Length;
+        if (_compress)
         {
-            _stream = stream;
-
-            _currentEntities = new List<OsmGeo>();
-            _reverseStringTable = new Dictionary<string, int>();
-            _buffer = new MemoryStream();
-
-            _runtimeTypeModel = RuntimeTypeModel.Create();
-            _runtimeTypeModel.Add(_blobHeaderType, true);
-            _runtimeTypeModel.Add(_blobType, true);
-            _runtimeTypeModel.Add(_primitiveBlockType, true);
-            _runtimeTypeModel.Add(_headerBlockType, true);
-
-            _compress = compress;
-            _level = compressionLevel ?? Deflater.DEFAULT_COMPRESSION;
-            _bufferSize = bufferSize ?? DeflaterOutputStream.DefaultBufferSize;
-        }
-
-        private List<OsmGeo> _currentEntities;
-        private Dictionary<string, int> _reverseStringTable;
-        private MemoryStream _buffer;
-
-        /// <summary>
-        /// Initializes this target.
-        /// </summary>
-        public override void Initialize()
-        {
-            _currentEntities.Clear();
-
-            // write the mandatory header.
-            _buffer.Seek(0, SeekOrigin.Begin);
-
-            // create header block.
-            var blockHeader = new HeaderBlock();
-            blockHeader.required_features.Add("OsmSchema-V0.6");
-            blockHeader.required_features.Add("DenseNodes");
-            _runtimeTypeModel.Serialize(_buffer, blockHeader);
-            var blockHeaderData = _buffer.ToArray();
-            _buffer.SetLength(0);
-
-            // create blob.
-            var blob = new Blob();
-            blob.raw_size = blockHeaderData.Length;
-            if (_compress)
+            using (var target = new MemoryStream())
             {
-                using (var target = new MemoryStream())
+                using (var source = new MemoryStream(blockHeaderData))
+                using (var deflate = new DeflaterOutputStream(target))
                 {
-                    using (var source = new MemoryStream(blockHeaderData))
-                    using (var deflate = new DeflaterOutputStream(target))
-                    {
-                        source.CopyTo(deflate);
-                    }
-                    blob.zlib_data =  target.ToArray();
+                    source.CopyTo(deflate);
                 }
+                blob.zlib_data = target.ToArray();
             }
-            else
-            {
-                blob.raw = blockHeaderData;
-            }
-            
-            _runtimeTypeModel.Serialize(_buffer, blob);
-
-            // create blobheader.
-            var blobHeader = new BlobHeader();
-            blobHeader.datasize = (int)_buffer.Length;
-            blobHeader.indexdata = null;
-            blobHeader.type = Encoder.OSMHeader;
-            _runtimeTypeModel.SerializeWithLengthPrefix(_stream, blobHeader, _blobHeaderType, ProtoBuf.PrefixStyle.Fixed32BigEndian, 0);
-
-            // flush to stream.
-            _buffer.Seek(0, SeekOrigin.Begin);
-            _buffer.CopyTo(_stream);
+        }
+        else
+        {
+            blob.raw = blockHeaderData;
         }
 
-        /// <summary>
-        /// Flushes the current block of data.
-        /// </summary>
-        private void FlushBlock()
+        _runtimeTypeModel.Serialize(_buffer, blob);
+
+        // create blobheader.
+        var blobHeader = new BlobHeader();
+        blobHeader.datasize = (int)_buffer.Length;
+        blobHeader.indexdata = null;
+        blobHeader.type = Encoder.OSMHeader;
+        _runtimeTypeModel.SerializeWithLengthPrefix(_stream, blobHeader, _blobHeaderType, ProtoBuf.PrefixStyle.Fixed32BigEndian, 0);
+
+        // flush to stream.
+        _buffer.Seek(0, SeekOrigin.Begin);
+        _buffer.CopyTo(_stream);
+    }
+
+    /// <summary>
+    /// Flushes the current block of data.
+    /// </summary>
+    private void FlushBlock()
+    {
+        if (_currentEntities.Count == 0) { return; }
+
+        // encode into block.
+        var block = new PrimitiveBlock();
+        Encoder.Encode(block, _reverseStringTable, _currentEntities, _compress);
+        _currentEntities.Clear();
+        _reverseStringTable.Clear();
+
+        // serialize.
+        _buffer.SetLength(0);
+        _runtimeTypeModel.Serialize(_buffer, block);
+        var blockBytes = _buffer.ToArray();
+        _buffer.SetLength(0);
+
+        // create blob.
+        var blob = new Blob();
+        blob.raw_size = blockBytes.Length;
+        if (_compress)
         {
-            if (_currentEntities.Count == 0) { return; }
-
-            // encode into block.
-            var block = new PrimitiveBlock();
-            Encoder.Encode(block, _reverseStringTable, _currentEntities, _compress);
-            _currentEntities.Clear();
-            _reverseStringTable.Clear();
-
-            // serialize.
-            _buffer.SetLength(0);
-            _runtimeTypeModel.Serialize(_buffer, block);
-            var blockBytes = _buffer.ToArray();
-            _buffer.SetLength(0);
-
-            // create blob.
-            var blob = new Blob();
-            blob.raw_size = blockBytes.Length;
-            if (_compress)
+            using (var target = new MemoryStream())
             {
-                using (var target = new MemoryStream())
+                using (var source = new MemoryStream(blockBytes))
+                using (var deflate = new DeflaterOutputStream(target, new Deflater(_level), _bufferSize))
                 {
-                    using (var source = new MemoryStream(blockBytes))
-                    using (var deflate = new DeflaterOutputStream(target, new Deflater(_level), _bufferSize))
-                    {
-                        source.CopyTo(deflate);
-                    }
-                    blob.zlib_data = target.ToArray();
+                    source.CopyTo(deflate);
                 }
+                blob.zlib_data = target.ToArray();
             }
-            else
-            {
-                blob.raw = blockBytes;
-            }
-            
-            _runtimeTypeModel.Serialize(_buffer, blob);
-
-            // create blobheader.
-            var blobHeader = new BlobHeader();
-            blobHeader.datasize = (int)_buffer.Length;
-            blobHeader.indexdata = null;
-            blobHeader.type = Encoder.OSMData;
-            _runtimeTypeModel.SerializeWithLengthPrefix(_stream, blobHeader, _blobHeaderType, ProtoBuf.PrefixStyle.Fixed32BigEndian, 0);
-
-            // serialize to stream.
-            _buffer.Seek(0, SeekOrigin.Begin);
-            _buffer.CopyTo(_stream);
         }
-
-        /// <summary>
-        /// Adds a node.
-        /// </summary>
-        public override void AddNode(Node node)
+        else
         {
-            _currentEntities.Add(node);
-            if (_currentEntities.Count >= 8000)
-            {
-                this.FlushBlock();
-            }
+            blob.raw = blockBytes;
         }
 
-        /// <summary>
-        /// Adds a way.
-        /// </summary>
-        public override void AddWay(Way way)
-        {
-            _currentEntities.Add(way);
-            if (_currentEntities.Count >= 8000)
-            {
-                this.FlushBlock();
-            }
-        }
+        _runtimeTypeModel.Serialize(_buffer, blob);
 
-        /// <summary>
-        /// Adds a relation.
-        /// </summary>
-        public override void AddRelation(Relation relation)
-        {
-            _currentEntities.Add(relation);
-            if (_currentEntities.Count >= 8000)
-            {
-                this.FlushBlock();
-            }
-        }
+        // create blobheader.
+        var blobHeader = new BlobHeader();
+        blobHeader.datasize = (int)_buffer.Length;
+        blobHeader.indexdata = null;
+        blobHeader.type = Encoder.OSMData;
+        _runtimeTypeModel.SerializeWithLengthPrefix(_stream, blobHeader, _blobHeaderType, ProtoBuf.PrefixStyle.Fixed32BigEndian, 0);
 
-        /// <summary>
-        /// Flushes data in this stream.
-        /// </summary>
-        public override void Flush()
+        // serialize to stream.
+        _buffer.Seek(0, SeekOrigin.Begin);
+        _buffer.CopyTo(_stream);
+    }
+
+    /// <summary>
+    /// Adds a node.
+    /// </summary>
+    public override void AddNode(Node node)
+    {
+        _currentEntities.Add(node);
+        if (_currentEntities.Count >= 8000)
         {
             this.FlushBlock();
-            _stream.Flush();
         }
+    }
 
-        /// <summary>
-        /// Closes this target.
-        /// </summary>
-        public override void Close()
+    /// <summary>
+    /// Adds a way.
+    /// </summary>
+    public override void AddWay(Way way)
+    {
+        _currentEntities.Add(way);
+        if (_currentEntities.Count >= 8000)
         {
-            this.Flush();
+            this.FlushBlock();
         }
+    }
+
+    /// <summary>
+    /// Adds a relation.
+    /// </summary>
+    public override void AddRelation(Relation relation)
+    {
+        _currentEntities.Add(relation);
+        if (_currentEntities.Count >= 8000)
+        {
+            this.FlushBlock();
+        }
+    }
+
+    /// <summary>
+    /// Flushes data in this stream.
+    /// </summary>
+    public override void Flush()
+    {
+        this.FlushBlock();
+        _stream.Flush();
+    }
+
+    /// <summary>
+    /// Closes this target.
+    /// </summary>
+    public override void Close()
+    {
+        this.Flush();
     }
 }

@@ -22,96 +22,95 @@
 
 using System;
 
-namespace OsmSharp.Complete
+namespace OsmSharp.Complete;
+
+/// <summary>
+/// A complete relation.
+/// </summary>
+public class CompleteRelation : CompleteOsmGeo
 {
     /// <summary>
-    /// A complete relation.
+    /// Creates a new relation.
     /// </summary>
-    public class CompleteRelation : CompleteOsmGeo
+    public CompleteRelation()
     {
-        /// <summary>
-        /// Creates a new relation.
-        /// </summary>
-        public CompleteRelation()
-        {
 
-        }
-
-        /// <summary>
-        /// Returns the relation type.
-        /// </summary>
-        public override OsmGeoType Type
-        {
-            get { return OsmGeoType.Relation; }
-        }
-
-        /// <summary>
-        /// Gets the relation members.
-        /// </summary>
-        public CompleteRelationMember[] Members { get; set; }
-
-        /// <summary>
-        /// Converts this relation into it's simple counterpart.
-        /// </summary>
-        /// <returns></returns>
-        public override OsmGeo ToSimple()
-        {
-            var relation = new Relation();
-            relation.Id = this.Id;
-            relation.ChangeSetId = this.ChangeSetId;
-            relation.Tags = this.Tags;
-            relation.TimeStamp = this.TimeStamp;
-            relation.UserId = this.UserId;
-            relation.UserName = this.UserName;
-            relation.Version = this.Version;
-            relation.Visible = this.Visible;
-
-            if (this.Members != null)
-            {
-                relation.Members = new RelationMember[this.Members.Length];
-                for (var i = 0; i < relation.Members.Length; i++)
-                {
-                    var member = this.Members[i];
-                    if (member == null)
-                    {
-                        continue;
-                    }
-
-                    var simpleMember = new RelationMember();
-                    simpleMember.Id = member.Member.Id;
-                    simpleMember.Role = member.Role;
-                    simpleMember.Type = member.Member.Type;
-
-                    relation.Members[i] = simpleMember;
-                }
-            }
-            return relation;
-        }
-
-        /// <summary>
-        /// Returns a description of this object.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return String.Format("http://www.openstreetmap.org/?relation={0}",
-                this.Id);
-        }
     }
 
     /// <summary>
-    /// A complete relation member.
+    /// Returns the relation type.
     /// </summary>
-    public class CompleteRelationMember
+    public override OsmGeoType Type
     {
-        /// <summary>
-        /// The member.
-        /// </summary>
-        public ICompleteOsmGeo Member { get; set; }
-
-        /// <summary>
-        /// The role.
-        /// </summary>
-        public string Role { get; set; }
+        get { return OsmGeoType.Relation; }
     }
+
+    /// <summary>
+    /// Gets the relation members.
+    /// </summary>
+    public CompleteRelationMember[] Members { get; set; }
+
+    /// <summary>
+    /// Converts this relation into it's simple counterpart.
+    /// </summary>
+    /// <returns></returns>
+    public override OsmGeo ToSimple()
+    {
+        var relation = new Relation();
+        relation.Id = this.Id;
+        relation.ChangeSetId = this.ChangeSetId;
+        relation.Tags = this.Tags;
+        relation.TimeStamp = this.TimeStamp;
+        relation.UserId = this.UserId;
+        relation.UserName = this.UserName;
+        relation.Version = this.Version;
+        relation.Visible = this.Visible;
+
+        if (this.Members != null)
+        {
+            relation.Members = new RelationMember[this.Members.Length];
+            for (var i = 0; i < relation.Members.Length; i++)
+            {
+                var member = this.Members[i];
+                if (member == null)
+                {
+                    continue;
+                }
+
+                var simpleMember = new RelationMember();
+                simpleMember.Id = member.Member.Id;
+                simpleMember.Role = member.Role;
+                simpleMember.Type = member.Member.Type;
+
+                relation.Members[i] = simpleMember;
+            }
+        }
+        return relation;
+    }
+
+    /// <summary>
+    /// Returns a description of this object.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+        return string.Format("http://www.openstreetmap.org/?relation={0}",
+            this.Id);
+    }
+}
+
+/// <summary>
+/// A complete relation member.
+/// </summary>
+public class CompleteRelationMember
+{
+    /// <summary>
+    /// The member.
+    /// </summary>
+    public ICompleteOsmGeo Member { get; set; }
+
+    /// <summary>
+    /// The role.
+    /// </summary>
+    public string Role { get; set; }
 }

@@ -19,43 +19,42 @@
 using System;
 using System.Text;
 
-namespace OsmSharp.IO.PBF
+namespace OsmSharp.IO.PBF;
+
+/// <summary>
+/// Contains helper/extension methods to help with PBF encoding/decoding.
+/// </summary>
+public static class PBFExtensions
 {
     /// <summary>
-    /// Contains helper/extension methods to help with PBF encoding/decoding.
+    /// Decodes a sequence of bytes from the specified byte array into a string.
     /// </summary>
-    public static class PBFExtensions
+    /// <param name="encoding"></param>
+    /// <param name="bytes"></param>
+    /// <returns></returns>
+    public static string GetString(this Encoding encoding, byte[] bytes)
     {
-        /// <summary>
-        /// Decodes a sequence of bytes from the specified byte array into a string.
-        /// </summary>
-        /// <param name="encoding"></param>
-        /// <param name="bytes"></param>
-        /// <returns></returns>
-        public static string GetString(this Encoding encoding, byte[] bytes)
-        {
-            return encoding.GetString(bytes, 0, bytes.Length);
-        }
+        return encoding.GetString(bytes, 0, bytes.Length);
+    }
 
-        /// <summary>
-        /// Ticks since 1/1/1970
-        /// </summary>
-        public static long EpochTicks = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
+    /// <summary>
+    /// Ticks since 1/1/1970
+    /// </summary>
+    public static long EpochTicks = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
 
-        /// <summary>
-        /// Converts a number of milliseconds from 1/1/1970 into a standard DateTime.
-        /// </summary>
-        public static DateTime FromUnixTime(this long milliseconds)
-        {
-            return new DateTime(EpochTicks + milliseconds * 10000); // to a multiple of 100 nanosec or ticks.
-        }
+    /// <summary>
+    /// Converts a number of milliseconds from 1/1/1970 into a standard DateTime.
+    /// </summary>
+    public static DateTime FromUnixTime(this long milliseconds)
+    {
+        return new DateTime(EpochTicks + milliseconds * 10000); // to a multiple of 100 nanosec or ticks.
+    }
 
-        /// <summary>
-        /// Converts a standard DateTime into the number of milliseconds since 1/1/1970.
-        /// </summary>
-        public static long ToUnixTime(this DateTime date)
-        {
-            return (date.Ticks - EpochTicks) / 10000; // from a multiple of 100 nanosec or ticks to milliseconds.
-        }
+    /// <summary>
+    /// Converts a standard DateTime into the number of milliseconds since 1/1/1970.
+    /// </summary>
+    public static long ToUnixTime(this DateTime date)
+    {
+        return (date.Ticks - EpochTicks) / 10000; // from a multiple of 100 nanosec or ticks to milliseconds.
     }
 }

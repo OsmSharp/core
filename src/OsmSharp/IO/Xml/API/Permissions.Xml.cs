@@ -20,54 +20,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using OsmSharp.IO.Xml;
-using System;
-using System.Collections.Generic;
 
-namespace OsmSharp.API
+namespace OsmSharp.API;
+
+/// <summary>
+/// Represents the Permissions object.
+/// </summary>
+[XmlRoot("permissions")]
+public partial class Permissions : IXmlSerializable
 {
-    /// <summary>
-    /// Represents the Permissions object.
-    /// </summary>
-    [XmlRoot("permissions")]
-    public partial class Permissions : IXmlSerializable
+    XmlSchema IXmlSerializable.GetSchema()
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
+        return null;
+    }
 
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            var userPermissions = new List<Permission>();
+    void IXmlSerializable.ReadXml(XmlReader reader)
+    {
+        var userPermissions = new List<Permission>();
 
-            reader.GetElements(
-                new Tuple<string, Action>(
-                    "permission", () =>
+        reader.GetElements(
+            new Tuple<string, Action>(
+                "permission", () =>
+                {
+                    var value = reader.GetAttributeEnum<Permission>("name");
+                    if (value != null)
                     {
-                        var value = reader.GetAttributeEnum<Permission>("name");
-                        if (value != null)
-                        {
-                            userPermissions.Add(value.Value);
-                        }
-                        reader.Read();
-                    })
-            );
+                        userPermissions.Add(value.Value);
+                    }
+                    reader.Read();
+                })
+        );
 
-            this.UserPermission = userPermissions.ToArray();
-        }
+        this.UserPermission = userPermissions.ToArray();
+    }
 
-        void IXmlSerializable.WriteXml(XmlWriter writer)
+    void IXmlSerializable.WriteXml(XmlWriter writer)
+    {
+        foreach (var permission in this.UserPermission)
         {
-            foreach (var permission in this.UserPermission)
-            {
-                writer.WriteStartElement("permission");
-                writer.WriteAttribute("name", permission.ToString());
-                writer.WriteEndElement();
-            }
+            writer.WriteStartElement("permission");
+            writer.WriteAttribute("name", permission.ToString());
+            writer.WriteEndElement();
         }
     }
 }

@@ -20,16 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.Db
+namespace OsmSharp.Db;
+
+/// <summary>
+/// Abstract representation of a source of OSM-objects.
+/// </summary>
+public interface IOsmGeoSource
 {
     /// <summary>
-    /// Abstract representation of a source of OSM-objects.
+    /// Returns an OsmGeo object with the given id and type from this source.
     /// </summary>
-    public interface IOsmGeoSource
-    {
-        /// <summary>
-        /// Returns an OsmGeo object with the given id and type from this source.
-        /// </summary>
-        OsmGeo Get(OsmGeoType type, long id);
-    }
+    OsmGeo Get(OsmGeoType type, long id);
 }

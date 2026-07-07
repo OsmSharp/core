@@ -24,96 +24,95 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace OsmSharp.Streams
+namespace OsmSharp.Streams;
+
+/// <summary>
+/// An enumerable that can ignore nodes, ways or relations.
+/// </summary>
+public class OsmStreamSourceEnumerable : IEnumerable<OsmGeo>, IEnumerator<OsmGeo>
 {
+    private readonly OsmStreamSource _source;
+    private readonly bool _ignoreNodes;
+    private readonly bool _ignoreWays;
+    private readonly bool _ignoreRelations;
+
     /// <summary>
-    /// An enumerable that can ignore nodes, ways or relations.
+    /// Creates a new enumerable.
     /// </summary>
-    public class OsmStreamSourceEnumerable : IEnumerable<OsmGeo>, IEnumerator<OsmGeo>
+    public OsmStreamSourceEnumerable(OsmStreamSource source, bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
     {
-        private readonly OsmStreamSource _source;
-        private readonly bool _ignoreNodes;
-        private readonly bool _ignoreWays;
-        private readonly bool _ignoreRelations;
+        _source = source;
+        _ignoreNodes = ignoreNodes;
+        _ignoreWays = ignoreWays;
+        _ignoreRelations = ignoreRelations;
+    }
 
-        /// <summary>
-        /// Creates a new enumerable.
-        /// </summary>
-        public OsmStreamSourceEnumerable(OsmStreamSource source, bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
+    /// <summary>
+    /// Gets the current object.
+    /// </summary>
+    public OsmGeo Current
+    {
+        get
         {
-            _source = source;
-            _ignoreNodes = ignoreNodes;
-            _ignoreWays = ignoreWays;
-            _ignoreRelations = ignoreRelations;
+            return _source.Current();
         }
+    }
 
-        /// <summary>
-        /// Gets the current object.
-        /// </summary>
-        public OsmGeo Current
+    /// <summary>
+    /// Gets the current object.
+    /// </summary>
+    object IEnumerator.Current
+    {
+        get
         {
-            get
-            {
-                return _source.Current();
-            }
+            return _source.Current();
         }
+    }
 
-        /// <summary>
-        /// Gets the current object.
-        /// </summary>
-        object IEnumerator.Current
+    /// <summary>
+    /// Moves to the next object.
+    /// </summary>
+    /// <returns></returns>
+    public bool MoveNext()
+    {
+        return _source.MoveNext(_ignoreNodes, _ignoreWays, _ignoreRelations);
+    }
+
+    /// <summary>
+    /// Resets this enumerator.
+    /// </summary>
+    public void Reset()
+    {
+        if (!_source.CanReset)
         {
-            get
-            {
-                return _source.Current();
-            }
+            throw new Exception("The source for this enumerator cannot be reset. You can only loop over these objects once or recreate the source.");
         }
+        _source.Reset();
+    }
 
-        /// <summary>
-        /// Moves to the next object.
-        /// </summary>
-        /// <returns></returns>
-        public bool MoveNext()
-        {
-            return _source.MoveNext(_ignoreNodes, _ignoreWays, _ignoreRelations);
-        }
+    /// <summary>
+    /// Disposes this enumerator.
+    /// </summary>
+    public void Dispose()
+    {
 
-        /// <summary>
-        /// Resets this enumerator.
-        /// </summary>
-        public void Reset()
-        {
-            if (!_source.CanReset)
-            {
-                throw new Exception("The source for this enumerator cannot be reset. You can only loop over these objects once or recreate the source.");
-            }
-            _source.Reset();
-        }
+    }
 
-        /// <summary>
-        /// Disposes this enumerator.
-        /// </summary>
-        public void Dispose()
-        {
+    /// <summary>
+    /// Gets the enumerator.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator<OsmGeo> GetEnumerator()
+    {
+        return this;
+    }
 
-        }
-
-        /// <summary>
-        /// Gets the enumerator.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator<OsmGeo> GetEnumerator()
-        {
-            return this;
-        }
-
-        /// <summary>
-        /// Gets the enumerator.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this;
-        }
+    /// <summary>
+    /// Gets the enumerator.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return this;
     }
 }

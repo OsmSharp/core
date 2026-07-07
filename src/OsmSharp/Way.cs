@@ -24,42 +24,41 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using OsmSharp.IO.Json.Converters;
 
-namespace OsmSharp
+namespace OsmSharp;
+
+/// <summary>
+/// Represents a way.
+/// </summary>
+[JsonConverter(typeof(WayJsonConverter))]
+public partial class Way : OsmGeo
 {
     /// <summary>
-    /// Represents a way.
+    /// Creates a new simple way.
     /// </summary>
-    [JsonConverter(typeof(WayJsonConverter))]
-    public partial class Way : OsmGeo
+    public Way()
     {
-        /// <summary>
-        /// Creates a new simple way.
-        /// </summary>
-        public Way()
-        {
-            this.Type = OsmGeoType.Way;
-        }
+        this.Type = OsmGeoType.Way;
+    }
 
-        /// <summary>
-        /// Gets or sets the nodes.
-        /// </summary>
-        public long[] Nodes { get; set; }
+    /// <summary>
+    /// Gets or sets the nodes.
+    /// </summary>
+    public long[] Nodes { get; set; }
 
-        /// <summary>
-        /// Returns a description of this object.
-        /// </summary>
-        public override string ToString()
+    /// <summary>
+    /// Returns a description of this object.
+    /// </summary>
+    public override string ToString()
+    {
+        var tags = "{no tags}";
+        if (this.Tags != null && this.Tags.Count > 0)
         {
-            var tags = "{no tags}";
-            if (this.Tags != null && this.Tags.Count > 0)
-            {
-                tags = this.Tags.ToString();
-            }
-            if (!this.Id.HasValue)
-            {
-                return $"Way[null]{tags}";
-            }
-            return $"Way[{this.Id.Value}]{tags}";
+            tags = this.Tags.ToString();
         }
+        if (!this.Id.HasValue)
+        {
+            return $"Way[null]{tags}";
+        }
+        return $"Way[{this.Id.Value}]{tags}";
     }
 }

@@ -20,61 +20,60 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Linq;
 using NUnit.Framework;
 using OsmSharp.Geo;
 using OsmSharp.Tags;
-using System.Linq;
 
-namespace OsmSharp.Test.Geo.Streams.Features.Interpreted
+namespace OsmSharp.Test.Geo.Streams.Features.Interpreted;
+
+/// <summary>
+/// Contains tests for the interpreted feature stream.
+/// </summary>
+[TestFixture]
+public class InterpretedFeatureStreamSourceTests
 {
     /// <summary>
-    /// Contains tests for the interpreted feature stream.
+    /// Tests a stream with an area.
     /// </summary>
-    [TestFixture]
-    public class InterpretedFeatureStreamSourceTests
+    [Test]
+    public void TestArea()
     {
-        /// <summary>
-        /// Tests a stream with an area.
-        /// </summary>
-        [Test]
-        public void TestArea()
-        {
-            var source = new OsmGeo[] {
-                new Node()
+        var source = new OsmGeo[] {
+            new Node()
+            {
+                Id = 1,
+                Latitude = 0,
+                Longitude = 0
+            },
+            new Node()
+            {
+                Id = 2,
+                Latitude = 1,
+                Longitude = 0
+            },
+            new Node()
+            {
+                Id = 3,
+                Latitude = 0,
+                Longitude = 1
+            },
+            new Way()
+            {
+                Id = 1,
+                Nodes = new long[]
                 {
-                    Id = 1,
-                    Latitude = 0,
-                    Longitude = 0
+                    1, 2, 3, 1
                 },
-                new Node()
-                {
-                    Id = 2,
-                    Latitude = 1,
-                    Longitude = 0
-                },
-                new Node()
-                {
-                    Id = 3,
-                    Latitude = 0,
-                    Longitude = 1
-                },
-                new Way()
-                {
-                    Id = 1,
-                    Nodes = new long[]
-                    {
-                        1, 2, 3, 1
-                    },
-                    Tags = new TagsCollection(
-                        new Tag("area", "yes"))
-                }
-            };
+                Tags = new TagsCollection(
+                    new Tag("area", "yes"))
+            }
+        };
 
-            var features = source.ToFeatureSource();
-            Assert.IsNotNull(features);
-            var featuresList = features.ToList();
-            Assert.IsNotNull(featuresList);
-            Assert.AreEqual(1, featuresList.Count);
-        }
+        var features = source.ToFeatureSource();
+        Assert.IsNotNull(features);
+        var featuresList = features.ToList();
+        Assert.IsNotNull(featuresList);
+        Assert.That(featuresList.Count, Is.EqualTo(1));
     }
 }

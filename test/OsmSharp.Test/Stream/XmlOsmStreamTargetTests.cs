@@ -20,221 +20,217 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using NUnit.Framework;
-using OsmSharp.Streams;
 using System;
 using System.IO;
+using NUnit.Framework;
+using OsmSharp.Streams;
 
-namespace OsmSharp.Test.Stream
+namespace OsmSharp.Test.Stream;
+
+/// <summary>
+/// Contains tests for the OSM-XML target stream.
+/// </summary>
+[TestFixture]
+public class XmlOsmStreamTargetTests
 {
     /// <summary>
-    /// Contains tests for the OSM-XML target stream.
+    /// Tests writing one node.
     /// </summary>
-    [TestFixture]
-    public class XmlOsmStreamTargetTests
+    [Test]
+    public void TestWriteNode()
     {
-        /// <summary>
-        /// Tests writing one node.
-        /// </summary>
-        [Test]
-        public void TestWriteNode()
+        var source = new OsmGeo[]
         {
-            var source = new OsmGeo[]
+            new Node()
             {
-                new Node()
-                {
-                    Id = 1
-                }
-            };
-
-            using (var memoryStream = new MemoryStream())
-            {
-                var target = new XmlOsmStreamTarget(memoryStream);
-                target.RegisterSource(source);
-                target.Pull();
-
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                var result = (new StreamReader(memoryStream)).ReadToEnd();
-                Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\"><node id=\"1\" /></osm>",
-                    result);
+                Id = 1
             }
+        };
+
+        using (var memoryStream = new MemoryStream())
+        {
+            var target = new XmlOsmStreamTarget(memoryStream);
+            target.RegisterSource(source);
+            target.Pull();
+
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            var result = (new StreamReader(memoryStream)).ReadToEnd();
+            Assert.That(result, Is.EqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\"><node id=\"1\" /></osm>"));
         }
+    }
 
-        /// <summary>
-        /// Tests writing one way.
-        /// </summary>
-        [Test]
-        public void TestWriteWay()
+    /// <summary>
+    /// Tests writing one way.
+    /// </summary>
+    [Test]
+    public void TestWriteWay()
+    {
+        var source = new OsmGeo[]
         {
-            var source = new OsmGeo[]
+            new Way()
             {
-                new Way()
-                {
-                    Id = 1
-                }
-            };
-
-            using (var memoryStream = new MemoryStream())
-            {
-                var target = new XmlOsmStreamTarget(memoryStream);
-                target.RegisterSource(source);
-                target.Pull();
-
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                var result = (new StreamReader(memoryStream)).ReadToEnd();
-                Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\"><way id=\"1\" /></osm>",
-                    result);
+                Id = 1
             }
+        };
+
+        using (var memoryStream = new MemoryStream())
+        {
+            var target = new XmlOsmStreamTarget(memoryStream);
+            target.RegisterSource(source);
+            target.Pull();
+
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            var result = (new StreamReader(memoryStream)).ReadToEnd();
+            Assert.That(result, Is.EqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\"><way id=\"1\" /></osm>"));
         }
+    }
 
-        /// <summary>
-        /// Tests writing one relation.
-        /// </summary>
-        [Test]
-        public void TestWriteRelation()
+    /// <summary>
+    /// Tests writing one relation.
+    /// </summary>
+    [Test]
+    public void TestWriteRelation()
+    {
+        var source = new OsmGeo[]
         {
-            var source = new OsmGeo[]
+            new Relation()
             {
-                new Relation()
-                {
-                    Id = 1
-                }
-            };
-
-            using (var memoryStream = new MemoryStream())
-            {
-                var target = new XmlOsmStreamTarget(memoryStream);
-                target.RegisterSource(source);
-                target.Pull();
-
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                var result = (new StreamReader(memoryStream)).ReadToEnd();
-                Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\"><relation id=\"1\" /></osm>",
-                    result);
+                Id = 1
             }
+        };
+
+        using (var memoryStream = new MemoryStream())
+        {
+            var target = new XmlOsmStreamTarget(memoryStream);
+            target.RegisterSource(source);
+            target.Pull();
+
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            var result = (new StreamReader(memoryStream)).ReadToEnd();
+            Assert.That(result, Is.EqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\"><relation id=\"1\" /></osm>"));
         }
+    }
 
-        /// <summary>
-        /// Tests writing a couple of nodes, ways and relations.
-        /// </summary>
-        [Test]
-        public void TestWrite()
+    /// <summary>
+    /// Tests writing a couple of nodes, ways and relations.
+    /// </summary>
+    [Test]
+    public void TestWrite()
+    {
+        var source = new OsmGeo[]
         {
-            var source = new OsmGeo[]
+            new Node()
             {
-                new Node()
+                Id = 1,
+                Latitude = 1.0f,
+                Longitude = 1.1f
+            },
+            new Node()
+            {
+                Id = 2,
+                Latitude = 2.0f,
+                Longitude = 2.1f
+            },
+            new Node()
+            {
+                Id = 3,
+                Latitude = 3.0f,
+                Longitude = 3.1f
+            },
+            new Way()
+            {
+                Id = 1,
+                Nodes = new long[]
                 {
-                    Id = 1,
-                    Latitude = 1.0f,
-                    Longitude = 1.1f
-                },
-                new Node()
-                {
-                    Id = 2,
-                    Latitude = 2.0f,
-                    Longitude = 2.1f
-                },
-                new Node()
-                {
-                    Id = 3,
-                    Latitude = 3.0f,
-                    Longitude = 3.1f
-                },
-                new Way()
-                {
-                    Id = 1,
-                    Nodes = new long[]
-                    {
-                        1, 2, 3
-                    }
-                },
-                new Relation()
-                {
-                    Id = 1,
-                    Members = new RelationMember[]
-                    {
-                        new RelationMember(1, string.Empty, OsmGeoType.Node)
-                    }
+                    1, 2, 3
                 }
-            };
-
-            using (var memoryStream = new MemoryStream())
+            },
+            new Relation()
             {
-                var target = new XmlOsmStreamTarget(memoryStream);
-                target.ExtraRootAttributes.Add(new Tuple<string, string>("upload", "never"));
-                target.RegisterSource(source);
-                target.Pull();
-
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                var result = (new StreamReader(memoryStream)).ReadToEnd();
-                Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\" upload=\"never\"><node id=\"1\" lat=\"1\" lon=\"1.100000023841858\" /><node id=\"2\" lat=\"2\" lon=\"2.0999999046325684\" /><node id=\"3\" lat=\"3\" lon=\"3.0999999046325684\" /><way id=\"1\"><nd ref=\"1\" /><nd ref=\"2\" /><nd ref=\"3\" /></way><relation id=\"1\"><member type=\"node\" ref=\"1\" role=\"\" /></relation></osm>" 
-                    ,result);
+                Id = 1,
+                Members = new RelationMember[]
+                {
+                    new RelationMember(1, string.Empty, OsmGeoType.Node)
+                }
             }
+        };
+
+        using (var memoryStream = new MemoryStream())
+        {
+            var target = new XmlOsmStreamTarget(memoryStream);
+            target.ExtraRootAttributes.Add(new Tuple<string, string>("upload", "never"));
+            target.RegisterSource(source);
+            target.Pull();
+
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            var result = (new StreamReader(memoryStream)).ReadToEnd();
+            Assert.That(result, Is.EqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\" upload=\"never\"><node id=\"1\" lat=\"1\" lon=\"1.100000023841858\" /><node id=\"2\" lat=\"2\" lon=\"2.0999999046325684\" /><node id=\"3\" lat=\"3\" lon=\"3.0999999046325684\" /><way id=\"1\"><nd ref=\"1\" /><nd ref=\"2\" /><nd ref=\"3\" /></way><relation id=\"1\"><member type=\"node\" ref=\"1\" role=\"\" /></relation></osm>"
+));
         }
+    }
 
-        /// <summary>
-        /// Tests writing a couple of nodes, ways and relations.
-        /// </summary>
-        [Test]
-        public void TestWriteWithBounds()
+    /// <summary>
+    /// Tests writing a couple of nodes, ways and relations.
+    /// </summary>
+    [Test]
+    public void TestWriteWithBounds()
+    {
+        var source = new OsmGeo[]
         {
-            var source = new OsmGeo[]
+            new Node()
             {
-                new Node()
+                Id = 1,
+                Latitude = 1.0f,
+                Longitude = 1.1f
+            },
+            new Node()
+            {
+                Id = 2,
+                Latitude = 2.0f,
+                Longitude = 2.1f
+            },
+            new Node()
+            {
+                Id = 3,
+                Latitude = 3.0f,
+                Longitude = 3.1f
+            },
+            new Way()
+            {
+                Id = 1,
+                Nodes = new long[]
                 {
-                    Id = 1,
-                    Latitude = 1.0f,
-                    Longitude = 1.1f
-                },
-                new Node()
-                {
-                    Id = 2,
-                    Latitude = 2.0f,
-                    Longitude = 2.1f
-                },
-                new Node()
-                {
-                    Id = 3,
-                    Latitude = 3.0f,
-                    Longitude = 3.1f
-                },
-                new Way()
-                {
-                    Id = 1,
-                    Nodes = new long[]
-                    {
-                        1, 2, 3
-                    }
-                },
-                new Relation()
-                {
-                    Id = 1,
-                    Members = new RelationMember[]
-                    {
-                        new RelationMember(1, string.Empty, OsmGeoType.Node)
-                    }
+                    1, 2, 3
                 }
-            };
-
-            using (var memoryStream = new MemoryStream())
+            },
+            new Relation()
             {
-                var target = new XmlOsmStreamTarget(memoryStream);
-                target.ExtraRootAttributes.Add(new Tuple<string, string>("upload", "never"));
-                target.Bounds = new API.Bounds()
+                Id = 1,
+                Members = new RelationMember[]
                 {
-                    MinLatitude = 1.0f,
-                    MaxLatitude = 3.0f,
-                    MinLongitude = 1.1f,
-                    MaxLongitude = 3.1f
-                };
-                target.RegisterSource(source);
-                target.Pull();
-
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                var result = (new StreamReader(memoryStream)).ReadToEnd();
-                Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\" upload=\"never\"><bounds minlat=\"1\" minlon=\"1.1\" maxlat=\"3\" maxlon=\"3.1\" /><node id=\"1\" lat=\"1\" lon=\"1.100000023841858\" /><node id=\"2\" lat=\"2\" lon=\"2.0999999046325684\" /><node id=\"3\" lat=\"3\" lon=\"3.0999999046325684\" /><way id=\"1\"><nd ref=\"1\" /><nd ref=\"2\" /><nd ref=\"3\" /></way><relation id=\"1\"><member type=\"node\" ref=\"1\" role=\"\" /></relation></osm>"
-                    ,result);
+                    new RelationMember(1, string.Empty, OsmGeoType.Node)
+                }
             }
+        };
+
+        using (var memoryStream = new MemoryStream())
+        {
+            var target = new XmlOsmStreamTarget(memoryStream);
+            target.ExtraRootAttributes.Add(new Tuple<string, string>("upload", "never"));
+            target.Bounds = new API.Bounds()
+            {
+                MinLatitude = 1.0f,
+                MaxLatitude = 3.0f,
+                MinLongitude = 1.1f,
+                MaxLongitude = 3.1f
+            };
+            target.RegisterSource(source);
+            target.Pull();
+
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            var result = (new StreamReader(memoryStream)).ReadToEnd();
+            Assert.That(result, Is.EqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\"?><osm version=\"0.6\" generator=\"OsmSharp\" upload=\"never\"><bounds minlat=\"1\" minlon=\"1.1\" maxlat=\"3\" maxlon=\"3.1\" /><node id=\"1\" lat=\"1\" lon=\"1.100000023841858\" /><node id=\"2\" lat=\"2\" lon=\"2.0999999046325684\" /><node id=\"3\" lat=\"3\" lon=\"3.0999999046325684\" /><way id=\"1\"><nd ref=\"1\" /><nd ref=\"2\" /><nd ref=\"3\" /></way><relation id=\"1\"><member type=\"node\" ref=\"1\" role=\"\" /></relation></osm>"
+));
         }
     }
 }

@@ -16,42 +16,41 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.IO.PBF;
 using System.Collections.Generic;
+using OsmSharp.IO.PBF;
 
-namespace OsmSharp.Test.IO.PBF
+namespace OsmSharp.Test.IO.PBF;
+
+/// <summary>
+/// A dummy primitives consumer.
+/// </summary>
+internal class PrimitivesConsumerMock : IPBFOsmPrimitiveConsumer
 {
-    /// <summary>
-    /// A dummy primitives consumer.
-    /// </summary>
-    class PrimitivesConsumerMock : IPBFOsmPrimitiveConsumer
+    public PrimitivesConsumerMock()
     {
-        public PrimitivesConsumerMock()
-        {
-            this.Nodes = new List<OsmSharp.IO.PBF.Node>();
-            this.Ways = new List<OsmSharp.IO.PBF.Way>();
-            this.Relations = new List<OsmSharp.IO.PBF.Relation>();
-        }
-
-        public void ProcessNode(PrimitiveBlock block, OsmSharp.IO.PBF.Node node)
-        {
-            this.Nodes.Add(node);
-        }
-
-        public void ProcessWay(PrimitiveBlock block, OsmSharp.IO.PBF.Way way)
-        {
-            this.Ways.Add(way);
-        }
-
-        public void ProcessRelation(PrimitiveBlock block, OsmSharp.IO.PBF.Relation relation)
-        {
-            this.Relations.Add(relation);
-        }
-
-        public List<OsmSharp.IO.PBF.Node> Nodes { get; set; }
-
-        public List<OsmSharp.IO.PBF.Way> Ways { get; set; }
-
-        public List<OsmSharp.IO.PBF.Relation> Relations { get; set; }
+        this.Nodes = new List<OsmSharp.IO.PBF.Node>();
+        this.Ways = new List<OsmSharp.IO.PBF.Way>();
+        this.Relations = new List<OsmSharp.IO.PBF.Relation>();
     }
+
+    public void ProcessNode(PrimitiveBlock block, OsmSharp.IO.PBF.Node node)
+    {
+        this.Nodes.Add(node);
+    }
+
+    public void ProcessWay(PrimitiveBlock block, OsmSharp.IO.PBF.Way way)
+    {
+        this.Ways.Add(way);
+    }
+
+    public void ProcessRelation(PrimitiveBlock block, OsmSharp.IO.PBF.Relation relation)
+    {
+        this.Relations.Add(relation);
+    }
+
+    public List<OsmSharp.IO.PBF.Node> Nodes { get; set; }
+
+    public List<OsmSharp.IO.PBF.Way> Ways { get; set; }
+
+    public List<OsmSharp.IO.PBF.Relation> Relations { get; set; }
 }

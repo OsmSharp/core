@@ -20,113 +20,112 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using OsmSharp.IO.Xml;
 using OsmSharp.Tags;
-using System.Collections.Generic;
 
-namespace OsmSharp
+namespace OsmSharp;
+
+/// <summary>
+/// Represents a way.
+/// </summary>
+[XmlRoot("way")]
+public partial class Way : IXmlSerializable
 {
-    /// <summary>
-    /// Represents a way.
-    /// </summary>
-    [XmlRoot("way")]
-    public partial class Way : IXmlSerializable
+    XmlSchema IXmlSerializable.GetSchema()
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
+        return null;
+    }
 
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            this.Id = reader.GetAttributeInt64("id");
-            this.Version = reader.GetAttributeInt64("version");
-            this.ChangeSetId = reader.GetAttributeInt64("changeset");
-            this.TimeStamp = reader.GetAttributeDateTime("timestamp");
-            this.UserId = reader.GetAttributeInt64("uid");
-            this.UserName = reader.GetAttribute("user");
-            this.Visible = reader.GetAttributeBool("visible");
+    void IXmlSerializable.ReadXml(XmlReader reader)
+    {
+        this.Id = reader.GetAttributeInt64("id");
+        this.Version = reader.GetAttributeInt64("version");
+        this.ChangeSetId = reader.GetAttributeInt64("changeset");
+        this.TimeStamp = reader.GetAttributeDateTime("timestamp");
+        this.UserId = reader.GetAttributeInt64("uid");
+        this.UserName = reader.GetAttribute("user");
+        this.Visible = reader.GetAttributeBool("visible");
 
-            TagsCollection tags = null;
-            var nodes = new List<long>();
-            while (reader.Read() &&
-                reader.MoveToContent() != XmlNodeType.None)
+        TagsCollection tags = null;
+        var nodes = new List<long>();
+        while (reader.Read() &&
+            reader.MoveToContent() != XmlNodeType.None)
+        {
+            if (reader.Name == "tag")
             {
-                if (reader.Name == "tag")
+                if (tags == null)
                 {
-                    if (tags == null)
-                    {
-                        tags = new TagsCollection();
-                    }
-                    tags.Add(new Tag()
-                    {
-                        Key = reader.GetAttribute("k"),
-                        Value = reader.GetAttribute("v")
-                    });
+                    tags = new TagsCollection();
                 }
-                else if (reader.Name == "nd")
+                tags.Add(new Tag()
                 {
-                    if (nodes == null)
-                    {
-                        nodes = new List<long>();
-                    }
-                    nodes.Add(reader.GetAttributeInt64("ref").Value);
-                }
-                else
-                {
-                    if (tags != null)
-                    {
-                        this.Tags = tags;
-                    }
-                    if (nodes != null)
-                    {
-                        this.Nodes = nodes.ToArray();
-                    }
-                    return;
-                }
+                    Key = reader.GetAttribute("k"),
+                    Value = reader.GetAttribute("v")
+                });
             }
-            if (tags != null)
+            else if (reader.Name == "nd")
             {
-                this.Tags = tags;
+                if (nodes == null)
+                {
+                    nodes = new List<long>();
+                }
+                nodes.Add(reader.GetAttributeInt64("ref").Value);
             }
-            if (nodes != null)
+            else
             {
-                this.Nodes = nodes.ToArray();
+                if (tags != null)
+                {
+                    this.Tags = tags;
+                }
+                if (nodes != null)
+                {
+                    this.Nodes = nodes.ToArray();
+                }
+                return;
             }
         }
-
-        void IXmlSerializable.WriteXml(XmlWriter writer)
+        if (tags != null)
         {
-            writer.WriteAttribute("id", this.Id);
-            writer.WriteAttribute("user", this.UserName);
-            writer.WriteAttribute("uid", this.UserId);
-            writer.WriteAttribute("visible", this.Visible);
-            writer.WriteAttribute("version", this.Version);
-            writer.WriteAttribute("changeset", this.ChangeSetId);
-            writer.WriteAttribute("timestamp", this.TimeStamp);
+            this.Tags = tags;
+        }
+        if (nodes != null)
+        {
+            this.Nodes = nodes.ToArray();
+        }
+    }
 
-            if (this.Nodes != null)
+    void IXmlSerializable.WriteXml(XmlWriter writer)
+    {
+        writer.WriteAttribute("id", this.Id);
+        writer.WriteAttribute("user", this.UserName);
+        writer.WriteAttribute("uid", this.UserId);
+        writer.WriteAttribute("visible", this.Visible);
+        writer.WriteAttribute("version", this.Version);
+        writer.WriteAttribute("changeset", this.ChangeSetId);
+        writer.WriteAttribute("timestamp", this.TimeStamp);
+
+        if (this.Nodes != null)
+        {
+            for (var i = 0; i < this.Nodes.Length; i++)
             {
-                for (var i = 0; i < this.Nodes.Length; i++)
-                {
-                    writer.WriteStartElement("nd");
-                    writer.WriteAttribute("ref", this.Nodes[i]);
-                    writer.WriteEndElement();
-                }
+                writer.WriteStartElement("nd");
+                writer.WriteAttribute("ref", this.Nodes[i]);
+                writer.WriteEndElement();
             }
+        }
 
-            if (this.Tags != null)
+        if (this.Tags != null)
+        {
+            foreach (var tag in this.Tags)
             {
-                foreach (var tag in this.Tags)
-                {
-                    writer.WriteStartElement("tag");
-                    writer.WriteAttributeString("k", tag.Key);
-                    writer.WriteAttributeString("v", tag.Value);
-                    writer.WriteEndElement();
-                }
+                writer.WriteStartElement("tag");
+                writer.WriteAttributeString("k", tag.Key);
+                writer.WriteAttributeString("v", tag.Value);
+                writer.WriteEndElement();
             }
         }
     }

@@ -20,100 +20,99 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.Complete;
 using System.Collections;
 using System.Collections.Generic;
+using OsmSharp.Complete;
 
-namespace OsmSharp.Streams.Complete
+namespace OsmSharp.Streams.Complete;
+
+/// <summary>
+/// Represents a stream source that converts a stream of simple osm objects into a stream of complete osm objects.
+/// </summary>
+public abstract class OsmCompleteStreamSource : IEnumerable<ICompleteOsmGeo>, IEnumerator<ICompleteOsmGeo>
 {
     /// <summary>
-    /// Represents a stream source that converts a stream of simple osm objects into a stream of complete osm objects.
+    /// Creates a new source.
     /// </summary>
-    public abstract class OsmCompleteStreamSource : IEnumerable<ICompleteOsmGeo>, IEnumerator<ICompleteOsmGeo>
+    protected OsmCompleteStreamSource()
     {
-        /// <summary>
-        /// Creates a new source.
-        /// </summary>
-        protected OsmCompleteStreamSource()
-        {
 
-        }
-
-        /// <summary>
-        /// Initializes this source.
-        /// </summary>
-        public abstract void Initialize();
-
-        /// <summary>
-        /// Move to the next item in the stream.
-        /// </summary>
-        public abstract bool MoveNext();
-
-        /// <summary>
-        /// Returns the current item in the stream.
-        /// </summary>
-        public abstract ICompleteOsmGeo Current();
-
-        /// <summary>
-        /// Resets the source to the beginning.
-        /// </summary>
-        public abstract void Reset();
-
-        /// <summary>
-        /// Returns true if this source can be reset.
-        /// </summary>
-        public abstract bool CanReset
-        {
-            get;
-        }
-
-        #region IEnumerator/IEnumerable Implementation
-
-        /// <summary>
-        /// Returns the enumerator for this enumerable.
-        /// </summary>
-        public IEnumerator<ICompleteOsmGeo> GetEnumerator()
-        {
-            this.Initialize();
-
-            return this;
-        }
-
-        /// <summary>
-        /// Returns the enumerator for this enumerable.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            this.Initialize();
-
-            return this;
-        }
-
-        /// <summary>
-        /// Returns the current object.
-        /// </summary>
-        ICompleteOsmGeo IEnumerator<ICompleteOsmGeo>.Current
-        {
-            get { return this.Current(); }
-        }
-
-        /// <summary>
-        /// Disposes all resources associated with this source.
-        /// </summary>
-        public virtual void Dispose()
-        {
-
-        }
-
-        /// <summary>
-        /// Returns the current object.
-        /// </summary>
-        object System.Collections.IEnumerator.Current
-        {
-            get { return this.Current(); }
-        }
-
-        #endregion
     }
+
+    /// <summary>
+    /// Initializes this source.
+    /// </summary>
+    public abstract void Initialize();
+
+    /// <summary>
+    /// Move to the next item in the stream.
+    /// </summary>
+    public abstract bool MoveNext();
+
+    /// <summary>
+    /// Returns the current item in the stream.
+    /// </summary>
+    public abstract ICompleteOsmGeo Current();
+
+    /// <summary>
+    /// Resets the source to the beginning.
+    /// </summary>
+    public abstract void Reset();
+
+    /// <summary>
+    /// Returns true if this source can be reset.
+    /// </summary>
+    public abstract bool CanReset
+    {
+        get;
+    }
+
+    #region IEnumerator/IEnumerable Implementation
+
+    /// <summary>
+    /// Returns the enumerator for this enumerable.
+    /// </summary>
+    public IEnumerator<ICompleteOsmGeo> GetEnumerator()
+    {
+        this.Initialize();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Returns the enumerator for this enumerable.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        this.Initialize();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Returns the current object.
+    /// </summary>
+    ICompleteOsmGeo IEnumerator<ICompleteOsmGeo>.Current
+    {
+        get { return this.Current(); }
+    }
+
+    /// <summary>
+    /// Disposes all resources associated with this source.
+    /// </summary>
+    public virtual void Dispose()
+    {
+
+    }
+
+    /// <summary>
+    /// Returns the current object.
+    /// </summary>
+    object System.Collections.IEnumerator.Current
+    {
+        get { return this.Current(); }
+    }
+
+    #endregion
 }

@@ -20,31 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.API
+namespace OsmSharp.API;
+
+/// <summary>
+/// Represents bounds.
+/// </summary>
+public partial class Bounds
 {
     /// <summary>
-    /// Represents bounds.
+    /// Gets or sets the minimum latitude.
     /// </summary>
-    public partial class Bounds
-    {
-        /// <summary>
-        /// Gets or sets the minimum latitude.
-        /// </summary>
-        public float? MinLatitude { get; set; }
+    public float? MinLatitude { get; set; }
 
-        /// <summary>
-        /// Gets or sets the minimum longitude.
-        /// </summary>
-        public float? MinLongitude { get; set; }
+    /// <summary>
+    /// Gets or sets the minimum longitude.
+    /// </summary>
+    public float? MinLongitude { get; set; }
 
-        /// <summary>
-        /// Gets or sets the maximum latitude.
-        /// </summary>
-        public float? MaxLatitude { get; set; }
+    /// <summary>
+    /// Gets or sets the maximum latitude.
+    /// </summary>
+    public float? MaxLatitude { get; set; }
 
-        /// <summary>
-        /// Gets or sets the maximum longitude.
-        /// </summary>
-        public float? MaxLongitude { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the maximum longitude.
+    /// </summary>
+    public float? MaxLongitude { get; set; }
 }

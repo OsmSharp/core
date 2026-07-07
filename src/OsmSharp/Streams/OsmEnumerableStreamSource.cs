@@ -22,72 +22,71 @@
 
 using System.Collections.Generic;
 
-namespace OsmSharp.Streams
+namespace OsmSharp.Streams;
+
+/// <summary>
+/// An OSM Stream Reader that wraps around a collection of OSM objects.
+/// </summary>
+public class OsmEnumerableStreamSource : OsmStreamSource
 {
+    private readonly IEnumerable<OsmGeo> _baseObjects; // Holds the list of SimpleOsmGeo objects.
+
     /// <summary>
-    /// An OSM Stream Reader that wraps around a collection of OSM objects.
+    /// Creates a new OsmBase source.
     /// </summary>
-    public class OsmEnumerableStreamSource : OsmStreamSource
+    public OsmEnumerableStreamSource(IEnumerable<OsmGeo> baseObjects)
     {
-        private readonly IEnumerable<OsmGeo> _baseObjects; // Holds the list of SimpleOsmGeo objects.
+        _baseObjects = baseObjects;
+    }
 
-        /// <summary>
-        /// Creates a new OsmBase source.
-        /// </summary>
-        public OsmEnumerableStreamSource(IEnumerable<OsmGeo> baseObjects)
-        {
-            _baseObjects = baseObjects;
+    private IEnumerator<OsmGeo> _baseObjectEnumerator; // Holds the current enumerator.
+
+    /// <summary>
+    /// Move to the next item in the stream.
+    /// </summary>
+    /// 
+    public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
+    {
+        if (_baseObjectEnumerator == null)
+        { // create the enumerator.
+            _baseObjectEnumerator = _baseObjects.GetEnumerator();
         }
 
-        private IEnumerator<OsmGeo> _baseObjectEnumerator; // Holds the current enumerator.
-        
-        /// <summary>
-        /// Move to the next item in the stream.
-        /// </summary>
-        /// 
-        public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
+        // move next.
+        do
         {
-            if (_baseObjectEnumerator == null)
-            { // create the enumerator.
-                _baseObjectEnumerator = _baseObjects.GetEnumerator();
+            if (!_baseObjectEnumerator.MoveNext())
+            { // the move failed!
+                _baseObjectEnumerator = null;
+                return false;
             }
+        } while ((ignoreNodes && _baseObjectEnumerator.Current.Type == OsmGeoType.Node) ||
+            (ignoreWays && _baseObjectEnumerator.Current.Type == OsmGeoType.Way) ||
+            (ignoreRelations && _baseObjectEnumerator.Current.Type == OsmGeoType.Relation));
+        return true;
+    }
 
-            // move next.
-            do
-            {
-                if (!_baseObjectEnumerator.MoveNext())
-                { // the move failed!
-                    _baseObjectEnumerator = null;
-                    return false;
-                }
-            } while ((ignoreNodes && _baseObjectEnumerator.Current.Type == OsmGeoType.Node) ||
-                (ignoreWays && _baseObjectEnumerator.Current.Type == OsmGeoType.Way) ||
-                (ignoreRelations && _baseObjectEnumerator.Current.Type == OsmGeoType.Relation));
-            return true;
-        }
+    /// <summary>
+    /// Returns the current object.
+    /// </summary>
+    public override OsmGeo Current()
+    {
+        return _baseObjectEnumerator.Current;
+    }
 
-        /// <summary>
-        /// Returns the current object.
-        /// </summary>
-        public override OsmGeo Current()
-        {
-            return _baseObjectEnumerator.Current;
-        }
+    /// <summary>
+    /// Resets this data source.
+    /// </summary>
+    public override void Reset()
+    {
+        _baseObjectEnumerator = null;
+    }
 
-        /// <summary>
-        /// Resets this data source.
-        /// </summary>
-        public override void Reset()
-        {
-            _baseObjectEnumerator = null;
-        }
-
-        /// <summary>
-        /// Returns true, this source can be reset.
-        /// </summary>
-        public override bool CanReset
-        {
-            get { return true; }
-        }
+    /// <summary>
+    /// Returns true, this source can be reset.
+    /// </summary>
+    public override bool CanReset
+    {
+        get { return true; }
     }
 }

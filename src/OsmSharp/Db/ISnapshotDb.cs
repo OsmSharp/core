@@ -20,56 +20,55 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.Changesets;
 using System.Collections.Generic;
+using OsmSharp.Changesets;
 
-namespace OsmSharp.Db
+namespace OsmSharp.Db;
+
+/// <summary>
+/// Abstract representation of a database to store OSM nodes, ways and relations without version and using only one object per id.
+/// 
+/// - Only one node per id.
+/// - Only one way per id.
+/// - Only one relation per id.
+/// - Does not generate id's, objects are stored as-is.
+/// 
+/// </summary>
+public interface ISnapshotDb : IOsmGeoSource
 {
     /// <summary>
-    /// Abstract representation of a database to store OSM nodes, ways and relations without version and using only one object per id.
-    /// 
-    /// - Only one node per id.
-    /// - Only one way per id.
-    /// - Only one relation per id.
-    /// - Does not generate id's, objects are stored as-is.
-    /// 
+    /// Clears all data.
     /// </summary>
-    public interface ISnapshotDb : IOsmGeoSource
-    {
-        /// <summary>
-        /// Clears all data.
-        /// </summary>
-        void Clear();
+    void Clear();
 
-        /// <summary>
-        /// Adds or updates osm objects in the db exactly as they are given.
-        /// </summary>
-        void AddOrUpdate(IEnumerable<OsmGeo> osmGeos);
+    /// <summary>
+    /// Adds or updates osm objects in the db exactly as they are given.
+    /// </summary>
+    void AddOrUpdate(IEnumerable<OsmGeo> osmGeos);
 
-        /// <summary>
-        /// Gets all the objects.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<OsmGeo> Get();
+    /// <summary>
+    /// Gets all the objects.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerable<OsmGeo> Get();
 
-        /// <summary>
-        /// Gets all objects for the given keys.
-        /// </summary>
-        IEnumerable<OsmGeo> Get(IEnumerable<OsmGeoKey> keys);
+    /// <summary>
+    /// Gets all objects for the given keys.
+    /// </summary>
+    IEnumerable<OsmGeo> Get(IEnumerable<OsmGeoKey> keys);
 
-        /// <summary>
-        /// Gets all objects within the given bounding box.
-        /// </summary>
-        IEnumerable<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude);
+    /// <summary>
+    /// Gets all objects within the given bounding box.
+    /// </summary>
+    IEnumerable<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude);
 
-        /// <summary>
-        /// Deletes all osm objects with the given types and the given id's.
-        /// </summary>
-        void Delete(IEnumerable<OsmGeoKey> keys);
+    /// <summary>
+    /// Deletes all osm objects with the given types and the given id's.
+    /// </summary>
+    void Delete(IEnumerable<OsmGeoKey> keys);
 
-        /// <summary>
-        /// Applies the given changeset, the changeset is applied using best-effort.
-        /// </summary>
-        void ApplyChangeset(OsmChange changeset);
-    }
+    /// <summary>
+    /// Applies the given changeset, the changeset is applied using best-effort.
+    /// </summary>
+    void ApplyChangeset(OsmChange changeset);
 }

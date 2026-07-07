@@ -22,66 +22,65 @@
 
 using System;
 
-namespace OsmSharp.Complete
+namespace OsmSharp.Complete;
+
+/// <summary>
+/// Represents a complete way.
+/// </summary>
+public class CompleteWay : CompleteOsmGeo
 {
     /// <summary>
-    /// Represents a complete way.
+    /// Creates a new way.
     /// </summary>
-    public class CompleteWay : CompleteOsmGeo
+    public CompleteWay()
     {
-        /// <summary>
-        /// Creates a new way.
-        /// </summary>
-        public CompleteWay()
-        {
 
+    }
+
+    /// <summary>
+    /// Returns the way type.
+    /// </summary>
+    public override OsmGeoType Type
+    {
+        get { return OsmGeoType.Way; }
+    }
+
+    /// <summary>
+    /// Gets the ordered list of nodes.
+    /// </summary>
+    public Node[] Nodes { get; set; }
+
+    /// <summary>
+    /// Converts this way into it's simple counterpart.
+    /// </summary>
+    /// <returns></returns>
+    public override OsmGeo ToSimple()
+    {
+        var way = new Way();
+        way.Id = this.Id;
+        way.ChangeSetId = this.ChangeSetId;
+        way.Tags = this.Tags;
+        way.TimeStamp = this.TimeStamp;
+        way.UserId = this.UserId;
+        way.UserName = this.UserName;
+        way.Version = this.Version;
+        way.Visible = this.Visible;
+
+        way.Nodes = new long[this.Nodes.Length];
+        for (var i = 0; i < this.Nodes.Length; i++)
+        {
+            way.Nodes[i] = this.Nodes[i].Id.Value;
         }
 
-        /// <summary>
-        /// Returns the way type.
-        /// </summary>
-        public override OsmGeoType Type
-        {
-            get { return OsmGeoType.Way; }
-        }
+        return way;
+    }
 
-        /// <summary>
-        /// Gets the ordered list of nodes.
-        /// </summary>
-        public Node[] Nodes { get; set; }
-
-        /// <summary>
-        /// Converts this way into it's simple counterpart.
-        /// </summary>
-        /// <returns></returns>
-        public override OsmGeo ToSimple()
-        {
-            var way = new Way();
-            way.Id = this.Id;
-            way.ChangeSetId = this.ChangeSetId;
-            way.Tags = this.Tags;
-            way.TimeStamp = this.TimeStamp;
-            way.UserId = this.UserId;
-            way.UserName = this.UserName;
-            way.Version = this.Version;
-            way.Visible = this.Visible;
-
-            way.Nodes = new long[this.Nodes.Length];
-            for (var i = 0; i < this.Nodes.Length; i++)
-            {
-                way.Nodes[i] = this.Nodes[i].Id.Value;
-            }
-
-            return way;
-        }
-
-        /// <summary>
-        /// Returns a description of this object.
-        /// </summary>
-        public override string ToString()
-        {
-            return String.Format("http://www.openstreetmap.org/?way={0}",
-                this.Id);
-        }
+    /// <summary>
+    /// Returns a description of this object.
+    /// </summary>
+    public override string ToString()
+    {
+        return string.Format("http://www.openstreetmap.org/?way={0}",
+            this.Id);
     }
 }

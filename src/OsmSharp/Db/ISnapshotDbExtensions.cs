@@ -20,84 +20,83 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.Complete;
-using OsmSharp.Streams.Complete;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using OsmSharp.Complete;
+using OsmSharp.Streams.Complete;
 
-namespace OsmSharp.Db
+namespace OsmSharp.Db;
+
+/// <summary>
+/// Contains extensions for the snapshot db.
+/// </summary>
+public static class ISnapshotDbExtensions
 {
     /// <summary>
-    /// Contains extensions for the snapshot db.
+    /// Gets all osm objects with the given types and the given id's.
     /// </summary>
-    public static class ISnapshotDbExtensions
+    public static IList<OsmGeo> Get(this ISnapshotDb db, IList<OsmGeoType> type, IList<long> id)
     {
-        /// <summary>
-        /// Gets all osm objects with the given types and the given id's.
-        /// </summary>
-        public static IList<OsmGeo> Get(this ISnapshotDb db, IList<OsmGeoType> type, IList<long> id)
-        {
-            if (type == null) { throw new ArgumentNullException("type"); }
-            if (id == null) { throw new ArgumentNullException("id"); }
-            if (id.Count != type.Count) { throw new ArgumentException("Type and id lists need to have the same size."); }
+        if (type == null) { throw new ArgumentNullException("type"); }
+        if (id == null) { throw new ArgumentNullException("id"); }
+        if (id.Count != type.Count) { throw new ArgumentException("Type and id lists need to have the same size."); }
 
-            var result = new List<OsmGeo>();
-            for (int i = 0; i < id.Count; i++)
-            {
-                result.Add(db.Get(type[i], id[i]));
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Deletes the object for the given key.
-        /// </summary>
-        public static void Delete(this ISnapshotDb db, OsmGeoKey key)
+        var result = new List<OsmGeo>();
+        for (int i = 0; i < id.Count; i++)
         {
-            db.Delete(new OsmGeoKey[] { key });
+            result.Add(db.Get(type[i], id[i]));
         }
+        return result;
+    }
 
-        /// <summary>
-        /// Deletes the node with the given id.
-        /// </summary>
-        public static void DeleteNode(this ISnapshotDb db, long id)
-        {
-            db.Delete(new OsmGeoKey(OsmGeoType.Node, id));
-        }
+    /// <summary>
+    /// Deletes the object for the given key.
+    /// </summary>
+    public static void Delete(this ISnapshotDb db, OsmGeoKey key)
+    {
+        db.Delete(new OsmGeoKey[] { key });
+    }
 
-        /// <summary>
-        /// Deletes the way with the given id.
-        /// </summary>
-        public static void DeleteWay(this ISnapshotDb db, long id)
-        {
-            db.Delete(new OsmGeoKey(OsmGeoType.Way, id));
-        }
+    /// <summary>
+    /// Deletes the node with the given id.
+    /// </summary>
+    public static void DeleteNode(this ISnapshotDb db, long id)
+    {
+        db.Delete(new OsmGeoKey(OsmGeoType.Node, id));
+    }
 
-        /// <summary>
-        /// Deletes the relation with the given id.
-        /// </summary>
-        public static void DeleteRelation(this ISnapshotDb db, long id)
-        {
-            db.Delete(new OsmGeoKey(OsmGeoType.Relation, id));
-        }
+    /// <summary>
+    /// Deletes the way with the given id.
+    /// </summary>
+    public static void DeleteWay(this ISnapshotDb db, long id)
+    {
+        db.Delete(new OsmGeoKey(OsmGeoType.Way, id));
+    }
 
-        /// <summary>
-        /// Adds or objects the given object.
-        /// </summary>
-        public static void AddOrUpdate(this ISnapshotDb db, OsmGeo osmGeo)
-        {
-            db.AddOrUpdate(new OsmGeo[] { osmGeo });
-        }
+    /// <summary>
+    /// Deletes the relation with the given id.
+    /// </summary>
+    public static void DeleteRelation(this ISnapshotDb db, long id)
+    {
+        db.Delete(new OsmGeoKey(OsmGeoType.Relation, id));
+    }
 
-        /// <summary>
-        /// Gets all data in the form of a complete stream.
-        /// </summary>
-        public static OsmCompleteStreamSource GetComplete(this ISnapshotDb db)
-        {
-            return new Streams.Complete.OsmCompleteEnumerableStreamSource(
-                db.Get().Select(x => x.CreateComplete(db)));
-        }
+    /// <summary>
+    /// Adds or objects the given object.
+    /// </summary>
+    public static void AddOrUpdate(this ISnapshotDb db, OsmGeo osmGeo)
+    {
+        db.AddOrUpdate(new OsmGeo[] { osmGeo });
+    }
+
+    /// <summary>
+    /// Gets all data in the form of a complete stream.
+    /// </summary>
+    public static OsmCompleteStreamSource GetComplete(this ISnapshotDb db)
+    {
+        return new Streams.Complete.OsmCompleteEnumerableStreamSource(
+            db.Get().Select(x => x.CreateComplete(db)));
     }
 }

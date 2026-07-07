@@ -23,51 +23,50 @@
 using System;
 using OsmSharp.Tags;
 
-namespace OsmSharp.Complete
+namespace OsmSharp.Complete;
+
+/// <summary>
+/// An abstract representation of a complete OsmGeo object.
+/// </summary>
+public interface ICompleteOsmGeo
 {
     /// <summary>
-    /// An abstract representation of a complete OsmGeo object.
+    /// Gets or sets the changeset id.
     /// </summary>
-    public interface ICompleteOsmGeo
-    {
-        /// <summary>
-        /// Gets or sets the changeset id.
-        /// </summary>
-        long? ChangeSetId { get; set; }
+    long? ChangeSetId { get; set; }
 
-        /// <summary>
-        /// Gets or sets the visible flag.
-        /// </summary>
-        bool? Visible { get; set; }
+    /// <summary>
+    /// Gets or sets the visible flag.
+    /// </summary>
+    bool? Visible { get; set; }
 
-        /// <summary>
-        /// The id of this object.
-        /// </summary>
-        long Id { get; }
+    /// <summary>
+    /// The id of this object.
+    /// </summary>
+    long Id { get; }
 
-        /// <summary>
-        /// Returns the type of osm data.
-        /// </summary>
-        OsmGeoType Type { get; }
+    /// <summary>
+    /// Returns the type of osm data.
+    /// </summary>
+    OsmGeoType Type { get; }
 
-        /// <summary>
-        /// Returns the tags dictionary.
-        /// </summary>
-        TagsCollectionBase Tags { get; set; }
+    /// <summary>
+    /// Returns the tags dictionary.
+    /// </summary>
+    TagsCollectionBase Tags { get; set; }
 
-        /// <summary>
-        /// Gets/Sets the timestamp.
-        /// </summary>
-        DateTime? TimeStamp { get; set; }
+    /// <summary>
+    /// Gets/Sets the timestamp.
+    /// </summary>
+    DateTime? TimeStamp { get; set; }
 
-        /// <summary>
-        /// The user that created this object
-        /// </summary>
-        string UserName { get; set; }
+    /// <summary>
+    /// The user that created this object
+    /// </summary>
+    string UserName { get; set; }
 
-        /// <summary>
-        /// Gets or sets the version.
-        /// </summary>
-        long? Version { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the version.
+    /// </summary>
+    long? Version { get; set; }
 }

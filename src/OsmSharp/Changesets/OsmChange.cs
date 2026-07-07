@@ -20,51 +20,50 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.Changesets
+namespace OsmSharp.Changesets;
+
+/// <summary>
+/// Represents an OSM change.
+/// </summary>
+public partial class OsmChange
 {
     /// <summary>
-    /// Represents an OSM change.
+    /// Gets or sets the generator.
     /// </summary>
-    public partial class OsmChange
-    {
-        /// <summary>
-        /// Gets or sets the generator.
-        /// </summary>
-        public string Generator { get; set; }
+    public string Generator { get; set; }
 
-        /// <summary>
-        /// Gets or sets the copyright.
-        /// </summary>
-        public string Copyright { get; set; }
+    /// <summary>
+    /// Gets or sets the copyright.
+    /// </summary>
+    public string Copyright { get; set; }
 
-        /// <summary>
-        /// Gets or sets the attribution.
-        /// </summary>
-        public string Attribution { get; set; }
+    /// <summary>
+    /// Gets or sets the attribution.
+    /// </summary>
+    public string Attribution { get; set; }
 
-        /// <summary>
-        /// Gets or sets the license.
-        /// </summary>
-        public string License { get; set; }
+    /// <summary>
+    /// Gets or sets the license.
+    /// </summary>
+    public string License { get; set; }
 
-        /// <summary>
-        /// Gets or sets the version.
-        /// </summary>
-        public double? Version { get; set; }
+    /// <summary>
+    /// Gets or sets the version.
+    /// </summary>
+    public double? Version { get; set; }
 
-        /// <summary>
-        /// Gets or sets the create change array.
-        /// </summary>
-        public OsmGeo[] Create { get; set; }
+    /// <summary>
+    /// Gets or sets the create change array.
+    /// </summary>
+    public OsmGeo[] Create { get; set; }
 
-        /// <summary>
-        /// Gets or sets the modify change array.
-        /// </summary>
-        public OsmGeo[] Modify { get; set; }
+    /// <summary>
+    /// Gets or sets the modify change array.
+    /// </summary>
+    public OsmGeo[] Modify { get; set; }
 
-        /// <summary>
-        /// Gets or sets the delete change array.
-        /// </summary>
-        public OsmGeo[] Delete { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the delete change array.
+    /// </summary>
+    public OsmGeo[] Delete { get; set; }
 }

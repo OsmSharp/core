@@ -22,19 +22,18 @@
 
 using System;
 
-namespace OsmSharp.Streams.Exceptions
+namespace OsmSharp.Streams.Exceptions;
+
+/// <summary>
+/// An exception thrown when a stream is not sorted but it was expected to be.
+/// </summary>
+public class StreamNotSortedException : Exception
 {
     /// <summary>
-    /// An exception thrown when a stream is not sorted but it was expected to be.
+    /// Creates a new exception.
     /// </summary>
-    public class StreamNotSortedException : Exception
+    public StreamNotSortedException()
     {
-        /// <summary>
-        /// Creates a new exception.
-        /// </summary>
-        public StreamNotSortedException()
-        {
 
-        }
     }
 }

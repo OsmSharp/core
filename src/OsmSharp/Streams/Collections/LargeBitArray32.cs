@@ -20,64 +20,63 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.Streams.Collections
+namespace OsmSharp.Streams.Collections;
+
+/// <summary>
+/// Represents a large bit array.
+/// </summary>
+public class LargeBitArray32
 {
+    private readonly uint[] _array;
+    private readonly long _length;
+
     /// <summary>
-    /// Represents a large bit array.
+    /// Creates a new bitvector array.
     /// </summary>
-    public class LargeBitArray32
+    public LargeBitArray32(long size)
     {
-        private readonly uint[] _array;
-        private readonly long _length;
+        _length = size;
+        _array = new uint[(int)System.Math.Ceiling((double)size / 32)];
+    }
 
-        /// <summary>
-        /// Creates a new bitvector array.
-        /// </summary>
-        public LargeBitArray32(long size)
+    /// <summary>
+    /// Returns the element at the given index.
+    /// </summary>
+    /// <param name="idx"></param>
+    /// <returns></returns>
+    public bool this[long idx]
+    {
+        get
         {
-            _length = size;
-            _array = new uint[(int)System.Math.Ceiling((double)size / 32)];
+            int arrayIdx = (int)(idx >> 5);
+            int bitIdx = (int)(idx % 32);
+            long mask = (long)1 << bitIdx;
+            return (_array[arrayIdx] & mask) != 0;
         }
-
-        /// <summary>
-        /// Returns the element at the given index.
-        /// </summary>
-        /// <param name="idx"></param>
-        /// <returns></returns>
-        public bool this[long idx]
+        set
         {
-            get
-            {
-                int arrayIdx = (int)(idx >> 5);
-                int bitIdx = (int)(idx % 32);
-                long mask = (long)1 << bitIdx;
-                return (_array[arrayIdx] & mask) != 0;
+            int arrayIdx = (int)(idx >> 5);
+            int bitIdx = (int)(idx % 32);
+            long mask = (long)1 << bitIdx;
+            if (value)
+            { // set value.
+                _array[arrayIdx] = (uint)(mask | _array[arrayIdx]);
             }
-            set
-            {
-                int arrayIdx = (int)(idx >> 5);
-                int bitIdx = (int)(idx % 32);
-                long mask = (long)1 << bitIdx;
-                if (value)
-                { // set value.
-                    _array[arrayIdx] = (uint)(mask | _array[arrayIdx]);
-                }
-                else
-                { // unset value.
-                    _array[arrayIdx] = (uint)((~mask) & _array[arrayIdx]);
-                }
+            else
+            { // unset value.
+                _array[arrayIdx] = (uint)((~mask) & _array[arrayIdx]);
             }
         }
+    }
 
-        /// <summary>
-        /// Returns the length of this array.
-        /// </summary>
-        public long Length
+    /// <summary>
+    /// Returns the length of this array.
+    /// </summary>
+    public long Length
+    {
+        get
         {
-            get
-            {
-                return _length;
-            }
+            return _length;
         }
     }
 }

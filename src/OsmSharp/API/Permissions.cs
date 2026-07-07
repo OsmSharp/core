@@ -22,34 +22,33 @@
 
 using System;
 
-namespace OsmSharp.API
-{
-    /// <summary>
-    /// Represents a Permissions.
-    /// </summary>
-    public partial class Permissions
-    {
-        public enum Permission
-        {
-            //read user preferences
-            allow_read_prefs,
-            //modify user preferences
-            allow_write_prefs,
-            //create diary entries, comments and make friends
-            allow_write_diary,
-            //modify the map
-            allow_write_api,
-            //read private GPS traces
-            allow_read_gpx,
-            //upload GPS traces
-            allow_write_gpx,
-            //modify notes
-            allow_write_notes
-        }
+namespace OsmSharp.API;
 
-        /// <summary>
-        /// Gets or sets the Permission array.
-        /// </summary>
-        public Permission[] UserPermission { get; set; }
+/// <summary>
+/// Represents a Permissions.
+/// </summary>
+public partial class Permissions
+{
+    public enum Permission
+    {
+        //read user preferences
+        allow_read_prefs,
+        //modify user preferences
+        allow_write_prefs,
+        //create diary entries, comments and make friends
+        allow_write_diary,
+        //modify the map
+        allow_write_api,
+        //read private GPS traces
+        allow_read_gpx,
+        //upload GPS traces
+        allow_write_gpx,
+        //modify notes
+        allow_write_notes
     }
+
+    /// <summary>
+    /// Gets or sets the Permission array.
+    /// </summary>
+    public Permission[] UserPermission { get; set; }
 }

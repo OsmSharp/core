@@ -20,92 +20,91 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.IO;
+using System.Xml.Serialization;
 using NUnit.Framework;
 using OsmSharp.API;
 using OsmSharp.IO.Xml;
-using System.IO;
-using System.Xml.Serialization;
 
-namespace OsmSharp.Test.IO.Xml.API
+namespace OsmSharp.Test.IO.Xml.API;
+
+/// <summary>
+/// Contains tests for the capabilities class.
+/// </summary>
+[TestFixture]
+public class CapabilitiesTests
 {
     /// <summary>
-    /// Contains tests for the capabilities class.
+    /// Tests serialization.
     /// </summary>
-    [TestFixture]
-    public class CapabilitiesTests
+    [Test]
+    public void TestSerialize()
     {
-        /// <summary>
-        /// Tests serialization.
-        /// </summary>
-        [Test]
-        public void TestSerialize()
+        var capabilities = new Capabilities()
         {
-            var capabilities = new Capabilities()
+            Version = new Version()
             {
-                Version = new Version()
-                {
-                    Maximum = 0.6,
-                    Minimum = 0.6
-                },
-                Area = new Area()
-                {
-                    Maximum = 0.25
-                },
-                Changesets = new OsmSharp.API.Changesets()
-                {
-                    MaximumElements = 50000
-                },
-                Status = new Status()
-                {
-                    Api = Status.ServiceStatus.online,
-                    Database = Status.ServiceStatus.online,
-                    Gpx = Status.ServiceStatus.online
-				},
-				Timeout = new Timeout()
-                {
-                    Seconds = 300
-                },
-				Tracepoints = new Tracepoints()
-                {
-					PerPage = 5000
-                },
-				WayNodes = new WayNodes()
-                {
-					Maximum = 2000
-                }
-            };
+                Maximum = 0.6,
+                Minimum = 0.6
+            },
+            Area = new Area()
+            {
+                Maximum = 0.25
+            },
+            Changesets = new OsmSharp.API.Changesets()
+            {
+                MaximumElements = 50000
+            },
+            Status = new Status()
+            {
+                Api = Status.ServiceStatus.online,
+                Database = Status.ServiceStatus.online,
+                Gpx = Status.ServiceStatus.online
+            },
+            Timeout = new Timeout()
+            {
+                Seconds = 300
+            },
+            Tracepoints = new Tracepoints()
+            {
+                PerPage = 5000
+            },
+            WayNodes = new WayNodes()
+            {
+                Maximum = 2000
+            }
+        };
 
-            Assert.AreEqual("<api><version minimum=\"0.6\" maximum=\"0.6\" /><area maximum=\"0.25\" /><tracepoints per_page=\"5000\" /><waynodes maximum=\"2000\" /><changesets maximum_elements=\"50000\" /><timeout seconds=\"300\" /><status api=\"online\" database=\"online\" gpx=\"online\" /></api>", capabilities.SerializeToXml());
-        }
+        Assert.That(capabilities.SerializeToXml(), Is.EqualTo("<api><version minimum=\"0.6\" maximum=\"0.6\" /><area maximum=\"0.25\" /><tracepoints per_page=\"5000\" /><waynodes maximum=\"2000\" /><changesets maximum_elements=\"50000\" /><timeout seconds=\"300\" /><status api=\"online\" database=\"online\" gpx=\"online\" /></api>"));
+    }
 
-        /// <summary>
-        /// Test deserialization.
-        /// </summary>
-        [Test]
-        public void TestDeserialize()
-        {
-            var serializer = new XmlSerializer(typeof(Capabilities));
+    /// <summary>
+    /// Test deserialization.
+    /// </summary>
+    [Test]
+    public void TestDeserialize()
+    {
+        var serializer = new XmlSerializer(typeof(Capabilities));
 
-            var capabilities = serializer.Deserialize(
-                new StringReader("<api><version minimum=\"0.6\" maximum=\"0.6\" /><area maximum=\"0.25\" /><tracepoints per_page=\"5000\" /><waynodes maximum=\"2000\" /><changesets maximum_elements=\"50000\" /><timeout seconds=\"300\" /><status api=\"online\" database=\"online\" gpx=\"online\" /></api>")) as Capabilities;
-            Assert.IsNotNull(capabilities);
-            Assert.IsNotNull(capabilities.Version);
-            Assert.AreEqual(0.6, capabilities.Version.Minimum);
-            Assert.AreEqual(0.6, capabilities.Version.Maximum);
-            Assert.IsNotNull(capabilities.Area);
-            Assert.AreEqual(0.25, capabilities.Area.Maximum);
-            Assert.IsNotNull(capabilities.Changesets);
-            Assert.AreEqual(50000, capabilities.Changesets.MaximumElements);
-            Assert.IsNotNull(capabilities.Status);
-            Assert.AreEqual(Status.ServiceStatus.online, capabilities.Status.Api);
-            Assert.AreEqual(Status.ServiceStatus.online, capabilities.Status.Database);
-            Assert.AreEqual(Status.ServiceStatus.online, capabilities.Status.Gpx);
-            Assert.IsNotNull(capabilities.Timeout);
-            Assert.AreEqual(300, capabilities.Timeout.Seconds);
-            Assert.IsNotNull(capabilities.Tracepoints);
-            Assert.AreEqual(5000, capabilities.Tracepoints.PerPage);
-            Assert.IsNotNull(capabilities.WayNodes);
-            Assert.AreEqual(2000, capabilities.WayNodes.Maximum);
-        }
+        var capabilities = serializer.Deserialize(
+            new StringReader("<api><version minimum=\"0.6\" maximum=\"0.6\" /><area maximum=\"0.25\" /><tracepoints per_page=\"5000\" /><waynodes maximum=\"2000\" /><changesets maximum_elements=\"50000\" /><timeout seconds=\"300\" /><status api=\"online\" database=\"online\" gpx=\"online\" /></api>")) as Capabilities;
+        Assert.IsNotNull(capabilities);
+        Assert.IsNotNull(capabilities.Version);
+        Assert.That(capabilities.Version.Minimum, Is.EqualTo(0.6));
+        Assert.That(capabilities.Version.Maximum, Is.EqualTo(0.6));
+        Assert.IsNotNull(capabilities.Area);
+        Assert.That(capabilities.Area.Maximum, Is.EqualTo(0.25));
+        Assert.IsNotNull(capabilities.Changesets);
+        Assert.That(capabilities.Changesets.MaximumElements, Is.EqualTo(50000));
+        Assert.IsNotNull(capabilities.Status);
+        Assert.That(capabilities.Status.Api, Is.EqualTo(Status.ServiceStatus.online));
+        Assert.That(capabilities.Status.Database, Is.EqualTo(Status.ServiceStatus.online));
+        Assert.That(capabilities.Status.Gpx, Is.EqualTo(Status.ServiceStatus.online));
+        Assert.IsNotNull(capabilities.Timeout);
+        Assert.That(capabilities.Timeout.Seconds, Is.EqualTo(300));
+        Assert.IsNotNull(capabilities.Tracepoints);
+        Assert.That(capabilities.Tracepoints.PerPage, Is.EqualTo(5000));
+        Assert.IsNotNull(capabilities.WayNodes);
+        Assert.That(capabilities.WayNodes.Maximum, Is.EqualTo(2000));
     }
 }

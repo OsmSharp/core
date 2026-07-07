@@ -20,160 +20,159 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.API
+namespace OsmSharp.API;
+
+/// <summary>
+/// Represents the API capabilities.
+/// </summary>
+public partial class Capabilities
 {
     /// <summary>
-    /// Represents the API capabilities.
+    /// Gets or sets the version.
     /// </summary>
-    public partial class Capabilities
-    {
-        /// <summary>
-        /// Gets or sets the version.
-        /// </summary>
-        public Version Version { get; set; }
-
-        /// <summary>
-        /// Gets or sets the area.
-        /// </summary>
-        public Area Area { get; set; }
-
-        /// <summary>
-        /// Gets or sets the area.
-        /// </summary>
-        public NoteArea NoteArea { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tracepoints.
-        /// </summary>
-        public Tracepoints Tracepoints { get; set; }
-
-        /// <summary>
-        /// Gets or sets the way nodes.
-        /// </summary>
-        public WayNodes WayNodes { get; set; }
-
-        /// <summary>
-        /// Gets or sets the changesets.
-        /// </summary>
-        public OsmSharp.API.Changesets Changesets { get; set; }
-
-        /// <summary>
-        /// Gets or sets the timeout.
-        /// </summary>
-        public Timeout Timeout { get; set; }
-
-        /// <summary>
-        /// Gets or sets the status.
-        /// </summary>
-        public Status Status { get; set; }
-    }
+    public Version Version { get; set; }
 
     /// <summary>
-    /// Represents the API-version capabilities.
+    /// Gets or sets the area.
     /// </summary>
-    public partial class Version
-    {
-        /// <summary>
-        /// Gets or sets the minimum version.
-        /// </summary>
-        public double? Minimum { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum version.
-        /// </summary>
-        public double? Maximum { get; set; }
-    }
+    public Area Area { get; set; }
 
     /// <summary>
-    /// Represents the API-area capability.
+    /// Gets or sets the area.
     /// </summary>
-    public partial class Area
-    {
-        /// <summary>
-        /// Gets or sets the maximum.
-        /// </summary>
-        public double? Maximum { get; set; }
-    }
+    public NoteArea NoteArea { get; set; }
 
     /// <summary>
-    /// Represents the API-note-area capability.
+    /// Gets or sets the tracepoints.
     /// </summary>
-    public partial class NoteArea
-    {
-        /// <summary>
-        /// Gets or sets the maximum.
-        /// </summary>
-        public double? Maximum { get; set; }
-    }
+    public Tracepoints Tracepoints { get; set; }
 
     /// <summary>
-    /// Represents the API-tracepoints capability.
+    /// Gets or sets the way nodes.
     /// </summary>
-    public partial class Tracepoints
-    {
-        /// <summary>
-        /// Gets or sets the per page setting.
-        /// </summary>
-        public int? PerPage { get; set; }
-    }
+    public WayNodes WayNodes { get; set; }
 
     /// <summary>
-    /// Represents the API-waynodes capability.
+    /// Gets or sets the changesets.
     /// </summary>
-    public partial class WayNodes
-    {
-        /// <summary>
-        /// Gets or sets the maximum.
-        /// </summary>
-        public int? Maximum { get; set; }
-    }
+    public OsmSharp.API.Changesets Changesets { get; set; }
 
     /// <summary>
-    /// Represents the API-changesets capability.
+    /// Gets or sets the timeout.
     /// </summary>
-    public partial class Changesets
-    {
-        /// <summary>
-        /// Gets or sets the maximum element count.
-        /// </summary>
-        public int? MaximumElements { get; set; }
-    }
+    public Timeout Timeout { get; set; }
 
     /// <summary>
-    /// Represents the API-timeout capability.
+    /// Gets or sets the status.
     /// </summary>
-    public partial class Timeout
-    {
-        /// <summary>
-        /// Gets or sets the # of seconds.
-        /// </summary>
-        public int? Seconds { get; set; }
-    }
+    public Status Status { get; set; }
+}
+
+/// <summary>
+/// Represents the API-version capabilities.
+/// </summary>
+public partial class Version
+{
+    /// <summary>
+    /// Gets or sets the minimum version.
+    /// </summary>
+    public double? Minimum { get; set; }
 
     /// <summary>
-    /// Represents the API-status.
+    /// Gets or sets the maximum version.
     /// </summary>
-    public partial class Status
+    public double? Maximum { get; set; }
+}
+
+/// <summary>
+/// Represents the API-area capability.
+/// </summary>
+public partial class Area
+{
+    /// <summary>
+    /// Gets or sets the maximum.
+    /// </summary>
+    public double? Maximum { get; set; }
+}
+
+/// <summary>
+/// Represents the API-note-area capability.
+/// </summary>
+public partial class NoteArea
+{
+    /// <summary>
+    /// Gets or sets the maximum.
+    /// </summary>
+    public double? Maximum { get; set; }
+}
+
+/// <summary>
+/// Represents the API-tracepoints capability.
+/// </summary>
+public partial class Tracepoints
+{
+    /// <summary>
+    /// Gets or sets the per page setting.
+    /// </summary>
+    public int? PerPage { get; set; }
+}
+
+/// <summary>
+/// Represents the API-waynodes capability.
+/// </summary>
+public partial class WayNodes
+{
+    /// <summary>
+    /// Gets or sets the maximum.
+    /// </summary>
+    public int? Maximum { get; set; }
+}
+
+/// <summary>
+/// Represents the API-changesets capability.
+/// </summary>
+public partial class Changesets
+{
+    /// <summary>
+    /// Gets or sets the maximum element count.
+    /// </summary>
+    public int? MaximumElements { get; set; }
+}
+
+/// <summary>
+/// Represents the API-timeout capability.
+/// </summary>
+public partial class Timeout
+{
+    /// <summary>
+    /// Gets or sets the # of seconds.
+    /// </summary>
+    public int? Seconds { get; set; }
+}
+
+/// <summary>
+/// Represents the API-status.
+/// </summary>
+public partial class Status
+{
+    public enum ServiceStatus
     {
-        public enum ServiceStatus
-        {
-            online,
-            @readonly,
-            offline,
-        }
-        /// <summary>
-        /// Gets or sets the database status.
-        /// </summary>
-        public ServiceStatus? Database { get; set; }
-
-        /// <summary>
-        /// Gets or sets the api status.
-        /// </summary>
-        public ServiceStatus? Api { get; set; }
-
-        /// <summary>
-        /// Gets or sets the gpx status.
-        /// </summary>
-        public ServiceStatus? Gpx { get; set; }
+        online,
+        @readonly,
+        offline,
     }
+    /// <summary>
+    /// Gets or sets the database status.
+    /// </summary>
+    public ServiceStatus? Database { get; set; }
+
+    /// <summary>
+    /// Gets or sets the api status.
+    /// </summary>
+    public ServiceStatus? Api { get; set; }
+
+    /// <summary>
+    /// Gets or sets the gpx status.
+    /// </summary>
+    public ServiceStatus? Gpx { get; set; }
 }

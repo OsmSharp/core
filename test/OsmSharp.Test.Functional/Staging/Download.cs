@@ -23,33 +23,32 @@
 using System.IO;
 using System.Net;
 
-namespace OsmSharp.Test.Functional.Staging
-{
-    /// <summary>
-    /// Downloads all data needed for testing.
-    /// </summary>
-    public static class Download
-    {
-        public static string PBF = "http://planet.anyways.eu/planet/europe/luxembourg/luxembourg-latest.osm.pbf";
-        public static string Local = "luxembourg-latest.osm.pbf";
+namespace OsmSharp.Test.Functional.Staging;
 
-        /// <summary>
-        /// Downloads the belgium data.
-        /// </summary>
-        public static void DownloadAll()
+/// <summary>
+/// Downloads all data needed for testing.
+/// </summary>
+public static class Download
+{
+    public static string PBF = "http://planet.anyways.eu/planet/europe/luxembourg/luxembourg-latest.osm.pbf";
+    public static string Local = "luxembourg-latest.osm.pbf";
+
+    /// <summary>
+    /// Downloads the belgium data.
+    /// </summary>
+    public static void DownloadAll()
+    {
+        if (!File.Exists(Download.Local))
         {
-            if (!File.Exists(Download.Local))
-            {
-                var client = new WebClient();
-                client.DownloadProgressChanged += (sender, e) =>
-                { // Displays the operation identifier, and the transfer progress.
-                    OsmSharp.Logging.Logger.Log("Download", Logging.TraceEventType.Information, 
-                        "{0}    downloaded {1} of {2} bytes. {3} % complete...",
-                        (string)e.UserState, e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
-                };
-                client.DownloadFile(Download.PBF,
-                    Download.Local);
-            }
+            var client = new WebClient();
+            client.DownloadProgressChanged += (sender, e) =>
+            { // Displays the operation identifier, and the transfer progress.
+                OsmSharp.Logging.Logger.Log("Download", Logging.TraceEventType.Information,
+                    "{0}    downloaded {1} of {2} bytes. {3} % complete...",
+                    (string)e.UserState, e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
+            };
+            client.DownloadFile(Download.PBF,
+                Download.Local);
         }
     }
 }

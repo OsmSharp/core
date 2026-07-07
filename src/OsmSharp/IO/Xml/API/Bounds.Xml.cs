@@ -25,33 +25,32 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using OsmSharp.IO.Xml;
 
-namespace OsmSharp.API
+namespace OsmSharp.API;
+
+/// <summary>
+/// Represents the API capabilities.
+/// </summary>
+[XmlRoot("bounds")]
+public partial class Bounds : IXmlSerializable
 {
-    /// <summary>
-    /// Represents the API capabilities.
-    /// </summary>
-    [XmlRoot("bounds")]
-    public partial class Bounds : IXmlSerializable
+    XmlSchema IXmlSerializable.GetSchema()
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
+        return null;
+    }
 
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            this.MinLatitude = reader.GetAttributeSingle("minlat");
-            this.MinLongitude = reader.GetAttributeSingle("minlon");
-            this.MaxLatitude = reader.GetAttributeSingle("maxlat");
-            this.MaxLongitude = reader.GetAttributeSingle("maxlon");
-        }
+    void IXmlSerializable.ReadXml(XmlReader reader)
+    {
+        this.MinLatitude = reader.GetAttributeSingle("minlat");
+        this.MinLongitude = reader.GetAttributeSingle("minlon");
+        this.MaxLatitude = reader.GetAttributeSingle("maxlat");
+        this.MaxLongitude = reader.GetAttributeSingle("maxlon");
+    }
 
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteAttribute("minlat", this.MinLatitude);
-            writer.WriteAttribute("minlon", this.MinLongitude);
-            writer.WriteAttribute("maxlat", this.MaxLatitude);
-            writer.WriteAttribute("maxlon", this.MaxLongitude);
-        }
+    void IXmlSerializable.WriteXml(XmlWriter writer)
+    {
+        writer.WriteAttribute("minlat", this.MinLatitude);
+        writer.WriteAttribute("minlon", this.MinLongitude);
+        writer.WriteAttribute("maxlat", this.MaxLatitude);
+        writer.WriteAttribute("maxlon", this.MaxLongitude);
     }
 }

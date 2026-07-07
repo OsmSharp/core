@@ -27,308 +27,307 @@ using System.Text;
 using System.Text.Json.Serialization;
 using OsmSharp.IO.Json.Converters;
 
-namespace OsmSharp.Tags
+namespace OsmSharp.Tags;
+
+/// <summary>
+/// Abstract representation of a tags collection.
+/// </summary>
+[JsonConverter(typeof(TagsCollectionConvertor))]
+public abstract class TagsCollectionBase : IEnumerable<Tag>
 {
     /// <summary>
-    /// Abstract representation of a tags collection.
+    /// Returns the number of tags in this collection.
     /// </summary>
-    [JsonConverter(typeof(TagsCollectionConvertor))]
-    public abstract class TagsCollectionBase : IEnumerable<Tag>
+    public abstract int Count { get; }
+
+    /// <summary>
+    /// Returns true if this collection is readonly.
+    /// </summary>
+    public abstract bool IsReadonly { get; }
+
+    /// <summary>
+    /// Adds a tag.
+    /// </summary>
+    public void Add(Tag tag)
     {
-        /// <summary>
-        /// Returns the number of tags in this collection.
-        /// </summary>
-        public abstract int Count { get; }
-
-        /// <summary>
-        /// Returns true if this collection is readonly.
-        /// </summary>
-        public abstract bool IsReadonly { get; }
-
-        /// <summary>
-        /// Adds a tag.
-        /// </summary>
-        public void Add(Tag tag)
+        if (this.ContainsKey(tag.Key))
         {
-            if (this.ContainsKey(tag.Key))
-            {
-                throw new ArgumentException("A tag with this key already exists.");
-            }
+            throw new ArgumentException("A tag with this key already exists.");
+        }
 
+        this.AddOrReplace(tag);
+    }
+
+    /// <summary>
+    /// Adds a tag.
+    /// </summary>
+    public void Add(string key, string value)
+    {
+        this.Add(new Tag()
+        {
+            Key = key,
+            Value = value
+        });
+    }
+
+    /// <summary>
+    /// Adds or replaces a tag.
+    /// </summary>
+    public abstract void AddOrReplace(Tag tag);
+
+    /// <summary>
+    /// Adds or replaces a tag.
+    /// </summary>
+    public void AddOrReplace(string key, string value)
+    {
+        this.AddOrReplace(new Tag()
+        {
+            Key = key,
+            Value = value
+        });
+    }
+
+    /// <summary>
+    /// Adds or replaces all tags.
+    /// </summary>
+    public void AddOrReplace(IEnumerable<Tag> tags)
+    {
+        foreach (var tag in tags)
+        {
             this.AddOrReplace(tag);
         }
+    }
 
-        /// <summary>
-        /// Adds a tag.
-        /// </summary>
-        public void Add(string key, string value)
+    /// <summary>
+    /// Tries to add a key-value-pair to this collection.
+    /// If the value already exist, the addition fails and returns false
+    /// </summary>
+    /// <param name="key">The key of the tag</param>
+    /// <param name="value">The value of the tag</param>
+    /// <returns>true if the addition was successful</returns>
+    public abstract bool TryAdd(string key, string value);
+
+    /// <summary>
+    /// Tries to add a key-value-pair to this collection.
+    /// If the value already exist, the addition fails and returns false
+    /// </summary>
+    /// <param name="tag">The tag to add</param>
+    /// <returns>true if the addition was successful</returns>
+    public bool TryAdd(Tag tag)
+    {
+        return this.TryAdd(tag.Key, tag.Value);
+    }
+
+    /// <summary>
+    /// Returns true if the given tag exists.
+    /// </summary>
+    public bool ContainsKey(string key)
+    {
+        string value;
+        return this.TryGetValue(key, out value);
+    }
+
+    /// <summary>
+    /// Returns true if the given tag exists.
+    /// </summary>
+    public bool Contains(Tag tag)
+    {
+        string value;
+        if (this.TryGetValue(tag.Key, out value))
         {
-            this.Add(new Tag()
-            {
-                Key = key,
-                Value = value
-            });
+            return value == tag.Value;
         }
+        return false;
+    }
 
-        /// <summary>
-        /// Adds or replaces a tag.
-        /// </summary>
-        public abstract void AddOrReplace(Tag tag);
+    /// <summary>
+    /// Returns true if the given tag exists.
+    /// </summary>
+    public bool Contains(string key, string value)
+    {
+        return this.Contains(new Tag(key, value));
+    }
 
-        /// <summary>
-        /// Adds or replaces a tag.
-        /// </summary>
-        public void AddOrReplace(string key, string value)
+    /// <summary>
+    /// Gets the value for the given key and returns true if the given key exists.
+    /// </summary>
+    public abstract bool TryGetValue(string key, out string value);
+
+    /// <summary>
+    /// Gets the value associated with the given key, returns an empty string if the kay was not found.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public string GetValue(string key)
+    {
+        if (!this.TryGetValue(key, out var value))
         {
-            this.AddOrReplace(new Tag()
-            {
-                Key = key,
-                Value = value
-            });
+            return string.Empty;
         }
+        return value;
+    }
 
-        /// <summary>
-        /// Adds or replaces all tags.
-        /// </summary>
-        public void AddOrReplace(IEnumerable<Tag> tags)
-        {
-            foreach (var tag in tags)
-            {
-                this.AddOrReplace(tag);
-            }
-        }
-
-        /// <summary>
-        /// Tries to add a key-value-pair to this collection.
-        /// If the value already exist, the addition fails and returns false
-        /// </summary>
-        /// <param name="key">The key of the tag</param>
-        /// <param name="value">The value of the tag</param>
-        /// <returns>true if the addition was successful</returns>
-        public abstract bool TryAdd(string key, string value);
-        
-        /// <summary>
-        /// Tries to add a key-value-pair to this collection.
-        /// If the value already exist, the addition fails and returns false
-        /// </summary>
-        /// <param name="tag">The tag to add</param>
-        /// <returns>true if the addition was successful</returns>
-        public bool TryAdd(Tag tag)
-        {
-            return TryAdd(tag.Key, tag.Value);
-        }
-
-        /// <summary>
-        /// Returns true if the given tag exists.
-        /// </summary>
-        public bool ContainsKey(string key)
+    /// <summary>
+    /// Returns the value associated with the given key.
+    /// </summary>
+    public virtual string this[string key]
+    {
+        get
         {
             string value;
-            return this.TryGetValue(key, out value);
-        }
-
-        /// <summary>
-        /// Returns true if the given tag exists.
-        /// </summary>
-        public bool Contains(Tag tag)
-        {
-            string value;
-            if (this.TryGetValue(tag.Key, out value))
+            if (this.TryGetValue(key, out value))
             {
-                return value == tag.Value;
+                return value;
             }
-            return false;
+            throw new KeyNotFoundException();
         }
-
-        /// <summary>
-        /// Returns true if the given tag exists.
-        /// </summary>
-        public bool Contains(string key, string value)
+        set
         {
-            return this.Contains(new Tag(key, value));
+            this.AddOrReplace(new Tag() { Key = key, Value = value });
         }
+    }
 
-        /// <summary>
-        /// Gets the value for the given key and returns true if the given key exists.
-        /// </summary>
-        public abstract bool TryGetValue(string key, out string value);
+    /// <summary>
+    /// Removes all tags with the given key.
+    /// </summary>
+    public abstract bool RemoveKey(string key);
 
-        /// <summary>
-        /// Gets the value associated with the given key, returns an empty string if the kay was not found.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public string GetValue(string key)
+    /// <summary>
+    /// Removes the given tag.
+    /// </summary>
+    public bool RemoveKeyValue(Tag tag)
+    {
+        foreach (var t in this)
         {
-            if (!this.TryGetValue(key, out var value))
+            if (t.Key == tag.Key &&
+                t.Value == tag.Value)
             {
-                return string.Empty;
+                this.RemoveKey(t.Key);
+                return true;
             }
-            return value;
         }
+        return false;
+    }
 
-        /// <summary>
-        /// Returns the value associated with the given key.
-        /// </summary>
-        public virtual string this[string key]
+    /// <summary>
+    /// Clears all tags.
+    /// </summary>
+    public abstract void Clear();
+
+    /// <summary>
+    /// Removes all tags that match the given criteria.
+    /// </summary>
+    public void RemoveAll(Predicate<Tag> predicate)
+    {
+        var keys = new HashSet<string>();
+        foreach (var tag in this)
         {
-            get
+            if (predicate(tag))
             {
-                string value;
-                if (this.TryGetValue(key, out value))
+                keys.Add(tag.Key);
+            }
+        }
+        foreach (var key in keys)
+        {
+            this.RemoveKey(key);
+        }
+    }
+
+    /// <summary>
+    /// Trims the internal data structures to their minimum size.
+    /// </summary>
+    public virtual void Trim()
+    {
+
+    }
+
+    #region IEnumerable<Tag>
+
+    /// <summary>
+    /// Returns the enumerator for this enumerable.
+    /// </summary>
+    /// <returns></returns>
+    public abstract IEnumerator<Tag> GetEnumerator();
+
+    /// <summary>
+    /// Returns the enumerator for this enumerable.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return this.GetEnumerator();
+    }
+
+    #endregion
+
+    #region Equals
+
+    /// <summary>
+    /// Returns true if the given object represent the same information.
+    /// </summary>
+    public override bool Equals(object obj)
+    {
+        if (!object.ReferenceEquals(this, obj))
+        {
+            if (obj is TagsCollectionBase)
+            {
+                var other = (obj as TagsCollectionBase);
+                if (other.Count == this.Count)
                 {
-                    return value;
-                }
-                throw new KeyNotFoundException();
-            }
-            set
-            {
-                this.AddOrReplace( new Tag() { Key = key, Value = value });
-            }
-        }
-        
-        /// <summary>
-        /// Removes all tags with the given key.
-        /// </summary>
-        public abstract bool RemoveKey(string key);
-
-        /// <summary>
-        /// Removes the given tag.
-        /// </summary>
-        public bool RemoveKeyValue(Tag tag)
-        {
-            foreach (var t in this)
-            {
-                if (t.Key == tag.Key &&
-                    t.Value == tag.Value)
-                {
-                    this.RemoveKey(t.Key);
+                    // make sure all object in the first are in the second and vice-versa.
+                    foreach (var tag in this)
+                    {
+                        if (!other.Contains(tag))
+                        {
+                            return false;
+                        }
+                    }
+                    foreach (var tag in other)
+                    {
+                        if (!this.Contains(tag))
+                        {
+                            return false;
+                        }
+                    }
                     return true;
                 }
             }
             return false;
         }
+        return true;
+    }
 
-        /// <summary>
-        /// Clears all tags.
-        /// </summary>
-        public abstract void Clear();
-
-        /// <summary>
-        /// Removes all tags that match the given criteria.
-        /// </summary>
-        public void RemoveAll(Predicate<Tag> predicate)
+    /// <summary>
+    /// Serves as a hash function.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode()
+    {
+        var hashCode = this.Count.GetHashCode();
+        foreach (var tag in this)
         {
-            var keys = new HashSet<string>();
-            foreach (var tag in this)
+            hashCode = hashCode ^ tag.GetHashCode();
+        }
+        return hashCode;
+    }
+
+    #endregion
+
+    /// <summary>
+    /// Gets a proper description of this tags collection.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+        var builder = new StringBuilder();
+        foreach (var a in this)
+        {
+            if (builder.Length > 0)
             {
-                if (predicate(tag))
-                {
-                    keys.Add(tag.Key);
-                }
+                builder.Append('|');
             }
-            foreach (var key in keys)
-            {
-                this.RemoveKey(key);
-            }
+            builder.Append(a.ToString());
         }
-
-        /// <summary>
-        /// Trims the internal data structures to their minimum size.
-        /// </summary>
-        public virtual void Trim()
-        {
-
-        }
-
-        #region IEnumerable<Tag>
-
-        /// <summary>
-        /// Returns the enumerator for this enumerable.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IEnumerator<Tag> GetEnumerator();
-
-        /// <summary>
-        /// Returns the enumerator for this enumerable.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-        }
-
-        #endregion
-
-        #region Equals
-
-        /// <summary>
-        /// Returns true if the given object represent the same information.
-        /// </summary>
-        public override bool Equals(object obj)
-        {
-            if (!object.ReferenceEquals(this, obj))
-            {
-                if (obj is TagsCollectionBase)
-                {
-                    var other = (obj as TagsCollectionBase);
-                    if (other.Count == this.Count)
-                    {
-                        // make sure all object in the first are in the second and vice-versa.
-                        foreach (var tag in this)
-                        {
-                            if (!other.Contains(tag))
-                            {
-                                return false;
-                            }
-                        }
-                        foreach (var tag in other)
-                        {
-                            if (!this.Contains(tag))
-                            {
-                                return false;
-                            }
-                        }
-                        return true;
-                    }
-                }
-                return false;
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Serves as a hash function.
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            var hashCode = this.Count.GetHashCode();
-            foreach (var tag in this)
-            {
-                hashCode = hashCode ^ tag.GetHashCode();
-            }
-            return hashCode;
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Gets a proper description of this tags collection.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            foreach(var a in this)
-            {
-                if (builder.Length > 0)
-                {
-                    builder.Append('|');
-                }
-                builder.Append(a.ToString());
-            }
-            return builder.ToString();
-        }
+        return builder.ToString();
     }
 }

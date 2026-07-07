@@ -20,102 +20,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
+using OsmSharp.Changesets;
 using OsmSharp.Streams;
 using OsmSharp.Streams.Filters;
-using System.Linq;
-using System.Collections.Generic;
-using OsmSharp.Changesets;
 
-namespace OsmSharp.Test.Stream.Filters
+namespace OsmSharp.Test.Stream.Filters;
+
+/// <summary>
+/// Contains apply changesets filter tests.
+/// </summary>
+[TestFixture]
+public class OsmStreamFilterApplyChangesetTests
 {
     /// <summary>
-    /// Contains apply changesets filter tests.
+    /// Tests creating objects.
     /// </summary>
-    [TestFixture]
-    public class OsmStreamFilterApplyChangesetTests
+    [Test]
+    public void TestCreate()
     {
-        /// <summary>
-        /// Tests creating objects.
-        /// </summary>
-        [Test]
-        public void TestCreate()
+        var source = new OsmGeo[]
         {
-            var source = new OsmGeo[]
+            new Node()
             {
-                new Node()
-                {
-                    Id = 2,
-                    Version = 1
-                },
-                new Way()
-                {
-                    Id = 3,
-                    Version = 2
-                },
-                new Relation()
-                {
-                    Id = 3,
-                    Version = 2
-                }
-            };
-            var changeset = new OsmChange()
+                Id = 2,
+                Version = 1
+            },
+            new Way()
             {
-                Create = new OsmGeo[]
-                {
-                    new Node()
-                    {
-                        Id = 1,
-                        Version = 1
-                    },
-                    new Node()
-                    {
-                        Id = 3,
-                        Version = 1
-                    },
-                    new Way()
-                    {
-                        Id = 2,
-                        Version = 1
-                    },
-                    new Relation()
-                    {
-                        Id = 4,
-                        Version = 1
-                    }
-                }
-            };
-
-            var filter = new OsmStreamFilterApplyChangeset(changeset);
-            filter.RegisterSource(source);
-
-            var result = new List<OsmGeo>(filter);
-            Assert.AreEqual(7, result.Count);
-            Assert.AreEqual(1, result[0].Id);
-            Assert.AreEqual(OsmGeoType.Node, result[0].Type);
-            Assert.AreEqual(2, result[1].Id);
-            Assert.AreEqual(OsmGeoType.Node, result[1].Type);
-            Assert.AreEqual(3, result[2].Id);
-            Assert.AreEqual(OsmGeoType.Node, result[2].Type);
-
-            Assert.AreEqual(2, result[3].Id);
-            Assert.AreEqual(OsmGeoType.Way, result[3].Type);
-            Assert.AreEqual(3, result[4].Id);
-            Assert.AreEqual(OsmGeoType.Way, result[4].Type);
-
-            Assert.AreEqual(3, result[5].Id);
-            Assert.AreEqual(OsmGeoType.Relation, result[5].Type);
-            Assert.AreEqual(4, result[6].Id);
-            Assert.AreEqual(OsmGeoType.Relation, result[6].Type);
-        }
-
-        /// <summary>
-        /// Tests modifying objects.
-        /// </summary>
-        [Test]
-        public void TestModify()
+                Id = 3,
+                Version = 2
+            },
+            new Relation()
+            {
+                Id = 3,
+                Version = 2
+            }
+        };
+        var changeset = new OsmChange()
         {
-            var source = new OsmGeo[]
+            Create = new OsmGeo[]
             {
                 new Node()
                 {
@@ -124,27 +70,12 @@ namespace OsmSharp.Test.Stream.Filters
                 },
                 new Node()
                 {
-                    Id = 2,
-                    Version = 1
-                },
-                new Node()
-                {
                     Id = 3,
                     Version = 1
                 },
                 new Way()
                 {
                     Id = 2,
-                    Version = 1
-                },
-                new Way()
-                {
-                    Id = 3,
-                    Version = 1
-                },
-                new Relation()
-                {
-                    Id = 3,
                     Version = 1
                 },
                 new Relation()
@@ -152,95 +83,184 @@ namespace OsmSharp.Test.Stream.Filters
                     Id = 4,
                     Version = 1
                 }
-            };
-            var changeset = new OsmChange()
-            {
-                Modify = new OsmGeo[]
-                {
-                    new Node()
-                    {
-                        Id = 3,
-                        Version = 2
-                    },
-                    new Way()
-                    {
-                        Id = 2,
-                        Version = 2
-                    },
-                    new Relation()
-                    {
-                        Id = 4,
-                        Version = 2
-                    }
-                }
-            };
+            }
+        };
 
-            var filter = new OsmStreamFilterApplyChangeset(changeset);
-            filter.RegisterSource(source);
+        var filter = new OsmStreamFilterApplyChangeset(changeset);
+        filter.RegisterSource(source);
 
-            var result = new List<OsmGeo>(filter);
-            Assert.AreEqual(7, result.Count);
-            Assert.AreEqual(1, result[0].Id);
-            Assert.AreEqual(1, result[0].Version);
-            Assert.AreEqual(OsmGeoType.Node, result[0].Type);
-            Assert.AreEqual(2, result[1].Id);
-            Assert.AreEqual(1, result[1].Version);
-            Assert.AreEqual(OsmGeoType.Node, result[1].Type);
-            Assert.AreEqual(3, result[2].Id);
-            Assert.AreEqual(2, result[2].Version);
-            Assert.AreEqual(OsmGeoType.Node, result[2].Type);
+        var result = new List<OsmGeo>(filter);
+        Assert.That(result.Count, Is.EqualTo(7));
+        Assert.That(result[0].Id, Is.EqualTo(1));
+        Assert.That(result[0].Type, Is.EqualTo(OsmGeoType.Node));
+        Assert.That(result[1].Id, Is.EqualTo(2));
+        Assert.That(result[1].Type, Is.EqualTo(OsmGeoType.Node));
+        Assert.That(result[2].Id, Is.EqualTo(3));
+        Assert.That(result[2].Type, Is.EqualTo(OsmGeoType.Node));
 
-            Assert.AreEqual(2, result[3].Id);
-            Assert.AreEqual(2, result[3].Version);
-            Assert.AreEqual(OsmGeoType.Way, result[3].Type);
-            Assert.AreEqual(3, result[4].Id);
-            Assert.AreEqual(1, result[4].Version);
-            Assert.AreEqual(OsmGeoType.Way, result[4].Type);
+        Assert.That(result[3].Id, Is.EqualTo(2));
+        Assert.That(result[3].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(result[4].Id, Is.EqualTo(3));
+        Assert.That(result[4].Type, Is.EqualTo(OsmGeoType.Way));
 
-            Assert.AreEqual(3, result[5].Id);
-            Assert.AreEqual(1, result[5].Version);
-            Assert.AreEqual(OsmGeoType.Relation, result[5].Type);
-            Assert.AreEqual(4, result[6].Id);
-            Assert.AreEqual(2, result[6].Version);
-            Assert.AreEqual(OsmGeoType.Relation, result[6].Type);
-        }
+        Assert.That(result[5].Id, Is.EqualTo(3));
+        Assert.That(result[5].Type, Is.EqualTo(OsmGeoType.Relation));
+        Assert.That(result[6].Id, Is.EqualTo(4));
+        Assert.That(result[6].Type, Is.EqualTo(OsmGeoType.Relation));
+    }
 
-        /// <summary>
-        /// Tests deleting objects.
-        /// </summary>
-        [Test]
-        public void TestDelete()
+    /// <summary>
+    /// Tests modifying objects.
+    /// </summary>
+    [Test]
+    public void TestModify()
+    {
+        var source = new OsmGeo[]
         {
-            var source = new OsmGeo[]
+            new Node()
+            {
+                Id = 1,
+                Version = 1
+            },
+            new Node()
+            {
+                Id = 2,
+                Version = 1
+            },
+            new Node()
+            {
+                Id = 3,
+                Version = 1
+            },
+            new Way()
+            {
+                Id = 2,
+                Version = 1
+            },
+            new Way()
+            {
+                Id = 3,
+                Version = 1
+            },
+            new Relation()
+            {
+                Id = 3,
+                Version = 1
+            },
+            new Relation()
+            {
+                Id = 4,
+                Version = 1
+            }
+        };
+        var changeset = new OsmChange()
+        {
+            Modify = new OsmGeo[]
             {
                 new Node()
                 {
-                    Id = 1,
-                    Version = 1
-                },
-                new Node()
-                {
-                    Id = 2,
-                    Version = 1
-                },
-                new Node()
-                {
                     Id = 3,
-                    Version = 1
+                    Version = 2
                 },
                 new Way()
                 {
                     Id = 2,
-                    Version = 1
-                },
-                new Way()
-                {
-                    Id = 3,
-                    Version = 1
+                    Version = 2
                 },
                 new Relation()
                 {
+                    Id = 4,
+                    Version = 2
+                }
+            }
+        };
+
+        var filter = new OsmStreamFilterApplyChangeset(changeset);
+        filter.RegisterSource(source);
+
+        var result = new List<OsmGeo>(filter);
+        Assert.That(result.Count, Is.EqualTo(7));
+        Assert.That(result[0].Id, Is.EqualTo(1));
+        Assert.That(result[0].Version, Is.EqualTo(1));
+        Assert.That(result[0].Type, Is.EqualTo(OsmGeoType.Node));
+        Assert.That(result[1].Id, Is.EqualTo(2));
+        Assert.That(result[1].Version, Is.EqualTo(1));
+        Assert.That(result[1].Type, Is.EqualTo(OsmGeoType.Node));
+        Assert.That(result[2].Id, Is.EqualTo(3));
+        Assert.That(result[2].Version, Is.EqualTo(2));
+        Assert.That(result[2].Type, Is.EqualTo(OsmGeoType.Node));
+
+        Assert.That(result[3].Id, Is.EqualTo(2));
+        Assert.That(result[3].Version, Is.EqualTo(2));
+        Assert.That(result[3].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(result[4].Id, Is.EqualTo(3));
+        Assert.That(result[4].Version, Is.EqualTo(1));
+        Assert.That(result[4].Type, Is.EqualTo(OsmGeoType.Way));
+
+        Assert.That(result[5].Id, Is.EqualTo(3));
+        Assert.That(result[5].Version, Is.EqualTo(1));
+        Assert.That(result[5].Type, Is.EqualTo(OsmGeoType.Relation));
+        Assert.That(result[6].Id, Is.EqualTo(4));
+        Assert.That(result[6].Version, Is.EqualTo(2));
+        Assert.That(result[6].Type, Is.EqualTo(OsmGeoType.Relation));
+    }
+
+    /// <summary>
+    /// Tests deleting objects.
+    /// </summary>
+    [Test]
+    public void TestDelete()
+    {
+        var source = new OsmGeo[]
+        {
+            new Node()
+            {
+                Id = 1,
+                Version = 1
+            },
+            new Node()
+            {
+                Id = 2,
+                Version = 1
+            },
+            new Node()
+            {
+                Id = 3,
+                Version = 1
+            },
+            new Way()
+            {
+                Id = 2,
+                Version = 1
+            },
+            new Way()
+            {
+                Id = 3,
+                Version = 1
+            },
+            new Relation()
+            {
+                Id = 3,
+                Version = 1
+            },
+            new Relation()
+            {
+                Id = 4,
+                Version = 1
+            }
+        };
+        var changeset = new OsmChange()
+        {
+            Delete = new OsmGeo[]
+            {
+                new Node()
+                {
                     Id = 3,
+                    Version = 1
+                },
+                new Way()
+                {
+                    Id = 2,
                     Version = 1
                 },
                 new Relation()
@@ -248,48 +268,27 @@ namespace OsmSharp.Test.Stream.Filters
                     Id = 4,
                     Version = 1
                 }
-            };
-            var changeset = new OsmChange()
-            {
-                Delete = new OsmGeo[]
-                {
-                    new Node()
-                    {
-                        Id = 3,
-                        Version = 1
-                    },
-                    new Way()
-                    {
-                        Id = 2,
-                        Version = 1
-                    },
-                    new Relation()
-                    {
-                        Id = 4,
-                        Version = 1
-                    }
-                }
-            };
+            }
+        };
 
-            var filter = new OsmStreamFilterApplyChangeset(changeset);
-            filter.RegisterSource(source);
+        var filter = new OsmStreamFilterApplyChangeset(changeset);
+        filter.RegisterSource(source);
 
-            var result = new List<OsmGeo>(filter);
-            Assert.AreEqual(4, result.Count);
-            Assert.AreEqual(1, result[0].Id);
-            Assert.AreEqual(1, result[0].Version);
-            Assert.AreEqual(OsmGeoType.Node, result[0].Type);
-            Assert.AreEqual(2, result[1].Id);
-            Assert.AreEqual(1, result[1].Version);
-            Assert.AreEqual(OsmGeoType.Node, result[1].Type);
-            
-            Assert.AreEqual(3, result[2].Id);
-            Assert.AreEqual(1, result[2].Version);
-            Assert.AreEqual(OsmGeoType.Way, result[2].Type);
+        var result = new List<OsmGeo>(filter);
+        Assert.That(result.Count, Is.EqualTo(4));
+        Assert.That(result[0].Id, Is.EqualTo(1));
+        Assert.That(result[0].Version, Is.EqualTo(1));
+        Assert.That(result[0].Type, Is.EqualTo(OsmGeoType.Node));
+        Assert.That(result[1].Id, Is.EqualTo(2));
+        Assert.That(result[1].Version, Is.EqualTo(1));
+        Assert.That(result[1].Type, Is.EqualTo(OsmGeoType.Node));
 
-            Assert.AreEqual(3, result[3].Id);
-            Assert.AreEqual(1, result[3].Version);
-            Assert.AreEqual(OsmGeoType.Relation, result[3].Type);
-        }
+        Assert.That(result[2].Id, Is.EqualTo(3));
+        Assert.That(result[2].Version, Is.EqualTo(1));
+        Assert.That(result[2].Type, Is.EqualTo(OsmGeoType.Way));
+
+        Assert.That(result[3].Id, Is.EqualTo(3));
+        Assert.That(result[3].Version, Is.EqualTo(1));
+        Assert.That(result[3].Type, Is.EqualTo(OsmGeoType.Relation));
     }
 }

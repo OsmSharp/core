@@ -20,33 +20,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp
+namespace OsmSharp;
+
+/// <summary>
+/// Contains general utilities.
+/// </summary>
+public static class Utilities
 {
     /// <summary>
-    /// Contains general utilities.
+    /// Returns true if the given coordinate is inside the box.
     /// </summary>
-    public static class Utilities
+    public static bool IsInside(double boxLat1, double boxLon1, double boxLat2, double boxLon2,
+        double lat, double lon)
     {
-        /// <summary>
-        /// Returns true if the given coordinate is inside the box.
-        /// </summary>
-        public static bool IsInside(double boxLat1, double boxLon1, double boxLat2, double boxLon2,
-            double lat, double lon)
+        if (boxLat1 > boxLat2)
         {
-            if (boxLat1 > boxLat2)
-            {
-                var t = boxLat1;
-                boxLat1 = boxLat2;
-                boxLat2 = t;
-            }
-            if (boxLon1 > boxLon2)
-            {
-                var t = boxLon1;
-                boxLon1 = boxLon2;
-                boxLon2 = t;
-            }
-
-            return boxLat1 <= lat && lat <= boxLat2 && boxLon1 <= lon && lon <= boxLon2; 
+            var t = boxLat1;
+            boxLat1 = boxLat2;
+            boxLat2 = t;
         }
+        if (boxLon1 > boxLon2)
+        {
+            var t = boxLon1;
+            boxLon1 = boxLon2;
+            boxLon2 = t;
+        }
+
+        return boxLat1 <= lat && lat <= boxLat2 && boxLon1 <= lon && lon <= boxLon2;
     }
 }

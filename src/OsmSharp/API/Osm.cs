@@ -24,87 +24,86 @@ using System.Text.Json.Serialization;
 using OsmSharp.Changesets;
 using OsmSharp.IO.Json.Converters;
 
-namespace OsmSharp.API
+namespace OsmSharp.API;
+
+/// <summary>
+/// Represents the root-object for all API-related communication.
+/// </summary>
+[JsonConverter(typeof(OsmJsonConverter))]
+public partial class Osm
 {
     /// <summary>
-    /// Represents the root-object for all API-related communication.
+    /// Gets or sets the generator.
     /// </summary>
-    [JsonConverter(typeof(OsmJsonConverter))]
-    public partial class Osm
-    {
-        /// <summary>
-        /// Gets or sets the generator.
-        /// </summary>
-        public string Generator { get; set; }
+    public string Generator { get; set; }
 
-        /// <summary>
-        /// Gets or sets the version #.
-        /// </summary>
-        public double? Version { get; set; }
+    /// <summary>
+    /// Gets or sets the version #.
+    /// </summary>
+    public double? Version { get; set; }
 
-        /// <summary>
-        /// Gets or sets the capabilities.
-        /// </summary>
-        public Capabilities Api { get; set; }
+    /// <summary>
+    /// Gets or sets the capabilities.
+    /// </summary>
+    public Capabilities Api { get; set; }
 
-        /// <summary>
-        /// Gets or sets the nodes array.
-        /// </summary>
-        public Node[] Nodes { get; set; }
+    /// <summary>
+    /// Gets or sets the nodes array.
+    /// </summary>
+    public Node[] Nodes { get; set; }
 
-        /// <summary>
-        /// Gets or sets the ways array.
-        /// </summary>
-        public Way[] Ways { get; set; }
+    /// <summary>
+    /// Gets or sets the ways array.
+    /// </summary>
+    public Way[] Ways { get; set; }
 
-        /// <summary>
-        /// Gets or sets the relations array.
-        /// </summary>
-        public Relation[] Relations { get; set; }
+    /// <summary>
+    /// Gets or sets the relations array.
+    /// </summary>
+    public Relation[] Relations { get; set; }
 
-        /// <summary>
-        /// Gets or sets the changeset.
-        /// </summary>
-        public Changeset[] Changesets { get; set; }
+    /// <summary>
+    /// Gets or sets the changeset.
+    /// </summary>
+    public Changeset[] Changesets { get; set; }
 
-        /// <summary>
-        /// Gets or sets the users.
-        /// </summary>
-        public User[] Users { get; set; }
+    /// <summary>
+    /// Gets or sets the users.
+    /// </summary>
+    public User[] Users { get; set; }
 
-        /// <summary>
-        /// Gets or sets the user.
-        /// </summary>
-        public User User { get; set; }
+    /// <summary>
+    /// Gets or sets the user.
+    /// </summary>
+    public User User { get; set; }
 
-        /// <summary>
-        /// Gets or sets the bounds.
-        /// </summary>
-        public Bounds Bounds { get; set; }
+    /// <summary>
+    /// Gets or sets the bounds.
+    /// </summary>
+    public Bounds Bounds { get; set; }
 
-        /// <summary>
-        /// Gets or sets the GPX files.
-        /// </summary>
-        public GpxFile[] GpxFiles { get; set; }
+    /// <summary>
+    /// Gets or sets the GPX files.
+    /// </summary>
+    public GpxFile[] GpxFiles { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Policy.
-        /// </summary>
-        public Policy Policy { get; set; }
+    /// <summary>
+    /// Gets or sets the Policy.
+    /// </summary>
+    public Policy Policy { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Permissions.
-        /// </summary>
-        public Permissions Permissions { get; set; }
+    /// <summary>
+    /// Gets or sets the Permissions.
+    /// </summary>
+    public Permissions Permissions { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Preferences.
-        /// </summary>
-        public Preferences Preferences { get; set; }
+    /// <summary>
+    /// Gets or sets the Preferences.
+    /// </summary>
+    public Preferences Preferences { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Notes.
-        /// </summary>
-        public Note[] Notes { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the Notes.
+    /// </summary>
+    public Note[] Notes { get; set; }
 }

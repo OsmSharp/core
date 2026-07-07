@@ -22,95 +22,94 @@
 
 using System;
 
-namespace OsmSharp.API
+namespace OsmSharp.API;
+
+/// <summary>
+/// Represents a GPX file.
+/// </summary>
+public partial class GpxFile
 {
     /// <summary>
-    /// Represents a GPX file.
+    /// Gets or sets the id.
     /// </summary>
-    public partial class GpxFile
-    {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        public long Id { get; set; }
+    public long Id { get; set; }
 
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        public string Name { get; set; }
+    /// <summary>
+    /// Gets or sets the name.
+    /// </summary>
+    public string Name { get; set; }
 
-        /// <summary>
-        /// Gets or sets the latitude.
-        /// </summary>
-        public double? Lat { get; set; }
+    /// <summary>
+    /// Gets or sets the latitude.
+    /// </summary>
+    public double? Lat { get; set; }
 
-        /// <summary>
-        /// Gets or sets the longitude.
-        /// </summary>
-        public double? Lon { get; set; }
+    /// <summary>
+    /// Gets or sets the longitude.
+    /// </summary>
+    public double? Lon { get; set; }
 
-        /// <summary>
-        /// Gets or sets the user name.
-        /// </summary>
-        public string User { get; set; }
+    /// <summary>
+    /// Gets or sets the user name.
+    /// </summary>
+    public string User { get; set; }
 
-        /// <summary>
-        /// Gets or sets the visibility.
-        /// </summary>
-        public Visibility? Visibility { get; set; }
+    /// <summary>
+    /// Gets or sets the visibility.
+    /// </summary>
+    public Visibility? Visibility { get; set; }
 
-        /// <summary>
-        /// Gets or sets the description.
-        /// </summary>
-        public string Description { get; set; }
+    /// <summary>
+    /// Gets or sets the description.
+    /// </summary>
+    public string Description { get; set; }
 
-        /// <summary>
-        /// Gets or sets the pending approval.
-        /// </summary>
-        public bool Pending { get; set; }
+    /// <summary>
+    /// Gets or sets the pending approval.
+    /// </summary>
+    public bool Pending { get; set; }
 
-        /// <summary>
-        /// Gets or sets the tags.
-        /// </summary>
-        public string[] Tags { get; set; }
+    /// <summary>
+    /// Gets or sets the tags.
+    /// </summary>
+    public string[] Tags { get; set; }
 
-        /// <summary>
-        /// Gets or sets the timestamp.
-        /// </summary>
-        public DateTime TimeStamp { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the timestamp.
+    /// </summary>
+    public DateTime TimeStamp { get; set; }
+}
 
-    public enum Visibility
-    {
-        /// <summary>
-        /// The trace will not show up in any public listings, but trackpoints from it will
-        /// still be available through the public GPS API without timestamps but will not be
-        /// chronologically ordered.
-        /// </summary>
-        Private,
+public enum Visibility
+{
+    /// <summary>
+    /// The trace will not show up in any public listings, but trackpoints from it will
+    /// still be available through the public GPS API without timestamps but will not be
+    /// chronologically ordered.
+    /// </summary>
+    Private,
 
-        /// <summary>
-        /// The trace will be shown publicly in Your GPS traces and in public GPS trace listings.
-        /// Data served via the API does not reference your trace page. Timestamps of the trace
-        /// points are not available through the public GPS API, and the points are not
-        /// chronologically ordered. However, other users are still able to download the raw
-        /// trace from the public trace list and any timestamps contained within.
-        /// </summary>
-        Public,
+    /// <summary>
+    /// The trace will be shown publicly in Your GPS traces and in public GPS trace listings.
+    /// Data served via the API does not reference your trace page. Timestamps of the trace
+    /// points are not available through the public GPS API, and the points are not
+    /// chronologically ordered. However, other users are still able to download the raw
+    /// trace from the public trace list and any timestamps contained within.
+    /// </summary>
+    Public,
 
-        /// <summary>
-        /// The trace will not show up in any public listings but trackpoints from it will still be
-        /// available through the public GPS API with timestamps. Other users will only be able to
-        /// download processed trackpoints from your trace which can't be associated with you directly.
-        /// </summary>
-        Trackable,
+    /// <summary>
+    /// The trace will not show up in any public listings but trackpoints from it will still be
+    /// available through the public GPS API with timestamps. Other users will only be able to
+    /// download processed trackpoints from your trace which can't be associated with you directly.
+    /// </summary>
+    Trackable,
 
-        /// <summary>
-        /// The trace will be shown publicly in Your GPS traces and in public GPS trace listings,
-        /// i.e. other users will be able to download the raw trace and associate it with your username.
-        /// Data served via the trackpoints API will reference your original trace page. Timestamps of
-        /// the trace points are available through the public GPS API.
-        /// </summary>
-        Identifiable
-    }
+    /// <summary>
+    /// The trace will be shown publicly in Your GPS traces and in public GPS trace listings,
+    /// i.e. other users will be able to download the raw trace and associate it with your username.
+    /// Data served via the trackpoints API will reference your original trace page. Timestamps of
+    /// the trace points are available through the public GPS API.
+    /// </summary>
+    Identifiable
 }

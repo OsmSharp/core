@@ -20,46 +20,45 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.Streams
+namespace OsmSharp.Streams;
+
+/// <summary>
+/// An empty stream reader.
+/// </summary>
+public class OsmStreamSourceEmpty : OsmStreamSource
 {
     /// <summary>
-    /// An empty stream reader.
+    /// Move to the next item in the stream.
     /// </summary>
-    public class OsmStreamSourceEmpty : OsmStreamSource
+    public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
     {
-        /// <summary>
-        /// Move to the next item in the stream.
-        /// </summary>
-        public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
-        {
-            return false;
-        }
+        return false;
+    }
 
-        /// <summary>
-        /// Returns the current object.
-        /// </summary>
-        public override OsmGeo Current()
-        {
-            return null;
-        }
+    /// <summary>
+    /// Returns the current object.
+    /// </summary>
+    public override OsmGeo Current()
+    {
+        return null;
+    }
 
-        /// <summary>
-        /// Resets this source.
-        /// </summary>
-        public override void Reset()
-        {
+    /// <summary>
+    /// Resets this source.
+    /// </summary>
+    public override void Reset()
+    {
 
-        }
+    }
 
-        /// <summary>
-        /// Returns true if this source can be reset.
-        /// </summary>
-        public override bool CanReset
+    /// <summary>
+    /// Returns true if this source can be reset.
+    /// </summary>
+    public override bool CanReset
+    {
+        get
         {
-            get
-            {
-                return true;
-            }
+            return true;
         }
     }
 }

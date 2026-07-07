@@ -22,28 +22,27 @@
 
 using System;
 
-namespace OsmSharp.Db
+namespace OsmSharp.Db;
+
+/// <summary>
+/// An exception thrown when something bad happens in one of the db-implementations.
+/// </summary>
+public class DbException : Exception
 {
     /// <summary>
-    /// An exception thrown when something bad happens in one of the db-implementations.
+    /// Creates a new db exception.
     /// </summary>
-    public class DbException : Exception
+    public DbException(string message)
+        : base(message)
     {
-        /// <summary>
-        /// Creates a new db exception.
-        /// </summary>
-        public DbException(string message)
-            : base(message)
-        {
 
-        }
-        /// <summary>
-        /// Creates a new db exception.
-        /// </summary>
-        public DbException(string message, params object[] param)
-            : base(string.Format(message, param))
-        {
+    }
+    /// <summary>
+    /// Creates a new db exception.
+    /// </summary>
+    public DbException(string message, params object[] param)
+        : base(string.Format(message, param))
+    {
 
-        }
     }
 }

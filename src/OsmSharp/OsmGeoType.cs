@@ -20,24 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp
+namespace OsmSharp;
+
+/// <summary>
+/// Represents a type of Geo OSM object.
+/// </summary>
+public enum OsmGeoType
 {
     /// <summary>
-    /// Represents a type of Geo OSM object.
+    /// Node
     /// </summary>
-    public enum OsmGeoType
-    {
-        /// <summary>
-        /// Node
-        /// </summary>
-        Node,
-        /// <summary>
-        /// Way
-        /// </summary>
-        Way,
-        /// <summary>
-        /// Relation
-        /// </summary>
-        Relation
-    }
+    Node,
+    /// <summary>
+    /// Way
+    /// </summary>
+    Way,
+    /// <summary>
+    /// Relation
+    /// </summary>
+    Relation
 }

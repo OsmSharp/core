@@ -20,311 +20,310 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using NUnit.Framework;
-using OsmSharp.Streams;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using NUnit.Framework;
+using OsmSharp.Streams;
 
-namespace OsmSharp.Test.Stream
+namespace OsmSharp.Test.Stream;
+
+/// <summary>
+/// Contains tests for the osm xml source stream.
+/// </summary>
+[TestFixture]
+public class XmlOsmStreamSourceTests
 {
     /// <summary>
-    /// Contains tests for the osm xml source stream.
+    /// Test reading one node.
     /// </summary>
-    [TestFixture]
-    public class XmlOsmStreamSourceTests
+    [Test]
+    public void TestReadNode()
     {
-        /// <summary>
-        /// Test reading one node.
-        /// </summary>
-        [Test]
-        public void TestReadNode()
+        // build the source.
+        var source = new XmlOsmStreamSource(
+            Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                "OsmSharp.Test.data.xml.node.osm"));
+
+        // read.
+        var result = new List<OsmGeo>(source);
+
+        // check results.
+        Assert.IsNotNull(result);
+        Assert.That(result.Count, Is.EqualTo(1));
+        Assert.IsInstanceOf<Node>(result[0]);
+        var node = result[0] as Node;
+        Assert.That(node.Id, Is.EqualTo(471625991));
+        Assert.That(node.Latitude, Is.EqualTo(51.2704712));
+        Assert.That(node.Longitude, Is.EqualTo(4.8006659));
+        Assert.That(node.UserName, Is.EqualTo("marc12"));
+        Assert.That(node.UserId, Is.EqualTo(540527));
+        Assert.That(node.Visible, Is.EqualTo(true));
+        Assert.That(node.Version, Is.EqualTo(3));
+        Assert.That(node.ChangeSetId, Is.EqualTo(9797840));
+        Assert.That(node.TimeStamp.Value.ToUniversalTime(), Is.EqualTo(new DateTime(2011, 11, 11, 16, 43, 47)));
+        Assert.IsNotNull(node.Tags);
+        Assert.That(node.Tags.Count, Is.EqualTo(3));
+        Assert.IsTrue(node.Tags.Contains("alt_name", "Lille"));
+        Assert.IsTrue(node.Tags.Contains("name", "Wechelderzande"));
+        Assert.IsTrue(node.Tags.Contains("traffic_sign", "city_limit"));
+    }
+
+    /// <summary>
+    /// Test reading one way.
+    /// </summary>
+    [Test]
+    public void TestReadWay()
+    {
+        // build the source.
+        var source = new XmlOsmStreamSource(
+            Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                "OsmSharp.Test.data.xml.way.osm"));
+
+        // read.
+        var result = new List<OsmGeo>(source);
+
+        // check results.
+        Assert.IsNotNull(result);
+        Assert.That(result.Count, Is.EqualTo(1));
+        Assert.IsInstanceOf<Way>(result[0]);
+        var way = result[0] as Way;
+        Assert.That(way.Id, Is.EqualTo(88310427));
+        Assert.That(way.UserName, Is.EqualTo("Ben Abelshausen"));
+        Assert.That(way.UserId, Is.EqualTo(137772));
+        Assert.That(way.Visible, Is.EqualTo(true));
+        Assert.That(way.Version, Is.EqualTo(1));
+        Assert.That(way.ChangeSetId, Is.EqualTo(6570367));
+        Assert.That(way.TimeStamp.Value.ToUniversalTime(), Is.EqualTo(new DateTime(2010, 12, 06, 23, 58, 37)));
+        Assert.IsNotNull(way.Tags);
+        Assert.That(way.Tags.Count, Is.EqualTo(1));
+        Assert.IsTrue(way.Tags.Contains("building", "yes"));
+        Assert.IsNotNull(way.Nodes);
+        Assert.That(way.Nodes.Length, Is.EqualTo(5));
+        Assert.That(way.Nodes[0], Is.EqualTo(1025709357));
+        Assert.That(way.Nodes[1], Is.EqualTo(1025709360));
+        Assert.That(way.Nodes[2], Is.EqualTo(1025709358));
+        Assert.That(way.Nodes[3], Is.EqualTo(1025709344));
+        Assert.That(way.Nodes[4], Is.EqualTo(1025709357));
+    }
+
+    /// <summary>
+    /// Test reading one relation.
+    /// </summary>
+    [Test]
+    public void TestReadRelation()
+    {
+        // build the source.
+        var source = new XmlOsmStreamSource(
+            Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                "OsmSharp.Test.data.xml.relation.osm"));
+
+        // read.
+        var result = new List<OsmGeo>(source);
+
+        // check results.
+        Assert.IsNotNull(result);
+        Assert.That(result.Count, Is.EqualTo(1));
+        Assert.IsInstanceOf<Relation>(result[0]);
+        var relation = result[0] as Relation;
+        Assert.That(relation.Id, Is.EqualTo(214314));
+        Assert.That(relation.UserName, Is.EqualTo("marc12"));
+        Assert.That(relation.UserId, Is.EqualTo(540527));
+        Assert.That(relation.Visible, Is.EqualTo(true));
+        Assert.That(relation.Version, Is.EqualTo(18));
+        Assert.That(relation.ChangeSetId, Is.EqualTo(9797825));
+        Assert.That(relation.TimeStamp.Value.ToUniversalTime(), Is.EqualTo(new DateTime(2011, 11, 11, 16, 42, 26)));
+        Assert.IsNotNull(relation.Tags);
+        Assert.That(relation.Tags.Count, Is.EqualTo(4));
+        Assert.IsTrue(relation.Tags.Contains("network", "rcn"));
+        Assert.IsTrue(relation.Tags.Contains("note", "53-80"));
+        Assert.IsTrue(relation.Tags.Contains("route", "bicycle"));
+        Assert.IsTrue(relation.Tags.Contains("type", "route"));
+        Assert.IsNotNull(relation.Members);
+        Assert.That(relation.Members.Length, Is.EqualTo(13));
+
+        Assert.That(relation.Members[0].Role, Is.EqualTo(string.Empty));
+        Assert.That(relation.Members[0].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(relation.Members[0].Id, Is.EqualTo(37294428));
+
+        Assert.That(relation.Members[1].Role, Is.EqualTo("forward"));
+        Assert.That(relation.Members[1].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(relation.Members[1].Id, Is.EqualTo(87492000));
+
+        Assert.That(relation.Members[2].Role, Is.EqualTo("forward"));
+        Assert.That(relation.Members[2].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(relation.Members[2].Id, Is.EqualTo(37682837));
+
+        Assert.That(relation.Members[3].Role, Is.EqualTo("forward"));
+        Assert.That(relation.Members[3].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(relation.Members[3].Id, Is.EqualTo(88614492));
+
+        Assert.That(relation.Members[4].Role, Is.EqualTo(string.Empty));
+        Assert.That(relation.Members[4].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(relation.Members[4].Id, Is.EqualTo(88614520));
+
+        Assert.That(relation.Members[5].Role, Is.EqualTo(string.Empty));
+        Assert.That(relation.Members[5].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(relation.Members[5].Id, Is.EqualTo(39448130));
+
+        Assert.That(relation.Members[6].Role, Is.EqualTo(string.Empty));
+        Assert.That(relation.Members[6].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(relation.Members[6].Id, Is.EqualTo(39364233));
+
+        Assert.That(relation.Members[7].Role, Is.EqualTo(string.Empty));
+        Assert.That(relation.Members[7].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(relation.Members[7].Id, Is.EqualTo(52285585));
+
+        Assert.That(relation.Members[8].Role, Is.EqualTo(string.Empty));
+        Assert.That(relation.Members[8].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(relation.Members[8].Id, Is.EqualTo(39364232));
+
+        Assert.That(relation.Members[9].Role, Is.EqualTo(string.Empty));
+        Assert.That(relation.Members[9].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(relation.Members[9].Id, Is.EqualTo(136621092));
+
+        Assert.That(relation.Members[10].Role, Is.EqualTo(string.Empty));
+        Assert.That(relation.Members[10].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(relation.Members[10].Id, Is.EqualTo(88195311));
+
+        Assert.That(relation.Members[11].Role, Is.EqualTo(string.Empty));
+        Assert.That(relation.Members[11].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(relation.Members[11].Id, Is.EqualTo(88195309));
+
+        Assert.That(relation.Members[12].Role, Is.EqualTo(string.Empty));
+        Assert.That(relation.Members[12].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(relation.Members[12].Id, Is.EqualTo(88195313));
+    }
+
+    /// <summary>
+    /// A regression test in resetting an XML data source.
+    /// </summary>
+    [Test]
+    public void TestReset()
+    {
+        // generate the source.
+        var source = new XmlOsmStreamSource(
+            Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                "OsmSharp.Test.data.xml.api.osm"));
+
+        // pull the data out.
+        var target = new OsmStreamTargetEmpty();
+        target.RegisterSource(source);
+        target.Pull();
+
+        // reset the source.
+        if (source.CanReset)
         {
-            // build the source.
-            var source = new XmlOsmStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.Test.data.xml.node.osm"));
+            source.Reset();
 
-            // read.
-            var result = new List<OsmGeo>(source);
-
-            // check results.
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Count);
-            Assert.IsInstanceOf<Node>(result[0]);
-            var node = result[0] as Node;
-            Assert.AreEqual(471625991, node.Id);
-            Assert.AreEqual(51.2704712, node.Latitude);
-            Assert.AreEqual(4.8006659, node.Longitude);
-            Assert.AreEqual("marc12", node.UserName);
-            Assert.AreEqual(540527, node.UserId);
-            Assert.AreEqual(true, node.Visible);
-            Assert.AreEqual(3, node.Version);
-            Assert.AreEqual(9797840, node.ChangeSetId);
-            Assert.AreEqual(new DateTime(2011, 11, 11, 16, 43, 47), node.TimeStamp.Value.ToUniversalTime());
-            Assert.IsNotNull(node.Tags);
-            Assert.AreEqual(3, node.Tags.Count);
-            Assert.IsTrue(node.Tags.Contains("alt_name", "Lille"));
-            Assert.IsTrue(node.Tags.Contains("name", "Wechelderzande"));
-            Assert.IsTrue(node.Tags.Contains("traffic_sign", "city_limit"));
-        }
-
-        /// <summary>
-        /// Test reading one way.
-        /// </summary>
-        [Test]
-        public void TestReadWay()
-        {
-            // build the source.
-            var source = new XmlOsmStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.Test.data.xml.way.osm"));
-
-            // read.
-            var result = new List<OsmGeo>(source);
-
-            // check results.
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Count);
-            Assert.IsInstanceOf<Way>(result[0]);
-            var way = result[0] as Way;
-            Assert.AreEqual(88310427, way.Id);
-            Assert.AreEqual("Ben Abelshausen", way.UserName);
-            Assert.AreEqual(137772, way.UserId);
-            Assert.AreEqual(true, way.Visible);
-            Assert.AreEqual(1, way.Version);
-            Assert.AreEqual(6570367, way.ChangeSetId);
-            Assert.AreEqual(new DateTime(2010, 12, 06, 23, 58, 37), way.TimeStamp.Value.ToUniversalTime());
-            Assert.IsNotNull(way.Tags);
-            Assert.AreEqual(1, way.Tags.Count);
-            Assert.IsTrue(way.Tags.Contains("building", "yes"));
-            Assert.IsNotNull(way.Nodes);
-            Assert.AreEqual(5, way.Nodes.Length);
-            Assert.AreEqual(1025709357, way.Nodes[0]);
-            Assert.AreEqual(1025709360, way.Nodes[1]);
-            Assert.AreEqual(1025709358, way.Nodes[2]);
-            Assert.AreEqual(1025709344, way.Nodes[3]);
-            Assert.AreEqual(1025709357, way.Nodes[4]);
-        }
-
-        /// <summary>
-        /// Test reading one relation.
-        /// </summary>
-        [Test]
-        public void TestReadRelation()
-        {
-            // build the source.
-            var source = new XmlOsmStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.Test.data.xml.relation.osm"));
-
-            // read.
-            var result = new List<OsmGeo>(source);
-
-            // check results.
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Count);
-            Assert.IsInstanceOf<Relation>(result[0]);
-            var relation = result[0] as Relation;
-            Assert.AreEqual(214314, relation.Id);
-            Assert.AreEqual("marc12", relation.UserName);
-            Assert.AreEqual(540527, relation.UserId);
-            Assert.AreEqual(true, relation.Visible);
-            Assert.AreEqual(18, relation.Version);
-            Assert.AreEqual(9797825, relation.ChangeSetId);
-            Assert.AreEqual(new DateTime(2011, 11, 11, 16, 42, 26), relation.TimeStamp.Value.ToUniversalTime());
-            Assert.IsNotNull(relation.Tags);
-            Assert.AreEqual(4, relation.Tags.Count);
-            Assert.IsTrue(relation.Tags.Contains("network", "rcn"));
-            Assert.IsTrue(relation.Tags.Contains("note", "53-80"));
-            Assert.IsTrue(relation.Tags.Contains("route", "bicycle"));
-            Assert.IsTrue(relation.Tags.Contains("type", "route"));
-            Assert.IsNotNull(relation.Members);
-            Assert.AreEqual(13, relation.Members.Length);
-
-            Assert.AreEqual(string.Empty, relation.Members[0].Role);
-            Assert.AreEqual(OsmGeoType.Way, relation.Members[0].Type);
-            Assert.AreEqual(37294428, relation.Members[0].Id);
-
-            Assert.AreEqual("forward", relation.Members[1].Role);
-            Assert.AreEqual(OsmGeoType.Way, relation.Members[1].Type);
-            Assert.AreEqual(87492000, relation.Members[1].Id);
-
-            Assert.AreEqual("forward", relation.Members[2].Role);
-            Assert.AreEqual(OsmGeoType.Way, relation.Members[2].Type);
-            Assert.AreEqual(37682837, relation.Members[2].Id);
-
-            Assert.AreEqual("forward", relation.Members[3].Role);
-            Assert.AreEqual(OsmGeoType.Way, relation.Members[3].Type);
-            Assert.AreEqual(88614492, relation.Members[3].Id);
-
-            Assert.AreEqual(string.Empty, relation.Members[4].Role);
-            Assert.AreEqual(OsmGeoType.Way, relation.Members[4].Type);
-            Assert.AreEqual(88614520, relation.Members[4].Id);
-
-            Assert.AreEqual(string.Empty, relation.Members[5].Role);
-            Assert.AreEqual(OsmGeoType.Way, relation.Members[5].Type);
-            Assert.AreEqual(39448130, relation.Members[5].Id);
-
-            Assert.AreEqual(string.Empty, relation.Members[6].Role);
-            Assert.AreEqual(OsmGeoType.Way, relation.Members[6].Type);
-            Assert.AreEqual(39364233, relation.Members[6].Id);
-
-            Assert.AreEqual(string.Empty, relation.Members[7].Role);
-            Assert.AreEqual(OsmGeoType.Way, relation.Members[7].Type);
-            Assert.AreEqual(52285585, relation.Members[7].Id);
-
-            Assert.AreEqual(string.Empty, relation.Members[8].Role);
-            Assert.AreEqual(OsmGeoType.Way, relation.Members[8].Type);
-            Assert.AreEqual(39364232, relation.Members[8].Id);
-
-            Assert.AreEqual(string.Empty, relation.Members[9].Role);
-            Assert.AreEqual(OsmGeoType.Way, relation.Members[9].Type);
-            Assert.AreEqual(136621092, relation.Members[9].Id);
-
-            Assert.AreEqual(string.Empty, relation.Members[10].Role);
-            Assert.AreEqual(OsmGeoType.Way, relation.Members[10].Type);
-            Assert.AreEqual(88195311, relation.Members[10].Id);
-
-            Assert.AreEqual(string.Empty, relation.Members[11].Role);
-            Assert.AreEqual(OsmGeoType.Way, relation.Members[11].Type);
-            Assert.AreEqual(88195309, relation.Members[11].Id);
-
-            Assert.AreEqual(string.Empty, relation.Members[12].Role);
-            Assert.AreEqual(OsmGeoType.Way, relation.Members[12].Type);
-            Assert.AreEqual(88195313, relation.Members[12].Id);
-        }
-
-        /// <summary>
-        /// A regression test in resetting an XML data source.
-        /// </summary>
-        [Test]
-        public void TestReset()
-        {
-            // generate the source.
-            var source = new XmlOsmStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.Test.data.xml.api.osm"));
-
-            // pull the data out.
-            var target = new OsmStreamTargetEmpty();
-            target.RegisterSource(source);
+            // pull the data again.
             target.Pull();
-
-            // reset the source.
-            if (source.CanReset)
-            {
-                source.Reset();
-
-                // pull the data again.
-                target.Pull();
-            }
         }
+    }
 
-        /// <summary>
-        /// Reads a real OSM-XML file.
-        /// </summary>
-        [Test]
-        public void ReadRealXML()
+    /// <summary>
+    /// Reads a real OSM-XML file.
+    /// </summary>
+    [Test]
+    public void ReadRealXML()
+    {
+        using (var fileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
+            "OsmSharp.Test.data.xml.wechel.osm"))
         {
-            using (var fileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                "OsmSharp.Test.data.xml.wechel.osm"))
-            {
-                var wechel = new List<OsmGeo>();
-                using (var reader = new XmlOsmStreamSource(fileStream))
-                {
-                    wechel.AddRange(reader);
-                }
-
-                Assert.AreEqual(13978, wechel.Count);
-            }
-        }
-
-        /// <summary>
-        /// Tests reading an actual OSM-PBF file from a non-seekable stream.
-        /// </summary>
-        [Test]
-        public void ReadRealXMLNonSeekable()
-        {
-            using (var fileStream = new NonSeekableStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                "OsmSharp.Test.data.xml.wechel.osm")))
-            {
-                var wechel = new List<OsmGeo>();
-                using (var reader = new XmlOsmStreamSource(fileStream))
-                {
-                    wechel.AddRange(reader);
-                }
-
-                Assert.AreEqual(13978, wechel.Count);
-            }
-        }
-
-        /// <summary>
-        /// Tests reading an actual OSM-PBF file from a non-seekable stream.
-        /// </summary>
-        [Test]
-        public void ReadRealXMLNotAtBeginning()
-        {
-            var offsetMemoryStream = new MemoryStream();
-            offsetMemoryStream.Write(new byte[235], 0, 235);
-            using (var fileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                "OsmSharp.Test.data.xml.wechel.osm"))
-            {
-                fileStream.CopyTo(offsetMemoryStream);
-            }
-            offsetMemoryStream.Seek(235, SeekOrigin.Begin);
-
             var wechel = new List<OsmGeo>();
-            using (var reader = new XmlOsmStreamSource(offsetMemoryStream))
+            using (var reader = new XmlOsmStreamSource(fileStream))
             {
                 wechel.AddRange(reader);
             }
 
-            Assert.AreEqual(13978, wechel.Count);
+            Assert.That(wechel.Count, Is.EqualTo(13978));
         }
+    }
 
-        /// <summary>
-        /// Tests reading an actual OSM-XML file from a non-seekable stream.
-        /// </summary>
-        [Test]
-        public void ReadRealXMLNonSeekableNotAtBeginning()
+    /// <summary>
+    /// Tests reading an actual OSM-PBF file from a non-seekable stream.
+    /// </summary>
+    [Test]
+    public void ReadRealXMLNonSeekable()
+    {
+        using (var fileStream = new NonSeekableStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(
+            "OsmSharp.Test.data.xml.wechel.osm")))
         {
-            var offsetMemoryStream = new MemoryStream();
-            offsetMemoryStream.Write(new byte[235], 0, 235);
-            using (var fileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                "OsmSharp.Test.data.xml.wechel.osm"))
-            {
-                fileStream.CopyTo(offsetMemoryStream);
-            }
-            offsetMemoryStream.Seek(235, SeekOrigin.Begin);
-
             var wechel = new List<OsmGeo>();
-            using (var reader = new XmlOsmStreamSource(new NonSeekableStream(offsetMemoryStream)))
+            using (var reader = new XmlOsmStreamSource(fileStream))
             {
                 wechel.AddRange(reader);
             }
 
-            Assert.AreEqual(13978, wechel.Count);
+            Assert.That(wechel.Count, Is.EqualTo(13978));
+        }
+    }
+
+    /// <summary>
+    /// Tests reading an actual OSM-PBF file from a non-seekable stream.
+    /// </summary>
+    [Test]
+    public void ReadRealXMLNotAtBeginning()
+    {
+        var offsetMemoryStream = new MemoryStream();
+        offsetMemoryStream.Write(new byte[235], 0, 235);
+        using (var fileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
+            "OsmSharp.Test.data.xml.wechel.osm"))
+        {
+            fileStream.CopyTo(offsetMemoryStream);
+        }
+        offsetMemoryStream.Seek(235, SeekOrigin.Begin);
+
+        var wechel = new List<OsmGeo>();
+        using (var reader = new XmlOsmStreamSource(offsetMemoryStream))
+        {
+            wechel.AddRange(reader);
         }
 
-        /// <summary>
-        /// Tests reading from a stream where position is not available.
-        /// </summary>
-        [Test]
-        public void XmlOsmStreamSource_ShouldBeAbleToReadFromStreamWithPositionNotAvailable()
-        {
-            using (var fileStream = new DeflateMockStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                "OsmSharp.Test.data.xml.wechel.osm")))
-            {
-                var wechel = new List<OsmGeo>();
-                using (var reader = new XmlOsmStreamSource(fileStream))
-                {
-                    wechel.AddRange(reader);
-                }
+        Assert.That(wechel.Count, Is.EqualTo(13978));
+    }
 
-                Assert.AreEqual(13978, wechel.Count);
+    /// <summary>
+    /// Tests reading an actual OSM-XML file from a non-seekable stream.
+    /// </summary>
+    [Test]
+    public void ReadRealXMLNonSeekableNotAtBeginning()
+    {
+        var offsetMemoryStream = new MemoryStream();
+        offsetMemoryStream.Write(new byte[235], 0, 235);
+        using (var fileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
+            "OsmSharp.Test.data.xml.wechel.osm"))
+        {
+            fileStream.CopyTo(offsetMemoryStream);
+        }
+        offsetMemoryStream.Seek(235, SeekOrigin.Begin);
+
+        var wechel = new List<OsmGeo>();
+        using (var reader = new XmlOsmStreamSource(new NonSeekableStream(offsetMemoryStream)))
+        {
+            wechel.AddRange(reader);
+        }
+
+        Assert.That(wechel.Count, Is.EqualTo(13978));
+    }
+
+    /// <summary>
+    /// Tests reading from a stream where position is not available.
+    /// </summary>
+    [Test]
+    public void XmlOsmStreamSource_ShouldBeAbleToReadFromStreamWithPositionNotAvailable()
+    {
+        using (var fileStream = new DeflateMockStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(
+            "OsmSharp.Test.data.xml.wechel.osm")))
+        {
+            var wechel = new List<OsmGeo>();
+            using (var reader = new XmlOsmStreamSource(fileStream))
+            {
+                wechel.AddRange(reader);
             }
+
+            Assert.That(wechel.Count, Is.EqualTo(13978));
         }
     }
 }

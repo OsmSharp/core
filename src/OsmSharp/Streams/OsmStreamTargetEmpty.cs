@@ -20,43 +20,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.Streams
+namespace OsmSharp.Streams;
+
+/// <summary>
+/// An empty OSM stream writer doing nothing with objects being streamed to it.
+/// </summary>
+public class OsmStreamTargetEmpty : OsmStreamTarget
 {
     /// <summary>
-    /// An empty OSM stream writer doing nothing with objects being streamed to it.
+    /// Initializes this target.
     /// </summary>
-    public class OsmStreamTargetEmpty : OsmStreamTarget
+    public override void Initialize()
     {
-        /// <summary>
-        /// Initializes this target.
-        /// </summary>
-        public override void Initialize()
-        {
 
-        }
+    }
 
-        /// <summary>
-        /// Adds a node.
-        /// </summary>
-        public override void AddNode(Node node)
-        {
+    /// <summary>
+    /// Adds a node.
+    /// </summary>
+    public override void AddNode(Node node)
+    {
 
-        }
+    }
 
-        /// <summary>
-        /// Adds a way.
-        /// </summary>
-        public override void AddWay(Way way)
-        {
+    /// <summary>
+    /// Adds a way.
+    /// </summary>
+    public override void AddWay(Way way)
+    {
 
-        }
+    }
 
-        /// <summary>
-        /// Adds a relation.
-        /// </summary>
-        public override void AddRelation(Relation relation)
-        {
+    /// <summary>
+    /// Adds a relation.
+    /// </summary>
+    public override void AddRelation(Relation relation)
+    {
 
-        }
     }
 }

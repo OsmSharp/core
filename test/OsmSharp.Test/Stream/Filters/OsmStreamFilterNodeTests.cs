@@ -20,69 +20,68 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Linq;
 using NUnit.Framework;
 using OsmSharp.Streams;
-using System.Linq;
 
-namespace OsmSharp.Test.Stream.Filters
+namespace OsmSharp.Test.Stream.Filters;
+
+/// <summary>
+/// Node filter tests.
+/// </summary>
+[TestFixture]
+internal class OsmStreamFilterNodeTests
 {
     /// <summary>
-    /// Node filter tests.
+    /// A test with just one node.
     /// </summary>
-    [TestFixture]
-    class OsmStreamFilterNodeTests
+    [Test]
+    public void TestNode()
     {
-        /// <summary>
-        /// A test with just one node.
-        /// </summary>
-        [Test]
-        public void TestNode()
+        var result = (new OsmGeo[] { new Node() { Id = 1 } }).FilterNodes(x => x.Id == 1).ToList();
+        Assert.That(result.Count, Is.EqualTo(1));
+        Assert.That(result[0].Id, Is.EqualTo(1));
+
+        result = (new OsmGeo[] { new Node() { Id = 1 } }).FilterNodes(x => x.Id == 2).ToList();
+        Assert.That(result.Count, Is.EqualTo(0));
+    }
+
+    /// <summary>
+    /// A test with just one way.
+    /// </summary>
+    [Test]
+    public void TestWay()
+    {
+        var result = (new OsmGeo[]
         {
-            var result = (new OsmGeo[] { new Node() { Id = 1 } }).FilterNodes(x => x.Id == 1).ToList();
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(1, result[0].Id);
-            
-            result = (new OsmGeo[] { new Node() { Id = 1 } }).FilterNodes(x => x.Id == 2).ToList();
-            Assert.AreEqual(0, result.Count);
-        }
+            new Node() { Id = 1 },
+            new Node() { Id = 2 },
+            new Way() { Id = 1, Nodes = new long[] { 1, 2 } }
+        }).FilterNodes(x => x.Id == 1).ToList();
+        Assert.That(result.Count, Is.EqualTo(2));
+        Assert.That(result[0].Type, Is.EqualTo(OsmGeoType.Node));
+        Assert.That(result[0].Id, Is.EqualTo(1));
+        Assert.That(result[1].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(result[1].Id, Is.EqualTo(1));
 
-        /// <summary>
-        /// A test with just one way.
-        /// </summary>
-        [Test]
-        public void TestWay()
+        result = (new OsmGeo[]
         {
-            var result = (new OsmGeo[]
-            {
-                new Node() { Id = 1 },
-                new Node() { Id = 2 },
-                new Way() { Id = 1, Nodes = new long[] { 1, 2 } }
-            }).FilterNodes(x => x.Id == 1).ToList();
-            Assert.AreEqual(2, result.Count);
-            Assert.AreEqual(OsmGeoType.Node, result[0].Type);
-            Assert.AreEqual(1, result[0].Id);
-            Assert.AreEqual(OsmGeoType.Way, result[1].Type);
-            Assert.AreEqual(1, result[1].Id);
+            new Node() { Id = 1 },
+            new Node() { Id = 2 },
+            new Way() { Id = 1, Nodes = new long[] { 1, 2 } }
+        }).FilterNodes(x => x.Id == 2).ToList();
+        Assert.That(result.Count, Is.EqualTo(2));
+        Assert.That(result[0].Type, Is.EqualTo(OsmGeoType.Node));
+        Assert.That(result[0].Id, Is.EqualTo(2));
+        Assert.That(result[1].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(result[1].Id, Is.EqualTo(1));
 
-            result = (new OsmGeo[]
-            {
-                new Node() { Id = 1 },
-                new Node() { Id = 2 },
-                new Way() { Id = 1, Nodes = new long[] { 1, 2 } }
-            }).FilterNodes(x => x.Id == 2).ToList();
-            Assert.AreEqual(2, result.Count);
-            Assert.AreEqual(OsmGeoType.Node, result[0].Type);
-            Assert.AreEqual(2, result[0].Id);
-            Assert.AreEqual(OsmGeoType.Way, result[1].Type);
-            Assert.AreEqual(1, result[1].Id);
-
-            result = (new OsmGeo[]
-            {
-                new Node() { Id = 1 },
-                new Node() { Id = 2 },
-                new Way() { Id = 1, Nodes = new long[] { 1, 2 } }
-            }).FilterNodes(x => x.Id == 3).ToList();
-            Assert.AreEqual(0, result.Count);
-        }
+        result = (new OsmGeo[]
+        {
+            new Node() { Id = 1 },
+            new Node() { Id = 2 },
+            new Way() { Id = 1, Nodes = new long[] { 1, 2 } }
+        }).FilterNodes(x => x.Id == 3).ToList();
+        Assert.That(result.Count, Is.EqualTo(0));
     }
 }

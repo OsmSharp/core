@@ -20,193 +20,192 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.Streams.Collections
+namespace OsmSharp.Streams.Collections;
+
+/// <summary>
+/// An efficient index for OSM object ids.
+/// </summary>
+public class OsmIdIndex
 {
+    private readonly long _size = (long)(1024 * 1024) * (long)(1024 * 32);
+    private readonly int _blockSize = 1024 * 1024;
+
     /// <summary>
-    /// An efficient index for OSM object ids.
+    /// Creates a new longindex.
     /// </summary>
-    public class OsmIdIndex
+    public OsmIdIndex()
     {
-        private readonly long _size = (long)(1024 * 1024) * (long)(1024 * 32);
-        private readonly int _blockSize = 1024 * 1024;
 
-        /// <summary>
-        /// Creates a new longindex.
-        /// </summary>
-        public OsmIdIndex()
+    }
+
+    private long _count = 0;
+    private SparseLargeBitArray32 _positiveFlags = null;
+    private SparseLargeBitArray32 _negativeFlags = null;
+
+    /// <summary>
+    /// Adds an id.
+    /// </summary>
+    public void Add(long number)
+    {
+        if (number >= 0)
         {
-
+            this.PositiveAdd(number);
         }
-        
-        private long _count = 0;
-        private SparseLargeBitArray32 _positiveFlags = null;
-        private SparseLargeBitArray32 _negativeFlags = null;
-
-        /// <summary>
-        /// Adds an id.
-        /// </summary>
-        public void Add(long number)
+        else
         {
-            if (number >= 0)
-            {
-                this.PositiveAdd(number);
-            }
-            else
-            {
-                this.NegativeAdd(-number);
-            }
+            this.NegativeAdd(-number);
         }
+    }
 
-        /// <summary>
-        /// Removes an id.
-        /// </summary>
-        public void Remove(long number)
+    /// <summary>
+    /// Removes an id.
+    /// </summary>
+    public void Remove(long number)
+    {
+        if (number >= 0)
         {
-            if (number >= 0)
-            {
-                this.PositiveRemove(number);
-            }
-            else
-            {
-                this.NegativeAdd(-number);
-            }
+            this.PositiveRemove(number);
         }
-
-        /// <summary>
-        /// Returns true if the id is there.
-        /// </summary>
-        public bool Contains(long number)
+        else
         {
-            if (number >= 0)
-            {
-                return this.PositiveContains(number);
-            }
-            else
-            {
-                return this.NegativeContains(-number);
-            }
+            this.NegativeAdd(-number);
         }
+    }
 
-        #region Positive
-
-        /// <summary>
-        /// Adds an id.
-        /// </summary>
-        private void PositiveAdd(long number)
+    /// <summary>
+    /// Returns true if the id is there.
+    /// </summary>
+    public bool Contains(long number)
+    {
+        if (number >= 0)
         {
-            if (_positiveFlags == null)
-            {
-                _positiveFlags = new SparseLargeBitArray32(_size, _blockSize);
-            }
+            return this.PositiveContains(number);
+        }
+        else
+        {
+            return this.NegativeContains(-number);
+        }
+    }
 
-            if (!_positiveFlags[number])
-            { // there is a new positive flag.
-                _count++;
-            }
-            _positiveFlags[number] = true;
+    #region Positive
+
+    /// <summary>
+    /// Adds an id.
+    /// </summary>
+    private void PositiveAdd(long number)
+    {
+        if (_positiveFlags == null)
+        {
+            _positiveFlags = new SparseLargeBitArray32(_size, _blockSize);
         }
 
-        /// <summary>
-        /// Removes an id.
-        /// </summary>
-        private void PositiveRemove(long number)
-        {
-            if (_positiveFlags == null)
-            {
-                _positiveFlags = new SparseLargeBitArray32(_size, _blockSize);
-            }
+        if (!_positiveFlags[number])
+        { // there is a new positive flag.
+            _count++;
+        }
+        _positiveFlags[number] = true;
+    }
 
-            if (_positiveFlags[number])
-            { // there is one less positive flag.
-                _count--;
-            }
-            _positiveFlags[number] = false;
+    /// <summary>
+    /// Removes an id.
+    /// </summary>
+    private void PositiveRemove(long number)
+    {
+        if (_positiveFlags == null)
+        {
+            _positiveFlags = new SparseLargeBitArray32(_size, _blockSize);
         }
 
-        /// <summary>
-        /// Returns true if the id is there.
-        /// </summary>
-        private bool PositiveContains(long number)
-        {
-            if (_positiveFlags == null)
-            {
-                return false;
-            }
+        if (_positiveFlags[number])
+        { // there is one less positive flag.
+            _count--;
+        }
+        _positiveFlags[number] = false;
+    }
 
-            return _positiveFlags[number];
+    /// <summary>
+    /// Returns true if the id is there.
+    /// </summary>
+    private bool PositiveContains(long number)
+    {
+        if (_positiveFlags == null)
+        {
+            return false;
         }
 
-        #endregion
+        return _positiveFlags[number];
+    }
 
-        #region Negative
+    #endregion
 
-        /// <summary>
-        /// Adds an id.
-        /// </summary>
-        private void NegativeAdd(long number)
+    #region Negative
+
+    /// <summary>
+    /// Adds an id.
+    /// </summary>
+    private void NegativeAdd(long number)
+    {
+        if (_negativeFlags == null)
         {
-            if (_negativeFlags == null)
-            {
-                _negativeFlags = new SparseLargeBitArray32(_size, _blockSize);
-            }
-
-            if (!_negativeFlags[number])
-            { // there is one more negative flag.
-                _count++;
-            }
-            _negativeFlags[number] = true;
+            _negativeFlags = new SparseLargeBitArray32(_size, _blockSize);
         }
 
-        /// <summary>
-        /// Removes an id.
-        /// </summary>
-        private void NegativeRemove(long number)
-        {
-            if (_negativeFlags == null)
-            {
-                _negativeFlags = new SparseLargeBitArray32(_size, _blockSize);
-            }
+        if (!_negativeFlags[number])
+        { // there is one more negative flag.
+            _count++;
+        }
+        _negativeFlags[number] = true;
+    }
 
-            if (_negativeFlags[number])
-            { // there is one less negative flag.
-                _count--;
-            }
-            _negativeFlags[number] = false;
+    /// <summary>
+    /// Removes an id.
+    /// </summary>
+    private void NegativeRemove(long number)
+    {
+        if (_negativeFlags == null)
+        {
+            _negativeFlags = new SparseLargeBitArray32(_size, _blockSize);
         }
 
-        /// <summary>
-        /// Returns true if the id is there.
-        /// </summary>
-        private bool NegativeContains(long number)
-        {
-            if (_negativeFlags == null)
-            {
-                return false;
-            }
+        if (_negativeFlags[number])
+        { // there is one less negative flag.
+            _count--;
+        }
+        _negativeFlags[number] = false;
+    }
 
-            return _negativeFlags[number];
+    /// <summary>
+    /// Returns true if the id is there.
+    /// </summary>
+    private bool NegativeContains(long number)
+    {
+        if (_negativeFlags == null)
+        {
+            return false;
         }
 
-        #endregion
+        return _negativeFlags[number];
+    }
 
-        /// <summary>
-        /// Returns the number of positive flags.
-        /// </summary>
-        public long Count
-        {
-            get
-            {
-                return _count;
-            }
-        }
+    #endregion
 
-        /// <summary>
-        /// Clears this index.
-        /// </summary>
-        public void Clear()
+    /// <summary>
+    /// Returns the number of positive flags.
+    /// </summary>
+    public long Count
+    {
+        get
         {
-            _negativeFlags = null;
-            _positiveFlags = null;
+            return _count;
         }
+    }
+
+    /// <summary>
+    /// Clears this index.
+    /// </summary>
+    public void Clear()
+    {
+        _negativeFlags = null;
+        _positiveFlags = null;
     }
 }

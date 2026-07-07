@@ -22,7 +22,7 @@ public static class IEnumerableExtensions
         outputStream.Pull();
         outputStream.Flush();
     }
-    
+
     /// <summary>
     /// Creates a new file and write the data as OSM-PBF file.
     /// </summary>

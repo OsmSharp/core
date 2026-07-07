@@ -27,168 +27,167 @@ using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using OsmSharp.Streams.Complete;
 
-namespace OsmSharp.Geo.Streams.Features.Interpreted
+namespace OsmSharp.Geo.Streams.Features.Interpreted;
+
+/// <summary>
+/// A feature stream based on an osm complete stream and a feature interpreter.
+/// </summary>
+public class InterpretedFeatureStreamSource : IFeatureStreamSource
 {
+    private readonly FeatureInterpreter _interpreter;
+    private readonly OsmCompleteStreamSource _source;
+
     /// <summary>
-    /// A feature stream based on an osm complete stream and a feature interpreter.
+    /// Creates a new feature stream source.
     /// </summary>
-    public class InterpretedFeatureStreamSource : IFeatureStreamSource
+    public InterpretedFeatureStreamSource(OsmCompleteStreamSource source, FeatureInterpreter interpreter)
     {
-        private readonly FeatureInterpreter _interpreter;
-        private readonly OsmCompleteStreamSource _source;
+        _source = source;
+        _interpreter = interpreter;
+    }
 
-        /// <summary>
-        /// Creates a new feature stream source.
-        /// </summary>
-        public InterpretedFeatureStreamSource(OsmCompleteStreamSource source, FeatureInterpreter interpreter)
+    private List<IFeature> _currentFeatures;
+    private int _currentFeatureIndex = -1;
+
+    /// <summary>
+    /// Gets the current feature.
+    /// </summary>
+    public IFeature Current
+    {
+        get
         {
-            _source = source;
-            _interpreter = interpreter;
-        }
-
-        private List<IFeature> _currentFeatures;
-        private int _currentFeatureIndex = -1;
-
-        /// <summary>
-        /// Gets the current feature.
-        /// </summary>
-        public IFeature Current
-        {
-            get
+            if (_currentFeatures == null ||
+                _currentFeatureIndex >= _currentFeatures.Count ||
+                _currentFeatureIndex < 0)
             {
-                if (_currentFeatures == null ||
-                    _currentFeatureIndex >= _currentFeatures.Count ||
-                    _currentFeatureIndex < 0)
-                {
-                    throw new InvalidOperationException("No current feature available, use MoveNext(), returns true when there is an object available.");
-                }
-                return _currentFeatures[_currentFeatureIndex];
+                throw new InvalidOperationException("No current feature available, use MoveNext(), returns true when there is an object available.");
             }
+            return _currentFeatures[_currentFeatureIndex];
+        }
+    }
+
+    /// <summary>
+    /// Returns true if this source has bounds.
+    /// </summary>
+    public bool HasBounds
+    {
+        get
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Returns the current object.
+    /// </summary>
+    object IEnumerator.Current
+    {
+        get
+        {
+            return this.Current;
+        }
+    }
+
+    /// <summary>
+    /// Returns true if this stream can be reset.
+    /// </summary>
+    /// <returns></returns>
+    public bool CanReset()
+    {
+        return _source.CanReset;
+    }
+
+    /// <summary>
+    /// Closes this stream.
+    /// </summary>
+    public void Close()
+    {
+        _currentFeatures = new List<IFeature>();
+        _currentFeatureIndex = -1;
+    }
+
+    /// <summary>
+    /// Disposes of all native resource associated with this stream.
+    /// </summary>
+    public void Dispose()
+    {
+
+    }
+
+    /// <summary>
+    /// Returns a bounding box if available.
+    /// </summary>
+    /// <returns></returns>
+    public Envelope GetBounds()
+    {
+        throw new InvalidOperationException("No bounds available, check HasBounds.");
+    }
+
+    /// <summary>
+    /// Gets the enumerator.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator<IFeature> GetEnumerator()
+    {
+        return this;
+    }
+
+    /// <summary>
+    /// Initializes this stream.
+    /// </summary>
+    public void Initialize()
+    {
+        this.Reset();
+    }
+
+    /// <summary>
+    /// Moves to the next object.
+    /// </summary>
+    /// <returns></returns>
+    public bool MoveNext()
+    {
+        _currentFeatureIndex++;
+        if (_currentFeatures != null &&
+            _currentFeatureIndex < _currentFeatures.Count)
+        { // moved to the next object in the current features list.
+            return true;
         }
 
-        /// <summary>
-        /// Returns true if this source has bounds.
-        /// </summary>
-        public bool HasBounds
+        while (true)
         {
-            get
+            if (!_source.MoveNext())
             {
                 return false;
             }
-        }
+            var next = _source.Current();
+            var nextFeatures = _interpreter.Interpret(next);
+            _currentFeatures = new List<IFeature>(nextFeatures);
+            _currentFeatureIndex = 0;
 
-        /// <summary>
-        /// Returns the current object.
-        /// </summary>
-        object IEnumerator.Current
-        {
-            get
+            if (_currentFeatures.Count > 0)
             {
-                return this.Current;
-            }
-        }
-
-        /// <summary>
-        /// Returns true if this stream can be reset.
-        /// </summary>
-        /// <returns></returns>
-        public bool CanReset()
-        {
-            return _source.CanReset;
-        }
-
-        /// <summary>
-        /// Closes this stream.
-        /// </summary>
-        public void Close()
-        {
-            _currentFeatures = new List<IFeature>();
-            _currentFeatureIndex = -1;
-        }
-
-        /// <summary>
-        /// Disposes of all native resource associated with this stream.
-        /// </summary>
-        public void Dispose()
-        {
-
-        }
-
-        /// <summary>
-        /// Returns a bounding box if available.
-        /// </summary>
-        /// <returns></returns>
-        public Envelope GetBounds()
-        {
-            throw new InvalidOperationException("No bounds available, check HasBounds.");
-        }
-
-        /// <summary>
-        /// Gets the enumerator.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator<IFeature> GetEnumerator()
-        {
-            return this;
-        }
-
-        /// <summary>
-        /// Initializes this stream.
-        /// </summary>
-        public void Initialize()
-        {
-            this.Reset();
-        }
-
-        /// <summary>
-        /// Moves to the next object.
-        /// </summary>
-        /// <returns></returns>
-        public bool MoveNext()
-        {
-            _currentFeatureIndex++;
-            if (_currentFeatures != null &&
-                _currentFeatureIndex < _currentFeatures.Count)
-            { // moved to the next object in the current features list.
                 return true;
             }
-            
-            while(true)
-            {
-                if (!_source.MoveNext())
-                {
-                    return false;
-                }
-                var next = _source.Current();
-                var nextFeatures = _interpreter.Interpret(next);
-                _currentFeatures = new List<IFeature>(nextFeatures);
-                _currentFeatureIndex = 0;
-
-                if(_currentFeatures.Count > 0)
-                {
-                    return true;
-                }
-            }
         }
+    }
 
-        /// <summary>
-        /// Resets this stream.
-        /// </summary>
-        public void Reset()
-        {
-            _source.Reset();
-            
-            _currentFeatures = new List<IFeature>();
-            _currentFeatureIndex = -1;
-        }
+    /// <summary>
+    /// Resets this stream.
+    /// </summary>
+    public void Reset()
+    {
+        _source.Reset();
 
-        /// <summary>
-        /// Gets the enumerator.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this;
-        }
+        _currentFeatures = new List<IFeature>();
+        _currentFeatureIndex = -1;
+    }
+
+    /// <summary>
+    /// Gets the enumerator.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return this;
     }
 }

@@ -26,177 +26,176 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace OsmSharp.Streams
+namespace OsmSharp.Streams;
+
+/// <summary>
+/// A stream source that reads OSM-XML.
+/// </summary>
+public class XmlOsmStreamSource : OsmStreamSource
 {
+    private readonly bool _disposeStream = false;
+    private readonly Stream _stream;
+    private readonly long? _initialPosition;
+
     /// <summary>
-    /// A stream source that reads OSM-XML.
+    /// Creates a new OSM XML processor source.
     /// </summary>
-    public class XmlOsmStreamSource : OsmStreamSource
+    public XmlOsmStreamSource(Stream stream)
     {
-        private readonly bool _disposeStream = false;
-        private readonly Stream _stream;
-        private readonly long? _initialPosition;
-
-        /// <summary>
-        /// Creates a new OSM XML processor source.
-        /// </summary>
-        public XmlOsmStreamSource(Stream stream)
+        _stream = stream;
+        _initialPosition = null;
+        if (_stream.CanSeek)
         {
-            _stream = stream;
-            _initialPosition = null;
-            if (_stream.CanSeek)
-            {
-                _initialPosition = _stream.Position;
-            }
+            _initialPosition = _stream.Position;
+        }
+    }
+
+    private XmlReader _reader;
+    private XmlSerializer _serNode;
+    private XmlSerializer _serWay;
+    private XmlSerializer _serRelation;
+    private OsmGeo _next;
+    private bool _initialized;
+
+    /// <summary>
+    /// Initializes this source.
+    /// </summary>
+    private void Initialize()
+    {
+        _next = null;
+        _serNode = new XmlSerializer(typeof(Node));
+        _serWay = new XmlSerializer(typeof(Way));
+        _serRelation = new XmlSerializer(typeof(Relation));
+
+        // create the xml reader settings.
+        var settings = new XmlReaderSettings();
+        settings.CloseInput = true;
+        settings.CheckCharacters = false;
+        settings.IgnoreComments = true;
+        settings.IgnoreProcessingInstructions = true;
+
+        // seek to the beginning of the stream.
+        if (_stream.CanSeek)
+        { // if a non-seekable stream is given resetting is disabled.
+            _stream.Seek(_initialPosition.Value, SeekOrigin.Begin);
         }
 
-        private XmlReader _reader;
-        private XmlSerializer _serNode;
-        private XmlSerializer _serWay;
-        private XmlSerializer _serRelation;
-        private OsmGeo _next;
-        private bool _initialized;
+        var textReader = new StreamReader(_stream, Encoding.UTF8);
+        _reader = XmlReader.Create(textReader, settings);
+    }
 
-        /// <summary>
-        /// Initializes this source.
-        /// </summary>
-        private void Initialize()
-        {
-            _next = null;
-            _serNode = new XmlSerializer(typeof(Node));
-            _serWay = new XmlSerializer(typeof(Way));
-            _serRelation = new XmlSerializer(typeof(Relation));
+    /// <summary>
+    /// Resets this source.
+    /// </summary>
+    public override void Reset()
+    {
+        if (_initialPosition == null) throw new NotSupportedException(
+            $"Cannot reset this stream, source stream is not seekable, check {nameof(this.CanReset)} before calling {nameof(this.Reset)}");
 
-            // create the xml reader settings.
-            var settings = new XmlReaderSettings();
-            settings.CloseInput = true;
-            settings.CheckCharacters = false;
-            settings.IgnoreComments = true;
-            settings.IgnoreProcessingInstructions = true;
+        // create the xml reader settings.
+        var settings = new XmlReaderSettings();
+        settings.CloseInput = true;
+        settings.CheckCharacters = false;
+        settings.IgnoreComments = true;
+        settings.IgnoreProcessingInstructions = true;
 
-            // seek to the beginning of the stream.
-            if (_stream.CanSeek)
-            { // if a non-seekable stream is given resetting is disabled.
-                _stream.Seek(_initialPosition.Value, SeekOrigin.Begin);
-            }
-
-            var textReader = new StreamReader(_stream, Encoding.UTF8);
-            _reader = XmlReader.Create(textReader, settings);
+        // seek to the beginning of the stream.
+        if (_stream.CanSeek)
+        { // if a non-seekable stream is given resetting is disabled.
+            _stream.Seek(_initialPosition.Value, SeekOrigin.Begin);
         }
 
-        /// <summary>
-        /// Resets this source.
-        /// </summary>
-        public override void Reset()
+        var textReader = new StreamReader(_stream, Encoding.UTF8);
+        _reader = XmlReader.Create(textReader, settings);
+    }
+
+    /// <summary>
+    /// Returns true if this source can be reset.
+    /// </summary>
+    public override bool CanReset
+    {
+        get
         {
-            if (_initialPosition == null) throw new NotSupportedException(
-                $"Cannot reset this stream, source stream is not seekable, check {nameof(this.CanReset)} before calling {nameof(this.Reset)}");
-            
-            // create the xml reader settings.
-            var settings = new XmlReaderSettings();
-            settings.CloseInput = true;
-            settings.CheckCharacters = false;
-            settings.IgnoreComments = true;
-            settings.IgnoreProcessingInstructions = true;
+            return _stream.CanSeek;
+        }
+    }
 
-            // seek to the beginning of the stream.
-            if (_stream.CanSeek)
-            { // if a non-seekable stream is given resetting is disabled.
-                _stream.Seek(_initialPosition.Value, SeekOrigin.Begin);
-            }
-
-            var textReader = new StreamReader(_stream, Encoding.UTF8);
-            _reader = XmlReader.Create(textReader, settings);
+    /// <summary>
+    /// Move to the next item in the stream.
+    /// </summary>
+    public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
+    {
+        if (!_initialized)
+        {
+            this.Initialize();
+            _initialized = true;
         }
 
-        /// <summary>
-        /// Returns true if this source can be reset.
-        /// </summary>
-        public override bool CanReset
+        while (!_reader.EOF &&
+            _reader.MoveToContent() != XmlNodeType.Whitespace)
         {
-            get
+            if (_reader.NodeType == XmlNodeType.Element &&
+                (_reader.Name == "node" && !ignoreNodes) ||
+                (_reader.Name == "way" && !ignoreWays) ||
+                (_reader.Name == "relation" && !ignoreRelations))
             {
-                return _stream.CanSeek;
-            }
-        }
+                var name = _reader.Name;
 
-        /// <summary>
-        /// Move to the next item in the stream.
-        /// </summary>
-        public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
-        {
-            if (!_initialized)
-            {
-                this.Initialize();
-                _initialized = true;
-            }
-
-            while (!_reader.EOF &&
-                _reader.MoveToContent() != XmlNodeType.Whitespace)
-            {
-                if (_reader.NodeType == XmlNodeType.Element &&
-                    (_reader.Name == "node" && !ignoreNodes) ||
-                    (_reader.Name == "way" && !ignoreWays) ||
-                    (_reader.Name == "relation" && !ignoreRelations))
+                switch (name)
                 {
-                    var name = _reader.Name;
-                    
-                    switch (name)
-                    {
-                        case "node":
-                            _next = _serNode.Deserialize(_reader) as Node;
-                            if (_reader.NodeType == XmlNodeType.EndElement &&
-                                _reader.Name == "node")
-                            {
-                                _reader.Read();
-                            }
-                            return true;
-                        case "way":
-                            _next = _serWay.Deserialize(_reader) as Way;
-                            if (_reader.NodeType == XmlNodeType.EndElement &&
-                                _reader.Name == "way")
-                            {
-                                _reader.Read();
-                            }
-                            return true;
-                        case "relation":
-                            _next = _serRelation.Deserialize(_reader) as Relation;
-                            if (_reader.NodeType == XmlNodeType.EndElement &&
-                                _reader.Name == "relation")
-                            {
-                                _reader.Read();
-                            }
-                            return true;
-                    }
-                }
-                else
-                { // unknown element or to be ignored, skip it.
-                    _reader.Read();
+                    case "node":
+                        _next = _serNode.Deserialize(_reader) as Node;
+                        if (_reader.NodeType == XmlNodeType.EndElement &&
+                            _reader.Name == "node")
+                        {
+                            _reader.Read();
+                        }
+                        return true;
+                    case "way":
+                        _next = _serWay.Deserialize(_reader) as Way;
+                        if (_reader.NodeType == XmlNodeType.EndElement &&
+                            _reader.Name == "way")
+                        {
+                            _reader.Read();
+                        }
+                        return true;
+                    case "relation":
+                        _next = _serRelation.Deserialize(_reader) as Relation;
+                        if (_reader.NodeType == XmlNodeType.EndElement &&
+                            _reader.Name == "relation")
+                        {
+                            _reader.Read();
+                        }
+                        return true;
                 }
             }
-            _next = null;
-            return false;
-        }
-
-        /// <summary>
-        /// Returns the current object.
-        /// </summary>
-        public override OsmGeo Current()
-        {
-            return _next;
-        }
-
-        /// <summary>
-        /// Disposes all resources associated with this stream.
-        /// </summary>
-        public override void Dispose()
-        {
-            base.Dispose();
-
-            if (_disposeStream)
-            {
-                _stream.Dispose();
+            else
+            { // unknown element or to be ignored, skip it.
+                _reader.Read();
             }
+        }
+        _next = null;
+        return false;
+    }
+
+    /// <summary>
+    /// Returns the current object.
+    /// </summary>
+    public override OsmGeo Current()
+    {
+        return _next;
+    }
+
+    /// <summary>
+    /// Disposes all resources associated with this stream.
+    /// </summary>
+    public override void Dispose()
+    {
+        base.Dispose();
+
+        if (_disposeStream)
+        {
+            _stream.Dispose();
         }
     }
 }

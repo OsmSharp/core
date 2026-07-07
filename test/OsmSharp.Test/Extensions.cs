@@ -22,21 +22,20 @@
 
 using System.IO;
 
-namespace OsmSharp.Test
+namespace OsmSharp.Test;
+
+/// <summary>
+/// Contains extension methods.
+/// </summary>
+public static class Extensions
 {
     /// <summary>
-    /// Contains extension methods.
+    /// Reads a string.
     /// </summary>
-    public static class Extensions
+    public static string ReadBeginToEnd(this MemoryStream stream)
     {
-        /// <summary>
-        /// Reads a string.
-        /// </summary>
-        public static string ReadBeginToEnd(this MemoryStream stream)
-        {
-            stream.Seek(0, SeekOrigin.Begin);
-            var streamReader = new StreamReader(stream);
-            return streamReader.ReadToEnd();
-        }
+        stream.Seek(0, SeekOrigin.Begin);
+        var streamReader = new StreamReader(stream);
+        return streamReader.ReadToEnd();
     }
 }

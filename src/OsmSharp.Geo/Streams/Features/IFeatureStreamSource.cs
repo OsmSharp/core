@@ -20,48 +20,47 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Collections.Generic;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
-using System.Collections.Generic;
 
-namespace OsmSharp.Geo.Streams
+namespace OsmSharp.Geo.Streams;
+
+/// <summary>
+/// Represents a streamed source of features.
+/// </summary>
+public interface IFeatureStreamSource : IEnumerator<IFeature>, IEnumerable<IFeature>
 {
     /// <summary>
-    /// Represents a streamed source of features.
+    /// Initializes this source.
     /// </summary>
-    public interface IFeatureStreamSource : IEnumerator<IFeature>, IEnumerable<IFeature>
+    /// <rremarks>Has to be called before starting read objects.</rremarks>
+    void Initialize();
+
+    /// <summary>
+    /// Returns true if this source can be reset.
+    /// </summary>
+    /// <returns></returns>
+    /// <remarks>Some sources cannot be reset, live feeds of objects for example.</remarks>
+    bool CanReset();
+
+    /// <summary>
+    /// Closes this target.
+    /// </summary>
+    /// <remarks>Closes any open connections, file locks or anything related to this source.</remarks>
+    void Close();
+
+    /// <summary>
+    /// Returns true if this source is bounded.
+    /// </summary>
+    bool HasBounds
     {
-        /// <summary>
-        /// Initializes this source.
-        /// </summary>
-        /// <rremarks>Has to be called before starting read objects.</rremarks>
-        void Initialize();
-
-        /// <summary>
-        /// Returns true if this source can be reset.
-        /// </summary>
-        /// <returns></returns>
-        /// <remarks>Some sources cannot be reset, live feeds of objects for example.</remarks>
-        bool CanReset();
-
-        /// <summary>
-        /// Closes this target.
-        /// </summary>
-        /// <remarks>Closes any open connections, file locks or anything related to this source.</remarks>
-        void Close();
-
-        /// <summary>
-        /// Returns true if this source is bounded.
-        /// </summary>
-        bool HasBounds
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Returns the bounds of this source.
-        /// </summary>
-        /// <returns></returns>
-        Envelope GetBounds();
+        get;
     }
+
+    /// <summary>
+    /// Returns the bounds of this source.
+    /// </summary>
+    /// <returns></returns>
+    Envelope GetBounds();
 }

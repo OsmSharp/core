@@ -20,39 +20,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.Tags
+namespace OsmSharp.Tags;
+
+/// <summary>
+/// Represents an OSM-tag.
+/// </summary>
+public struct Tag
 {
     /// <summary>
-    /// Represents an OSM-tag.
+    /// Creates a new tag.
     /// </summary>
-    public struct Tag
+    public Tag(string key, string value)
     {
-        /// <summary>
-        /// Creates a new tag.
-        /// </summary>
-        public Tag(string key, string value)
-        {
-            this.Key = key;
-            this.Value = value;
-        }
+        this.Key = key;
+        this.Value = value;
+    }
 
-        /// <summary>
-        /// Gets or sets the key.
-        /// </summary>
-        public string Key { get; set; }
+    /// <summary>
+    /// Gets or sets the key.
+    /// </summary>
+    public string Key { get; set; }
 
-        /// <summary>
-        ///  Gets or sets the value.
-        /// </summary>
-        public string Value { get; set; }
+    /// <summary>
+    ///  Gets or sets the value.
+    /// </summary>
+    public string Value { get; set; }
 
-        /// <summary>
-        /// Gets a proper description of this tag.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return $"{Key}={Value}";
-        }
+    /// <summary>
+    /// Gets a proper description of this tag.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+        return $"{this.Key}={this.Value}";
     }
 }

@@ -23,231 +23,230 @@
 using System;
 using OsmSharp.Tags;
 
-namespace OsmSharp.Streams.Filters
+namespace OsmSharp.Streams.Filters;
+
+/// <summary>
+/// A filter to merge two sorted stream together.
+/// </summary>
+public class OsmStreamFilterMerge : OsmStreamFilter
 {
+    private OsmStreamSource _source1;
+    private OsmStreamSource _source2;
+
     /// <summary>
-    /// A filter to merge two sorted stream together.
+    /// Creates a new filter.
     /// </summary>
-    public class OsmStreamFilterMerge : OsmStreamFilter
+    public OsmStreamFilterMerge()
     {
-        private OsmStreamSource _source1;
-        private OsmStreamSource _source2;
+        _resolutionType = ConflictResolutionType.FirstStream;
+    }
 
-        /// <summary>
-        /// Creates a new filter.
-        /// </summary>
-        public OsmStreamFilterMerge()
+    /// <summary>
+    /// Creates a new filter.
+    /// </summary>
+    public OsmStreamFilterMerge(ConflictResolutionType resolutionType)
+    {
+        _resolutionType = resolutionType;
+    }
+
+    /// <summary>
+    /// Returns true if this filter can be reset.
+    /// </summary>
+    public override bool CanReset
+    {
+        get
         {
-            _resolutionType = ConflictResolutionType.FirstStream;
+            if (_source1 != null && _source2 != null)
+            {
+                return _source1.CanReset && _source2.CanReset;
+            }
+            else if (_source1 != null)
+            {
+                return _source1.CanReset;
+            }
+            else if (_source2 != null)
+            {
+                return _source2.CanReset;
+            }
+
+            return true; // a stream can be reset when there is no data.
+        }
+    }
+
+    /// <summary>
+    /// Resets this filter.
+    /// </summary>
+    public override void Reset()
+    {
+        _source1?.Reset();
+        _source2?.Reset();
+
+        _source1Status = null;
+        _source2Status = null;
+        _current = null;
+    }
+
+    /// <summary>
+    /// Returns true if this filter returns sorted objects.
+    /// </summary>
+    public override bool IsSorted
+    {
+        get
+        {
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// Gets all meta-data.
+    /// </summary>
+    public override TagsCollection GetAllMeta()
+    {
+        var tags = new TagsCollection();
+        tags.AddOrReplace(_source1.GetAllMeta());
+        tags.AddOrReplace(_source2.GetAllMeta());
+        return tags;
+    }
+
+    /// <summary>
+    /// Registers a source.
+    /// </summary>
+    public override void RegisterSource(OsmStreamSource source)
+    {
+        if (_source1 == null)
+        {
+            _source1 = source;
+            return;
+        }
+        if (_source2 != null)
+        {
+            throw new ArgumentException("Merge filter can only handle two streams, to merge in a third use a second merge filter.");
+        }
+        _source2 = source;
+    }
+
+    private OsmGeo _current;
+    private bool? _source1Status = null; // false when finished, true when there is data, null when uninitialized.
+    private bool? _source2Status = null; // false when finished, true when there is data, null when uninitialized.
+    private readonly ConflictResolutionType _resolutionType;
+
+    /// <summary>
+    /// Move to the next object.
+    /// </summary>
+    public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
+    {
+        if (_source1 != null && _source2 == null)
+        {
+            return _source1.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
         }
 
-        /// <summary>
-        /// Creates a new filter.
-        /// </summary>
-        public OsmStreamFilterMerge(ConflictResolutionType resolutionType)
+        if (_source1 == null && _source2 != null)
         {
-            _resolutionType = resolutionType;
+            return _source2.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
         }
 
-        /// <summary>
-        /// Returns true if this filter can be reset.
-        /// </summary>
-        public override bool CanReset
-        {
-            get
-            {
-                if (_source1 != null && _source2 != null)
-                {
-                    return _source1.CanReset && _source2.CanReset;
-                }
-                else if (_source1 != null)
-                {
-                    return _source1.CanReset;
-                }
-                else if(_source2 != null)
-                {
-                    return _source2.CanReset;
-                }
+        OsmGeo source1Current = null;
+        OsmGeo source2Current = null;
 
-                return true; // a stream can be reset when there is no data.
-            }
+        // get currents or move to first.
+        if (_source1Status == null)
+        {
+            _source1Status = _source1.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
+        }
+        if (_source1Status.Value)
+        {
+            source1Current = _source1.Current();
+        }
+        if (_source2Status == null)
+        {
+            _source2Status = _source2.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
+        }
+        if (_source2Status.Value)
+        {
+            source2Current = _source2.Current();
         }
 
-        /// <summary>
-        /// Resets this filter.
-        /// </summary>
-        public override void Reset()
+        // compare currents and select next.
+        OsmGeo newCurrent;
+        if (source1Current == null && source2Current == null)
         {
-            _source1?.Reset();
-            _source2?.Reset();
-
-            _source1Status = null;
-            _source2Status = null;
-            _current = null;
+            return false;
         }
-
-        /// <summary>
-        /// Returns true if this filter returns sorted objects.
-        /// </summary>
-        public override bool IsSorted
+        else if (source1Current == null)
         {
-            get
-            {
-                return true;
-            }
+            newCurrent = source2Current;
+            _source2Status = _source2.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
         }
-
-        /// <summary>
-        /// Gets all meta-data.
-        /// </summary>
-        public override TagsCollection GetAllMeta()
+        else if (source2Current == null)
         {
-            var tags = new TagsCollection();
-            tags.AddOrReplace(_source1.GetAllMeta());
-            tags.AddOrReplace(_source2.GetAllMeta());
-            return tags;
+            newCurrent = source1Current;
+            _source1Status = _source1.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
         }
-
-        /// <summary>
-        /// Registers a source.
-        /// </summary>
-        public override void RegisterSource(OsmStreamSource source)
+        else
         {
-            if (_source1 == null)
-            {
-                _source1 = source;
-                return;
-            }
-            if (_source2 != null)
-            {
-                throw new ArgumentException("Merge filter can only handle two streams, to merge in a third use a second merge filter.");
-            }
-            _source2 = source;
-        }
+            var comp = source1Current.CompareByIdAndType(source2Current);
 
-        private OsmGeo _current;
-        private bool? _source1Status = null; // false when finished, true when there is data, null when uninitialized.
-        private bool? _source2Status = null; // false when finished, true when there is data, null when uninitialized.
-        private readonly ConflictResolutionType _resolutionType;
-
-        /// <summary>
-        /// Move to the next object.
-        /// </summary>
-        public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
-        {
-            if (_source1 != null && _source2 == null)
-            {
-                return _source1.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
-            }
-            
-            if (_source1 == null && _source2 != null)
-            {
-                return _source2.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
-            }
-            
-            OsmGeo source1Current = null;
-            OsmGeo source2Current = null;
-            
-            // get currents or move to first.
-            if (_source1Status == null)
-            {
-                _source1Status = _source1.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
-            }
-            if (_source1Status.Value)
-            {
-                source1Current = _source1.Current();
-            }
-            if (_source2Status == null)
-            {
-                _source2Status = _source2.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
-            }
-            if (_source2Status.Value)
-            {
-                source2Current = _source2.Current();
-            }
-
-            // compare currents and select next.
-            OsmGeo newCurrent;
-            if (source1Current == null && source2Current == null)
-            {
-                return false;
-            }
-            else if(source1Current == null)
-            {
-                newCurrent = source2Current;
-                _source2Status = _source2.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
-            }
-            else if(source2Current == null)
-            {
-                newCurrent = source1Current;
-                _source1Status = _source1.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
-            }
-            else 
-            {
-                var comp = source1Current.CompareByIdAndType(source2Current);
-
-                if (comp == 0)
-                { // oeps, conflict here!
-                    if (_resolutionType == ConflictResolutionType.None)
-                    { // no conflict resolution return both.
-                        newCurrent = source1Current;
-                        _source1Status = _source1.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
-                    }
-                    else if(_resolutionType == ConflictResolutionType.FirstStream)
-                    { // return only the object from the first stream.
-                        newCurrent = source1Current;
-                        _source1Status = _source1.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
-                        _source2Status = _source2.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
-                    }
-                    else
-                    {
-                        throw new NotImplementedException(string.Format("Conflict resolution {0} not implemented.", _resolutionType));
-                    }
-                }
-                else if (comp < 0)
-                { // return from first stream.
+            if (comp == 0)
+            { // oeps, conflict here!
+                if (_resolutionType == ConflictResolutionType.None)
+                { // no conflict resolution return both.
                     newCurrent = source1Current;
                     _source1Status = _source1.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
                 }
-                else
-                { // return from second stream.
-                    newCurrent = source2Current;
+                else if (_resolutionType == ConflictResolutionType.FirstStream)
+                { // return only the object from the first stream.
+                    newCurrent = source1Current;
+                    _source1Status = _source1.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
                     _source2Status = _source2.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
                 }
+                else
+                {
+                    throw new NotImplementedException(string.Format("Conflict resolution {0} not implemented.", _resolutionType));
+                }
             }
-
-            // make sure the result is sorted.
-            if (_current != null &&
-                _current.CompareByIdAndType(newCurrent) > 0)
-            {
-                throw new Exceptions.StreamNotSortedException();
+            else if (comp < 0)
+            { // return from first stream.
+                newCurrent = source1Current;
+                _source1Status = _source1.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
             }
-
-            _current = newCurrent;
-            return true;
+            else
+            { // return from second stream.
+                newCurrent = source2Current;
+                _source2Status = _source2.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
+            }
         }
 
-        /// <summary>
-        /// Returns the current object.
-        /// </summary>
-        public override OsmGeo Current()
+        // make sure the result is sorted.
+        if (_current != null &&
+            _current.CompareByIdAndType(newCurrent) > 0)
         {
-            return _current;
+            throw new Exceptions.StreamNotSortedException();
         }
+
+        _current = newCurrent;
+        return true;
     }
 
     /// <summary>
-    /// Types of conflict resolution.
+    /// Returns the current object.
     /// </summary>
-    public enum ConflictResolutionType
+    public override OsmGeo Current()
     {
-        /// <summary>
-        /// Keep both entities.
-        /// </summary>
-        None,
-        /// <summary>
-        /// Keep object from the first stream only.
-        /// </summary>
-        FirstStream
+        return _current;
     }
+}
+
+/// <summary>
+/// Types of conflict resolution.
+/// </summary>
+public enum ConflictResolutionType
+{
+    /// <summary>
+    /// Keep both entities.
+    /// </summary>
+    None,
+    /// <summary>
+    /// Keep object from the first stream only.
+    /// </summary>
+    FirstStream
 }

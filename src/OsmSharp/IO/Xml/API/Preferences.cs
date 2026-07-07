@@ -20,73 +20,72 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using OsmSharp.IO.Xml;
-using System;
-using System.Collections.Generic;
 
-namespace OsmSharp.API
+namespace OsmSharp.API;
+
+/// <summary>
+/// Represents the Preferences object.
+/// </summary>
+[XmlRoot("preferences")]
+public partial class Preferences : IXmlSerializable
 {
-    /// <summary>
-    /// Represents the Preferences object.
-    /// </summary>
-    [XmlRoot("preferences")]
-    public partial class Preferences : IXmlSerializable
+    XmlSchema IXmlSerializable.GetSchema()
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
-
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            var userPreference = new List<Preference>();
-
-            reader.GetElements(
-                new Tuple<string, Action>(
-                    "preference", () =>
-                    {
-                        var preference = new Preference();
-                        (preference as IXmlSerializable).ReadXml(reader);
-                        userPreference.Add(preference);
-                        reader.Read();
-                    })
-            );
-
-            this.UserPreferences = userPreference.ToArray();
-        }
-
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteStartElement("preferences");
-            writer.WriteElements("preference", this.UserPreferences);
-            writer.WriteEndElement();
-        }
+        return null;
     }
 
-    /// <summary>
-    /// Represents the Preference object.
-    /// </summary>
-    [XmlRoot("preference")]
-    public partial class Preference : IXmlSerializable
+    void IXmlSerializable.ReadXml(XmlReader reader)
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
+        var userPreference = new List<Preference>();
 
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            this.Key = reader.GetAttribute("k");
-            this.Value = reader.GetAttribute("v");
-        }
+        reader.GetElements(
+            new Tuple<string, Action>(
+                "preference", () =>
+                {
+                    var preference = new Preference();
+                    (preference as IXmlSerializable).ReadXml(reader);
+                    userPreference.Add(preference);
+                    reader.Read();
+                })
+        );
 
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteAttribute("k", this.Key);
-            writer.WriteAttribute("v", this.Value);
-        }
+        this.UserPreferences = userPreference.ToArray();
+    }
+
+    void IXmlSerializable.WriteXml(XmlWriter writer)
+    {
+        writer.WriteStartElement("preferences");
+        writer.WriteElements("preference", this.UserPreferences);
+        writer.WriteEndElement();
+    }
+}
+
+/// <summary>
+/// Represents the Preference object.
+/// </summary>
+[XmlRoot("preference")]
+public partial class Preference : IXmlSerializable
+{
+    XmlSchema IXmlSerializable.GetSchema()
+    {
+        return null;
+    }
+
+    void IXmlSerializable.ReadXml(XmlReader reader)
+    {
+        this.Key = reader.GetAttribute("k");
+        this.Value = reader.GetAttribute("v");
+    }
+
+    void IXmlSerializable.WriteXml(XmlWriter writer)
+    {
+        writer.WriteAttribute("k", this.Key);
+        writer.WriteAttribute("v", this.Value);
     }
 }

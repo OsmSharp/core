@@ -20,30 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.Streams;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using OsmSharp.Streams;
 
-namespace Sample.Filter
+namespace Sample.Filter;
+
+internal class Program
 {
-    class Program
+    private static async Task Main(string[] args)
     {
-        static async Task Main(string[] args)
-        {
-            await Download.Download.ToFile("http://planet.anyways.eu/planet/europe/luxembourg/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf");
+        await Download.Download.ToFile("http://planet.anyways.eu/planet/europe/luxembourg/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf");
 
-            await using var fileStream = File.OpenRead("luxembourg-latest.osm.pbf");
-            
-            var source = new PBFOsmStreamSource(fileStream); // create source stream.
-            var filtered = from osmGeo in source 
-                where osmGeo.Id % 100000 == 0 // let's use linq to leave only objects with and id dividable by 100000.
-                select osmGeo;  
-            foreach(var osmGeo in filtered)
-            {
-                Console.WriteLine(osmGeo.ToString());
-            }
+        await using var fileStream = File.OpenRead("luxembourg-latest.osm.pbf");
+
+        var source = new PBFOsmStreamSource(fileStream); // create source stream.
+        var filtered = from osmGeo in source
+                       where osmGeo.Id % 100000 == 0 // let's use linq to leave only objects with and id dividable by 100000.
+                       select osmGeo;
+        foreach (var osmGeo in filtered)
+        {
+            Console.WriteLine(osmGeo.ToString());
         }
     }
 }

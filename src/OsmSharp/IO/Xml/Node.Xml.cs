@@ -26,83 +26,82 @@ using System.Xml.Serialization;
 using OsmSharp.IO.Xml;
 using OsmSharp.Tags;
 
-namespace OsmSharp
+namespace OsmSharp;
+
+/// <summary>
+/// Represents a node.
+/// </summary>
+[XmlRoot("node")]
+public partial class Node : IXmlSerializable
 {
-    /// <summary>
-    /// Represents a node.
-    /// </summary>
-    [XmlRoot("node")]
-    public partial class Node : IXmlSerializable
+    XmlSchema IXmlSerializable.GetSchema()
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
+        return null;
+    }
 
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            this.Id = reader.GetAttributeInt64("id");
-            this.Version = reader.GetAttributeInt64("version");
-            this.Latitude = reader.GetAttributeDouble("lat");
-            this.Longitude = reader.GetAttributeDouble("lon");
-            this.ChangeSetId = reader.GetAttributeInt64("changeset");
-            this.TimeStamp = reader.GetAttributeDateTime("timestamp");
-            this.UserId = reader.GetAttributeInt64("uid");
-            this.UserName = reader.GetAttribute("user");
-            this.Visible = reader.GetAttributeBool("visible");
+    void IXmlSerializable.ReadXml(XmlReader reader)
+    {
+        this.Id = reader.GetAttributeInt64("id");
+        this.Version = reader.GetAttributeInt64("version");
+        this.Latitude = reader.GetAttributeDouble("lat");
+        this.Longitude = reader.GetAttributeDouble("lon");
+        this.ChangeSetId = reader.GetAttributeInt64("changeset");
+        this.TimeStamp = reader.GetAttributeDateTime("timestamp");
+        this.UserId = reader.GetAttributeInt64("uid");
+        this.UserName = reader.GetAttribute("user");
+        this.Visible = reader.GetAttributeBool("visible");
 
-            TagsCollection tags = null;
-            while (reader.Read() &&
-                reader.MoveToContent() != XmlNodeType.None)
+        TagsCollection tags = null;
+        while (reader.Read() &&
+            reader.MoveToContent() != XmlNodeType.None)
+        {
+            if (reader.Name == "tag")
             {
-                if (reader.Name == "tag")
+                if (tags == null)
                 {
-                    if (tags == null)
-                    {
-                        tags = new TagsCollection();
-                    }
-                    tags.Add(new Tag()
-                    {
-                        Key = reader.GetAttribute("k"),
-                        Value = reader.GetAttribute("v")
-                    });
+                    tags = new TagsCollection();
                 }
-                else
+                tags.Add(new Tag()
                 {
-                    if (tags != null)
-                    {
-                        this.Tags = tags;
-                    }
-                    return;
-                }
+                    Key = reader.GetAttribute("k"),
+                    Value = reader.GetAttribute("v")
+                });
             }
-            if (tags != null)
+            else
             {
-                this.Tags = tags;
+                if (tags != null)
+                {
+                    this.Tags = tags;
+                }
+                return;
             }
         }
-
-        void IXmlSerializable.WriteXml(XmlWriter writer)
+        if (tags != null)
         {
-            writer.WriteAttribute("id", this.Id);
-            writer.WriteAttribute("lat", this.Latitude);
-            writer.WriteAttribute("lon", this.Longitude);
-            writer.WriteAttribute("user", this.UserName);
-            writer.WriteAttribute("uid", this.UserId);
-            writer.WriteAttribute("visible", this.Visible);
-            writer.WriteAttribute("version", this.Version);
-            writer.WriteAttribute("changeset", this.ChangeSetId);
-            writer.WriteAttribute("timestamp", this.TimeStamp);
+            this.Tags = tags;
+        }
+    }
 
-            if (this.Tags != null)
+    void IXmlSerializable.WriteXml(XmlWriter writer)
+    {
+        writer.WriteAttribute("id", this.Id);
+        writer.WriteAttribute("lat", this.Latitude);
+        writer.WriteAttribute("lon", this.Longitude);
+        writer.WriteAttribute("user", this.UserName);
+        writer.WriteAttribute("uid", this.UserId);
+        writer.WriteAttribute("visible", this.Visible);
+        writer.WriteAttribute("version", this.Version);
+        writer.WriteAttribute("changeset", this.ChangeSetId);
+        writer.WriteAttribute("timestamp", this.TimeStamp);
+
+        if (this.Tags != null)
+        {
+            foreach (var tag in this.Tags)
             {
-                foreach (var tag in this.Tags)
-                {
-                    writer.WriteStartElement("tag");
-                    writer.WriteAttributeString("k", tag.Key);
-                    writer.WriteAttributeString("v", tag.Value);
-                    writer.WriteEndElement();
-                }
+                writer.WriteStartElement("tag");
+                writer.WriteAttributeString("k", tag.Key);
+                writer.WriteAttributeString("v", tag.Value);
+                writer.WriteEndElement();
             }
         }
     }

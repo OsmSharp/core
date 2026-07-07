@@ -22,95 +22,94 @@
 
 using System;
 
-namespace OsmSharp.Streams.Filters
+namespace OsmSharp.Streams.Filters;
+
+/// <summary>
+/// A filter that use a function to filter objects.
+/// </summary>
+public class OsmStreamFilterDelegate : OsmStreamFilter
 {
+    private readonly object _param; // Holds the parameters object sent with the events.
+
     /// <summary>
-    /// A filter that use a function to filter objects.
+    /// Creates a new filter with events.
     /// </summary>
-    public class OsmStreamFilterDelegate : OsmStreamFilter
+    public OsmStreamFilterDelegate()
     {
-        private readonly object _param; // Holds the parameters object sent with the events.
+        _param = null;
+    }
 
-        /// <summary>
-        /// Creates a new filter with events.
-        /// </summary>
-        public OsmStreamFilterDelegate()
+    /// <summary>
+    /// Creates a new filter with events.
+    /// </summary>
+    public OsmStreamFilterDelegate(object param)
+    {
+        _param = param;
+    }
+
+    private OsmGeo _current = null;
+
+    /// <summary>
+    /// Called when the move is made to the next object.
+    /// </summary>
+    public Func<OsmGeo, object, OsmGeo> MoveToNextEvent;
+
+    /// <summary>
+    /// Called when an object was selected.
+    /// </summary>
+    public Action<OsmGeo> Selected;
+
+    /// <summary>
+    /// Move to the next item in the stream.
+    /// </summary>
+    public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
+    {
+        while (this.Source.MoveNext(ignoreNodes, ignoreWays, ignoreRelations))
         {
-            _param = null;
-        }
-
-        /// <summary>
-        /// Creates a new filter with events.
-        /// </summary>
-        public OsmStreamFilterDelegate(object param)
-        {
-            _param = param;
-        }
-
-        private OsmGeo _current = null;
-        
-        /// <summary>
-        /// Called when the move is made to the next object.
-        /// </summary>
-        public Func<OsmGeo, object, OsmGeo> MoveToNextEvent;
-
-        /// <summary>
-        /// Called when an object was selected.
-        /// </summary>
-        public Action<OsmGeo> Selected;
-
-        /// <summary>
-        /// Move to the next item in the stream.
-        /// </summary>
-        public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
-        {
-            while (this.Source.MoveNext(ignoreNodes, ignoreWays, ignoreRelations))
+            _current = this.Source.Current();
+            if (MoveToNextEvent != null)
             {
-                _current = this.Source.Current();
-                if (this.MoveToNextEvent != null)
-                {
-                    _current = this.MoveToNextEvent(_current, _param);
-                    if (_current != null)
-                    { // when null is returned the object is to be ignored.
-                        if (this.Selected != null)
-                        {
-                            this.Selected(_current);
-                        }
-                        return true;
+                _current = MoveToNextEvent(_current, _param);
+                if (_current != null)
+                { // when null is returned the object is to be ignored.
+                    if (Selected != null)
+                    {
+                        Selected(_current);
                     }
-                }
-                else
-                {
                     return true;
                 }
             }
-            return false;
+            else
+            {
+                return true;
+            }
         }
+        return false;
+    }
 
-        /// <summary>
-        /// Returns the current object.
-        /// </summary>
-        /// <returns></returns>
-        public override OsmGeo Current()
-        {
-            return _current;
-        }
+    /// <summary>
+    /// Returns the current object.
+    /// </summary>
+    /// <returns></returns>
+    public override OsmGeo Current()
+    {
+        return _current;
+    }
 
-        /// <summary>
-        /// Resets this filter.
-        /// </summary>
-        public override void Reset()
-        {
-            _current = null;
-            this.Source.Reset();
-        }
+    /// <summary>
+    /// Resets this filter.
+    /// </summary>
+    public override void Reset()
+    {
+        _current = null;
+        this.Source.Reset();
+    }
 
-        /// <summary>
-        /// Returns true if this filter can be reset.
-        /// </summary>
-        public override bool CanReset
-        {
-            get { return this.Source.CanReset; }
-        }
+    /// <summary>
+    /// Returns true if this filter can be reset.
+    /// </summary>
+    public override bool CanReset
+    {
+        get { return this.Source.CanReset; }
     }
 }

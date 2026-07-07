@@ -16,30 +16,29 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp.IO.PBF
+namespace OsmSharp.IO.PBF;
+
+/// <summary>
+/// Consumers Osm PBF primitives.
+/// </summary>
+public interface IPBFOsmPrimitiveConsumer
 {
     /// <summary>
-    /// Consumers Osm PBF primitives.
+    /// Processes the given node using the properties in the given block.
     /// </summary>
-    public interface IPBFOsmPrimitiveConsumer
-    {
-        /// <summary>
-        /// Processes the given node using the properties in the given block.
-        /// </summary>
-        void ProcessNode(PrimitiveBlock block, Node node);
+    void ProcessNode(PrimitiveBlock block, Node node);
 
-        /// <summary>
-        /// Processes the given way using the properties in the given block.
-        /// </summary>
-        /// <param name="block"></param>
-        /// <param name="way"></param>
-        void ProcessWay(PrimitiveBlock block, Way way);
+    /// <summary>
+    /// Processes the given way using the properties in the given block.
+    /// </summary>
+    /// <param name="block"></param>
+    /// <param name="way"></param>
+    void ProcessWay(PrimitiveBlock block, Way way);
 
-        /// <summary>
-        /// Processing the given relation using the properties in the given block.
-        /// </summary>
-        /// <param name="block"></param>
-        /// <param name="relation"></param>
-        void ProcessRelation(PrimitiveBlock block, Relation relation);
-    }
+    /// <summary>
+    /// Processing the given relation using the properties in the given block.
+    /// </summary>
+    /// <param name="block"></param>
+    /// <param name="relation"></param>
+    void ProcessRelation(PrimitiveBlock block, Relation relation);
 }

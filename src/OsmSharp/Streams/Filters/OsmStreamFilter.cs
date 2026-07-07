@@ -22,60 +22,59 @@
 
 using OsmSharp.Tags;
 
-namespace OsmSharp.Streams.Filters
+namespace OsmSharp.Streams.Filters;
+
+/// <summary>
+/// An OSM stream filter.
+/// </summary>
+public abstract class OsmStreamFilter : OsmStreamSource, IOsmStreamTarget
 {
     /// <summary>
-    /// An OSM stream filter.
+    /// Holds the reader.
     /// </summary>
-    public abstract class OsmStreamFilter : OsmStreamSource, IOsmStreamTarget
+    private OsmStreamSource _source;
+
+    /// <summary>
+    /// Creates a new OSM filter.
+    /// </summary>
+    public OsmStreamFilter()
     {
-        /// <summary>
-        /// Holds the reader.
-        /// </summary>
-        private OsmStreamSource _source;
 
-        /// <summary>
-        /// Creates a new OSM filter.
-        /// </summary>
-        public OsmStreamFilter()
-        {
-
-        }
-
-        /// <summary>
-        /// Registers a reader as the source to filter.
-        /// </summary>
-        public virtual void RegisterSource(OsmStreamSource source)
-        {
-            _source = source;
-        }
-
-        /// <summary>
-        /// Returns the reader being filtered.
-        /// </summary>
-        protected OsmStreamSource Source
-        {
-            get
-            {
-                return _source;
-            }
-        }
-
-        /// <summary>
-        /// Gets all meta-data from all sources and filters that provide this filter of data.
-        /// </summary>
-        /// <returns></returns>
-        public override TagsCollection GetAllMeta()
-        {
-            var tags = this.Source.GetAllMeta();
-            tags.AddOrReplace(new TagsCollection(this.Meta));
-            return tags;
-        }
-
-        /// <summary>
-        /// Returns the current object.
-        /// </summary>
-        /// <returns></returns>
-        public abstract override OsmGeo Current();
     }
+
+    /// <summary>
+    /// Registers a reader as the source to filter.
+    /// </summary>
+    public virtual void RegisterSource(OsmStreamSource source)
+    {
+        _source = source;
+    }
+
+    /// <summary>
+    /// Returns the reader being filtered.
+    /// </summary>
+    protected OsmStreamSource Source
+    {
+        get
+        {
+            return _source;
+        }
+    }
+
+    /// <summary>
+    /// Gets all meta-data from all sources and filters that provide this filter of data.
+    /// </summary>
+    /// <returns></returns>
+    public override TagsCollection GetAllMeta()
+    {
+        var tags = this.Source.GetAllMeta();
+        tags.AddOrReplace(new TagsCollection(this.Meta));
+        return tags;
+    }
+
+    /// <summary>
+    /// Returns the current object.
+    /// </summary>
+    /// <returns></returns>
+    public abstract override OsmGeo Current();
 }

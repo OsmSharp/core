@@ -20,67 +20,66 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.Streams.Collections
+namespace OsmSharp.Streams.Collections;
+
+/// <summary>
+/// Contains extension methods for the osm id index.
+/// </summary>
+public static class OsmIdIndexExtensions
 {
     /// <summary>
-    /// Contains extension methods for the osm id index.
+    /// Returns true if the given way has a node in the id index.
     /// </summary>
-    public static class OsmIdIndexExtensions
+    public static bool HasNodeIn(this Way way, OsmIdIndex index)
     {
-        /// <summary>
-        /// Returns true if the given way has a node in the id index.
-        /// </summary>
-        public static bool HasNodeIn(this Way way, OsmIdIndex index)
+        if (way.Nodes != null)
         {
-            if (way.Nodes != null)
+            for (var i = 0; i < way.Nodes.Length; i++)
             {
-                for (var i = 0; i < way.Nodes.Length; i++)
+                if (index.Contains(way.Nodes[i]))
                 {
-                    if (index.Contains(way.Nodes[i]))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
-            return false;
         }
+        return false;
+    }
 
-        /// <summary>
-        /// Returns true if the given relation has a member in one of the id indexes.
-        /// </summary>
-        public static bool HasMemberIn(this Relation relation, OsmIdIndex nodeIndex, OsmIdIndex wayIndex, OsmIdIndex relationIndex)
+    /// <summary>
+    /// Returns true if the given relation has a member in one of the id indexes.
+    /// </summary>
+    public static bool HasMemberIn(this Relation relation, OsmIdIndex nodeIndex, OsmIdIndex wayIndex, OsmIdIndex relationIndex)
+    {
+        if (relation.Members != null)
         {
-            if (relation.Members != null)
+            for (var i = 0; i < relation.Members.Length; i++)
             {
-                for (var i = 0; i < relation.Members.Length; i++)
+                if (relation.Members != null)
                 {
-                    if (relation.Members != null)
+                    if (relation.Members[i].Type == OsmGeoType.Node)
                     {
-                        if (relation.Members[i].Type == OsmGeoType.Node)
-                        { 
-                            if (nodeIndex.Contains(relation.Members[i].Id))
-                            {
-                                return true;
-                            }
-                        }
-                        else if (relation.Members[i].Type == OsmGeoType.Way)
+                        if (nodeIndex.Contains(relation.Members[i].Id))
                         {
-                            if (wayIndex.Contains(relation.Members[i].Id))
-                            {
-                                return true;
-                            }
+                            return true;
                         }
-                        else if (relation.Members[i].Type == OsmGeoType.Relation)
+                    }
+                    else if (relation.Members[i].Type == OsmGeoType.Way)
+                    {
+                        if (wayIndex.Contains(relation.Members[i].Id))
                         {
-                            if (relationIndex.Contains(relation.Members[i].Id))
-                            {
-                                return true;
-                            }
+                            return true;
+                        }
+                    }
+                    else if (relation.Members[i].Type == OsmGeoType.Relation)
+                    {
+                        if (relationIndex.Contains(relation.Members[i].Id))
+                        {
+                            return true;
                         }
                     }
                 }
             }
-            return false;
         }
+        return false;
     }
 }

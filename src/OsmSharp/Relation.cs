@@ -23,81 +23,80 @@
 using System.Text.Json.Serialization;
 using OsmSharp.IO.Json.Converters;
 
-namespace OsmSharp
+namespace OsmSharp;
+
+/// <summary>
+/// Represents a relation.
+/// </summary>
+[JsonConverter(typeof(RelationJsonConverter))]
+public partial class Relation : OsmGeo
 {
     /// <summary>
-    /// Represents a relation.
+    /// Creates new relation.
     /// </summary>
-    [JsonConverter(typeof(RelationJsonConverter))]
-    public partial class Relation : OsmGeo
+    public Relation()
     {
-        /// <summary>
-        /// Creates new relation.
-        /// </summary>
-        public Relation()
-        {
-            this.Type = OsmGeoType.Relation;
-        }
-
-        /// <summary>
-        /// The relation members.
-        /// </summary>
-        public RelationMember[] Members { get; set; }
-
-        /// <summary>
-        /// Returns a description of this object.
-        /// </summary>
-        public override string ToString()
-        {
-            var tags = "{no tags}";
-            if (this.Tags != null && this.Tags.Count > 0)
-            {
-                tags = this.Tags.ToString();
-            }
-            if (!this.Id.HasValue)
-            {
-                return $"Relation[null]{tags}";
-            }
-            return $"Relation[{this.Id.Value}]{tags}";
-        }
+        this.Type = OsmGeoType.Relation;
     }
-    
+
     /// <summary>
-    /// Represents a relation member.
+    /// The relation members.
     /// </summary>
-    public partial class RelationMember
+    public RelationMember[] Members { get; set; }
+
+    /// <summary>
+    /// Returns a description of this object.
+    /// </summary>
+    public override string ToString()
     {
-        /// <summary>
-        /// Creates a new relation member.
-        /// </summary>
-        public RelationMember()
+        var tags = "{no tags}";
+        if (this.Tags != null && this.Tags.Count > 0)
         {
-
+            tags = this.Tags.ToString();
         }
-
-        /// <summary>
-        /// Creates a new relation member.
-        /// </summary>
-        public RelationMember(long id, string role, OsmGeoType memberType)
+        if (!this.Id.HasValue)
         {
-            this.Type = memberType;
-            this.Id = id;
-            this.Role = role;
+            return $"Relation[null]{tags}";
         }
-
-        /// <summary>
-        /// Gets or sets the type.
-        /// </summary>
-        public OsmGeoType Type { get; set; }
-
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        public long Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the role.
-        /// </summary>
-        public string Role { get; set; }
+        return $"Relation[{this.Id.Value}]{tags}";
     }
+}
+
+/// <summary>
+/// Represents a relation member.
+/// </summary>
+public partial class RelationMember
+{
+    /// <summary>
+    /// Creates a new relation member.
+    /// </summary>
+    public RelationMember()
+    {
+
+    }
+
+    /// <summary>
+    /// Creates a new relation member.
+    /// </summary>
+    public RelationMember(long id, string role, OsmGeoType memberType)
+    {
+        this.Type = memberType;
+        this.Id = id;
+        this.Role = role;
+    }
+
+    /// <summary>
+    /// Gets or sets the type.
+    /// </summary>
+    public OsmGeoType Type { get; set; }
+
+    /// <summary>
+    /// Gets or sets the id.
+    /// </summary>
+    public long Id { get; set; }
+
+    /// <summary>
+    /// Gets or sets the role.
+    /// </summary>
+    public string Role { get; set; }
 }

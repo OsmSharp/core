@@ -20,98 +20,97 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using OsmSharp.IO.Xml;
-using System;
-using System.Collections.Generic;
 
-namespace OsmSharp.API
+namespace OsmSharp.API;
+
+/// <summary>
+/// Represents the Policy object.
+/// </summary>
+[XmlRoot("policy")]
+public partial class Policy : IXmlSerializable
 {
-    /// <summary>
-    /// Represents the Policy object.
-    /// </summary>
-    [XmlRoot("policy")]
-    public partial class Policy : IXmlSerializable
+    XmlSchema IXmlSerializable.GetSchema()
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
-
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            reader.GetElements(
-                new Tuple<string, Action>(
-                    "imagery", () =>
-                    {
-                        var imagery = new Imagery();
-                        imagery.ReadXml(reader);
-                        reader.Read();
-                        this.Imagery = imagery;
-                    })
-            );
-        }
-
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteStartElement("imagery");
-            writer.WriteElement("imagery", this.Imagery);
-            writer.WriteEndElement();
-        }
+        return null;
     }
 
-    [XmlRoot("imagery")]
-    public partial class Imagery : IXmlSerializable
+    void IXmlSerializable.ReadXml(XmlReader reader)
     {
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
-
-        public void ReadXml(XmlReader reader)
-        {
-            var blacklists = new List<Blacklist>();
-
-            reader.GetElements(
-                new Tuple<string, Action>(
-                    "blacklist", () =>
-                    {
-                        var blacklist = new Blacklist();
-                        blacklist.ReadXml(reader);
-                        blacklists.Add(blacklist);
-                        reader.Read();
-                    })
-            );
-
-            this.Blacklists = blacklists.ToArray();
-        }
-
-        public void WriteXml(XmlWriter writer)
-        {
-            writer.WriteElements("blacklist", this.Blacklists);
-        }
+        reader.GetElements(
+            new Tuple<string, Action>(
+                "imagery", () =>
+                {
+                    var imagery = new Imagery();
+                    imagery.ReadXml(reader);
+                    reader.Read();
+                    this.Imagery = imagery;
+                })
+        );
     }
 
-    [XmlRoot("blacklist")]
-    public partial class Blacklist : IXmlSerializable
+    void IXmlSerializable.WriteXml(XmlWriter writer)
     {
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
+        writer.WriteStartElement("imagery");
+        writer.WriteElement("imagery", this.Imagery);
+        writer.WriteEndElement();
+    }
+}
 
-        public void ReadXml(XmlReader reader)
-        {
-            this.Regex = reader.GetAttribute("regex");
-        }
+[XmlRoot("imagery")]
+public partial class Imagery : IXmlSerializable
+{
+    public XmlSchema GetSchema()
+    {
+        return null;
+    }
 
-        public void WriteXml(XmlWriter writer)
-        {
-            writer.WriteStartElement("blacklist");
-            writer.WriteAttribute("regex", this.Regex);
-            writer.WriteEndElement();
-        }
+    public void ReadXml(XmlReader reader)
+    {
+        var blacklists = new List<Blacklist>();
+
+        reader.GetElements(
+            new Tuple<string, Action>(
+                "blacklist", () =>
+                {
+                    var blacklist = new Blacklist();
+                    blacklist.ReadXml(reader);
+                    blacklists.Add(blacklist);
+                    reader.Read();
+                })
+        );
+
+        this.Blacklists = blacklists.ToArray();
+    }
+
+    public void WriteXml(XmlWriter writer)
+    {
+        writer.WriteElements("blacklist", this.Blacklists);
+    }
+}
+
+[XmlRoot("blacklist")]
+public partial class Blacklist : IXmlSerializable
+{
+    public XmlSchema GetSchema()
+    {
+        return null;
+    }
+
+    public void ReadXml(XmlReader reader)
+    {
+        this.Regex = reader.GetAttribute("regex");
+    }
+
+    public void WriteXml(XmlWriter writer)
+    {
+        writer.WriteStartElement("blacklist");
+        writer.WriteAttribute("regex", this.Regex);
+        writer.WriteEndElement();
     }
 }

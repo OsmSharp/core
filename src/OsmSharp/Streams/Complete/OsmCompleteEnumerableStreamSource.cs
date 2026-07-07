@@ -20,69 +20,68 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.Complete;
 using System.Collections.Generic;
+using OsmSharp.Complete;
 
-namespace OsmSharp.Streams.Complete
+namespace OsmSharp.Streams.Complete;
+
+/// <summary>
+/// An osm complete enumerable stream source.
+/// </summary>
+public class OsmCompleteEnumerableStreamSource : OsmCompleteStreamSource
 {
+    private readonly IEnumerable<ICompleteOsmGeo> _enumerable;
+
     /// <summary>
-    /// An osm complete enumerable stream source.
+    /// Creates a new osm complete source based on the given enumerable.
     /// </summary>
-    public class OsmCompleteEnumerableStreamSource : OsmCompleteStreamSource
+    public OsmCompleteEnumerableStreamSource(IEnumerable<ICompleteOsmGeo> enumerable)
     {
-        private readonly IEnumerable<ICompleteOsmGeo> _enumerable;
+        _enumerable = enumerable;
+    }
 
-        /// <summary>
-        /// Creates a new osm complete source based on the given enumerable.
-        /// </summary>
-        public OsmCompleteEnumerableStreamSource(IEnumerable<ICompleteOsmGeo> enumerable)
+    private IEnumerator<ICompleteOsmGeo> _enumerator;
+
+    /// <summary>
+    /// Returns true if this source can be reset.
+    /// </summary>
+    public override bool CanReset
+    {
+        get
         {
-            _enumerable = enumerable;
+            return true;
         }
+    }
 
-        private IEnumerator<ICompleteOsmGeo> _enumerator;
+    /// <summary>
+    /// Returns the current object.
+    /// </summary>
+    public override ICompleteOsmGeo Current()
+    {
+        return _enumerator.Current;
+    }
 
-        /// <summary>
-        /// Returns true if this source can be reset.
-        /// </summary>
-        public override bool CanReset
-        {
-            get
-            {
-                return true;
-            }
-        }
+    /// <summary>
+    /// Initializes this source.
+    /// </summary>
+    public override void Initialize()
+    {
+        _enumerator = _enumerable.GetEnumerator();
+    }
 
-        /// <summary>
-        /// Returns the current object.
-        /// </summary>
-        public override ICompleteOsmGeo Current()
-        {
-            return _enumerator.Current;
-        }
+    /// <summary>
+    /// Moves to the next object.
+    /// </summary>
+    public override bool MoveNext()
+    {
+        return _enumerator.MoveNext();
+    }
 
-        /// <summary>
-        /// Initializes this source.
-        /// </summary>
-        public override void Initialize()
-        {
-            _enumerator = _enumerable.GetEnumerator();
-        }
-
-        /// <summary>
-        /// Moves to the next object.
-        /// </summary>
-        public override bool MoveNext()
-        {
-            return _enumerator.MoveNext();
-        }
-
-        /// <summary>
-        /// Resets this source.
-        /// </summary>
-        public override void Reset()
-        {
-            _enumerator = _enumerable.GetEnumerator();
-        }
+    /// <summary>
+    /// Resets this source.
+    /// </summary>
+    public override void Reset()
+    {
+        _enumerator = _enumerable.GetEnumerator();
     }
 }

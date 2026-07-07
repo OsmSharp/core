@@ -23,74 +23,73 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OsmSharp.Tags
+namespace OsmSharp.Tags;
+
+/// <summary>
+/// Contains extensions related to tags.
+/// </summary>
+public static class TagExtensions
 {
+    private static readonly string[] BooleanTrueValues = { "yes", "true", "1" };
+    private static readonly string[] BooleanFalseValues = { "no", "false", "0" };
+
     /// <summary>
-    /// Contains extensions related to tags.
+    /// Returns true if the given key has a value that means false.
     /// </summary>
-    public static class TagExtensions
+    public static bool IsFalse(this TagsCollectionBase tags, string key)
     {
-        private static string[] BooleanTrueValues = { "yes", "true", "1" };
-        private static string[] BooleanFalseValues = { "no", "false", "0" };
-
-        /// <summary>
-        /// Returns true if the given key has a value that means false.
-        /// </summary>
-        public static bool IsFalse(this TagsCollectionBase tags, string key)
-        {
-            if (tags == null || string.IsNullOrWhiteSpace(key))
-                return false;
-            string tagValue;
-            return tags.TryGetValue(key, out tagValue) &&
-                BooleanFalseValues.Contains(tagValue.ToLowerInvariant());
-        }
-
-        /// <summary>
-        /// Returns true if the given key has a value that means true.
-        /// </summary>
-        public static bool IsTrue(this TagsCollectionBase tags, string key)
-        {
-            if (tags == null || string.IsNullOrWhiteSpace(key))
-                return false;
-            
-            string tagValue;
-            return tags.TryGetValue(key, out tagValue) &&
-                BooleanTrueValues.Contains(tagValue.ToLowerInvariant());
-        }
-
-        /// <summary>
-        /// Returns true if the tag collection contains any of the given keys.
-        /// </summary>
-        public static bool ContainsAnyKey(this TagsCollectionBase tags, IEnumerable<string> keys)
-        {
-            foreach (var tag in keys)
-            {
-                if (tags.ContainsKey(tag))
-                {
-                    return true;
-                }
-            }
+        if (tags == null || string.IsNullOrWhiteSpace(key))
             return false;
-        }
+        string tagValue;
+        return tags.TryGetValue(key, out tagValue) &&
+            BooleanFalseValues.Contains(tagValue.ToLowerInvariant());
+    }
 
-        /// <summary>
-        /// Creates a new tags collection with only the given keys.
-        /// </summary>
-        public static TagsCollectionBase KeepKeysOf(this TagsCollectionBase tags, IEnumerable<string> keys)
+    /// <summary>
+    /// Returns true if the given key has a value that means true.
+    /// </summary>
+    public static bool IsTrue(this TagsCollectionBase tags, string key)
+    {
+        if (tags == null || string.IsNullOrWhiteSpace(key))
+            return false;
+
+        string tagValue;
+        return tags.TryGetValue(key, out tagValue) &&
+            BooleanTrueValues.Contains(tagValue.ToLowerInvariant());
+    }
+
+    /// <summary>
+    /// Returns true if the tag collection contains any of the given keys.
+    /// </summary>
+    public static bool ContainsAnyKey(this TagsCollectionBase tags, IEnumerable<string> keys)
+    {
+        foreach (var tag in keys)
         {
-            var collection = new TagsCollection();
-            if (tags == null || keys == null)
+            if (tags.ContainsKey(tag))
             {
-                return collection;
+                return true;
             }
-            foreach (var tag in tags)
-            {
-                if (keys.Contains(tag.Key))
-                {
-                    collection.Add(tag);
-                }
-            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Creates a new tags collection with only the given keys.
+    /// </summary>
+    public static TagsCollectionBase KeepKeysOf(this TagsCollectionBase tags, IEnumerable<string> keys)
+    {
+        var collection = new TagsCollection();
+        if (tags == null || keys == null)
+        {
             return collection;
         }
+        foreach (var tag in tags)
+        {
+            if (keys.Contains(tag.Key))
+            {
+                collection.Add(tag);
+            }
+        }
+        return collection;
     }
 }

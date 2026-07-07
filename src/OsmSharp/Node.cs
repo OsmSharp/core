@@ -24,48 +24,47 @@ using System.Text.Json.Serialization;
 using System.Xml.Serialization;
 using OsmSharp.IO.Json.Converters;
 
-namespace OsmSharp
+namespace OsmSharp;
+
+/// <summary>
+/// Represents a node.
+/// </summary>
+[JsonConverter(typeof(NodeJsonConverter))]
+public partial class Node : OsmGeo
 {
     /// <summary>
-    /// Represents a node.
+    /// Creates a new node.
     /// </summary>
-    [JsonConverter(typeof(NodeJsonConverter))]
-    public partial class Node : OsmGeo
+    public Node()
     {
-        /// <summary>
-        /// Creates a new node.
-        /// </summary>
-        public Node()
+        this.Type = OsmGeoType.Node;
+    }
+
+    /// <summary>
+    /// The latitude.
+    /// </summary>
+    public double? Latitude { get; set; }
+
+    /// <summary>
+    /// The longitude.
+    /// </summary>
+    public double? Longitude { get; set; }
+
+    /// <summary>
+    /// Returns a description of this object.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+        var tags = "{no tags}";
+        if (this.Tags != null && this.Tags.Count > 0)
         {
-            this.Type = OsmGeoType.Node;
+            tags = this.Tags.ToString();
         }
-
-        /// <summary>
-        /// The latitude.
-        /// </summary>
-        public double? Latitude { get; set; }
-
-        /// <summary>
-        /// The longitude.
-        /// </summary>
-        public double? Longitude { get; set; }
-
-        /// <summary>
-        /// Returns a description of this object.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
+        if (!this.Id.HasValue)
         {
-            var tags = "{no tags}";
-            if (this.Tags != null && this.Tags.Count > 0)
-            {
-                tags = this.Tags.ToString();
-            }
-            if (!this.Id.HasValue)
-            {
-                return $"Node[null]{tags}";
-            }
-            return $"Node[{this.Id.Value}]{tags}";
+            return $"Node[null]{tags}";
         }
+        return $"Node[{this.Id.Value}]{tags}";
     }
 }

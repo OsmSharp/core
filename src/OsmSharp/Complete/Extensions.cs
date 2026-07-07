@@ -20,279 +20,278 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.Db;
-using OsmSharp.Tags;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OsmSharp.Db;
+using OsmSharp.Tags;
 
-namespace OsmSharp.Complete
+namespace OsmSharp.Complete;
+
+/// <summary>
+/// Contains extension methods.
+/// </summary>
+public static class Extensions
 {
     /// <summary>
-    /// Contains extension methods.
+    /// Creates a complete object.
     /// </summary>
-    public static class Extensions
+    public static ICompleteOsmGeo CreateComplete(this OsmGeo simpleOsmGeo, IOsmGeoSource osmGeoSource)
     {
-        /// <summary>
-        /// Creates a complete object.
-        /// </summary>
-        public static ICompleteOsmGeo CreateComplete(this OsmGeo simpleOsmGeo, IOsmGeoSource osmGeoSource)
+        switch (simpleOsmGeo.Type)
         {
-            switch (simpleOsmGeo.Type)
-            {
-                case OsmGeoType.Node:
-                    return (simpleOsmGeo as Node);
-                case OsmGeoType.Way:
-                    return (simpleOsmGeo as Way).CreateComplete(osmGeoSource);
-                case OsmGeoType.Relation:
-                    return (simpleOsmGeo as Relation).CreateComplete(osmGeoSource);
-            }
-            throw new Exception("Unknown OsmGeoType.");
+            case OsmGeoType.Node:
+                return (simpleOsmGeo as Node);
+            case OsmGeoType.Way:
+                return (simpleOsmGeo as Way).CreateComplete(osmGeoSource);
+            case OsmGeoType.Relation:
+                return (simpleOsmGeo as Relation).CreateComplete(osmGeoSource);
         }
+        throw new Exception("Unknown OsmGeoType.");
+    }
 
-        /// <summary>
-        /// Creates a complete way.
-        /// </summary>
-        public static CompleteWay CreateComplete(this Way way, IOsmGeoSource osmGeoSource)
+    /// <summary>
+    /// Creates a complete way.
+    /// </summary>
+    public static CompleteWay CreateComplete(this Way way, IOsmGeoSource osmGeoSource)
+    {
+        if (way == null) throw new ArgumentNullException("simpleWay");
+        if (way.Id == null) throw new Exception("simpleWay.id is null");
+        if (osmGeoSource == null) throw new ArgumentNullException("osmGeoSource");
+
+        var completeWay = new CompleteWay();
+        completeWay.Id = way.Id.Value;
+        completeWay.ChangeSetId = way.ChangeSetId;
+        if (way.Tags != null)
         {
-            if (way == null) throw new ArgumentNullException("simpleWay");
-            if (way.Id == null) throw new Exception("simpleWay.id is null");
-            if (osmGeoSource == null) throw new ArgumentNullException("osmGeoSource");
-
-            var completeWay = new CompleteWay();
-            completeWay.Id = way.Id.Value;
-            completeWay.ChangeSetId = way.ChangeSetId;
-            if (way.Tags != null)
+            completeWay.Tags = new TagsCollection(way.Tags);
+        }
+        if (way.Nodes != null)
+        {
+            var nodes = new List<Node>();
+            for (int i = 0; i < way.Nodes.Length; i++)
             {
-                completeWay.Tags = new TagsCollection(way.Tags);
-            }
-            if (way.Nodes != null)
-            {
-                var nodes = new List<Node>();
-                for (int i = 0; i < way.Nodes.Length; i++)
+                var node = osmGeoSource.GetNode(way.Nodes[i]);
+                if (node == null)
                 {
-                    var node = osmGeoSource.GetNode(way.Nodes[i]);
-                    if (node == null)
-                    {
-                        return null;
-                    }
-                    nodes.Add(node);
+                    return null;
                 }
-                completeWay.Nodes = nodes.ToArray();
+                nodes.Add(node);
             }
-            completeWay.TimeStamp = way.TimeStamp;
-            completeWay.UserName = way.UserName;
-            completeWay.UserId = way.UserId;
-            completeWay.Version = way.Version;
-            completeWay.Visible = way.Visible;
-            return completeWay;
+            completeWay.Nodes = nodes.ToArray();
+        }
+        completeWay.TimeStamp = way.TimeStamp;
+        completeWay.UserName = way.UserName;
+        completeWay.UserId = way.UserId;
+        completeWay.Version = way.Version;
+        completeWay.Visible = way.Visible;
+        return completeWay;
+    }
+
+    /// <summary>
+    /// Creates a complete relation.
+    /// </summary>
+    public static CompleteRelation CreateComplete(this Relation relation, IOsmGeoSource osmGeoSource)
+    {
+        return relation.CreateComplete(osmGeoSource, new Dictionary<long, CompleteRelation>());
+    }
+
+    private static CompleteRelation CreateComplete(this Relation relation, IOsmGeoSource osmGeoSource, Dictionary<long, CompleteRelation> createdRelations)
+    {
+        if (relation == null) throw new ArgumentNullException("relation");
+        if (relation.Id == null) throw new Exception("relation.Id is null");
+        if (osmGeoSource == null) throw new ArgumentNullException("osmGeoSource");
+
+        var relationId = relation.Id.Value;
+
+        // If we've already created this relation, return it (handles circular references)
+        if (createdRelations.TryGetValue(relationId, out var existingRelation))
+        {
+            return existingRelation;
         }
 
-        /// <summary>
-        /// Creates a complete relation.
-        /// </summary>
-        public static CompleteRelation CreateComplete(this Relation relation, IOsmGeoSource osmGeoSource)
+        // Create the complete relation and add it to the cache immediately
+        var completeRelation = new CompleteRelation();
+        completeRelation.Id = relationId;
+        completeRelation.ChangeSetId = relation.ChangeSetId;
+        if (relation.Tags != null)
         {
-            return relation.CreateComplete(osmGeoSource, new Dictionary<long, CompleteRelation>());
+            completeRelation.Tags = new TagsCollection(relation.Tags);
         }
-        
-        private static CompleteRelation CreateComplete(this Relation relation, IOsmGeoSource osmGeoSource, Dictionary<long, CompleteRelation> createdRelations)
+        // Add to cache before processing members to handle circular references
+        createdRelations[relationId] = completeRelation;
+
+        if (relation.Members != null)
         {
-            if (relation == null) throw new ArgumentNullException("relation");
-            if (relation.Id == null) throw new Exception("relation.Id is null");
-            if (osmGeoSource == null) throw new ArgumentNullException("osmGeoSource");
-
-            var relationId = relation.Id.Value;
-            
-            // If we've already created this relation, return it (handles circular references)
-            if (createdRelations.TryGetValue(relationId, out var existingRelation))
+            var relationMembers = new List<CompleteRelationMember>();
+            for (var i = 0; i < relation.Members.Length; i++)
             {
-                return existingRelation;
-            }
-
-            // Create the complete relation and add it to the cache immediately
-            var completeRelation = new CompleteRelation();
-            completeRelation.Id = relationId;
-            completeRelation.ChangeSetId = relation.ChangeSetId;
-            if (relation.Tags != null)
-            {
-                completeRelation.Tags = new TagsCollection(relation.Tags);
-            }
-            // Add to cache before processing members to handle circular references
-            createdRelations[relationId] = completeRelation;
-
-            if (relation.Members != null)
-            {
-                var relationMembers = new List<CompleteRelationMember>();
-                for (var i = 0; i < relation.Members.Length; i++)
+                var memberId = relation.Members[i].Id;
+                var role = relation.Members[i].Role;
+                var member = new CompleteRelationMember();
+                member.Role = role;
+                switch (relation.Members[i].Type)
                 {
-                    var memberId = relation.Members[i].Id;
-                    var role = relation.Members[i].Role;
-                    var member = new CompleteRelationMember();
-                    member.Role = role;
-                    switch (relation.Members[i].Type)
-                    {
-                        case OsmGeoType.Node:
-                            var memberNode = osmGeoSource.GetNode(memberId);
-                            if (memberNode == null)
-                            {
-                                continue;
-                            }
-                            var completeMemberNode = memberNode;
-                            if (completeMemberNode != null)
-                            {
-                                member.Member = completeMemberNode;
-                            }
-                            else
-                            {
-                                continue;
-                            }
-                            break;
-                        case OsmGeoType.Way:
-                            var memberWay = osmGeoSource.GetWay(memberId);
-                            if (memberWay == null)
-                            {
-                                continue;
-                            }
-                            var completeMemberWay = memberWay.CreateComplete(osmGeoSource);
-                            if (completeMemberWay != null)
-                            {
-                                member.Member = completeMemberWay;
-                            }
-                            else
-                            {
-                                continue;
-                            }
-                            break;
-                        case OsmGeoType.Relation:
-                            if (relation.Id == memberId)                                
-                                continue;
-                            var relationMember = osmGeoSource.GetRelation(memberId);
-                            if (relationMember == null)
-                            {
-                                continue;
-                            }
-                            var completeMemberRelation = relationMember.CreateComplete(osmGeoSource, createdRelations);
-                            if (completeMemberRelation != null)
-                            {
-                                member.Member = completeMemberRelation;
-                            }
-                            else
-                            {
-                                continue;
-                            }
-                            break;
-                    }
-                    relationMembers.Add(member);
+                    case OsmGeoType.Node:
+                        var memberNode = osmGeoSource.GetNode(memberId);
+                        if (memberNode == null)
+                        {
+                            continue;
+                        }
+                        var completeMemberNode = memberNode;
+                        if (completeMemberNode != null)
+                        {
+                            member.Member = completeMemberNode;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                        break;
+                    case OsmGeoType.Way:
+                        var memberWay = osmGeoSource.GetWay(memberId);
+                        if (memberWay == null)
+                        {
+                            continue;
+                        }
+                        var completeMemberWay = memberWay.CreateComplete(osmGeoSource);
+                        if (completeMemberWay != null)
+                        {
+                            member.Member = completeMemberWay;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                        break;
+                    case OsmGeoType.Relation:
+                        if (relation.Id == memberId)
+                            continue;
+                        var relationMember = osmGeoSource.GetRelation(memberId);
+                        if (relationMember == null)
+                        {
+                            continue;
+                        }
+                        var completeMemberRelation = relationMember.CreateComplete(osmGeoSource, createdRelations);
+                        if (completeMemberRelation != null)
+                        {
+                            member.Member = completeMemberRelation;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                        break;
                 }
-                completeRelation.Members = relationMembers.ToArray();
+                relationMembers.Add(member);
             }
-            completeRelation.TimeStamp = relation.TimeStamp;
-            completeRelation.UserName = relation.UserName;
-            completeRelation.UserId = relation.UserId;
-            completeRelation.Version = relation.Version;
-            completeRelation.Visible = relation.Visible;
-            return completeRelation;
+            completeRelation.Members = relationMembers.ToArray();
+        }
+        completeRelation.TimeStamp = relation.TimeStamp;
+        completeRelation.UserName = relation.UserName;
+        completeRelation.UserId = relation.UserId;
+        completeRelation.Version = relation.Version;
+        completeRelation.Visible = relation.Visible;
+        return completeRelation;
+    }
+
+    /// <summary>
+    /// Returns true if this way is closed.
+    /// </summary>
+    public static bool IsClosed(this CompleteWay way)
+    {
+        return way.Nodes != null &&
+            way.Nodes.Length > 1 &&
+            way.Nodes[0].Id == way.Nodes[way.Nodes.Length - 1].Id;
+    }
+
+    /// <summary>
+    /// Converts these complete elements into their simple counterparts,
+    /// including the simple versions of their component elements.
+    /// Resulting elements will be distinct.
+    /// </summary>
+    public static OsmGeo[] ToSimpleWithChildren(this IEnumerable<ICompleteOsmGeo> completes)
+    {
+        return completes.SelectMany(e => e.ToSimpleWithChildren()).DistinctByGeoKey().ToArray();
+    }
+
+    /// <summary>
+    /// Converts a complete element into its simple counterpart,
+    /// including the simple versions of its component elements.
+    /// </summary>
+    public static OsmGeo[] ToSimpleWithChildren(this ICompleteOsmGeo complete)
+    {
+        switch (complete)
+        {
+            case Node node:
+                return new[] { node };
+            case CompleteWay way:
+                return way.ToSimpleWithChildren();
+            case CompleteRelation relation:
+                return relation.ToSimpleWithChildren();
+            default:
+                throw new Exception("Unknown Complete Element Type.");
+        }
+    }
+
+    /// <summary>
+    /// Converts a complete way into its simple counterpart,
+    /// including the simple versions of nodes.
+    /// </summary>
+    public static OsmGeo[] ToSimpleWithChildren(this CompleteWay way)
+    {
+        return way.Nodes.DistinctByGeoKey().Append(way.ToSimple()).ToArray();
+    }
+
+    /// <summary>
+    /// Converts a complete relation into its simple counterpart,
+    /// including the simple versions of all members, and their components, recursively.
+    /// </summary>
+    public static OsmGeo[] ToSimpleWithChildren(this CompleteRelation relation)
+    {
+        var withChildren = relation.ToSimpleWithChildrenCircularSafe(new HashSet<OsmGeoKey>());
+        return withChildren.DistinctByGeoKey().ToArray();
+    }
+
+    // Recursive, safe against circular references, may return duplicate nodes.
+    private static IEnumerable<OsmGeo> ToSimpleWithChildrenCircularSafe(
+        this CompleteRelation complete, HashSet<OsmGeoKey> seenGeoKeys)
+    {
+        if (complete.Members == null)
+        {
+            return new[] { complete.ToSimple() };
         }
 
-        /// <summary>
-        /// Returns true if this way is closed.
-        /// </summary>
-        public static bool IsClosed(this CompleteWay way)
-        {
-            return way.Nodes != null &&
-                way.Nodes.Length > 1 &&
-                way.Nodes[0].Id == way.Nodes[way.Nodes.Length - 1].Id;
-        }
+        var children = new List<OsmGeo>();
 
-        /// <summary>
-        /// Converts these complete elements into their simple counterparts,
-        /// including the simple versions of their component elements.
-        /// Resulting elements will be distinct.
-        /// </summary>
-        public static OsmGeo[] ToSimpleWithChildren(this IEnumerable<ICompleteOsmGeo> completes)
+        foreach (var completeMember in complete.Members.Where(m => m != null))
         {
-            return completes.SelectMany(e => e.ToSimpleWithChildren()).DistinctByGeoKey().ToArray();
-        }
+            var key = new OsmGeoKey(completeMember.Member.Type, completeMember.Member.Id);
 
-        /// <summary>
-        /// Converts a complete element into its simple counterpart,
-        /// including the simple versions of its component elements.
-        /// </summary>
-        public static OsmGeo[] ToSimpleWithChildren(this ICompleteOsmGeo complete)
-        {
-            switch (complete)
+            if (seenGeoKeys.Add(key)) // Returns true if element was not already present
             {
-                case Node node:
-                    return new [] { node };
-                case CompleteWay way:
-                    return way.ToSimpleWithChildren();
-                case CompleteRelation relation:
-                    return relation.ToSimpleWithChildren();
-                default:
-                    throw new Exception("Unknown Complete Element Type.");
-            }
-        }
-
-        /// <summary>
-        /// Converts a complete way into its simple counterpart,
-        /// including the simple versions of nodes.
-        /// </summary>
-        public static OsmGeo[] ToSimpleWithChildren(this CompleteWay way)
-        {
-            return way.Nodes.DistinctByGeoKey().Append(way.ToSimple()).ToArray();
-        }
-
-        /// <summary>
-        /// Converts a complete relation into its simple counterpart,
-        /// including the simple versions of all members, and their components, recursively.
-        /// </summary>
-        public static OsmGeo[] ToSimpleWithChildren(this CompleteRelation relation)
-        {
-            var withChildren = relation.ToSimpleWithChildrenCircularSafe(new HashSet<OsmGeoKey>());
-            return withChildren.DistinctByGeoKey().ToArray();
-        }
-
-        // Recursive, safe against circular references, may return duplicate nodes.
-        private static IEnumerable<OsmGeo> ToSimpleWithChildrenCircularSafe(
-            this CompleteRelation complete, HashSet<OsmGeoKey> seenGeoKeys)
-        {
-            if (complete.Members == null)
-            {
-                return new[] { complete.ToSimple() };
-            }
-
-            var children = new List<OsmGeo>();
-
-            foreach (var completeMember in complete.Members.Where(m => m != null))
-            {
-                var key = new OsmGeoKey(completeMember.Member.Type, completeMember.Member.Id);
-
-                if (seenGeoKeys.Add(key)) // Returns true if element was not already present
+                switch (completeMember.Member)
                 {
-                    switch (completeMember.Member)
-                    {
-                        case Node node:
-                            children.Add(node);
-                            break;
-                        case CompleteWay way:
-                            children.AddRange(way.ToSimpleWithChildren());
-                            break;
-                        case CompleteRelation relation:
-                            children.AddRange(relation.ToSimpleWithChildrenCircularSafe(seenGeoKeys));
-                            break;
-                        default:
-                            throw new Exception("Unknown Complete Element Type.");
-                    }
+                    case Node node:
+                        children.Add(node);
+                        break;
+                    case CompleteWay way:
+                        children.AddRange(way.ToSimpleWithChildren());
+                        break;
+                    case CompleteRelation relation:
+                        children.AddRange(relation.ToSimpleWithChildrenCircularSafe(seenGeoKeys));
+                        break;
+                    default:
+                        throw new Exception("Unknown Complete Element Type.");
                 }
             }
-
-            return children.Append(complete.ToSimple());
         }
 
-        private static IEnumerable<OsmGeo> DistinctByGeoKey(this IEnumerable<OsmGeo> elements)
-        {
-            return elements.GroupBy(e => new OsmGeoKey(e)).Select(g => g.First());
-        }
+        return children.Append(complete.ToSimple());
+    }
+
+    private static IEnumerable<OsmGeo> DistinctByGeoKey(this IEnumerable<OsmGeo> elements)
+    {
+        return elements.GroupBy(e => new OsmGeoKey(e)).Select(g => g.First());
     }
 }

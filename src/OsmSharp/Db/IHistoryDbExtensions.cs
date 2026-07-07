@@ -20,34 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Linq;
-using OsmSharp.Streams.Complete;
-using OsmSharp.Complete;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using OsmSharp.Complete;
+using OsmSharp.Streams.Complete;
 
-namespace OsmSharp.Db
+namespace OsmSharp.Db;
+
+/// <summary>
+/// Contains extensions for the history db.
+/// </summary>
+public static class IHistoryDbExtensions
 {
     /// <summary>
-    /// Contains extensions for the history db.
+    /// Adds a new object to the db.
     /// </summary>
-    public static class IHistoryDbExtensions
+    public static void Add(this IHistoryDb db, OsmGeo osmGeo)
     {
-        /// <summary>
-        /// Adds a new object to the db.
-        /// </summary>
-        public static void Add(this IHistoryDb db, OsmGeo osmGeo)
-        {
-            db.Add(new OsmGeo[] { osmGeo });
-        }
+        db.Add(new OsmGeo[] { osmGeo });
+    }
 
-        /// <summary>
-        /// Gets all data in the form of a complete stream.
-        /// </summary>
-        public static OsmCompleteStreamSource GetComplete(this IHistoryDb db)
-        {
-            return new Streams.Complete.OsmCompleteEnumerableStreamSource(
-                db.Get().Select(x => x.CreateComplete(db)));
-        }
+    /// <summary>
+    /// Gets all data in the form of a complete stream.
+    /// </summary>
+    public static OsmCompleteStreamSource GetComplete(this IHistoryDb db)
+    {
+        return new Streams.Complete.OsmCompleteEnumerableStreamSource(
+            db.Get().Select(x => x.CreateComplete(db)));
     }
 }

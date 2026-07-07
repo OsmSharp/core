@@ -19,48 +19,47 @@
 using System;
 using System.IO;
 
-namespace OsmSharp.IO.PBF
+namespace OsmSharp.IO.PBF;
+
+/// <summary>
+/// Writes PBF files.
+/// </summary>
+internal class PBFWriter
 {
     /// <summary>
-    /// Writes PBF files.
+    /// Holds the stream.
     /// </summary>
-    internal class PBFWriter
+    private readonly Stream _stream;
+
+    /// <summary>
+    /// Creates a new PBF write.
+    /// </summary>
+    /// <param name="stream"></param>
+    public PBFWriter(Stream stream)
     {
-        /// <summary>
-        /// Holds the stream.
-        /// </summary>
-        private Stream _stream;
-        
-        /// <summary>
-        /// Creates a new PBF write.
-        /// </summary>
-        /// <param name="stream"></param>
-        public PBFWriter(Stream stream)
+        _stream = stream;
+    }
+
+    /// <summary>
+    /// Closes this writer.
+    /// </summary>
+    public void Dispose()
+    {
+        _stream.Dispose();
+    }
+
+    /// <summary>
+    /// Writes one PBF primitive block.
+    /// </summary>
+    /// <param name="block">The block to write.</param>
+    public void ReadAll(PrimitiveBlock block)
+    {
+        // check parameters.
+        if (block == null)
         {
-            _stream = stream;
+            throw new ArgumentNullException("block");
         }
 
-        /// <summary>
-        /// Closes this writer.
-        /// </summary>
-        public void Dispose()
-        {
-            _stream.Dispose();
-        }
-
-        /// <summary>
-        /// Writes one PBF primitive block.
-        /// </summary>
-        /// <param name="block">The block to write.</param>
-        public void ReadAll(PrimitiveBlock block)
-        {
-            // check parameters.
-            if (block == null)
-            {
-                throw new ArgumentNullException("block");
-            }
-
-            // TODO: all the important stuff!
-        }
+        // TODO: all the important stuff!
     }
 }

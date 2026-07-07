@@ -22,38 +22,37 @@
 
 using System;
 
-namespace OsmSharp.API
+namespace OsmSharp.API;
+
+/// <summary>
+/// Represents a Policy.
+/// </summary>
+public partial class Policy
 {
     /// <summary>
-    /// Represents a Policy.
+    /// Gets or sets the Imagery.
     /// </summary>
-    public partial class Policy
-    {
-        /// <summary>
-        /// Gets or sets the Imagery.
-        /// </summary>
-        public Imagery Imagery { get; set; }
-    }
+    public Imagery Imagery { get; set; }
+}
 
+/// <summary>
+/// Represents a Imagery.
+/// </summary>
+public partial class Imagery
+{
     /// <summary>
-    /// Represents a Imagery.
+    /// Gets or sets the Blacklists.
     /// </summary>
-    public partial class Imagery
-    {
-        /// <summary>
-        /// Gets or sets the Blacklists.
-        /// </summary>
-        public Blacklist[] Blacklists { get; set; }
-    }
+    public Blacklist[] Blacklists { get; set; }
+}
 
+/// <summary>
+/// Represents a Blacklist.
+/// </summary>
+public partial class Blacklist
+{
     /// <summary>
-    /// Represents a Blacklist.
+    /// Gets or sets the Regex.
     /// </summary>
-    public partial class Blacklist
-    {
-        /// <summary>
-        /// Gets or sets the Regex.
-        /// </summary>
-        public string Regex { get; set; }
-    }
+    public string Regex { get; set; }
 }

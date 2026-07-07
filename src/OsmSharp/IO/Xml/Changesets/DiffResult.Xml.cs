@@ -20,275 +20,274 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.IO.Xml;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using System;
+using OsmSharp.IO.Xml;
 
-namespace OsmSharp.Changesets
+namespace OsmSharp.Changesets;
+
+/// <summary>
+/// Represents a diff result after applying a changeset.
+/// </summary>
+[XmlRoot("diffResult")]
+public partial class DiffResult : IXmlSerializable
 {
-    /// <summary>
-    /// Represents a diff result after applying a changeset.
-    /// </summary>
-    [XmlRoot("diffResult")]
-    public partial class DiffResult : IXmlSerializable
+    XmlSchema IXmlSerializable.GetSchema()
     {
-        XmlSchema IXmlSerializable.GetSchema()
+        return null;
+    }
+
+    void IXmlSerializable.ReadXml(XmlReader reader)
+    {
+        reader.MoveToContent();
+
+        this.Version = reader.GetAttributeDouble("version");
+        this.Generator = reader.GetAttribute("generator");
+
+        List<OsmGeoResult> results = null;
+        while (reader.Read())
         {
-            return null;
-        }
-
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            reader.MoveToContent();
-
-            this.Version = reader.GetAttributeDouble("version");
-            this.Generator = reader.GetAttribute("generator");
-
-            List<OsmGeoResult> results = null;
-            while (reader.Read())
+            var moveToContent = reader.MoveToContent();
+            if (moveToContent == XmlNodeType.None || moveToContent == XmlNodeType.EndElement)
             {
-                var moveToContent = reader.MoveToContent();
-                if (moveToContent == XmlNodeType.None || moveToContent == XmlNodeType.EndElement)
-                {
-                    break;
-                }
-                if (reader.Name == "node")
-                {
-                    if (results == null)
-                    {
-                        results = new List<OsmGeoResult>();
-                    }
-                    var nodeResult = new NodeResult();
-                    (nodeResult as IXmlSerializable).ReadXml(reader);
-                    results.Add(nodeResult);
-                }
-                else if (reader.Name == "way")
-                {
-                    if (results == null)
-                    {
-                        results = new List<OsmGeoResult>();
-                    }
-                    var wayResult = new WayResult();
-                    (wayResult as IXmlSerializable).ReadXml(reader);
-                    results.Add(wayResult);
-                }
-                else if (reader.Name == "relation")
-                {
-                    if (results == null)
-                    {
-                        results = new List<OsmGeoResult>();
-                    }
-                    var relationResult = new RelationResult();
-                    (relationResult as IXmlSerializable).ReadXml(reader);
-                    results.Add(relationResult);
-                }
-                else
-                {
-                    if (results == null)
-                    {
-                        results = new List<OsmGeoResult>();
-                    }
-                    return;
-                }
+                break;
             }
-            if (results != null)
+            if (reader.Name == "node")
             {
-                this.Results = results.ToArray();
+                if (results == null)
+                {
+                    results = new List<OsmGeoResult>();
+                }
+                var nodeResult = new NodeResult();
+                (nodeResult as IXmlSerializable).ReadXml(reader);
+                results.Add(nodeResult);
+            }
+            else if (reader.Name == "way")
+            {
+                if (results == null)
+                {
+                    results = new List<OsmGeoResult>();
+                }
+                var wayResult = new WayResult();
+                (wayResult as IXmlSerializable).ReadXml(reader);
+                results.Add(wayResult);
+            }
+            else if (reader.Name == "relation")
+            {
+                if (results == null)
+                {
+                    results = new List<OsmGeoResult>();
+                }
+                var relationResult = new RelationResult();
+                (relationResult as IXmlSerializable).ReadXml(reader);
+                results.Add(relationResult);
+            }
+            else
+            {
+                if (results == null)
+                {
+                    results = new List<OsmGeoResult>();
+                }
+                return;
             }
         }
-
-        void IXmlSerializable.WriteXml(XmlWriter writer)
+        if (results != null)
         {
-            if (!string.IsNullOrWhiteSpace(this.Generator))
-            {
-                writer.WriteAttributeString("generator", this.Generator);
-            }
-            if (this.Version.HasValue)
-            {
-                writer.WriteAttributeString("version", this.Version.Value.ToInvariantString());
-            }
+            this.Results = results.ToArray();
+        }
+    }
 
-            if (this.Results != null)
+    void IXmlSerializable.WriteXml(XmlWriter writer)
+    {
+        if (!string.IsNullOrWhiteSpace(this.Generator))
+        {
+            writer.WriteAttributeString("generator", this.Generator);
+        }
+        if (this.Version.HasValue)
+        {
+            writer.WriteAttributeString("version", this.Version.Value.ToInvariantString());
+        }
+
+        if (this.Results != null)
+        {
+            for (var i = 0; i < this.Results.Length; i++)
             {
-                for (var i = 0; i < this.Results.Length; i++)
+                var result = this.Results[i] as IXmlSerializable;
+                if (result is NodeResult)
                 {
-                    var result = this.Results[i] as IXmlSerializable;
-                    if (result is NodeResult)
-                    {
-                        writer.WriteStartElement("node");
-                        result.WriteXml(writer);
-                        writer.WriteEndElement();
-                    }
-                    else if (result is WayResult)
-                    {
-                        writer.WriteStartElement("way");
-                        result.WriteXml(writer);
-                        writer.WriteEndElement();
-                    }
-                    else if (result is RelationResult)
-                    {
-                        writer.WriteStartElement("relation");
-                        result.WriteXml(writer);
-                        writer.WriteEndElement();
-                    }
+                    writer.WriteStartElement("node");
+                    result.WriteXml(writer);
+                    writer.WriteEndElement();
+                }
+                else if (result is WayResult)
+                {
+                    writer.WriteStartElement("way");
+                    result.WriteXml(writer);
+                    writer.WriteEndElement();
+                }
+                else if (result is RelationResult)
+                {
+                    writer.WriteStartElement("relation");
+                    result.WriteXml(writer);
+                    writer.WriteEndElement();
                 }
             }
         }
     }
+}
+
+/// <summary>
+/// An osmgeo result.
+/// </summary>
+public abstract partial class OsmGeoResult : IXmlSerializable
+{
+    XmlSchema IXmlSerializable.GetSchema()
+    {
+        return null;
+    }
+
+    void IXmlSerializable.ReadXml(XmlReader reader)
+    {
+        reader.MoveToContent();
+
+        var newIdString = reader.GetAttribute("new_id");
+        long newId = 0;
+        if (!string.IsNullOrWhiteSpace(newIdString) &&
+           long.TryParse(newIdString, NumberStyles.Any, CultureInfo.InvariantCulture, out newId))
+        {
+            this.NewId = newId;
+        }
+
+        var oldIdString = reader.GetAttribute("old_id");
+        long oldId = 0;
+        if (!string.IsNullOrWhiteSpace(oldIdString) &&
+           long.TryParse(oldIdString, NumberStyles.Any, CultureInfo.InvariantCulture, out oldId))
+        {
+            this.OldId = oldId;
+        }
+
+        var versionString = reader.GetAttribute("new_version");
+        long version = 0;
+        if (!string.IsNullOrWhiteSpace(versionString) &&
+           long.TryParse(versionString, NumberStyles.Any, CultureInfo.InvariantCulture, out version))
+        {
+            this.NewVersion = version;
+        }
+    }
+
+    void IXmlSerializable.WriteXml(XmlWriter writer)
+    {
+        if (this.OldId.HasValue)
+        {
+            writer.WriteAttributeString("old_id", this.OldId.Value.ToInvariantString());
+        }
+        if (this.NewId.HasValue)
+        {
+            writer.WriteAttributeString("new_id", this.NewId.Value.ToInvariantString());
+        }
+        if (this.NewVersion.HasValue)
+        {
+            writer.WriteAttributeString("new_version", this.NewVersion.Value.ToInvariantString());
+        }
+    }
 
     /// <summary>
-    /// An osmgeo result.
+    /// Creates a modification.
     /// </summary>
-    public abstract partial class OsmGeoResult : IXmlSerializable
+    public static OsmGeoResult CreateModification(OsmGeo modify, long newVersion)
     {
-        XmlSchema IXmlSerializable.GetSchema()
+        switch (modify.Type)
         {
-            return null;
+            case OsmGeoType.Node:
+                return new NodeResult()
+                {
+                    NewId = modify.Id,
+                    OldId = modify.Id,
+                    NewVersion = newVersion
+                };
+            case OsmGeoType.Way:
+                return new WayResult()
+                {
+                    NewId = modify.Id,
+                    OldId = modify.Id,
+                    NewVersion = newVersion
+                };
+            case OsmGeoType.Relation:
+                return new RelationResult()
+                {
+                    NewId = modify.Id,
+                    OldId = modify.Id,
+                    NewVersion = newVersion
+                };
         }
+        throw new Exception("Invalid OsmGeo type.");
+    }
 
-        void IXmlSerializable.ReadXml(XmlReader reader)
+    /// <summary>
+    /// Creates a creation.
+    /// </summary>
+    public static OsmGeoResult CreateCreation(OsmGeo create, long newId)
+    {
+        switch (create.Type)
         {
-            reader.MoveToContent();
-
-            var newIdString = reader.GetAttribute("new_id");
-            long newId = 0;
-            if (!string.IsNullOrWhiteSpace(newIdString) &&
-               long.TryParse(newIdString, NumberStyles.Any, CultureInfo.InvariantCulture, out newId))
-            {
-                this.NewId = newId;
-            }
-
-            var oldIdString = reader.GetAttribute("old_id");
-            long oldId = 0;
-            if (!string.IsNullOrWhiteSpace(oldIdString) &&
-               long.TryParse(oldIdString, NumberStyles.Any, CultureInfo.InvariantCulture, out oldId))
-            {
-                this.OldId = oldId;
-            }
-
-            var versionString = reader.GetAttribute("new_version");
-            long version = 0;
-            if (!string.IsNullOrWhiteSpace(versionString) &&
-               long.TryParse(versionString, NumberStyles.Any, CultureInfo.InvariantCulture, out version))
-            {
-                this.NewVersion = version;
-            }
+            case OsmGeoType.Node:
+                return new NodeResult()
+                {
+                    NewId = newId,
+                    OldId = create.Id,
+                    NewVersion = 1
+                };
+            case OsmGeoType.Way:
+                return new WayResult()
+                {
+                    NewId = newId,
+                    OldId = create.Id,
+                    NewVersion = 1
+                };
+            case OsmGeoType.Relation:
+                return new RelationResult()
+                {
+                    NewId = newId,
+                    OldId = create.Id,
+                    NewVersion = 1
+                };
         }
+        throw new Exception("Invalid OsmGeo type.");
+    }
 
-        void IXmlSerializable.WriteXml(XmlWriter writer)
+    /// <summary>
+    /// Creates a deletion
+    /// </summary>
+    public static OsmGeoResult CreateDeletion(OsmGeo delete)
+    {
+        switch (delete.Type)
         {
-            if (this.OldId.HasValue)
-            {
-                writer.WriteAttributeString("old_id", this.OldId.Value.ToInvariantString());
-            }
-            if (this.NewId.HasValue)
-            {
-                writer.WriteAttributeString("new_id", this.NewId.Value.ToInvariantString());
-            }
-            if (this.NewVersion.HasValue)
-            {
-                writer.WriteAttributeString("new_version", this.NewVersion.Value.ToInvariantString());
-            }
+            case OsmGeoType.Node:
+                return new NodeResult()
+                {
+                    NewId = null,
+                    OldId = delete.Id.Value,
+                    NewVersion = null
+                };
+            case OsmGeoType.Way:
+                return new WayResult()
+                {
+                    NewId = null,
+                    OldId = delete.Id.Value,
+                    NewVersion = null
+                };
+            case OsmGeoType.Relation:
+                return new RelationResult()
+                {
+                    NewId = null,
+                    OldId = delete.Id.Value,
+                    NewVersion = null
+                };
         }
-
-        /// <summary>
-        /// Creates a modification.
-        /// </summary>
-        public static OsmGeoResult CreateModification(OsmGeo modify, long newVersion)
-        {
-            switch(modify.Type)
-            {
-                case OsmGeoType.Node:
-                    return new NodeResult()
-                    {
-                        NewId = modify.Id,
-                        OldId = modify.Id,
-                        NewVersion = newVersion
-                    };
-                case OsmGeoType.Way:
-                    return new WayResult()
-                    {
-                        NewId = modify.Id,
-                        OldId = modify.Id,
-                        NewVersion = newVersion
-                    };
-                case OsmGeoType.Relation:
-                    return new RelationResult()
-                    {
-                        NewId = modify.Id,
-                        OldId = modify.Id,
-                        NewVersion = newVersion
-                    };
-            }
-            throw new Exception("Invalid OsmGeo type.");
-        }
-
-        /// <summary>
-        /// Creates a creation.
-        /// </summary>
-        public static OsmGeoResult CreateCreation(OsmGeo create, long newId)
-        {
-            switch (create.Type)
-            {
-                case OsmGeoType.Node:
-                    return new NodeResult()
-                    {
-                        NewId = newId,
-                        OldId = create.Id,
-                        NewVersion = 1
-                    };
-                case OsmGeoType.Way:
-                    return new WayResult()
-                    {
-                        NewId = newId,
-                        OldId = create.Id,
-                        NewVersion = 1
-                    };
-                case OsmGeoType.Relation:
-                    return new RelationResult()
-                    {
-                        NewId = newId,
-                        OldId = create.Id,
-                        NewVersion = 1
-                    };
-            }
-            throw new Exception("Invalid OsmGeo type.");
-        }
-
-        /// <summary>
-        /// Creates a deletion
-        /// </summary>
-        public static OsmGeoResult CreateDeletion(OsmGeo delete)
-        {
-            switch (delete.Type)
-            {
-                case OsmGeoType.Node:
-                    return new NodeResult()
-                    {
-                        NewId = null,
-                        OldId = delete.Id.Value,
-                        NewVersion = null
-                    };
-                case OsmGeoType.Way:
-                    return new WayResult()
-                    {
-                        NewId = null,
-                        OldId = delete.Id.Value,
-                        NewVersion = null
-                    };
-                case OsmGeoType.Relation:
-                    return new RelationResult()
-                    {
-                        NewId = null,
-                        OldId = delete.Id.Value,
-                        NewVersion = null
-                    };
-            }
-            throw new Exception("Invalid OsmGeo type.");
-        }
+        throw new Exception("Invalid OsmGeo type.");
     }
 }

@@ -22,19 +22,18 @@
 
 using OsmSharp.Complete;
 
-namespace OsmSharp
+namespace OsmSharp;
+
+/// <summary>
+/// Represents a node.
+/// </summary>
+public partial class Node : ICompleteOsmGeo
 {
-    /// <summary>
-    /// Represents a node.
-    /// </summary>
-    public partial class Node : ICompleteOsmGeo
+    long ICompleteOsmGeo.Id
     {
-        long ICompleteOsmGeo.Id
+        get
         {
-            get
-            {
-                return this.Id.Value;
-            }
+            return this.Id.Value;
         }
     }
 }

@@ -20,122 +20,121 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.Tags;
 using System;
+using OsmSharp.Tags;
 
-namespace OsmSharp.Changesets
+namespace OsmSharp.Changesets;
+
+/// <summary>
+/// Represents a changeset.
+/// </summary>
+public partial class Changeset
 {
     /// <summary>
-    /// Represents a changeset.
+    /// Gets or sets the id.
     /// </summary>
-    public partial class Changeset
-    {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        public long? Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tags.
-        /// </summary>
-        public TagsCollectionBase Tags { get; set; }
-
-        /// <summary>
-        /// Gets or sets the userid.
-        /// </summary>
-        public long? UserId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the username.
-        /// </summary>
-        public string UserName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the created at timestamp.
-        /// </summary>
-        public DateTime? CreatedAt { get; set; }
-
-        /// <summary>
-        /// Gets or sets the closed at timestamp.
-        /// </summary>
-        public DateTime? ClosedAt { get; set; }
-
-        /// <summary>
-        /// Gets or sets the open flag.
-        /// </summary>
-        public bool? Open { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum latitude.
-        /// </summary>
-        public float? MinLatitude { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum longitude.
-        /// </summary>
-        public float? MinLongitude { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum latitude.
-        /// </summary>
-        public float? MaxLatitude { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum longitude.
-        /// </summary>
-        public float? MaxLongitude { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Discussion.
-        /// </summary>
-        public Discussion Discussion { get; set; }
-
-        /// <summary>
-        /// Gets or sets the comment count.
-        /// </summary>
-        public int? CommentsCount { get; set; }
-
-        /// <summary>
-        /// Gets or sets the change count.
-        /// </summary>
-        public int? ChangesCount { get; set; }
-
-    }
+    public long? Id { get; set; }
 
     /// <summary>
-    /// Represents a Discussion.
+    /// Gets or sets the tags.
     /// </summary>
-    public partial class Discussion
-    {
-        /// <summary>
-        /// Gets or sets the comments.
-        /// </summary>
-        public Comment[] Comments { get; set; }
-    }
+    public TagsCollectionBase Tags { get; set; }
 
     /// <summary>
-    /// Represents a Comment.
+    /// Gets or sets the userid.
     /// </summary>
-    public partial class Comment
-    {
-        /// <summary>
-        /// Gets or sets the date.
-        /// </summary>
-        public DateTime? Date { get; set; }
+    public long? UserId { get; set; }
 
-        /// <summary>
-        /// Gets or sets the UserId.
-        /// </summary>
-        public long? UserId { get; set; }
+    /// <summary>
+    /// Gets or sets the username.
+    /// </summary>
+    public string UserName { get; set; }
 
-        /// <summary>
-        /// Gets or sets the UserName.
-        /// </summary>
-        public string UserName { get; set; }
+    /// <summary>
+    /// Gets or sets the created at timestamp.
+    /// </summary>
+    public DateTime? CreatedAt { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Text.
-        /// </summary>
-        public string Text { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the closed at timestamp.
+    /// </summary>
+    public DateTime? ClosedAt { get; set; }
+
+    /// <summary>
+    /// Gets or sets the open flag.
+    /// </summary>
+    public bool? Open { get; set; }
+
+    /// <summary>
+    /// Gets or sets the minimum latitude.
+    /// </summary>
+    public float? MinLatitude { get; set; }
+
+    /// <summary>
+    /// Gets or sets the minimum longitude.
+    /// </summary>
+    public float? MinLongitude { get; set; }
+
+    /// <summary>
+    /// Gets or sets the maximum latitude.
+    /// </summary>
+    public float? MaxLatitude { get; set; }
+
+    /// <summary>
+    /// Gets or sets the maximum longitude.
+    /// </summary>
+    public float? MaxLongitude { get; set; }
+
+    /// <summary>
+    /// Gets or sets the Discussion.
+    /// </summary>
+    public Discussion Discussion { get; set; }
+
+    /// <summary>
+    /// Gets or sets the comment count.
+    /// </summary>
+    public int? CommentsCount { get; set; }
+
+    /// <summary>
+    /// Gets or sets the change count.
+    /// </summary>
+    public int? ChangesCount { get; set; }
+
+}
+
+/// <summary>
+/// Represents a Discussion.
+/// </summary>
+public partial class Discussion
+{
+    /// <summary>
+    /// Gets or sets the comments.
+    /// </summary>
+    public Comment[] Comments { get; set; }
+}
+
+/// <summary>
+/// Represents a Comment.
+/// </summary>
+public partial class Comment
+{
+    /// <summary>
+    /// Gets or sets the date.
+    /// </summary>
+    public DateTime? Date { get; set; }
+
+    /// <summary>
+    /// Gets or sets the UserId.
+    /// </summary>
+    public long? UserId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the UserName.
+    /// </summary>
+    public string UserName { get; set; }
+
+    /// <summary>
+    /// Gets or sets the Text.
+    /// </summary>
+    public string Text { get; set; }
 }

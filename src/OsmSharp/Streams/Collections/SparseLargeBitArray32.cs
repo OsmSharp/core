@@ -22,81 +22,80 @@
 
 using System;
 
-namespace OsmSharp.Streams.Collections
+namespace OsmSharp.Streams.Collections;
+
+/// <summary>
+/// Represents a sparce large bit array.
+/// </summary>
+public class SparseLargeBitArray32
 {
+    private readonly int _blockSize;
+    private readonly long _length;
+    private readonly LargeBitArray32[] _data;
+
     /// <summary>
-    /// Represents a sparce large bit array.
+    /// Creates a new sparse bitvector 32 array.
     /// </summary>
-    public class SparseLargeBitArray32
+    /// <param name="size"></param>
+    /// <param name="blockSize"></param>
+    public SparseLargeBitArray32(long size, int blockSize)
     {
-        private readonly int _blockSize;
-        private readonly long _length;
-        private readonly LargeBitArray32[] _data;
+        if (size % 32 != 0) { throw new ArgumentOutOfRangeException("Size has to be divisible by 32."); }
+        if (size % blockSize != 0) { throw new ArgumentOutOfRangeException("Size has to be divisible by blocksize."); }
 
-        /// <summary>
-        /// Creates a new sparse bitvector 32 array.
-        /// </summary>
-        /// <param name="size"></param>
-        /// <param name="blockSize"></param>
-        public SparseLargeBitArray32(long size, int blockSize)
+        _length = size;
+        _blockSize = blockSize;
+        _data = new LargeBitArray32[_length / _blockSize];
+    }
+
+    /// <summary>
+    /// Gets or sets the value at the given index.
+    /// </summary>
+    /// <param name="idx"></param>
+    /// <returns></returns>
+    public bool this[long idx]
+    {
+        get
         {
-            if (size % 32 != 0) { throw new ArgumentOutOfRangeException("Size has to be divisible by 32."); }
-            if (size % blockSize != 0) { throw new ArgumentOutOfRangeException("Size has to be divisible by blocksize."); }
-
-            _length = size;
-            _blockSize = blockSize;
-            _data = new LargeBitArray32[_length / _blockSize];
-        }
-
-        /// <summary>
-        /// Gets or sets the value at the given index.
-        /// </summary>
-        /// <param name="idx"></param>
-        /// <returns></returns>
-        public bool this[long idx]
-        {
-            get
-            {
-                int blockId = (int)(idx / _blockSize);
-                var block = _data[blockId];
-                if (block != null)
-                { // the block actually exists.
-                    int blockIdx = (int)(idx % _blockSize);
-                    return _data[blockId][blockIdx];
-                }
-                return false;
+            int blockId = (int)(idx / _blockSize);
+            var block = _data[blockId];
+            if (block != null)
+            { // the block actually exists.
+                int blockIdx = (int)(idx % _blockSize);
+                return _data[blockId][blockIdx];
             }
-            set
-            {
-                int blockId = (int)(idx / _blockSize);
-                var block = _data[blockId];
-                if (block == null)
-                { // block is not there.
-                    if (value)
-                    { // only add new block if true.
-                        block = new LargeBitArray32(_blockSize);
-                        int blockIdx = (int)(idx % _blockSize);
-                        block[blockIdx] = true;
-                        _data[blockId] = block;
-                    }
-                }
-                else
-                { // set value at block.
+            return false;
+        }
+        set
+        {
+            int blockId = (int)(idx / _blockSize);
+            var block = _data[blockId];
+            if (block == null)
+            { // block is not there.
+                if (value)
+                { // only add new block if true.
+                    block = new LargeBitArray32(_blockSize);
                     int blockIdx = (int)(idx % _blockSize);
-                    block[blockIdx] = value;
+                    block[blockIdx] = true;
+                    _data[blockId] = block;
                 }
+            }
+            else
+            { // set value at block.
+                int blockIdx = (int)(idx % _blockSize);
+                block[blockIdx] = value;
             }
         }
+    }
 
-        /// <summary>
-        /// Returns the length of this array.
-        /// </summary>
-        public long Length
+    /// <summary>
+    /// Returns the length of this array.
+    /// </summary>
+    public long Length
+    {
+        get
         {
-            get
-            {
-                return _length;
-            }
+            return _length;
         }
     }
 }

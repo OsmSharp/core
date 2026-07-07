@@ -20,215 +20,213 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.IO;
+using System.Xml.Serialization;
 using NUnit.Framework;
 using OsmSharp.Changesets;
 using OsmSharp.IO.Xml;
-using System.IO;
-using System.Xml.Serialization;
 
-namespace OsmSharp.Test.IO.Xml.Changesets
+namespace OsmSharp.Test.IO.Xml.Changesets;
+
+/// <summary>
+/// Contains tests for the osm change class.
+/// </summary>
+[TestFixture]
+public class OsmChangeTests
 {
     /// <summary>
-    /// Contains tests for the osm change class.
+    /// Tests serialization.
     /// </summary>
-    [TestFixture]
-    public class OsmChangeTests
+    [Test]
+    public void TestSerialize()
     {
-        /// <summary>
-        /// Tests serialization.
-        /// </summary>
-        [Test]
-        public void TestSerialize()
+        var osmChange = new OsmChange()
         {
-            var osmChange = new OsmChange()
+            Version = 0.6,
+            Generator = "OsmSharp",
+            Create = new OsmGeo[]
             {
-                Version = 0.6,
-                Generator = "OsmSharp",
-                Create = new OsmGeo[]
+                new Node()
                 {
-                    new Node()
-                    {
-                        Id = 1
-                    },
-                    new Way()
-                    {
-                        Id = 10
-                    },
-                    new Relation()
-                    {
-                        Id = 100
-                    }
+                    Id = 1
                 },
-                Modify = new OsmGeo[]
+                new Way()
                 {
-                    new Node()
-                    {
-                        Id = 2
-                    },
-                    new Way()
-                    {
-                        Id = 20
-                    },
-                    new Relation()
-                    {
-                        Id = 200
-                    }
+                    Id = 10
                 },
-                Delete = new OsmGeo[]
+                new Relation()
                 {
-                    new Node()
-                    {
-                        Id = 3
-                    },
-                    new Way()
-                    {
-                        Id = 30
-                    },
-                    new Relation()
-                    {
-                        Id = 300
-                    }
+                    Id = 100
                 }
-            };
+            },
+            Modify = new OsmGeo[]
+            {
+                new Node()
+                {
+                    Id = 2
+                },
+                new Way()
+                {
+                    Id = 20
+                },
+                new Relation()
+                {
+                    Id = 200
+                }
+            },
+            Delete = new OsmGeo[]
+            {
+                new Node()
+                {
+                    Id = 3
+                },
+                new Way()
+                {
+                    Id = 30
+                },
+                new Relation()
+                {
+                    Id = 300
+                }
+            }
+        };
 
-            var result = osmChange.SerializeToXml();
-            Assert.AreEqual("<osmChange generator=\"OsmSharp\" version=\"0.6\"><create><node id=\"1\" /><way id=\"10\" /><relation id=\"100\" /></create><modify><node id=\"2\" /><way id=\"20\" /><relation id=\"200\" /></modify><delete><node id=\"3\" /><way id=\"30\" /><relation id=\"300\" /></delete></osmChange>",
-                result);
-        }
+        var result = osmChange.SerializeToXml();
+        Assert.That(result, Is.EqualTo("<osmChange generator=\"OsmSharp\" version=\"0.6\"><create><node id=\"1\" /><way id=\"10\" /><relation id=\"100\" /></create><modify><node id=\"2\" /><way id=\"20\" /><relation id=\"200\" /></modify><delete><node id=\"3\" /><way id=\"30\" /><relation id=\"300\" /></delete></osmChange>"));
+    }
 
-        /// <summary>
-        /// Tests deserialization.
-        /// </summary>
-        [Test]
-        public void TestDeserialize_Empty()
-        {
-            var serializer = new XmlSerializer(typeof(OsmChange));
+    /// <summary>
+    /// Tests deserialization.
+    /// </summary>
+    [Test]
+    public void TestDeserialize_Empty()
+    {
+        var serializer = new XmlSerializer(typeof(OsmChange));
 
-            var osmChange = serializer.Deserialize(
-                new StringReader("<osmChange version=\"0.6\"></osmChange>")) as OsmChange;
-            Assert.IsNotNull(osmChange);
-            Assert.AreEqual(0, osmChange.Create.Length);
-            Assert.AreEqual(0, osmChange.Delete.Length);
-            Assert.AreEqual(0, osmChange.Modify.Length);
-            Assert.AreEqual(0.6, osmChange.Version);
-            Assert.IsNull(osmChange.Generator);
-            Assert.IsNull(osmChange.Copyright);
-            Assert.IsNull(osmChange.Attribution);
-            Assert.IsNull(osmChange.License);
-        }
+        var osmChange = serializer.Deserialize(
+            new StringReader("<osmChange version=\"0.6\"></osmChange>")) as OsmChange;
+        Assert.IsNotNull(osmChange);
+        Assert.That(osmChange.Create.Length, Is.EqualTo(0));
+        Assert.That(osmChange.Delete.Length, Is.EqualTo(0));
+        Assert.That(osmChange.Modify.Length, Is.EqualTo(0));
+        Assert.That(osmChange.Version, Is.EqualTo(0.6));
+        Assert.IsNull(osmChange.Generator);
+        Assert.IsNull(osmChange.Copyright);
+        Assert.IsNull(osmChange.Attribution);
+        Assert.IsNull(osmChange.License);
+    }
 
-        [Test]
-        public void TestDeserialize_WithAttributes()
-        {
-            var serializer = new XmlSerializer(typeof(OsmChange));
-            var osmChange = serializer.Deserialize(
-                new StringReader("<osmChange generator=\"OsmSharp\" version=\"0.6\" copyright=\"OpenStreetMap and contributors\" attribution=\"http://www.openstreetmap.org/copyright\" license=\"http://opendatacommons.org/licenses/odbl/1-0/\"></osmChange>")) as OsmChange;
-            Assert.IsNotNull(osmChange);
-            Assert.AreEqual(0, osmChange.Create.Length);
-            Assert.AreEqual(0, osmChange.Delete.Length);
-            Assert.AreEqual(0, osmChange.Modify.Length);
-            Assert.AreEqual(0.6, osmChange.Version);
-            Assert.AreEqual("OsmSharp", osmChange.Generator);
-            Assert.AreEqual("OpenStreetMap and contributors", osmChange.Copyright);
-            Assert.AreEqual("http://www.openstreetmap.org/copyright", osmChange.Attribution);
-            Assert.AreEqual("http://opendatacommons.org/licenses/odbl/1-0/", osmChange.License);
-        }
+    [Test]
+    public void TestDeserialize_WithAttributes()
+    {
+        var serializer = new XmlSerializer(typeof(OsmChange));
+        var osmChange = serializer.Deserialize(
+            new StringReader("<osmChange generator=\"OsmSharp\" version=\"0.6\" copyright=\"OpenStreetMap and contributors\" attribution=\"http://www.openstreetmap.org/copyright\" license=\"http://opendatacommons.org/licenses/odbl/1-0/\"></osmChange>")) as OsmChange;
+        Assert.IsNotNull(osmChange);
+        Assert.That(osmChange.Create.Length, Is.EqualTo(0));
+        Assert.That(osmChange.Delete.Length, Is.EqualTo(0));
+        Assert.That(osmChange.Modify.Length, Is.EqualTo(0));
+        Assert.That(osmChange.Version, Is.EqualTo(0.6));
+        Assert.That(osmChange.Generator, Is.EqualTo("OsmSharp"));
+        Assert.That(osmChange.Copyright, Is.EqualTo("OpenStreetMap and contributors"));
+        Assert.That(osmChange.Attribution, Is.EqualTo("http://www.openstreetmap.org/copyright"));
+        Assert.That(osmChange.License, Is.EqualTo("http://opendatacommons.org/licenses/odbl/1-0/"));
+    }
 
-        [Test]
-        public void TestDeserialize_Full()
-        {
-            var serializer = new XmlSerializer(typeof(OsmChange));
+    [Test]
+    public void TestDeserialize_Full()
+    {
+        var serializer = new XmlSerializer(typeof(OsmChange));
 
-            var osmChange = serializer.Deserialize(
-                new StringReader("<osmChange generator=\"OsmSharp\" version=\"0.6\"><create><node id=\"1\" /><way id=\"10\" /><relation id=\"100\" /></create><modify><node id=\"2\" /><way id=\"20\" /><relation id=\"200\" /></modify><delete><node id=\"3\" /><way id=\"30\" /><relation id=\"300\" /></delete></osmChange>")) as OsmChange;
-            Assert.IsNotNull(osmChange);
+        var osmChange = serializer.Deserialize(
+            new StringReader("<osmChange generator=\"OsmSharp\" version=\"0.6\"><create><node id=\"1\" /><way id=\"10\" /><relation id=\"100\" /></create><modify><node id=\"2\" /><way id=\"20\" /><relation id=\"200\" /></modify><delete><node id=\"3\" /><way id=\"30\" /><relation id=\"300\" /></delete></osmChange>")) as OsmChange;
+        Assert.IsNotNull(osmChange);
 
-            Assert.IsNotNull(osmChange.Create);
-            Assert.AreEqual(3, osmChange.Create.Length);
-            Assert.AreEqual(1, osmChange.Create[0].Id);
-            Assert.AreEqual(OsmGeoType.Node, osmChange.Create[0].Type);
-            Assert.AreEqual(10, osmChange.Create[1].Id);
-            Assert.AreEqual(OsmGeoType.Way, osmChange.Create[1].Type);
-            Assert.AreEqual(100, osmChange.Create[2].Id);
-            Assert.AreEqual(OsmGeoType.Relation, osmChange.Create[2].Type);
+        Assert.IsNotNull(osmChange.Create);
+        Assert.That(osmChange.Create.Length, Is.EqualTo(3));
+        Assert.That(osmChange.Create[0].Id, Is.EqualTo(1));
+        Assert.That(osmChange.Create[0].Type, Is.EqualTo(OsmGeoType.Node));
+        Assert.That(osmChange.Create[1].Id, Is.EqualTo(10));
+        Assert.That(osmChange.Create[1].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(osmChange.Create[2].Id, Is.EqualTo(100));
+        Assert.That(osmChange.Create[2].Type, Is.EqualTo(OsmGeoType.Relation));
 
-            Assert.IsNotNull(osmChange.Modify);
-            Assert.AreEqual(3, osmChange.Modify.Length);
-            Assert.AreEqual(2, osmChange.Modify[0].Id);
-            Assert.AreEqual(OsmGeoType.Node, osmChange.Modify[0].Type);
-            Assert.AreEqual(20, osmChange.Modify[1].Id);
-            Assert.AreEqual(OsmGeoType.Way, osmChange.Modify[1].Type);
-            Assert.AreEqual(200, osmChange.Modify[2].Id);
-            Assert.AreEqual(OsmGeoType.Relation, osmChange.Modify[2].Type);
+        Assert.IsNotNull(osmChange.Modify);
+        Assert.That(osmChange.Modify.Length, Is.EqualTo(3));
+        Assert.That(osmChange.Modify[0].Id, Is.EqualTo(2));
+        Assert.That(osmChange.Modify[0].Type, Is.EqualTo(OsmGeoType.Node));
+        Assert.That(osmChange.Modify[1].Id, Is.EqualTo(20));
+        Assert.That(osmChange.Modify[1].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(osmChange.Modify[2].Id, Is.EqualTo(200));
+        Assert.That(osmChange.Modify[2].Type, Is.EqualTo(OsmGeoType.Relation));
 
-            Assert.IsNotNull(osmChange.Delete);
-            Assert.AreEqual(3, osmChange.Delete.Length);
-            Assert.AreEqual(3, osmChange.Delete[0].Id);
-            Assert.AreEqual(OsmGeoType.Node, osmChange.Delete[0].Type);
-            Assert.AreEqual(30, osmChange.Delete[1].Id);
-            Assert.AreEqual(OsmGeoType.Way, osmChange.Delete[1].Type);
-            Assert.AreEqual(300, osmChange.Delete[2].Id);
-            Assert.AreEqual(OsmGeoType.Relation, osmChange.Delete[2].Type);
+        Assert.IsNotNull(osmChange.Delete);
+        Assert.That(osmChange.Delete.Length, Is.EqualTo(3));
+        Assert.That(osmChange.Delete[0].Id, Is.EqualTo(3));
+        Assert.That(osmChange.Delete[0].Type, Is.EqualTo(OsmGeoType.Node));
+        Assert.That(osmChange.Delete[1].Id, Is.EqualTo(30));
+        Assert.That(osmChange.Delete[1].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(osmChange.Delete[2].Id, Is.EqualTo(300));
+        Assert.That(osmChange.Delete[2].Type, Is.EqualTo(OsmGeoType.Relation));
 
-            Assert.AreEqual(0.6, osmChange.Version);
-            Assert.AreEqual("OsmSharp", osmChange.Generator);
+        Assert.That(osmChange.Version, Is.EqualTo(0.6));
+        Assert.That(osmChange.Generator, Is.EqualTo("OsmSharp"));
 
-        }
+    }
 
-        [Test]
-        public void TestDeserialize_IfUnused()
-        {
-            var serializer = new XmlSerializer(typeof(OsmChange));
+    [Test]
+    public void TestDeserialize_IfUnused()
+    {
+        var serializer = new XmlSerializer(typeof(OsmChange));
 
-            var osmChange = serializer.Deserialize(
-				new StringReader("<osmChange version=\"0.6\" generator=\"iD\"><create/><modify><node id=\"1014872736\" lon=\"4.793814787696839\" lat=\"51.26403992993145\" version=\"1470\" changeset=\"2\"/></modify><delete if-unused=\"true\"/></osmChange>")) as OsmChange;
-			Assert.IsNotNull(osmChange);
+        var osmChange = serializer.Deserialize(
+            new StringReader("<osmChange version=\"0.6\" generator=\"iD\"><create/><modify><node id=\"1014872736\" lon=\"4.793814787696839\" lat=\"51.26403992993145\" version=\"1470\" changeset=\"2\"/></modify><delete if-unused=\"true\"/></osmChange>")) as OsmChange;
+        Assert.IsNotNull(osmChange);
 
-			Assert.AreEqual(0 ,osmChange.Create.Length);
-			Assert.IsNotNull(osmChange.Modify);
-			Assert.AreEqual(1, osmChange.Modify.Length);
-			Assert.AreEqual(1014872736, osmChange.Modify[0].Id);
-			Assert.AreEqual(OsmGeoType.Node, osmChange.Modify[0].Type);
-			Assert.AreEqual(0, osmChange.Delete.Length);
-			Assert.AreEqual(0.6, osmChange.Version);
-			Assert.AreEqual("iD", osmChange.Generator);
-        }
+        Assert.That(osmChange.Create.Length, Is.EqualTo(0));
+        Assert.IsNotNull(osmChange.Modify);
+        Assert.That(osmChange.Modify.Length, Is.EqualTo(1));
+        Assert.That(osmChange.Modify[0].Id, Is.EqualTo(1014872736));
+        Assert.That(osmChange.Modify[0].Type, Is.EqualTo(OsmGeoType.Node));
+        Assert.That(osmChange.Delete.Length, Is.EqualTo(0));
+        Assert.That(osmChange.Version, Is.EqualTo(0.6));
+        Assert.That(osmChange.Generator, Is.EqualTo("iD"));
+    }
 
-        [Test]
-        public void TestDeserialize_DuplicateContainerTags()
-        {
-            var serializer = new XmlSerializer(typeof(OsmChange));
+    [Test]
+    public void TestDeserialize_DuplicateContainerTags()
+    {
+        var serializer = new XmlSerializer(typeof(OsmChange));
 
-            var osmChange = serializer.Deserialize(
-				new StringReader("<osmChange generator=\"OsmSharp\" version=\"0.6\"><create><node id=\"1\" /><way id=\"10\" /></create><create><relation id=\"100\" /></create><modify><node id=\"2\" /><way id=\"20\" /></modify><modify><relation id=\"200\" /></modify><delete><node id=\"3\" /></delete><delete><way id=\"30\" /><relation id=\"300\" /></delete></osmChange>")) as OsmChange;
-			Assert.IsNotNull(osmChange);
+        var osmChange = serializer.Deserialize(
+            new StringReader("<osmChange generator=\"OsmSharp\" version=\"0.6\"><create><node id=\"1\" /><way id=\"10\" /></create><create><relation id=\"100\" /></create><modify><node id=\"2\" /><way id=\"20\" /></modify><modify><relation id=\"200\" /></modify><delete><node id=\"3\" /></delete><delete><way id=\"30\" /><relation id=\"300\" /></delete></osmChange>")) as OsmChange;
+        Assert.IsNotNull(osmChange);
 
-            Assert.IsNotNull(osmChange.Create);
-            Assert.AreEqual(3, osmChange.Create.Length);
-            Assert.AreEqual(1, osmChange.Create[0].Id);
-            Assert.AreEqual(OsmGeoType.Node, osmChange.Create[0].Type);
-            Assert.AreEqual(10, osmChange.Create[1].Id);
-            Assert.AreEqual(OsmGeoType.Way, osmChange.Create[1].Type);
-            Assert.AreEqual(100, osmChange.Create[2].Id);
-            Assert.AreEqual(OsmGeoType.Relation, osmChange.Create[2].Type);
+        Assert.IsNotNull(osmChange.Create);
+        Assert.That(osmChange.Create.Length, Is.EqualTo(3));
+        Assert.That(osmChange.Create[0].Id, Is.EqualTo(1));
+        Assert.That(osmChange.Create[0].Type, Is.EqualTo(OsmGeoType.Node));
+        Assert.That(osmChange.Create[1].Id, Is.EqualTo(10));
+        Assert.That(osmChange.Create[1].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(osmChange.Create[2].Id, Is.EqualTo(100));
+        Assert.That(osmChange.Create[2].Type, Is.EqualTo(OsmGeoType.Relation));
 
-            Assert.IsNotNull(osmChange.Modify);
-            Assert.AreEqual(3, osmChange.Modify.Length);
-            Assert.AreEqual(2, osmChange.Modify[0].Id);
-            Assert.AreEqual(OsmGeoType.Node, osmChange.Modify[0].Type);
-            Assert.AreEqual(20, osmChange.Modify[1].Id);
-            Assert.AreEqual(OsmGeoType.Way, osmChange.Modify[1].Type);
-            Assert.AreEqual(200, osmChange.Modify[2].Id);
-            Assert.AreEqual(OsmGeoType.Relation, osmChange.Modify[2].Type);
+        Assert.IsNotNull(osmChange.Modify);
+        Assert.That(osmChange.Modify.Length, Is.EqualTo(3));
+        Assert.That(osmChange.Modify[0].Id, Is.EqualTo(2));
+        Assert.That(osmChange.Modify[0].Type, Is.EqualTo(OsmGeoType.Node));
+        Assert.That(osmChange.Modify[1].Id, Is.EqualTo(20));
+        Assert.That(osmChange.Modify[1].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(osmChange.Modify[2].Id, Is.EqualTo(200));
+        Assert.That(osmChange.Modify[2].Type, Is.EqualTo(OsmGeoType.Relation));
 
-            Assert.IsNotNull(osmChange.Delete);
-            Assert.AreEqual(3, osmChange.Delete.Length);
-            Assert.AreEqual(3, osmChange.Delete[0].Id);
-            Assert.AreEqual(OsmGeoType.Node, osmChange.Delete[0].Type);
-            Assert.AreEqual(30, osmChange.Delete[1].Id);
-            Assert.AreEqual(OsmGeoType.Way, osmChange.Delete[1].Type);
-            Assert.AreEqual(300, osmChange.Delete[2].Id);
-            Assert.AreEqual(OsmGeoType.Relation, osmChange.Delete[2].Type);
-        }
+        Assert.IsNotNull(osmChange.Delete);
+        Assert.That(osmChange.Delete.Length, Is.EqualTo(3));
+        Assert.That(osmChange.Delete[0].Id, Is.EqualTo(3));
+        Assert.That(osmChange.Delete[0].Type, Is.EqualTo(OsmGeoType.Node));
+        Assert.That(osmChange.Delete[1].Id, Is.EqualTo(30));
+        Assert.That(osmChange.Delete[1].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(osmChange.Delete[2].Id, Is.EqualTo(300));
+        Assert.That(osmChange.Delete[2].Type, Is.EqualTo(OsmGeoType.Relation));
     }
 }

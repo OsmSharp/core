@@ -22,71 +22,70 @@
 
 using System;
 
-namespace OsmSharp.Changesets
+namespace OsmSharp.Changesets;
+
+/// <summary>
+/// Represents a diff result after applying a changeset.
+/// </summary>
+public partial class DiffResult
 {
     /// <summary>
-    /// Represents a diff result after applying a changeset.
+    /// Gets or sets the generator.
     /// </summary>
-    public partial class DiffResult
-    {
-        /// <summary>
-        /// Gets or sets the generator.
-        /// </summary>
-        public string Generator { get; set; }
-
-        /// <summary>
-        /// Gets or sets the version #.
-        /// </summary>
-        public double? Version { get; set; }
-
-        /// <summary>
-        /// Gets or sets the results array.
-        /// </summary>
-        public OsmGeoResult[] Results { get; set; }
-    }
+    public string Generator { get; set; }
 
     /// <summary>
-    /// An osm-geo result.
+    /// Gets or sets the version #.
     /// </summary>
-    public abstract partial class OsmGeoResult
-    {
-        /// <summary>
-        /// Gets or sets the old id.
-        /// </summary>
-        public long? OldId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the new id.
-        /// </summary>
-        public long? NewId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the new version #.
-        /// </summary>
-        public long? NewVersion { get; set; }
-    }
+    public double? Version { get; set; }
 
     /// <summary>
-    /// A node result.
+    /// Gets or sets the results array.
     /// </summary>
-    public class NodeResult : OsmGeoResult
-    {
+    public OsmGeoResult[] Results { get; set; }
+}
 
-    }
+/// <summary>
+/// An osm-geo result.
+/// </summary>
+public abstract partial class OsmGeoResult
+{
+    /// <summary>
+    /// Gets or sets the old id.
+    /// </summary>
+    public long? OldId { get; set; }
 
     /// <summary>
-    /// A way result.
+    /// Gets or sets the new id.
     /// </summary>
-    public class WayResult : OsmGeoResult
-    {
-
-    }
+    public long? NewId { get; set; }
 
     /// <summary>
-    /// A relation result.
+    /// Gets or sets the new version #.
     /// </summary>
-    public class RelationResult : OsmGeoResult
-    {
+    public long? NewVersion { get; set; }
+}
 
-    }
+/// <summary>
+/// A node result.
+/// </summary>
+public class NodeResult : OsmGeoResult
+{
+
+}
+
+/// <summary>
+/// A way result.
+/// </summary>
+public class WayResult : OsmGeoResult
+{
+
+}
+
+/// <summary>
+/// A relation result.
+/// </summary>
+public class RelationResult : OsmGeoResult
+{
+
 }

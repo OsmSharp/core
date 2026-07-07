@@ -20,261 +20,260 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using OsmSharp.Streams;
 using OsmSharp.Streams.Filters;
-using System.Linq;
-using System.Collections.Generic;
 
-namespace OsmSharp.Test.Stream.Filters
+namespace OsmSharp.Test.Stream.Filters;
+
+/// <summary>
+/// A merge filter tests.
+/// </summary>
+[TestFixture]
+public class OsmStreamFilterMergeTests
 {
     /// <summary>
-    /// A merge filter tests.
+    /// Tests merging nodes.
     /// </summary>
-    [TestFixture]
-    public class OsmStreamFilterMergeTests
+    [Test]
+    public void TestMergeNodes()
     {
-        /// <summary>
-        /// Tests merging nodes.
-        /// </summary>
-        [Test]
-        public void TestMergeNodes()
+        var stream1 = new OsmGeo[]
         {
-            var stream1 = new OsmGeo[]
+            new Node()
             {
-                new Node()
-                {
-                    Id = 1
-                }
-            };
-            var stream2 = new OsmGeo[]
-            {
-                new Node()
-                {
-                    Id = 2
-                }
-            };
-
-            var merge = new OsmStreamFilterMerge();
-            merge.RegisterSource(stream1);
-            merge.RegisterSource(stream2);
-
-            var result = new List<OsmGeo>(merge);
-            Assert.AreEqual(2, result.Count);
-            Assert.AreEqual(1, result[0].Id);
-            Assert.AreEqual(2, result[1].Id);
-        }
-
-        /// <summary>
-        /// Tests merging ways.
-        /// </summary>
-        [Test]
-        public void TestMergeWays()
+                Id = 1
+            }
+        };
+        var stream2 = new OsmGeo[]
         {
-            var stream1 = new OsmGeo[]
+            new Node()
             {
-                new Way()
-                {
-                    Id = 1
-                }
-            };
-            var stream2 = new OsmGeo[]
-            {
-                new Way()
-                {
-                    Id = 2
-                }
-            };
+                Id = 2
+            }
+        };
 
-            var merge = new OsmStreamFilterMerge();
-            merge.RegisterSource(stream1);
-            merge.RegisterSource(stream2);
+        var merge = new OsmStreamFilterMerge();
+        merge.RegisterSource(stream1);
+        merge.RegisterSource(stream2);
 
-            var result = new List<OsmGeo>(merge);
-            Assert.AreEqual(2, result.Count);
-            Assert.AreEqual(1, result[0].Id);
-            Assert.AreEqual(2, result[1].Id);
-        }
+        var result = new List<OsmGeo>(merge);
+        Assert.That(result.Count, Is.EqualTo(2));
+        Assert.That(result[0].Id, Is.EqualTo(1));
+        Assert.That(result[1].Id, Is.EqualTo(2));
+    }
 
-        /// <summary>
-        /// Tests merging relations.
-        /// </summary>
-        [Test]
-        public void TestMergeRelations()
+    /// <summary>
+    /// Tests merging ways.
+    /// </summary>
+    [Test]
+    public void TestMergeWays()
+    {
+        var stream1 = new OsmGeo[]
         {
-            var stream1 = new OsmGeo[]
+            new Way()
             {
-                new Relation()
-                {
-                    Id = 1
-                }
-            };
-            var stream2 = new OsmGeo[]
-            {
-                new Relation()
-                {
-                    Id = 2
-                }
-            };
-
-            var merge = new OsmStreamFilterMerge();
-            merge.RegisterSource(stream1);
-            merge.RegisterSource(stream2);
-
-            var result = new List<OsmGeo>(merge);
-            Assert.AreEqual(2, result.Count);
-            Assert.AreEqual(1, result[0].Id);
-            Assert.AreEqual(2, result[1].Id);
-        }
-
-        /// <summary>
-        /// Tests not sorted.
-        /// </summary>
-        [Test]
-        public void TestMergeNotSorted()
+                Id = 1
+            }
+        };
+        var stream2 = new OsmGeo[]
         {
-            var stream1 = new OsmGeo[]
+            new Way()
             {
-                new Node()
-                {
-                    Id = 1
-                }
-            };
-            var stream2 = new OsmGeo[]
-            {
-                new Node()
-                {
-                    Id = 4
-                },
-                new Node()
-                {
-                    Id = 2
-                }
-            };
+                Id = 2
+            }
+        };
 
-            var merge = new OsmStreamFilterMerge();
-            merge.RegisterSource(stream1);
-            merge.RegisterSource(stream2);
+        var merge = new OsmStreamFilterMerge();
+        merge.RegisterSource(stream1);
+        merge.RegisterSource(stream2);
 
-            Assert.Catch<Streams.Exceptions.StreamNotSortedException>(() =>
-            {
-                merge.ToList();
-            });
-        }
+        var result = new List<OsmGeo>(merge);
+        Assert.That(result.Count, Is.EqualTo(2));
+        Assert.That(result[0].Id, Is.EqualTo(1));
+        Assert.That(result[1].Id, Is.EqualTo(2));
+    }
 
-        /// <summary>
-        /// Test merging with an empty stream.
-        /// </summary>
-        [Test]
-        public void TestMergeOneEmpty()
+    /// <summary>
+    /// Tests merging relations.
+    /// </summary>
+    [Test]
+    public void TestMergeRelations()
+    {
+        var stream1 = new OsmGeo[]
         {
-            var stream1 = new OsmGeo[0];
-            var stream2 = new OsmGeo[]
+            new Relation()
             {
-                new Node()
-                {
-                    Id = 1
-                },
-                new Way()
-                {
-                    Id = 1
-                },
-                new Relation()
-                {
-                    Id = 1
-                }
-            };
-
-            var merge = new OsmStreamFilterMerge();
-            merge.RegisterSource(stream1);
-            merge.RegisterSource(stream2);
-
-            var result = new List<OsmGeo>(merge);
-            Assert.AreEqual(3, result.Count);
-            Assert.AreEqual(1, result[0].Id);
-            Assert.AreEqual(OsmGeoType.Node, result[0].Type);
-            Assert.AreEqual(1, result[1].Id);
-            Assert.AreEqual(OsmGeoType.Way, result[1].Type);
-            Assert.AreEqual(1, result[2].Id);
-            Assert.AreEqual(OsmGeoType.Relation, result[2].Type);
-        }
-
-        /// <summary>
-        /// Tests merging a conflict.
-        /// </summary>
-        [Test]
-        public void TestMergeConflict()
+                Id = 1
+            }
+        };
+        var stream2 = new OsmGeo[]
         {
-            var stream1 = new OsmGeo[]
+            new Relation()
             {
-                new Node()
-                {
-                    Id = 1,
-                    Version = 1
-                },
-                new Way()
-                {
-                    Id = 1,
-                    Version = 1
-                },
-                new Relation()
-                {
-                    Id = 1,
-                    Version = 1
-                }
-            };
-            var stream2 = new OsmGeo[]
+                Id = 2
+            }
+        };
+
+        var merge = new OsmStreamFilterMerge();
+        merge.RegisterSource(stream1);
+        merge.RegisterSource(stream2);
+
+        var result = new List<OsmGeo>(merge);
+        Assert.That(result.Count, Is.EqualTo(2));
+        Assert.That(result[0].Id, Is.EqualTo(1));
+        Assert.That(result[1].Id, Is.EqualTo(2));
+    }
+
+    /// <summary>
+    /// Tests not sorted.
+    /// </summary>
+    [Test]
+    public void TestMergeNotSorted()
+    {
+        var stream1 = new OsmGeo[]
+        {
+            new Node()
             {
-                new Node()
-                {
-                    Id = 1
-                },
-                new Node()
-                {
-                    Id = 2
-                },
-                new Way()
-                {
-                    Id = 1
-                },
-                new Way()
-                {
-                    Id = 2
-                },
-                new Relation()
-                {
-                    Id = 1
-                },
-                new Relation()
-                {
-                    Id = 2
-                }
-            };
+                Id = 1
+            }
+        };
+        var stream2 = new OsmGeo[]
+        {
+            new Node()
+            {
+                Id = 4
+            },
+            new Node()
+            {
+                Id = 2
+            }
+        };
 
-            var merge = new OsmStreamFilterMerge();
-            merge.RegisterSource(stream1);
-            merge.RegisterSource(stream2);
+        var merge = new OsmStreamFilterMerge();
+        merge.RegisterSource(stream1);
+        merge.RegisterSource(stream2);
 
-            var result = new List<OsmGeo>(merge);
-            Assert.AreEqual(6, result.Count);
+        Assert.Catch<Streams.Exceptions.StreamNotSortedException>(() =>
+        {
+            merge.ToList();
+        });
+    }
 
-            Assert.AreEqual(1, result[0].Id);
-            Assert.AreEqual(1, result[0].Version);
-            Assert.AreEqual(OsmGeoType.Node, result[0].Type);
-            Assert.AreEqual(2, result[1].Id);
-            Assert.AreEqual(OsmGeoType.Node, result[1].Type);
+    /// <summary>
+    /// Test merging with an empty stream.
+    /// </summary>
+    [Test]
+    public void TestMergeOneEmpty()
+    {
+        var stream1 = new OsmGeo[0];
+        var stream2 = new OsmGeo[]
+        {
+            new Node()
+            {
+                Id = 1
+            },
+            new Way()
+            {
+                Id = 1
+            },
+            new Relation()
+            {
+                Id = 1
+            }
+        };
 
-            Assert.AreEqual(1, result[2].Id);
-            Assert.AreEqual(1, result[2].Version);
-            Assert.AreEqual(OsmGeoType.Way, result[2].Type);
-            Assert.AreEqual(2, result[3].Id);
-            Assert.AreEqual(OsmGeoType.Way, result[3].Type);
+        var merge = new OsmStreamFilterMerge();
+        merge.RegisterSource(stream1);
+        merge.RegisterSource(stream2);
 
-            Assert.AreEqual(1, result[4].Id);
-            Assert.AreEqual(1, result[4].Version);
-            Assert.AreEqual(OsmGeoType.Relation, result[4].Type);
-            Assert.AreEqual(2, result[5].Id);
-            Assert.AreEqual(OsmGeoType.Relation, result[5].Type);
-        }
+        var result = new List<OsmGeo>(merge);
+        Assert.That(result.Count, Is.EqualTo(3));
+        Assert.That(result[0].Id, Is.EqualTo(1));
+        Assert.That(result[0].Type, Is.EqualTo(OsmGeoType.Node));
+        Assert.That(result[1].Id, Is.EqualTo(1));
+        Assert.That(result[1].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(result[2].Id, Is.EqualTo(1));
+        Assert.That(result[2].Type, Is.EqualTo(OsmGeoType.Relation));
+    }
+
+    /// <summary>
+    /// Tests merging a conflict.
+    /// </summary>
+    [Test]
+    public void TestMergeConflict()
+    {
+        var stream1 = new OsmGeo[]
+        {
+            new Node()
+            {
+                Id = 1,
+                Version = 1
+            },
+            new Way()
+            {
+                Id = 1,
+                Version = 1
+            },
+            new Relation()
+            {
+                Id = 1,
+                Version = 1
+            }
+        };
+        var stream2 = new OsmGeo[]
+        {
+            new Node()
+            {
+                Id = 1
+            },
+            new Node()
+            {
+                Id = 2
+            },
+            new Way()
+            {
+                Id = 1
+            },
+            new Way()
+            {
+                Id = 2
+            },
+            new Relation()
+            {
+                Id = 1
+            },
+            new Relation()
+            {
+                Id = 2
+            }
+        };
+
+        var merge = new OsmStreamFilterMerge();
+        merge.RegisterSource(stream1);
+        merge.RegisterSource(stream2);
+
+        var result = new List<OsmGeo>(merge);
+        Assert.That(result.Count, Is.EqualTo(6));
+
+        Assert.That(result[0].Id, Is.EqualTo(1));
+        Assert.That(result[0].Version, Is.EqualTo(1));
+        Assert.That(result[0].Type, Is.EqualTo(OsmGeoType.Node));
+        Assert.That(result[1].Id, Is.EqualTo(2));
+        Assert.That(result[1].Type, Is.EqualTo(OsmGeoType.Node));
+
+        Assert.That(result[2].Id, Is.EqualTo(1));
+        Assert.That(result[2].Version, Is.EqualTo(1));
+        Assert.That(result[2].Type, Is.EqualTo(OsmGeoType.Way));
+        Assert.That(result[3].Id, Is.EqualTo(2));
+        Assert.That(result[3].Type, Is.EqualTo(OsmGeoType.Way));
+
+        Assert.That(result[4].Id, Is.EqualTo(1));
+        Assert.That(result[4].Version, Is.EqualTo(1));
+        Assert.That(result[4].Type, Is.EqualTo(OsmGeoType.Relation));
+        Assert.That(result[5].Id, Is.EqualTo(2));
+        Assert.That(result[5].Type, Is.EqualTo(OsmGeoType.Relation));
     }
 }

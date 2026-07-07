@@ -22,78 +22,77 @@
 
 using System;
 
-namespace OsmSharp.Test.Functional
+namespace OsmSharp.Test.Functional;
+
+/// <summary>
+/// Extension methods for the performance info class.
+/// </summary>
+public static class PerformanceInfoConsumerExtensions
 {
     /// <summary>
-    /// Extension methods for the performance info class.
+    /// Tests performance for the given action.
     /// </summary>
-    public static class PerformanceInfoConsumerExtensions
+    public static void TestPerf(this Action action, string name)
     {
-        /// <summary>
-        /// Tests performance for the given action.
-        /// </summary>
-        public static void TestPerf(this Action action, string name)
+        var info = new PerformanceInfoConsumer(name);
+        info.Start();
+        action();
+        info.Stop();
+    }
+
+    /// <summary>
+    /// Tests performance for the given action.
+    /// </summary>
+    public static void TestPerf(this Action action, string name, int count)
+    {
+        var info = new PerformanceInfoConsumer(name + " x " + count.ToInvariantString(), 10000);
+        info.Start();
+        while (count > 0)
         {
-            var info = new PerformanceInfoConsumer(name);
-            info.Start();
             action();
-            info.Stop();
+            count--;
         }
+        info.Stop();
+    }
 
-        /// <summary>
-        /// Tests performance for the given action.
-        /// </summary>
-        public static void TestPerf(this Action action, string name, int count)
-        {
-            var info = new PerformanceInfoConsumer(name + " x " + count.ToInvariantString(), 10000);
-            info.Start();
-            while (count > 0)
-            {
-                action();
-                count--;
-            }
-            info.Stop();
-        }
+    /// <summary>
+    /// Tests performance for the given function.
+    /// </summary>
+    public static T TestPerf<T>(this Func<T> func, string name)
+    {
+        var info = new PerformanceInfoConsumer(name);
+        info.Start();
+        var res = func();
+        info.Stop();
+        return res;
+    }
 
-        /// <summary>
-        /// Tests performance for the given function.
-        /// </summary>
-        public static T TestPerf<T>(this Func<T> func, string name)
+    /// <summary>
+    /// Tests performance for the given function.
+    /// </summary>
+    public static T TestPerf<T>(this Func<T> func, string name, int count)
+    {
+        var res = default(T);
+        var info = new PerformanceInfoConsumer(name + " x " + count.ToInvariantString(), 10000);
+        info.Start();
+        while (count > 0)
         {
-            var info = new PerformanceInfoConsumer(name);
-            info.Start();
-            var res = func();
-            info.Stop();
-            return res;
+            res = func();
+            count--;
         }
+        info.Stop();
+        return res;
+    }
 
-        /// <summary>
-        /// Tests performance for the given function.
-        /// </summary>
-        public static T TestPerf<T>(this Func<T> func, string name, int count)
-        {
-            var res = default(T);
-            var info = new PerformanceInfoConsumer(name + " x " + count.ToInvariantString(), 10000);
-            info.Start();
-            while (count > 0)
-            {
-                res = func();
-                count--;
-            }
-            info.Stop();
-            return res;
-        }
-
-        /// <summary>
-        /// Tests performance for the given function.
-        /// </summary>
-        public static TResult TestPerf<T, TResult>(this Func<T, TResult> func, string name, T a)
-        {
-            var info = new PerformanceInfoConsumer(name);
-            info.Start();
-            var res = func(a);
-            info.Stop();
-            return res;
-        }
+    /// <summary>
+    /// Tests performance for the given function.
+    /// </summary>
+    public static TResult TestPerf<T, TResult>(this Func<T, TResult> func, string name, T a)
+    {
+        var info = new PerformanceInfoConsumer(name);
+        info.Start();
+        var res = func(a);
+        info.Stop();
+        return res;
     }
 }

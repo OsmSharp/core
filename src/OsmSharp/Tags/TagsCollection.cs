@@ -25,143 +25,142 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using OsmSharp.IO.Json.Converters;
 
-namespace OsmSharp.Tags
+namespace OsmSharp.Tags;
+
+/// <summary>
+/// A tags collection.
+/// </summary>
+[JsonConverter(typeof(TagsCollectionConvertor))]
+public class TagsCollection : TagsCollectionBase
 {
+    private readonly Dictionary<string, string> _tags;
+
     /// <summary>
-    /// A tags collection.
+    /// Creates a new tags collection.
     /// </summary>
-    [JsonConverter(typeof(TagsCollectionConvertor))]
-    public class TagsCollection : TagsCollectionBase
+    public TagsCollection()
     {
-        private readonly Dictionary<string, string> _tags;
+        _tags = new Dictionary<string, string>();
+    }
 
-        /// <summary>
-        /// Creates a new tags collection.
-        /// </summary>
-        public TagsCollection()
+    /// <summary>
+    /// Creates a new tags collection.
+    /// </summary>
+    public TagsCollection(int capacity)
+    {
+        _tags = new Dictionary<string, string>(capacity);
+    }
+
+    /// <summary>
+    /// Creates a new tags collection.
+    /// </summary>
+    public TagsCollection(params Tag[] tags)
+        : this((IEnumerable<Tag>)tags)
+    {
+
+    }
+
+    /// <summary>
+    /// Creates a new tags collection.
+    /// </summary>
+    public TagsCollection(IEnumerable<Tag> tags)
+    {
+        _tags = new Dictionary<string, string>();
+
+        if (tags != null)
         {
-            _tags = new Dictionary<string, string>();
-        }
-
-        /// <summary>
-        /// Creates a new tags collection.
-        /// </summary>
-        public TagsCollection(int capacity)
-        {
-            _tags = new Dictionary<string, string>(capacity);
-        }
-
-        /// <summary>
-        /// Creates a new tags collection.
-        /// </summary>
-        public TagsCollection(params Tag[] tags)
-            : this((IEnumerable<Tag>)tags)
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new tags collection.
-        /// </summary>
-        public TagsCollection(IEnumerable<Tag> tags)
-        {
-            _tags = new Dictionary<string, string>();
-
-            if(tags != null)
+            foreach (var tag in tags)
             {
-                foreach(var tag in tags)
-                {
-                    this.AddOrReplace(tag);
-                }
+                this.AddOrReplace(tag);
             }
         }
+    }
 
-        /// <summary>
-        /// Creates a new tags collection.
-        /// </summary>
-        public TagsCollection(IDictionary<string, string> tags)
+    /// <summary>
+    /// Creates a new tags collection.
+    /// </summary>
+    public TagsCollection(IDictionary<string, string> tags)
+    {
+        _tags = new Dictionary<string, string>();
+
+        if (tags != null)
         {
-            _tags = new Dictionary<string, string>();
-
-            if (tags != null)
+            foreach (var pair in tags)
             {
-                foreach (var pair in tags)
-                {
-                    _tags.Add(pair.Key, pair.Value);
-                }
+                _tags.Add(pair.Key, pair.Value);
             }
         }
+    }
 
-        /// <summary>
-        /// Returns the number of tags in this collection.
-        /// </summary>
-        public override int Count
-        {
-            get { return _tags.Count; }
-        }
+    /// <summary>
+    /// Returns the number of tags in this collection.
+    /// </summary>
+    public override int Count
+    {
+        get { return _tags.Count; }
+    }
 
-        /// <summary>
-        /// Returns true if this collection is readonly.
-        /// </summary>
-        public override bool IsReadonly
-        {
-            get { return false; }
-        }
+    /// <summary>
+    /// Returns true if this collection is readonly.
+    /// </summary>
+    public override bool IsReadonly
+    {
+        get { return false; }
+    }
 
-        /// <summary>
-        /// Adds or replaces a tag.
-        /// </summary>
-        public override void AddOrReplace(Tag tag)
-        {
-            _tags[tag.Key] = tag.Value;
-        }
-        
-        public override bool TryAdd(string key, string value)
-        {
-            // TODO use _tags.TryAdd when OsmSharp ever uses netstandard 2.1
-            if (_tags.ContainsKey(key))
-            {
-                return false;
-            }
-            _tags.Add(key, value);
-            return true;
-        }
+    /// <summary>
+    /// Adds or replaces a tag.
+    /// </summary>
+    public override void AddOrReplace(Tag tag)
+    {
+        _tags[tag.Key] = tag.Value;
+    }
 
-        /// <summary>
-        /// Clears all tags.
-        /// </summary>
-        public override void Clear()
+    public override bool TryAdd(string key, string value)
+    {
+        // TODO use _tags.TryAdd when OsmSharp ever uses netstandard 2.1
+        if (_tags.ContainsKey(key))
         {
-            _tags.Clear();
+            return false;
         }
+        _tags.Add(key, value);
+        return true;
+    }
 
-        /// <summary>
-        /// Removes the tag with the given key.
-        /// </summary>
-        public override bool RemoveKey(string key)
-        {
-            return _tags.Remove(key);
-        }
+    /// <summary>
+    /// Clears all tags.
+    /// </summary>
+    public override void Clear()
+    {
+        _tags.Clear();
+    }
 
-        /// <summary>
-        /// Gets the value for the given key and returns true if the given key exists.
-        /// </summary>
-        public override bool TryGetValue(string key, out string value)
-        {
-            return _tags.TryGetValue(key, out value);
-        }
+    /// <summary>
+    /// Removes the tag with the given key.
+    /// </summary>
+    public override bool RemoveKey(string key)
+    {
+        return _tags.Remove(key);
+    }
 
-        /// <summary>
-        /// Gets the enumerator.
-        /// </summary>
-        /// <returns></returns>
-        public override IEnumerator<Tag> GetEnumerator()
+    /// <summary>
+    /// Gets the value for the given key and returns true if the given key exists.
+    /// </summary>
+    public override bool TryGetValue(string key, out string value)
+    {
+        return _tags.TryGetValue(key, out value);
+    }
+
+    /// <summary>
+    /// Gets the enumerator.
+    /// </summary>
+    /// <returns></returns>
+    public override IEnumerator<Tag> GetEnumerator()
+    {
+        return _tags.Select(x => new Tag()
         {
-            return _tags.Select(x => new Tag()
-            {
-                Key = x.Key,
-                Value = x.Value
-            }).GetEnumerator();
-        }
+            Key = x.Key,
+            Value = x.Value
+        }).GetEnumerator();
     }
 }

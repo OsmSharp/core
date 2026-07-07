@@ -20,109 +20,108 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.Db.Impl;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using OsmSharp.Changesets;
+using OsmSharp.Db.Impl;
 
-namespace OsmSharp.Db
+namespace OsmSharp.Db;
+
+/// <summary>
+/// An internal class implementing a snapshot db.
+/// </summary>
+public class SnapshotDb : ISnapshotDb
 {
+    private readonly ISnapshotDbImpl _db;
+
     /// <summary>
-    /// An internal class implementing a snapshot db.
+    /// Creates a new snapshot db.
     /// </summary>
-    public class SnapshotDb : ISnapshotDb
+    public SnapshotDb(ISnapshotDbImpl db)
     {
-        private readonly ISnapshotDbImpl _db;
+        _db = db;
+    }
 
-        /// <summary>
-        /// Creates a new snapshot db.
-        /// </summary>
-        public SnapshotDb(ISnapshotDbImpl db)
+    /// <summary>
+    /// Adds or updates.
+    /// </summary>
+    public void AddOrUpdate(IEnumerable<OsmGeo> osmGeos)
+    {
+        _db.AddOrUpdate(osmGeos);
+    }
+
+    /// <summary>
+    /// Clears all data.
+    /// </summary>
+    public void Clear()
+    {
+        _db.Clear();
+    }
+
+    /// <summary>
+    /// Deletes all given objects.
+    /// </summary>
+    public void Delete(IEnumerable<OsmGeoKey> keys)
+    {
+        _db.Delete(keys);
+    }
+
+    /// <summary>
+    /// Gets all objects.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<OsmGeo> Get()
+    {
+        return _db.Get();
+    }
+
+    /// <summary>
+    /// Gets the object with the given type and given id.
+    /// </summary>
+    public OsmGeo Get(OsmGeoType type, long id)
+    {
+        var res = this.Get(new OsmGeoKey[] { new OsmGeoKey(type, id) });
+
+        return res.FirstOrDefault();
+    }
+
+    /// <summary>
+    /// Returns all given objects.
+    /// </summary>
+    public IEnumerable<OsmGeo> Get(IEnumerable<OsmGeoKey> keys)
+    {
+        return _db.Get(keys);
+    }
+
+    /// <summary>
+    /// Gets all objects within the given bounding box.
+    /// </summary>
+    public IEnumerable<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude)
+    {
+        return _db.Get(minLatitude, minLongitude, maxLatitude, maxLongitude);
+    }
+
+    /// <summary>
+    /// Applies the given changes.
+    /// </summary>
+    public void ApplyChangeset(OsmChange changeset)
+    {
+        if (changeset == null) { throw new ArgumentNullException("changeset"); }
+
+        if (changeset.Delete != null)
         {
-            _db = db;
+            this.Delete(changeset.Delete.Select(x => new OsmGeoKey(x.Type, x.Id.Value)));
         }
 
-        /// <summary>
-        /// Adds or updates.
-        /// </summary>
-        public void AddOrUpdate(IEnumerable<OsmGeo> osmGeos)
+        if (changeset.Modify != null)
         {
-            _db.AddOrUpdate(osmGeos);
+            this.AddOrUpdate(changeset.Modify);
         }
 
-        /// <summary>
-        /// Clears all data.
-        /// </summary>
-        public void Clear()
+        if (changeset.Create != null)
         {
-            _db.Clear();
-        }
-
-        /// <summary>
-        /// Deletes all given objects.
-        /// </summary>
-        public void Delete(IEnumerable<OsmGeoKey> keys)
-        {
-            _db.Delete(keys);
-        }
-
-        /// <summary>
-        /// Gets all objects.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<OsmGeo> Get()
-        {
-            return _db.Get();
-        }
-
-        /// <summary>
-        /// Gets the object with the given type and given id.
-        /// </summary>
-        public OsmGeo Get(OsmGeoType type, long id)
-        {
-            var res = this.Get(new OsmGeoKey[] { new OsmGeoKey(type, id) });
-
-            return res.FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Returns all given objects.
-        /// </summary>
-        public IEnumerable<OsmGeo> Get(IEnumerable<OsmGeoKey> keys)
-        {
-            return _db.Get(keys);
-        }
-
-        /// <summary>
-        /// Gets all objects within the given bounding box.
-        /// </summary>
-        public IEnumerable<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude)
-        {
-            return _db.Get(minLatitude, minLongitude, maxLatitude, maxLongitude);
-        }
-        
-        /// <summary>
-        /// Applies the given changes.
-        /// </summary>
-        public void ApplyChangeset(OsmChange changeset)
-        {
-            if (changeset == null) { throw new ArgumentNullException("changeset"); }
-
-            if (changeset.Delete != null)
-            {
-                this.Delete(changeset.Delete.Select(x => new OsmGeoKey(x.Type, x.Id.Value)));
-            }
-            
-            if (changeset.Modify != null)
-            {
-                this.AddOrUpdate(changeset.Modify);
-            }
-
-            if (changeset.Create != null)
-            {
-                this.AddOrUpdate(changeset.Create);
-            }
+            this.AddOrUpdate(changeset.Create);
         }
     }
 }

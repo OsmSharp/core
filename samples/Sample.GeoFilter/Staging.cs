@@ -20,49 +20,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using NetTopologySuite.Features;
-using NetTopologySuite.Geometries;
-using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using NetTopologySuite.Features;
+using NetTopologySuite.Geometries;
+using Newtonsoft.Json;
 
-namespace Sample.GeoFilter
+namespace Sample.GeoFilter;
+
+/// <summary>
+/// Contains code to handle test data.
+/// </summary>
+public static class Staging
 {
     /// <summary>
-    /// Contains code to handle test data.
+    /// Downloads a file if it doesn't exist yet.
     /// </summary>
-    public static class Staging
+    public static async Task ToFile(string url, string filename)
     {
-        /// <summary>
-        /// Downloads a file if it doesn't exist yet.
-        /// </summary>
-        public static async Task ToFile(string url, string filename)
+        if (!File.Exists(filename))
         {
-            if (!File.Exists(filename))
-            {
-                var client = new HttpClient();
-                await using var stream = await client.GetStreamAsync(url);
-                await using var outputStream = File.OpenWrite(filename);
-                await stream.CopyToAsync(outputStream);
-            }
+            var client = new HttpClient();
+            await using var stream = await client.GetStreamAsync(url);
+            await using var outputStream = File.OpenWrite(filename);
+            await stream.CopyToAsync(outputStream);
         }
+    }
 
-        /// <summary>
-        /// Loads the test polygon.
-        /// </summary>
-        /// <returns></returns>
-        internal static Polygon LoadPolygon()
+    /// <summary>
+    /// Loads the test polygon.
+    /// </summary>
+    /// <returns></returns>
+    internal static Polygon LoadPolygon()
+    {
+        using (var stream = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Sample.GeoFilter.polygon.geojson")))
         {
-            using (var stream = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Sample.GeoFilter.polygon.geojson")))
-            {
-                var jsonSerializer = NetTopologySuite.IO.GeoJsonSerializer.Create();
-                var features = jsonSerializer.Deserialize<FeatureCollection>(new JsonTextReader(stream));
-                return features[0].Geometry as Polygon;
-            }
+            var jsonSerializer = NetTopologySuite.IO.GeoJsonSerializer.Create();
+            var features = jsonSerializer.Deserialize<FeatureCollection>(new JsonTextReader(stream));
+            return features[0].Geometry as Polygon;
         }
     }
 }

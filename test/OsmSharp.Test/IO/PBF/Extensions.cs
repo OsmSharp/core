@@ -22,22 +22,21 @@
 
 using OsmSharp.IO.PBF;
 
-namespace OsmSharp.Test.IO.PBF
+namespace OsmSharp.Test.IO.PBF;
+
+/// <summary>
+/// Contains extension methods.
+/// </summary>
+public static class Extensions
 {
     /// <summary>
-    /// Contains extension methods.
+    /// Decodes the given block.
     /// </summary>
-    public static class Extensions
+    public static bool Decode(this PrimitiveBlock block, IPBFOsmPrimitiveConsumer primitivesConsumer,
+        bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
     {
-        /// <summary>
-        /// Decodes the given block.
-        /// </summary>
-        public static bool Decode(this PrimitiveBlock block, IPBFOsmPrimitiveConsumer primitivesConsumer,
-            bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
-        {
-            bool hasNodes, hasWays, hasRelations;
-            return block.Decode(primitivesConsumer, ignoreNodes, ignoreWays, ignoreRelations,
-                out hasNodes, out hasWays, out hasRelations);
-        }
+        bool hasNodes, hasWays, hasRelations;
+        return block.Decode(primitivesConsumer, ignoreNodes, ignoreWays, ignoreRelations,
+            out hasNodes, out hasWays, out hasRelations);
     }
 }

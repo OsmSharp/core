@@ -23,62 +23,61 @@
 using System;
 using OsmSharp.Tags;
 
-namespace OsmSharp.Complete
+namespace OsmSharp.Complete;
+
+/// <summary>
+/// A complete OSM geo object.
+/// </summary>
+public abstract class CompleteOsmGeo : ICompleteOsmGeo
 {
     /// <summary>
-    /// A complete OSM geo object.
+    /// Gets or sets the id.
     /// </summary>
-    public abstract class CompleteOsmGeo : ICompleteOsmGeo
-    {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        public long Id { get; set; }
+    public long Id { get; set; }
 
-        /// <summary>
-        /// Gets or sets the changeset id.
-        /// </summary>
-        public long? ChangeSetId { get; set; }
+    /// <summary>
+    /// Gets or sets the changeset id.
+    /// </summary>
+    public long? ChangeSetId { get; set; }
 
-        /// <summary>
-        /// Gets or sets the visible flag.
-        /// </summary>
-        public bool? Visible { get; set; }
+    /// <summary>
+    /// Gets or sets the visible flag.
+    /// </summary>
+    public bool? Visible { get; set; }
 
-        /// <summary>
-        /// Gets/Sets the timestamp.
-        /// </summary>
-        public DateTime? TimeStamp { get; set; }
+    /// <summary>
+    /// Gets/Sets the timestamp.
+    /// </summary>
+    public DateTime? TimeStamp { get; set; }
 
-        /// <summary>
-        /// Gets/Sets the version.
-        /// </summary>
-        public long? Version { get; set; }
+    /// <summary>
+    /// Gets/Sets the version.
+    /// </summary>
+    public long? Version { get; set; }
 
-        /// <summary>
-        /// The user that created this object
-        /// </summary>
-        public string UserName { get; set; }
+    /// <summary>
+    /// The user that created this object
+    /// </summary>
+    public string UserName { get; set; }
 
-        /// <summary>
-        /// The user id.
-        /// </summary>
-        public long? UserId { get; set; }
+    /// <summary>
+    /// The user id.
+    /// </summary>
+    public long? UserId { get; set; }
 
-        /// <summary>
-        /// Gets the osm geo type.
-        /// </summary>
-        public abstract OsmGeoType Type { get; }
+    /// <summary>
+    /// Gets the osm geo type.
+    /// </summary>
+    public abstract OsmGeoType Type { get; }
 
-        /// <summary>
-        /// Gets the simple equivalent.
-        /// </summary>
-        /// <returns></returns>
-        public abstract OsmGeo ToSimple();
+    /// <summary>
+    /// Gets the simple equivalent.
+    /// </summary>
+    /// <returns></returns>
+    public abstract OsmGeo ToSimple();
 
-        /// <summary>
-        /// Gets or sets the tags.
-        /// </summary>
-        public TagsCollectionBase Tags { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the tags.
+    /// </summary>
+    public TagsCollectionBase Tags { get; set; }
 }

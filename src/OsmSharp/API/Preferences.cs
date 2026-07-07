@@ -22,32 +22,31 @@
 
 using System;
 
-namespace OsmSharp.API
+namespace OsmSharp.API;
+
+/// <summary>
+/// Represents a User's Preferences.
+/// </summary>
+public partial class Preferences
 {
     /// <summary>
-    /// Represents a User's Preferences.
+    /// Gets or sets the Permission array.
     /// </summary>
-    public partial class Preferences
-    {
-        /// <summary>
-        /// Gets or sets the Permission array.
-        /// </summary>
-        public Preference[] UserPreferences { get; set; }
-    }
+    public Preference[] UserPreferences { get; set; }
+}
+
+/// <summary>
+/// Represents a User's Preference.
+/// </summary>
+public partial class Preference
+{
+    /// <summary>
+    /// Gets or sets the Key.
+    /// </summary>
+    public string Key { get; set; }
 
     /// <summary>
-    /// Represents a User's Preference.
+    /// Gets or sets the Value.
     /// </summary>
-    public partial class Preference
-    {
-        /// <summary>
-        /// Gets or sets the Key.
-        /// </summary>
-        public string Key { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Value.
-        /// </summary>
-        public string Value { get; set; }
-    }
+    public string Value { get; set; }
 }

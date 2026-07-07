@@ -23,50 +23,50 @@
 using System;
 using System.IO;
 
-namespace OsmSharp.Test.Stream
+namespace OsmSharp.Test.Stream;
+
+internal class NonSeekableStream : System.IO.Stream
 {
-    class NonSeekableStream : System.IO.Stream
+    private readonly System.IO.Stream _stream;
+
+    public NonSeekableStream(System.IO.Stream stream)
     {
-        private readonly System.IO.Stream _stream;
-
-        public NonSeekableStream(System.IO.Stream stream)
-        {
-            _stream = stream;        }
+        _stream = stream;
+    }
 
 
-        public override bool CanRead => _stream.CanRead;
+    public override bool CanRead => _stream.CanRead;
 
-        public override bool CanSeek => false;
+    public override bool CanSeek => false;
 
-        public override bool CanWrite => _stream.CanWrite;
+    public override bool CanWrite => _stream.CanWrite;
 
-        public override long Length => _stream.Length;
+    public override long Length => _stream.Length;
 
-        public override long Position { get => _stream.Position; set => throw new NotSupportedException(); }
+    public override long Position { get => _stream.Position; set => throw new NotSupportedException(); }
 
-        public override void Flush()
-        {
-            _stream.Flush();
-        }
+    public override void Flush()
+    {
+        _stream.Flush();
+    }
 
-        public override int Read(byte[] buffer, int offset, int count)
-        {
-            return _stream.Read(buffer, offset, count);
-        }
+    public override int Read(byte[] buffer, int offset, int count)
+    {
+        return _stream.Read(buffer, offset, count);
+    }
 
-        public override long Seek(long offset, SeekOrigin origin)
-        {
-            throw new NotSupportedException();
-        }
+    public override long Seek(long offset, SeekOrigin origin)
+    {
+        throw new NotSupportedException();
+    }
 
-        public override void SetLength(long value)
-        {
-            _stream.SetLength(value);
-        }
+    public override void SetLength(long value)
+    {
+        _stream.SetLength(value);
+    }
 
-        public override void Write(byte[] buffer, int offset, int count)
-        {
-            _stream.Write(buffer, offset, count);   
-        }
+    public override void Write(byte[] buffer, int offset, int count)
+    {
+        _stream.Write(buffer, offset, count);
     }
 }

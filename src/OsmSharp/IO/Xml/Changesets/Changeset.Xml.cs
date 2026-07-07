@@ -28,171 +28,170 @@ using System.Xml.Serialization;
 using OsmSharp.IO.Xml;
 using OsmSharp.Tags;
 
-namespace OsmSharp.Changesets
+namespace OsmSharp.Changesets;
+
+/// <summary>
+/// Represents a changeset.
+/// </summary>
+[XmlRoot("changeset")]
+public partial class Changeset : IXmlSerializable
 {
-    /// <summary>
-    /// Represents a changeset.
-    /// </summary>
-    [XmlRoot("changeset")]
-    public partial class Changeset : IXmlSerializable
+    XmlSchema IXmlSerializable.GetSchema()
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
+        return null;
+    }
 
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            this.Id = reader.GetAttributeInt64("id");
-            this.UserName = reader.GetAttribute("user");
-            this.UserId = reader.GetAttributeInt64("uid");
-            this.CreatedAt = reader.GetAttributeDateTime("created_at");
-            this.ClosedAt = reader.GetAttributeDateTime("closed_at");
-            this.Open = reader.GetAttributeBool("open");
-            this.MinLongitude = reader.GetAttributeSingle("min_lon");
-            this.MinLatitude = reader.GetAttributeSingle("min_lat");
-            this.MaxLongitude = reader.GetAttributeSingle("max_lon");
-            this.MaxLatitude = reader.GetAttributeSingle("max_lat");
-            this.CommentsCount = reader.GetAttributeInt32("comments_count");
-            this.ChangesCount = reader.GetAttributeInt32("changes_count");
+    void IXmlSerializable.ReadXml(XmlReader reader)
+    {
+        this.Id = reader.GetAttributeInt64("id");
+        this.UserName = reader.GetAttribute("user");
+        this.UserId = reader.GetAttributeInt64("uid");
+        this.CreatedAt = reader.GetAttributeDateTime("created_at");
+        this.ClosedAt = reader.GetAttributeDateTime("closed_at");
+        this.Open = reader.GetAttributeBool("open");
+        this.MinLongitude = reader.GetAttributeSingle("min_lon");
+        this.MinLatitude = reader.GetAttributeSingle("min_lat");
+        this.MaxLongitude = reader.GetAttributeSingle("max_lon");
+        this.MaxLatitude = reader.GetAttributeSingle("max_lat");
+        this.CommentsCount = reader.GetAttributeInt32("comments_count");
+        this.ChangesCount = reader.GetAttributeInt32("changes_count");
 
-            TagsCollection tags = null;
-            while (reader.Read() &&
-                reader.MoveToContent() != XmlNodeType.None)
+        TagsCollection tags = null;
+        while (reader.Read() &&
+            reader.MoveToContent() != XmlNodeType.None)
+        {
+            if (reader.Name == "tag")
             {
-                if (reader.Name == "tag")
+                if (tags == null)
                 {
-                    if (tags == null)
-                    {
-                        tags = new TagsCollection();
-                    }
-                    tags.Add(new Tag()
-                    {
-                        Key = reader.GetAttribute("k"),
-                        Value = reader.GetAttribute("v")
-                    });
+                    tags = new TagsCollection();
                 }
-                else if (reader.Name == "discussion")
+                tags.Add(new Tag()
                 {
-                    this.Discussion = new Discussion();
-                    (this.Discussion as IXmlSerializable).ReadXml(reader);
-                }
-                else
-                {
-                    if (tags != null)
-                    {
-                        this.Tags = tags;
-                    }
-                    return;
-                }
+                    Key = reader.GetAttribute("k"),
+                    Value = reader.GetAttribute("v")
+                });
             }
-            if (tags != null)
+            else if (reader.Name == "discussion")
             {
-                this.Tags = tags;
+                this.Discussion = new Discussion();
+                (this.Discussion as IXmlSerializable).ReadXml(reader);
+            }
+            else
+            {
+                if (tags != null)
+                {
+                    this.Tags = tags;
+                }
+                return;
             }
         }
-
-        void IXmlSerializable.WriteXml(XmlWriter writer)
+        if (tags != null)
         {
-            writer.WriteAttribute("id", this.Id);
-            writer.WriteAttribute("user", this.UserName);
-            writer.WriteAttribute("uid", this.UserId);
-            writer.WriteAttribute("created_at", this.CreatedAt);
-            writer.WriteAttribute("closed_at", this.ClosedAt);
-            writer.WriteAttribute("open", this.Open);
-            writer.WriteAttribute("min_lon", this.MinLongitude);
-            writer.WriteAttribute("min_lat", this.MinLatitude);
-            writer.WriteAttribute("max_lon", this.MaxLongitude);
-            writer.WriteAttribute("max_lat", this.MaxLatitude);
-            writer.WriteAttribute("comments_count", this.CommentsCount);
-            writer.WriteAttribute("changes_count", this.ChangesCount);
-
-            if (this.Tags != null)
-            {
-                foreach (var tag in this.Tags)
-                {
-                    writer.WriteStartElement("tag");
-                    writer.WriteAttributeString("k", tag.Key);
-                    writer.WriteAttributeString("v", tag.Value);
-                    writer.WriteEndElement();
-                }
-            }
-
-            writer.WriteElement("discussion", this.Discussion);
+            this.Tags = tags;
         }
     }
 
-    /// <summary>
-    /// Represents a Discussion.
-    /// </summary>
-    [XmlRoot("discussion")]
-    public partial class Discussion : IXmlSerializable
+    void IXmlSerializable.WriteXml(XmlWriter writer)
     {
-        XmlSchema IXmlSerializable.GetSchema()
+        writer.WriteAttribute("id", this.Id);
+        writer.WriteAttribute("user", this.UserName);
+        writer.WriteAttribute("uid", this.UserId);
+        writer.WriteAttribute("created_at", this.CreatedAt);
+        writer.WriteAttribute("closed_at", this.ClosedAt);
+        writer.WriteAttribute("open", this.Open);
+        writer.WriteAttribute("min_lon", this.MinLongitude);
+        writer.WriteAttribute("min_lat", this.MinLatitude);
+        writer.WriteAttribute("max_lon", this.MaxLongitude);
+        writer.WriteAttribute("max_lat", this.MaxLatitude);
+        writer.WriteAttribute("comments_count", this.CommentsCount);
+        writer.WriteAttribute("changes_count", this.ChangesCount);
+
+        if (this.Tags != null)
         {
-            return null;
+            foreach (var tag in this.Tags)
+            {
+                writer.WriteStartElement("tag");
+                writer.WriteAttributeString("k", tag.Key);
+                writer.WriteAttributeString("v", tag.Value);
+                writer.WriteEndElement();
+            }
         }
 
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            var comments = new List<Comment>();
+        writer.WriteElement("discussion", this.Discussion);
+    }
+}
 
-            reader.GetElements(
-               new Tuple<string, Action>(
-                   "comment", () =>
-                   {
-                       var comment = new Comment();
-                       (comment as IXmlSerializable).ReadXml(reader);
-                       comments.Add(comment);
-                   })
-               );
-
-           this.Comments = comments.ToArray();
-        }
-
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteElements("comment", this.Comments);
-        }
+/// <summary>
+/// Represents a Discussion.
+/// </summary>
+[XmlRoot("discussion")]
+public partial class Discussion : IXmlSerializable
+{
+    XmlSchema IXmlSerializable.GetSchema()
+    {
+        return null;
     }
 
-    /// <summary>
-    /// Represents a Comment.
-    /// </summary>
-    [XmlRoot("comment")]
-    public partial class Comment : IXmlSerializable
+    void IXmlSerializable.ReadXml(XmlReader reader)
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
+        var comments = new List<Comment>();
 
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            this.Date = reader.GetAttributeDateTime("date");
-            this.UserId = reader.GetAttributeInt64("uid");
-            this.UserName = reader.GetAttribute("user");
+        reader.GetElements(
+           new Tuple<string, Action>(
+               "comment", () =>
+               {
+                   var comment = new Comment();
+                   (comment as IXmlSerializable).ReadXml(reader);
+                   comments.Add(comment);
+               })
+           );
 
-            reader.GetElements(
-               new Tuple<string, Action>(
-                   "text", () =>
-                   {
-                       reader.Read();
-                       this.Text = reader.Value;
-                       reader.Read();
-                   })
-               );
-        }
+        this.Comments = comments.ToArray();
+    }
 
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteAttribute("date", this.Date);
-            writer.WriteAttribute("uid", this.UserId);
-            writer.WriteAttribute("user", this.UserName);
+    void IXmlSerializable.WriteXml(XmlWriter writer)
+    {
+        writer.WriteElements("comment", this.Comments);
+    }
+}
 
-            writer.WriteStartElement("text");
-            writer.WriteString(this.Text);
-            writer.WriteEndElement();
-        }
+/// <summary>
+/// Represents a Comment.
+/// </summary>
+[XmlRoot("comment")]
+public partial class Comment : IXmlSerializable
+{
+    XmlSchema IXmlSerializable.GetSchema()
+    {
+        return null;
+    }
+
+    void IXmlSerializable.ReadXml(XmlReader reader)
+    {
+        this.Date = reader.GetAttributeDateTime("date");
+        this.UserId = reader.GetAttributeInt64("uid");
+        this.UserName = reader.GetAttribute("user");
+
+        reader.GetElements(
+           new Tuple<string, Action>(
+               "text", () =>
+               {
+                   reader.Read();
+                   this.Text = reader.Value;
+                   reader.Read();
+               })
+           );
+    }
+
+    void IXmlSerializable.WriteXml(XmlWriter writer)
+    {
+        writer.WriteAttribute("date", this.Date);
+        writer.WriteAttribute("uid", this.UserId);
+        writer.WriteAttribute("user", this.UserName);
+
+        writer.WriteStartElement("text");
+        writer.WriteString(this.Text);
+        writer.WriteEndElement();
     }
 }

@@ -20,290 +20,289 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using OsmSharp.IO.Xml;
-using System;
 
-namespace OsmSharp.API
+namespace OsmSharp.API;
+
+/// <summary>
+/// Represents the API capabilities.
+/// </summary>
+[XmlRoot("api")]
+public partial class Capabilities : IXmlSerializable
 {
-    /// <summary>
-    /// Represents the API capabilities.
-    /// </summary>
-    [XmlRoot("api")]
-    public partial class Capabilities : IXmlSerializable
+    XmlSchema IXmlSerializable.GetSchema()
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
-
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            reader.GetElements(
-                new Tuple<string, Action>(
-                    "version", () =>
-                    {
-                        this.Version = new Version();
-                        (this.Version as IXmlSerializable).ReadXml(reader);
-                        reader.Read();
-                    }),
-                new Tuple<string, Action>(
-                    "area", () =>
-                    {
-                        this.Area = new Area();
-                        (this.Area as IXmlSerializable).ReadXml(reader);
-                        reader.Read();
-                    }),
-                new Tuple<string, Action>(
-                    "note_area", () =>
-                    {
-                        this.NoteArea = new NoteArea();
-                        (this.NoteArea as IXmlSerializable).ReadXml(reader);
-                        reader.Read();
-                    }),
-                new Tuple<string, Action>(
-                    "tracepoints", () =>
-                    {
-                        this.Tracepoints = new Tracepoints();
-                        (this.Tracepoints as IXmlSerializable).ReadXml(reader);
-                        reader.Read();
-                    }),
-                new Tuple<string, Action>(
-                    "waynodes", () =>
-                    {
-                        this.WayNodes = new WayNodes();
-                        (this.WayNodes as IXmlSerializable).ReadXml(reader);
-                        reader.Read();
-                    }),
-                new Tuple<string, Action>(
-                    "changesets", () =>
-                    {
-                        this.Changesets = new Changesets();
-                        (this.Changesets as IXmlSerializable).ReadXml(reader);
-                        reader.Read();
-                    }),
-                new Tuple<string, Action>(
-                    "timeout", () =>
-                    {
-                        this.Timeout = new Timeout();
-                        (this.Timeout as IXmlSerializable).ReadXml(reader);
-                        reader.Read();
-                    }),
-                new Tuple<string, Action>(
-                    "status", () =>
-                    {
-                        this.Status = new Status();
-                        (this.Status as IXmlSerializable).ReadXml(reader);
-                        reader.Read();
-                    }));
-        }
-
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteElement("version", this.Version);
-            writer.WriteElement("area", this.Area);
-            writer.WriteElement("tracepoints", this.Tracepoints);
-            writer.WriteElement("waynodes", this.WayNodes);
-            writer.WriteElement("changesets", this.Changesets);
-            writer.WriteElement("timeout", this.Timeout);
-            writer.WriteElement("status", this.Status);
-        }
+        return null;
     }
 
-    /// <summary>
-    /// Represents the API-version capabilities.
-    /// </summary>
-    [XmlRoot("version")]
-    public partial class Version : IXmlSerializable
+    void IXmlSerializable.ReadXml(XmlReader reader)
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
-
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            // osm.api.version sometimes has attributes, sometimes just a value
-            if (reader.HasAttributes)
-            {
-                this.Minimum = reader.GetAttributeDouble("minimum");
-                this.Maximum = reader.GetAttributeDouble("maximum");
-            }
-            else if (!reader.IsEmptyElement)
-            {
-                reader.Read();
-                if (double.TryParse(reader.Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double value))
+        reader.GetElements(
+            new Tuple<string, Action>(
+                "version", () =>
                 {
-                    this.Maximum = value;
-                    this.Minimum = value;
-                }
+                    this.Version = new Version();
+                    (this.Version as IXmlSerializable).ReadXml(reader);
+                    reader.Read();
+                }),
+            new Tuple<string, Action>(
+                "area", () =>
+                {
+                    this.Area = new Area();
+                    (this.Area as IXmlSerializable).ReadXml(reader);
+                    reader.Read();
+                }),
+            new Tuple<string, Action>(
+                "note_area", () =>
+                {
+                    this.NoteArea = new NoteArea();
+                    (this.NoteArea as IXmlSerializable).ReadXml(reader);
+                    reader.Read();
+                }),
+            new Tuple<string, Action>(
+                "tracepoints", () =>
+                {
+                    this.Tracepoints = new Tracepoints();
+                    (this.Tracepoints as IXmlSerializable).ReadXml(reader);
+                    reader.Read();
+                }),
+            new Tuple<string, Action>(
+                "waynodes", () =>
+                {
+                    this.WayNodes = new WayNodes();
+                    (this.WayNodes as IXmlSerializable).ReadXml(reader);
+                    reader.Read();
+                }),
+            new Tuple<string, Action>(
+                "changesets", () =>
+                {
+                    this.Changesets = new Changesets();
+                    (this.Changesets as IXmlSerializable).ReadXml(reader);
+                    reader.Read();
+                }),
+            new Tuple<string, Action>(
+                "timeout", () =>
+                {
+                    this.Timeout = new Timeout();
+                    (this.Timeout as IXmlSerializable).ReadXml(reader);
+                    reader.Read();
+                }),
+            new Tuple<string, Action>(
+                "status", () =>
+                {
+                    this.Status = new Status();
+                    (this.Status as IXmlSerializable).ReadXml(reader);
+                    reader.Read();
+                }));
+    }
+
+    void IXmlSerializable.WriteXml(XmlWriter writer)
+    {
+        writer.WriteElement("version", this.Version);
+        writer.WriteElement("area", this.Area);
+        writer.WriteElement("tracepoints", this.Tracepoints);
+        writer.WriteElement("waynodes", this.WayNodes);
+        writer.WriteElement("changesets", this.Changesets);
+        writer.WriteElement("timeout", this.Timeout);
+        writer.WriteElement("status", this.Status);
+    }
+}
+
+/// <summary>
+/// Represents the API-version capabilities.
+/// </summary>
+[XmlRoot("version")]
+public partial class Version : IXmlSerializable
+{
+    XmlSchema IXmlSerializable.GetSchema()
+    {
+        return null;
+    }
+
+    void IXmlSerializable.ReadXml(XmlReader reader)
+    {
+        // osm.api.version sometimes has attributes, sometimes just a value
+        if (reader.HasAttributes)
+        {
+            this.Minimum = reader.GetAttributeDouble("minimum");
+            this.Maximum = reader.GetAttributeDouble("maximum");
+        }
+        else if (!reader.IsEmptyElement)
+        {
+            reader.Read();
+            if (double.TryParse(reader.Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double value))
+            {
+                this.Maximum = value;
+                this.Minimum = value;
             }
         }
-
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteAttribute("minimum", this.Minimum);
-            writer.WriteAttribute("maximum", this.Maximum);
-        }
     }
 
-    /// <summary>
-    /// Represents the API-area capability.
-    /// </summary>
-    [XmlRoot("area")]
-    public partial class Area : IXmlSerializable
+    void IXmlSerializable.WriteXml(XmlWriter writer)
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
+        writer.WriteAttribute("minimum", this.Minimum);
+        writer.WriteAttribute("maximum", this.Maximum);
+    }
+}
 
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            this.Maximum = reader.GetAttributeDouble("maximum");
-        }
-
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteAttribute("maximum", this.Maximum);
-        }
+/// <summary>
+/// Represents the API-area capability.
+/// </summary>
+[XmlRoot("area")]
+public partial class Area : IXmlSerializable
+{
+    XmlSchema IXmlSerializable.GetSchema()
+    {
+        return null;
     }
 
-    /// <summary>
-    /// Represents the API-note-area capability.
-    /// </summary>
-    [XmlRoot("note_area")]
-    public partial class NoteArea : IXmlSerializable
+    void IXmlSerializable.ReadXml(XmlReader reader)
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
-
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            this.Maximum = reader.GetAttributeDouble("maximum");
-        }
-
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteAttribute("maximum", this.Maximum);
-        }
+        this.Maximum = reader.GetAttributeDouble("maximum");
     }
 
-    /// <summary>
-    /// Represents the API-tracepoints capability.
-    /// </summary>
-    [XmlRoot("tracepoints")]
-    public partial class Tracepoints : IXmlSerializable
+    void IXmlSerializable.WriteXml(XmlWriter writer)
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
+        writer.WriteAttribute("maximum", this.Maximum);
+    }
+}
 
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            this.PerPage = reader.GetAttributeInt32("per_page");
-        }
-
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteAttribute("per_page", this.PerPage);
-        }
+/// <summary>
+/// Represents the API-note-area capability.
+/// </summary>
+[XmlRoot("note_area")]
+public partial class NoteArea : IXmlSerializable
+{
+    XmlSchema IXmlSerializable.GetSchema()
+    {
+        return null;
     }
 
-    /// <summary>
-    /// Represents the API-waynodes capability.
-    /// </summary>
-    [XmlRoot("waynodes")]
-    public partial class WayNodes : IXmlSerializable
+    void IXmlSerializable.ReadXml(XmlReader reader)
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
-
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            this.Maximum = reader.GetAttributeInt32("maximum");
-        }
-
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteAttribute("maximum", this.Maximum);
-        }
+        this.Maximum = reader.GetAttributeDouble("maximum");
     }
 
-    /// <summary>
-    /// Represents the API-changesets capability.
-    /// </summary>
-    [XmlRoot("changesets")]
-    public partial class Changesets : IXmlSerializable
+    void IXmlSerializable.WriteXml(XmlWriter writer)
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
+        writer.WriteAttribute("maximum", this.Maximum);
+    }
+}
 
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            this.MaximumElements = reader.GetAttributeInt32("maximum_elements");
-        }
-
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteAttribute("maximum_elements", this.MaximumElements);
-        }
+/// <summary>
+/// Represents the API-tracepoints capability.
+/// </summary>
+[XmlRoot("tracepoints")]
+public partial class Tracepoints : IXmlSerializable
+{
+    XmlSchema IXmlSerializable.GetSchema()
+    {
+        return null;
     }
 
-    /// <summary>
-    /// Represents the API-timeout capability.
-    /// </summary>
-    [XmlRoot("timeout")]
-    public partial class Timeout : IXmlSerializable
+    void IXmlSerializable.ReadXml(XmlReader reader)
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
-
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            this.Seconds = reader.GetAttributeInt32("seconds");
-        }
-
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteAttribute("seconds", this.Seconds);
-        }
+        this.PerPage = reader.GetAttributeInt32("per_page");
     }
 
-    /// <summary>
-    /// Represents the API-status.
-    /// </summary>
-    [XmlRoot("status")]
-    public partial class Status : IXmlSerializable
+    void IXmlSerializable.WriteXml(XmlWriter writer)
     {
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
+        writer.WriteAttribute("per_page", this.PerPage);
+    }
+}
 
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            this.Api = reader.GetAttributeEnum<ServiceStatus>("api");
-            this.Database = reader.GetAttributeEnum<ServiceStatus>("database");
-            this.Gpx = reader.GetAttributeEnum<ServiceStatus>("gpx");
-        }
+/// <summary>
+/// Represents the API-waynodes capability.
+/// </summary>
+[XmlRoot("waynodes")]
+public partial class WayNodes : IXmlSerializable
+{
+    XmlSchema IXmlSerializable.GetSchema()
+    {
+        return null;
+    }
 
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteAttribute("api", this.Api.ToString());
-            writer.WriteAttribute("database", this.Database.ToString());
-            writer.WriteAttribute("gpx", this.Gpx.ToString());
-        }
+    void IXmlSerializable.ReadXml(XmlReader reader)
+    {
+        this.Maximum = reader.GetAttributeInt32("maximum");
+    }
+
+    void IXmlSerializable.WriteXml(XmlWriter writer)
+    {
+        writer.WriteAttribute("maximum", this.Maximum);
+    }
+}
+
+/// <summary>
+/// Represents the API-changesets capability.
+/// </summary>
+[XmlRoot("changesets")]
+public partial class Changesets : IXmlSerializable
+{
+    XmlSchema IXmlSerializable.GetSchema()
+    {
+        return null;
+    }
+
+    void IXmlSerializable.ReadXml(XmlReader reader)
+    {
+        this.MaximumElements = reader.GetAttributeInt32("maximum_elements");
+    }
+
+    void IXmlSerializable.WriteXml(XmlWriter writer)
+    {
+        writer.WriteAttribute("maximum_elements", this.MaximumElements);
+    }
+}
+
+/// <summary>
+/// Represents the API-timeout capability.
+/// </summary>
+[XmlRoot("timeout")]
+public partial class Timeout : IXmlSerializable
+{
+    XmlSchema IXmlSerializable.GetSchema()
+    {
+        return null;
+    }
+
+    void IXmlSerializable.ReadXml(XmlReader reader)
+    {
+        this.Seconds = reader.GetAttributeInt32("seconds");
+    }
+
+    void IXmlSerializable.WriteXml(XmlWriter writer)
+    {
+        writer.WriteAttribute("seconds", this.Seconds);
+    }
+}
+
+/// <summary>
+/// Represents the API-status.
+/// </summary>
+[XmlRoot("status")]
+public partial class Status : IXmlSerializable
+{
+    XmlSchema IXmlSerializable.GetSchema()
+    {
+        return null;
+    }
+
+    void IXmlSerializable.ReadXml(XmlReader reader)
+    {
+        this.Api = reader.GetAttributeEnum<ServiceStatus>("api");
+        this.Database = reader.GetAttributeEnum<ServiceStatus>("database");
+        this.Gpx = reader.GetAttributeEnum<ServiceStatus>("gpx");
+    }
+
+    void IXmlSerializable.WriteXml(XmlWriter writer)
+    {
+        writer.WriteAttribute("api", this.Api.ToString());
+        writer.WriteAttribute("database", this.Database.ToString());
+        writer.WriteAttribute("gpx", this.Gpx.ToString());
     }
 }

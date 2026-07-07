@@ -20,32 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.Logging
+namespace OsmSharp.Logging;
+
+/// <summary>
+/// Represents different types of trace events.
+/// </summary>
+public enum TraceEventType
 {
     /// <summary>
-    /// Represents different types of trace events.
+    /// Critical.
     /// </summary>
-    public enum TraceEventType
-    {
-        /// <summary>
-        /// Critical.
-        /// </summary>
-        Critical,
-        /// <summary>
-        /// Error.
-        /// </summary>
-        Error,
-        /// <summary>
-        /// Warning.
-        /// </summary>
-        Warning,
-        /// <summary>
-        /// Verbose.
-        /// </summary>
-        Verbose,
-        /// <summary>
-        /// Information.
-        /// </summary>
-        Information
-    }
+    Critical,
+    /// <summary>
+    /// Error.
+    /// </summary>
+    Error,
+    /// <summary>
+    /// Warning.
+    /// </summary>
+    Warning,
+    /// <summary>
+    /// Verbose.
+    /// </summary>
+    Verbose,
+    /// <summary>
+    /// Information.
+    /// </summary>
+    Information
 }

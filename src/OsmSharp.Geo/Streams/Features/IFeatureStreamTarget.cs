@@ -22,29 +22,28 @@
 
 using NetTopologySuite.Features;
 
-namespace OsmSharp.Geo.Streams
+namespace OsmSharp.Geo.Streams;
+
+
+/// <summary>
+/// Represents a streamed feature target accepting feature objects for processing.
+/// </summary>
+public interface IFeatureStreamTarget
 {
+    /// <summary>
+    /// Initializes this target.
+    /// </summary>
+    /// <rremarks>Has to be called before starting to add objects.</rremarks>
+    void Initialize();
 
     /// <summary>
-    /// Represents a streamed feature target accepting feature objects for processing.
+    /// Adds a feature.
     /// </summary>
-    public interface IFeatureStreamTarget
-    {
-        /// <summary>
-        /// Initializes this target.
-        /// </summary>
-        /// <rremarks>Has to be called before starting to add objects.</rremarks>
-        void Initialize();
+    void Add(Feature feature);
 
-        /// <summary>
-        /// Adds a feature.
-        /// </summary>
-        void Add(Feature feature);
-
-        /// <summary>
-        /// Closes this target.
-        /// </summary>
-        /// <remarks>Closes any open connections, file locks or anything related to this target.</remarks>
-        void Close();
-    }
+    /// <summary>
+    /// Closes this target.
+    /// </summary>
+    /// <remarks>Closes any open connections, file locks or anything related to this target.</remarks>
+    void Close();
 }

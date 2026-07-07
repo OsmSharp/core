@@ -20,27 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.Db.Impl
+namespace OsmSharp.Db.Impl;
+
+/// <summary>
+/// Contains extension methods.
+/// </summary>
+public static class Extensions
 {
     /// <summary>
-    /// Contains extension methods.
+    /// Creates a snapshot db from a snapshot db implementation.
     /// </summary>
-    public static class Extensions
+    public static ISnapshotDb CreateSnapshotDb(this ISnapshotDbImpl dbImpl)
     {
-        /// <summary>
-        /// Creates a snapshot db from a snapshot db implementation.
-        /// </summary>
-        public static ISnapshotDb CreateSnapshotDb(this ISnapshotDbImpl dbImpl)
-        {
-            return new SnapshotDb(dbImpl);
-        }
+        return new SnapshotDb(dbImpl);
+    }
 
-        /// <summary>
-        /// Creates a history db from a history db implementation.
-        /// </summary>
-        public static IHistoryDb CreateHistoryDb(this IHistoryDbImpl dbImpl)
-        {
-            return new HistoryDb(dbImpl);
-        }
+    /// <summary>
+    /// Creates a history db from a history db implementation.
+    /// </summary>
+    public static IHistoryDb CreateHistoryDb(this IHistoryDbImpl dbImpl)
+    {
+        return new HistoryDb(dbImpl);
     }
 }

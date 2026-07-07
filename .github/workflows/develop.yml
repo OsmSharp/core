@@ -25,6 +25,8 @@ jobs:
       run: dotnet restore
     - name: Build all projects.
       run: dotnet build --configuration Release --no-restore
+    - name: Run dotnet format
+      run: dotnet format --verify-no-changes --verbosity diagnostic --no-restore
     - name: Unittests.
       run: dotnet test
       working-directory: ./test/OsmSharp.Test/

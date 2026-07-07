@@ -20,37 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.Geo;
-using OsmSharp.Streams;
 using System.IO;
 using System.Threading.Tasks;
+using OsmSharp.Geo;
+using OsmSharp.Streams;
 
-namespace Sample.GeoFilter
+namespace Sample.GeoFilter;
+
+internal class Program
 {
-    class Program
+    private static async Task Main(string[] args)
     {
-        static async Task Main(string[] args)
-        {
-            await Staging.ToFile("http://planet.anyways.eu/planet/europe/luxembourg/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf");
+        await Staging.ToFile("http://planet.anyways.eu/planet/europe/luxembourg/luxembourg-latest.osm.pbf", "luxembourg-latest.osm.pbf");
 
-            var polygon = Staging.LoadPolygon();
+        var polygon = Staging.LoadPolygon();
 
-            await using var fileStreamSource = File.OpenRead("luxembourg-latest.osm.pbf");
-            await using var fileStreamTarget = File.Open("polygon_complete.osm", FileMode.Create);
-            
-            // create source stream.
-            var source = new PBFOsmStreamSource(fileStreamSource);
+        await using var fileStreamSource = File.OpenRead("luxembourg-latest.osm.pbf");
+        await using var fileStreamTarget = File.Open("polygon_complete.osm", FileMode.Create);
 
-            // OPTION1: filter by keeping everything inside the given polygon.
-            var filtered = source.FilterSpatial(polygon, true);
+        // create source stream.
+        var source = new PBFOsmStreamSource(fileStreamSource);
 
-            // OPTION2: filter by bounding box.
-            // var filtered = source.FilterBox(6.238002777099609f, 49.72076145492323f, 6.272850036621093f, 49.69928180928878f);
+        // OPTION1: filter by keeping everything inside the given polygon.
+        var filtered = source.FilterSpatial(polygon, true);
 
-            // write to output xml
-            var target = new XmlOsmStreamTarget(fileStreamTarget);
-            target.RegisterSource(filtered);
-            target.Pull();
-        }
+        // OPTION2: filter by bounding box.
+        // var filtered = source.FilterBox(6.238002777099609f, 49.72076145492323f, 6.272850036621093f, 49.69928180928878f);
+
+        // write to output xml
+        var target = new XmlOsmStreamTarget(fileStreamTarget);
+        target.RegisterSource(filtered);
+        target.Pull();
     }
 }

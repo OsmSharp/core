@@ -22,381 +22,380 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using OsmSharp.Changesets;
 using OsmSharp.Db.Impl;
-using System.Linq;
 
-namespace OsmSharp.Db
+namespace OsmSharp.Db;
+
+/// <summary>
+/// An internal class implementing a snapshot db.
+/// </summary>
+public class HistoryDb : IHistoryDb
 {
+    private readonly IHistoryDbImpl _db;
+
     /// <summary>
-    /// An internal class implementing a snapshot db.
+    /// Creates a new history db.
     /// </summary>
-    public class HistoryDb : IHistoryDb
+    public HistoryDb(IHistoryDbImpl db)
     {
-        private readonly IHistoryDbImpl _db;
+        _db = db ?? throw new ArgumentNullException(nameof(db));
+    }
 
-        /// <summary>
-        /// Creates a new history db.
-        /// </summary>
-        public HistoryDb(IHistoryDbImpl db)
+    private long _lastNodeId = -1;
+    private long _lastWayId = -1;
+    private long _lastRelationId = -1;
+    private long _lastChangesetId = -1;
+
+    /// <summary>
+    /// Gets the next id for the given type.
+    /// </summary>
+    private long GetNextId(OsmGeoType type)
+    {
+        switch (type)
         {
-            _db = db ?? throw new ArgumentNullException(nameof(db));
-        }
-
-        private long _lastNodeId = -1;
-        private long _lastWayId = -1;
-        private long _lastRelationId = -1;
-        private long _lastChangesetId = -1;
-
-        /// <summary>
-        /// Gets the next id for the given type.
-        /// </summary>
-        private long GetNextId(OsmGeoType type)
-        {
-            switch(type)
-            {
-                case OsmGeoType.Node:
+            case OsmGeoType.Node:
+                if (_lastNodeId < 0)
+                {
+                    _lastNodeId = _db.GetLastId(OsmGeoType.Node);
                     if (_lastNodeId < 0)
                     {
-                        _lastNodeId = _db.GetLastId(OsmGeoType.Node);
-                        if (_lastNodeId < 0)
-                        {
-                            _lastNodeId = 0;
-                        }
+                        _lastNodeId = 0;
                     }
-                    _lastNodeId++;
-                    return _lastNodeId;
-                case OsmGeoType.Way:
+                }
+                _lastNodeId++;
+                return _lastNodeId;
+            case OsmGeoType.Way:
+                if (_lastWayId < 0)
+                {
+                    _lastWayId = _db.GetLastId(OsmGeoType.Way);
                     if (_lastWayId < 0)
                     {
-                        _lastWayId = _db.GetLastId(OsmGeoType.Way);
-                        if (_lastWayId < 0)
-                        {
-                            _lastWayId = 0;
-                        }
+                        _lastWayId = 0;
                     }
-                    _lastWayId++;
-                    return _lastWayId;
-                case OsmGeoType.Relation:
+                }
+                _lastWayId++;
+                return _lastWayId;
+            case OsmGeoType.Relation:
+                if (_lastRelationId < 0)
+                {
+                    _lastRelationId = _db.GetLastId(OsmGeoType.Relation);
                     if (_lastRelationId < 0)
                     {
-                        _lastRelationId = _db.GetLastId(OsmGeoType.Relation);
-                        if (_lastRelationId < 0)
-                        {
-                            _lastRelationId = 0;
-                        }
+                        _lastRelationId = 0;
                     }
-                    _lastRelationId++;
-                    return _lastRelationId;
-            }
-            throw new System.Exception("Unknown OsmGeo type.");
+                }
+                _lastRelationId++;
+                return _lastRelationId;
         }
+        throw new System.Exception("Unknown OsmGeo type.");
+    }
 
-        /// <summary>
-        /// Gets the next changeset id.
-        /// </summary>
-        private long GetNextChangesetId()
+    /// <summary>
+    /// Gets the next changeset id.
+    /// </summary>
+    private long GetNextChangesetId()
+    {
+        if (_lastChangesetId < 0)
         {
+            _lastChangesetId = _db.GetLastChangesetId();
             if (_lastChangesetId < 0)
             {
-                _lastChangesetId = _db.GetLastChangesetId();
-                if (_lastChangesetId < 0)
-                {
-                    _lastChangesetId = 0;
-                }
+                _lastChangesetId = 0;
             }
-            _lastChangesetId++;
-            return _lastChangesetId;
         }
+        _lastChangesetId++;
+        return _lastChangesetId;
+    }
 
-        /// <summary>
-        /// Clears all data.
-        /// </summary>
-        public void Clear()
+    /// <summary>
+    /// Clears all data.
+    /// </summary>
+    public void Clear()
+    {
+        _db.Clear();
+    }
+
+    /// <summary>
+    /// Adds the given objects.
+    /// </summary>
+    public void Add(IEnumerable<OsmGeo> osmGeos)
+    {
+        if (osmGeos == null) throw new ArgumentNullException(nameof(osmGeos));
+
+        _db.Add(osmGeos);
+    }
+
+    /// <summary>
+    /// Adds the given changeset.
+    /// </summary>
+    public void Add(Changeset meta, OsmChange changes)
+    {
+        if (meta == null) throw new ArgumentNullException(nameof(meta));
+        if (changes == null) throw new ArgumentNullException(nameof(changes));
+
+        _db.AddOrUpdate(meta);
+        _db.AddChanges(meta.Id.Value, changes);
+    }
+
+    /// <summary>
+    /// Gets all visible objects.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<OsmGeo> Get()
+    {
+        return _db.Get();
+    }
+
+    /// <summary>
+    /// Gets the last visible version of the object of the given type and given id.
+    /// </summary>
+    public OsmGeo Get(OsmGeoType type, long id)
+    {
+        return _db.Get(new OsmGeoKey[] { new OsmGeoKey(type, id) }).FirstOrDefault();
+    }
+
+    /// <summary>
+    /// Gets all visible objects for the given keys.
+    /// </summary>
+    public IEnumerable<OsmGeo> Get(IEnumerable<OsmGeoKey> keys)
+    {
+        if (keys == null) throw new ArgumentNullException(nameof(keys));
+
+        return _db.Get(keys);
+    }
+
+    /// <summary>
+    /// Gets all objects for the given keys.
+    /// </summary>
+    public IEnumerable<OsmGeo> Get(IEnumerable<OsmGeoVersionKey> keys)
+    {
+        if (keys == null) throw new ArgumentNullException(nameof(keys));
+
+        return _db.Get(keys);
+    }
+
+    /// <summary>
+    /// Gets all visible objects within the given bounding box.
+    /// </summary>
+    public IEnumerable<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude)
+    {
+        return _db.Get(minLatitude, minLongitude, maxLatitude, maxLongitude);
+    }
+
+    /// <summary>
+    /// Opens a changeset.
+    /// </summary>
+    public long OpenChangeset(Changeset info)
+    {
+        if (info == null) throw new ArgumentNullException(nameof(info));
+
+        info.Id = this.GetNextChangesetId();
+
+        _db.AddOrUpdate(info);
+        return info.Id.Value;
+    }
+
+    /// <summary>
+    /// Applies a changeset.
+    /// </summary>
+    public DiffResultResult ApplyChangeset(long id, OsmChange changeset)
+    {
+        if (changeset == null) throw new ArgumentNullException(nameof(changeset));
+
+        var results = new List<OsmGeoResult>();
+        var nodeTransforms = new Dictionary<long, long>();
+        var wayTransforms = new Dictionary<long, long>();
+        var relationTransforms = new Dictionary<long, long>();
+
+        if (changeset.Create != null)
         {
-            _db.Clear();
-        }
-
-        /// <summary>
-        /// Adds the given objects.
-        /// </summary>
-        public void Add(IEnumerable<OsmGeo> osmGeos)
-        {
-            if (osmGeos == null) throw new ArgumentNullException(nameof(osmGeos));
-            
-            _db.Add(osmGeos);
-        }
-
-        /// <summary>
-        /// Adds the given changeset.
-        /// </summary>
-        public void Add(Changeset meta, OsmChange changes)
-        {
-            if (meta == null) throw new ArgumentNullException(nameof(meta));
-            if (changes == null) throw new ArgumentNullException(nameof(changes));
-            
-            _db.AddOrUpdate(meta);
-            _db.AddChanges(meta.Id.Value, changes);
-        }
-
-        /// <summary>
-        /// Gets all visible objects.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<OsmGeo> Get()
-        {
-            return _db.Get();
-        }
-
-        /// <summary>
-        /// Gets the last visible version of the object of the given type and given id.
-        /// </summary>
-        public OsmGeo Get(OsmGeoType type, long id)
-        {
-            return _db.Get(new OsmGeoKey[] { new OsmGeoKey(type, id) }).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Gets all visible objects for the given keys.
-        /// </summary>
-        public IEnumerable<OsmGeo> Get(IEnumerable<OsmGeoKey> keys)
-        {
-            if (keys == null) throw new ArgumentNullException(nameof(keys));
-            
-            return _db.Get(keys);
-        }
-
-        /// <summary>
-        /// Gets all objects for the given keys.
-        /// </summary>
-        public IEnumerable<OsmGeo> Get(IEnumerable<OsmGeoVersionKey> keys)
-        {
-            if (keys == null) throw new ArgumentNullException(nameof(keys));
-            
-            return _db.Get(keys);
-        }
-
-        /// <summary>
-        /// Gets all visible objects within the given bounding box.
-        /// </summary>
-        public IEnumerable<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude)
-        {
-            return _db.Get(minLatitude, minLongitude, maxLatitude, maxLongitude);
-        }
-
-        /// <summary>
-        /// Opens a changeset.
-        /// </summary>
-        public long OpenChangeset(Changeset info)
-        {
-            if (info == null) throw new ArgumentNullException(nameof(info));
-            
-            info.Id = this.GetNextChangesetId();
-
-            _db.AddOrUpdate(info);
-            return info.Id.Value;
-        }
-
-        /// <summary>
-        /// Applies a changeset.
-        /// </summary>
-        public DiffResultResult ApplyChangeset(long id, OsmChange changeset)
-        {
-            if (changeset == null) throw new ArgumentNullException(nameof(changeset));
-
-            var results = new List<OsmGeoResult>();
-            var nodeTransforms = new Dictionary<long, long>();
-            var wayTransforms = new Dictionary<long, long>();
-            var relationTransforms = new Dictionary<long, long>();
-            
-            if (changeset.Create != null)
+            foreach (var create in changeset.Create)
             {
-                foreach (var create in changeset.Create)
+                var newId = this.GetNextId(create.Type);
+                switch (create.Type)
                 {
-                    var newId = this.GetNextId(create.Type);
-                    switch(create.Type)
-                    {
-                        case OsmGeoType.Node:
-                            nodeTransforms.Add(create.Id.Value, newId);
-                            break;
-                        case OsmGeoType.Way:
-                            var way = create as Way;
-                            for (var i = 0; i < way.Nodes.Length; i++)
+                    case OsmGeoType.Node:
+                        nodeTransforms.Add(create.Id.Value, newId);
+                        break;
+                    case OsmGeoType.Way:
+                        var way = create as Way;
+                        for (var i = 0; i < way.Nodes.Length; i++)
+                        {
+                            long newNodeId;
+                            if (nodeTransforms.TryGetValue(way.Nodes[i], out newNodeId))
                             {
-                                long newNodeId;
-                                if (nodeTransforms.TryGetValue(way.Nodes[i], out newNodeId))
-                                {
-                                    way.Nodes[i] = newNodeId;
-                                }
+                                way.Nodes[i] = newNodeId;
                             }
-                            wayTransforms.Add(create.Id.Value, newId);
-                            break;
-                        case OsmGeoType.Relation:
-                            var relation = create as Relation;
-                            for (var i = 0; i < relation.Members.Length; i++)
+                        }
+                        wayTransforms.Add(create.Id.Value, newId);
+                        break;
+                    case OsmGeoType.Relation:
+                        var relation = create as Relation;
+                        for (var i = 0; i < relation.Members.Length; i++)
+                        {
+                            long newMemberId;
+                            var member = relation.Members[i];
+                            switch (member.Type)
                             {
-                                long newMemberId;
-                                var member = relation.Members[i];
-                                switch(member.Type)
-                                {
-                                    case OsmGeoType.Node:
-                                        if (nodeTransforms.TryGetValue(member.Id, out newMemberId))
-                                        {
-                                            member.Id = newMemberId;
-                                        }
-                                        break;
-                                    case OsmGeoType.Way:
-                                        if (wayTransforms.TryGetValue(member.Id, out newMemberId))
-                                        {
-                                            member.Id = newMemberId;
-                                        }
-                                        break;
-                                    case OsmGeoType.Relation:
-                                        if (relationTransforms.TryGetValue(member.Id, out newMemberId))
-                                        {
-                                            member.Id = newMemberId;
-                                        }
-                                        break;
-                                }
-                                relation.Members[i] = member;
+                                case OsmGeoType.Node:
+                                    if (nodeTransforms.TryGetValue(member.Id, out newMemberId))
+                                    {
+                                        member.Id = newMemberId;
+                                    }
+                                    break;
+                                case OsmGeoType.Way:
+                                    if (wayTransforms.TryGetValue(member.Id, out newMemberId))
+                                    {
+                                        member.Id = newMemberId;
+                                    }
+                                    break;
+                                case OsmGeoType.Relation:
+                                    if (relationTransforms.TryGetValue(member.Id, out newMemberId))
+                                    {
+                                        member.Id = newMemberId;
+                                    }
+                                    break;
                             }
-                            relationTransforms.Add(create.Id.Value, newId);
-                            break;
-                    }
-
-                    results.Add(OsmGeoResult.CreateCreation(
-                        create, newId));
-                    create.Id = newId;
-                    create.Version = 1;
-                    create.TimeStamp = DateTime.Now.ToUniversalTime();
-                    create.Visible = true;
+                            relation.Members[i] = member;
+                        }
+                        relationTransforms.Add(create.Id.Value, newId);
+                        break;
                 }
 
-                this.Add(changeset.Create);
+                results.Add(OsmGeoResult.CreateCreation(
+                    create, newId));
+                create.Id = newId;
+                create.Version = 1;
+                create.TimeStamp = DateTime.Now.ToUniversalTime();
+                create.Visible = true;
             }
 
-            if (changeset.Modify != null)
-            {
-                _db.Archive(changeset.Modify.Select(x =>
-                    new OsmGeoKey(x.Type, x.Id.Value)));
+            this.Add(changeset.Create);
+        }
 
-                foreach(var modify in changeset.Modify)
+        if (changeset.Modify != null)
+        {
+            _db.Archive(changeset.Modify.Select(x =>
+                new OsmGeoKey(x.Type, x.Id.Value)));
+
+            foreach (var modify in changeset.Modify)
+            {
+                results.Add(OsmGeoResult.CreateModification(
+                    modify, modify.Version.Value + 1));
+
+                switch (modify.Type)
                 {
-                    results.Add(OsmGeoResult.CreateModification(
-                        modify, modify.Version.Value + 1));
-
-                    switch (modify.Type)
-                    {
-                        case OsmGeoType.Way:
-                            var way = modify as Way;
-                            for (var i = 0; i < way.Nodes.Length; i++)
+                    case OsmGeoType.Way:
+                        var way = modify as Way;
+                        for (var i = 0; i < way.Nodes.Length; i++)
+                        {
+                            long newNodeId;
+                            if (nodeTransforms.TryGetValue(way.Nodes[i], out newNodeId))
                             {
-                                long newNodeId;
-                                if (nodeTransforms.TryGetValue(way.Nodes[i], out newNodeId))
-                                {
-                                    way.Nodes[i] = newNodeId;
-                                }
+                                way.Nodes[i] = newNodeId;
                             }
-                            break;
-                        case OsmGeoType.Relation:
-                            var relation = modify as Relation;
-                            for (var i = 0; i < relation.Members.Length; i++)
+                        }
+                        break;
+                    case OsmGeoType.Relation:
+                        var relation = modify as Relation;
+                        for (var i = 0; i < relation.Members.Length; i++)
+                        {
+                            long newMemberId;
+                            var member = relation.Members[i];
+                            switch (member.Type)
                             {
-                                long newMemberId;
-                                var member = relation.Members[i];
-                                switch (member.Type)
-                                {
-                                    case OsmGeoType.Node:
-                                        if (nodeTransforms.TryGetValue(member.Id, out newMemberId))
-                                        {
-                                            member.Id = newMemberId;
-                                        }
-                                        break;
-                                    case OsmGeoType.Way:
-                                        if (wayTransforms.TryGetValue(member.Id, out newMemberId))
-                                        {
-                                            member.Id = newMemberId;
-                                        }
-                                        break;
-                                    case OsmGeoType.Relation:
-                                        if (relationTransforms.TryGetValue(member.Id, out newMemberId))
-                                        {
-                                            member.Id = newMemberId;
-                                        }
-                                        break;
-                                }
-                                relation.Members[i] = member;
+                                case OsmGeoType.Node:
+                                    if (nodeTransforms.TryGetValue(member.Id, out newMemberId))
+                                    {
+                                        member.Id = newMemberId;
+                                    }
+                                    break;
+                                case OsmGeoType.Way:
+                                    if (wayTransforms.TryGetValue(member.Id, out newMemberId))
+                                    {
+                                        member.Id = newMemberId;
+                                    }
+                                    break;
+                                case OsmGeoType.Relation:
+                                    if (relationTransforms.TryGetValue(member.Id, out newMemberId))
+                                    {
+                                        member.Id = newMemberId;
+                                    }
+                                    break;
                             }
-                            break;
-                    }
-
-                    modify.Version = modify.Version + 1;
-                    modify.TimeStamp = DateTime.Now.ToUniversalTime();
-                    modify.Visible = true;
+                            relation.Members[i] = member;
+                        }
+                        break;
                 }
-                _db.Add(changeset.Modify);
+
+                modify.Version = modify.Version + 1;
+                modify.TimeStamp = DateTime.Now.ToUniversalTime();
+                modify.Visible = true;
             }
+            _db.Add(changeset.Modify);
+        }
 
-            if (changeset.Delete != null)
+        if (changeset.Delete != null)
+        {
+            foreach (var delete in changeset.Delete)
             {
-                foreach(var delete in changeset.Delete)
-                {
-                    results.Add(OsmGeoResult.CreateDeletion(
-                        delete));
-                }
-                _db.Archive(changeset.Delete.Select(x =>
-                    new OsmGeoKey(x.Type, x.Id.Value)));
+                results.Add(OsmGeoResult.CreateDeletion(
+                    delete));
             }
-
-            return new DiffResultResult(new DiffResult()
-            {
-                Results = results.ToArray(),
-                Generator = "OsmSharp",
-                Version = 0.6f
-            }, DiffResultStatus.BestEffortOK);
+            _db.Archive(changeset.Delete.Select(x =>
+                new OsmGeoKey(x.Type, x.Id.Value)));
         }
 
-        /// <summary>
-        /// Updates changeset info.
-        /// </summary>
-        public void UpdateChangesetInfo(Changeset info)
+        return new DiffResultResult(new DiffResult()
         {
-            if (info == null) throw new ArgumentNullException(nameof(info));
-            
-            _db.AddOrUpdate(info);
-        }
+            Results = results.ToArray(),
+            Generator = "OsmSharp",
+            Version = 0.6f
+        }, DiffResultStatus.BestEffortOK);
+    }
 
-        /// <summary>
-        /// Closes a changeset.
-        /// </summary>
-        public bool CloseChangeset(long id)
+    /// <summary>
+    /// Updates changeset info.
+    /// </summary>
+    public void UpdateChangesetInfo(Changeset info)
+    {
+        if (info == null) throw new ArgumentNullException(nameof(info));
+
+        _db.AddOrUpdate(info);
+    }
+
+    /// <summary>
+    /// Closes a changeset.
+    /// </summary>
+    public bool CloseChangeset(long id)
+    {
+        var info = _db.GetChangeset(id);
+
+        if (info == null ||
+            info.ClosedAt != null)
         {
-            var info = _db.GetChangeset(id);
-
-            if (info == null ||
-                info.ClosedAt != null)
-            {
-                return false;
-            }
-            info.ClosedAt = DateTime.Now.ToUniversalTime();
-            _db.AddOrUpdate(info);
-            return true;
+            return false;
         }
+        info.ClosedAt = DateTime.Now.ToUniversalTime();
+        _db.AddOrUpdate(info);
+        return true;
+    }
 
-        /// <summary>
-        /// Gets the changeset with the given id.
-        /// </summary>
-        public Changeset GetChangeset(long id)
-        {
-            return _db.GetChangeset(id);
-        }
+    /// <summary>
+    /// Gets the changeset with the given id.
+    /// </summary>
+    public Changeset GetChangeset(long id)
+    {
+        return _db.GetChangeset(id);
+    }
 
-        /// <summary>
-        /// Gets the changes for the changeset with the given id.
-        /// </summary>
-        public OsmChange GetChanges(long id)
-        {
-            return _db.GetChanges(id);
-        }
+    /// <summary>
+    /// Gets the changes for the changeset with the given id.
+    /// </summary>
+    public OsmChange GetChanges(long id)
+    {
+        return _db.GetChanges(id);
     }
 }

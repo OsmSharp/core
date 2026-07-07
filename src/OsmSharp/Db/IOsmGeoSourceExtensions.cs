@@ -20,35 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.Db
+namespace OsmSharp.Db;
+
+/// <summary>
+/// Contains extension methods for an osm-geo source.
+/// </summary>
+public static class IOsmGeoSourceExtensions
 {
     /// <summary>
-    /// Contains extension methods for an osm-geo source.
+    /// Gets the node with the given id.
     /// </summary>
-    public static class IOsmGeoSourceExtensions
+    public static Node GetNode(this IOsmGeoSource db, long id)
     {
-        /// <summary>
-        /// Gets the node with the given id.
-        /// </summary>
-        public static Node GetNode(this IOsmGeoSource db, long id)
-        {
-            return db.Get(OsmGeoType.Node, id) as Node;
-        }
+        return db.Get(OsmGeoType.Node, id) as Node;
+    }
 
-        /// <summary>
-        /// Gets the way with the given id.
-        /// </summary>
-        public static Way GetWay(this IOsmGeoSource db, long id)
-        {
-            return db.Get(OsmGeoType.Way, id) as Way;
-        }
+    /// <summary>
+    /// Gets the way with the given id.
+    /// </summary>
+    public static Way GetWay(this IOsmGeoSource db, long id)
+    {
+        return db.Get(OsmGeoType.Way, id) as Way;
+    }
 
-        /// <summary>
-        /// Gets the relation with the given id.
-        /// </summary>
-        public static Relation GetRelation(this IOsmGeoSource db, long id)
-        {
-            return db.Get(OsmGeoType.Relation, id) as Relation;
-        }
+    /// <summary>
+    /// Gets the relation with the given id.
+    /// </summary>
+    public static Relation GetRelation(this IOsmGeoSource db, long id)
+    {
+        return db.Get(OsmGeoType.Relation, id) as Relation;
     }
 }

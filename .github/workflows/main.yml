@@ -9,6 +9,11 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write    # enable GitHub OIDC token issuance for nuget.org trusted publishing
+      contents: read     # explicit read for actions/checkout under least-privilege
+      packages: write    # for the GitHub Packages push below
+
     steps:
     - uses: actions/checkout@v2
       with:
@@ -57,6 +62,11 @@ jobs:
     - name: Nuget push Github Packages
       run: dotnet nuget push **/*.nupkg --skip-duplicate -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/osmsharp/index.json
       working-directory: ./src/
+    - name: NuGet login (OIDC → temp API key)
+      uses: NuGet/login@v1
+      id: nuget-login
+      with:
+        user: ${{ secrets.NUGET_USER }}
     - name: Nuget push Nuget.org
-      run: dotnet nuget push **/*.nupkg --skip-duplicate -k ${{ secrets.NUGET_SECRET }} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push **/*.nupkg --skip-duplicate --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
       working-directory: ./src/

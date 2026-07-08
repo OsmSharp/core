@@ -35,16 +35,283 @@ public class PBFOsmStreamSource : OsmStreamSource, IPBFOsmPrimitiveConsumer
     private readonly Stream _stream;
     private readonly long? _initialPosition;
 
+    // Only set when the source was constructed from a PBF file path. Enables the
+    // block-index persistence path: automatic load in the ctor, and flush via either
+    // SaveBlockIndex() or the periodic in-line flush when _persistBlockIndex is true.
+    // _blockIndexPath is derived from _pbfPath — the caller does not get to override it.
+    private readonly string _pbfPath;
+    private readonly string _blockIndexPath;
+    private readonly bool _persistBlockIndex;
+    private readonly bool _ownsStream;
+
+    // Mutation counter driving periodic flush. Bumped once per UpsertIndex call; when
+    // it crosses FlushMutationThreshold and persistence is enabled, the block index is
+    // written and the counter reset. Fully single-threaded — the source is a single-
+    // consumer stream by design, so no locking is needed here.
+    private int _pendingMutations;
+    private const int FlushMutationThreshold = 256;
+
+    private static readonly byte[] BlockIndexMagic =
+        { (byte)'O', (byte)'S', (byte)'M', (byte)'B', (byte)'I', (byte)'D', (byte)'X', 0 };
+    private const uint BlockIndexVersion = 1;
+
     /// <summary>
     /// Creates a new source of PBF formatted OSM data.
     /// </summary>
     public PBFOsmStreamSource(Stream stream)
+        : this(stream, pbfPath: null, persistBlockIndex: false, ownsStream: false)
+    {
+    }
+
+    /// <summary>
+    /// Creates a new source that reads from the given PBF file on disk. The source owns
+    /// the file handle and closes it on <see cref="Dispose"/>. If a block index sidecar
+    /// (<c>{pbfPath}.blockindex</c>) exists next to the file and matches the PBF's length
+    /// and mtime, it is loaded automatically; a mismatch or missing sidecar is silently
+    /// ignored and the source starts cold. The block index is not written back by this
+    /// overload — use <see cref="PBFOsmStreamSource(string, bool)"/> with
+    /// <c>persistBlockIndex: true</c> if you want the accreted index persisted.
+    /// </summary>
+    public PBFOsmStreamSource(string pbfPath)
+        : this(pbfPath, persistBlockIndex: false)
+    {
+    }
+
+    /// <summary>
+    /// Like <see cref="PBFOsmStreamSource(string)"/>, but when <paramref name="persistBlockIndex"/>
+    /// is <c>true</c> the accreted block index is written back to <c>{pbfPath}.blockindex</c>
+    /// periodically during the run and once more on <see cref="Dispose"/>. Writes are atomic
+    /// (temp file + rename). The sidecar path is fixed and cannot be overridden — the file
+    /// always lives next to the PBF.
+    /// </summary>
+    public PBFOsmStreamSource(string pbfPath, bool persistBlockIndex)
+        : this(File.OpenRead(pbfPath), pbfPath, persistBlockIndex, ownsStream: true)
+    {
+    }
+
+    private PBFOsmStreamSource(Stream stream, string pbfPath, bool persistBlockIndex, bool ownsStream)
     {
         _stream = stream;
-        _initialPosition = null;
-        if (_stream.CanSeek)
+        _initialPosition = _stream.CanSeek ? _stream.Position : (long?)null;
+
+        _pbfPath = pbfPath;
+        _blockIndexPath = pbfPath != null ? pbfPath + ".blockindex" : null;
+        _persistBlockIndex = persistBlockIndex;
+        _ownsStream = ownsStream;
+
+        if (_blockIndexPath != null && File.Exists(_blockIndexPath))
         {
-            _initialPosition = _stream.Position;
+            this.TryLoadBlockIndex();
+        }
+    }
+
+    /// <summary>
+    /// Writes the current in-memory block index to <c>{pbfPath}.blockindex</c>. Write is
+    /// atomic (temp file + rename). Throws <see cref="InvalidOperationException"/> when the
+    /// source was constructed from a raw <see cref="Stream"/> — there is no PBF path to derive
+    /// the sidecar location from in that case.
+    /// </summary>
+    public void SaveBlockIndex()
+    {
+        if (_blockIndexPath == null)
+        {
+            throw new InvalidOperationException(
+                "SaveBlockIndex requires the source to have been constructed with a PBF file path.");
+        }
+        this.WriteBlockIndex();
+    }
+
+    /// <summary>
+    /// Disposes the source. Flushes the block index one last time when persistence is on
+    /// and there are pending mutations, then closes the underlying stream if we opened it.
+    /// </summary>
+    public override void Dispose()
+    {
+        if (_persistBlockIndex && _pendingMutations > 0)
+        {
+            this.WriteBlockIndex();
+        }
+
+        if (_ownsStream)
+        {
+            _stream.Dispose();
+        }
+
+        base.Dispose();
+    }
+
+    private void TryLoadBlockIndex()
+    {
+        try
+        {
+            var pbfInfo = new FileInfo(_pbfPath);
+            if (!pbfInfo.Exists) return;
+            var pbfLength = pbfInfo.Length;
+            var pbfMtimeTicks = pbfInfo.LastWriteTimeUtc.Ticks;
+
+            using var fs = File.OpenRead(_blockIndexPath);
+            using var br = new BinaryReader(fs);
+
+            // Magic + version — either off means a foreign or older file, discard.
+            var magic = br.ReadBytes(BlockIndexMagic.Length);
+            if (magic.Length != BlockIndexMagic.Length) return;
+            for (var i = 0; i < BlockIndexMagic.Length; i++)
+            {
+                if (magic[i] != BlockIndexMagic[i]) return;
+            }
+            var version = br.ReadUInt32();
+            if (version != BlockIndexVersion) return;
+
+            // Fingerprint — length + mtime must match the current PBF exactly. If either
+            // is off, offsets in the sidecar may point at the wrong bytes; discard.
+            var storedLength = br.ReadInt64();
+            var storedMtimeTicks = br.ReadInt64();
+            if (storedLength != pbfLength) return;
+            if (storedMtimeTicks != pbfMtimeTicks) return;
+
+            var entryCount = br.ReadUInt32();
+
+            for (var i = 0; i < entryCount; i++)
+            {
+                var entry = ReadBlockEntry(br);
+                if (entry.FileOffset < 0 || entry.EndOffset <= entry.FileOffset
+                    || entry.EndOffset > storedLength)
+                {
+                    // Corrupt entry — stop, keep what we've loaded so far (all validated).
+                    return;
+                }
+                _blockIndex.Upsert(entry);
+            }
+
+            this.SeedFirstPositionsFromIndex();
+        }
+        catch (EndOfStreamException)
+        {
+            // Truncated / malformed sidecar. Keep whatever entries made it in cleanly.
+        }
+        catch (IOException)
+        {
+            // Transient I/O — sidecar unavailable, run cold.
+        }
+    }
+
+    private void WriteBlockIndex()
+    {
+        if (_blockIndexPath == null) return;
+        try
+        {
+            var pbfInfo = new FileInfo(_pbfPath);
+            if (!pbfInfo.Exists) return;
+            var pbfLength = pbfInfo.Length;
+            var pbfMtimeTicks = pbfInfo.LastWriteTimeUtc.Ticks;
+
+            var tmpPath = _blockIndexPath + ".tmp";
+            using (var fs = File.Create(tmpPath))
+            using (var bw = new BinaryWriter(fs))
+            {
+                bw.Write(BlockIndexMagic);
+                bw.Write(BlockIndexVersion);
+                bw.Write(pbfLength);
+                bw.Write(pbfMtimeTicks);
+
+                var entries = _blockIndex.Snapshot();
+                bw.Write((uint)entries.Count);
+                foreach (var entry in entries) WriteBlockEntry(bw, entry);
+            }
+
+            // Atomic swap: on POSIX and NTFS this is rename() / ReplaceFile, so either the
+            // old valid sidecar or the new one is at the target — never a torn write.
+            File.Move(tmpPath, _blockIndexPath, overwrite: true);
+            _pendingMutations = 0;
+        }
+        catch (IOException)
+        {
+            // Reset the counter so we don't spin retrying every entry after a persistent
+            // write failure (read-only mount, disk full). The in-memory index keeps
+            // growing; a later successful flush covers the gap.
+            _pendingMutations = 0;
+        }
+    }
+
+    private void SeedFirstPositionsFromIndex()
+    {
+        // The coarse pre-seek positions (_firstWayPosition, _firstRelationPosition) are
+        // normally learned by walking. On a resumed run we can seed them from the loaded
+        // index without an extra learn phase — smallest FileOffset with the given type
+        // present is exactly what the walk would eventually record.
+        long firstWay = -1, firstRelation = -1;
+        foreach (var entry in _blockIndex.Snapshot())
+        {
+            if (entry.HasWays && (firstWay < 0 || entry.FileOffset < firstWay))
+                firstWay = entry.FileOffset;
+            if (entry.HasRelations && (firstRelation < 0 || entry.FileOffset < firstRelation))
+                firstRelation = entry.FileOffset;
+        }
+        if (firstWay >= 0) _firstWayPosition = firstWay;
+        if (firstRelation >= 0) _firstRelationPosition = firstRelation;
+    }
+
+    private static PBFBlockEntry ReadBlockEntry(BinaryReader br)
+    {
+        var entry = new PBFBlockEntry
+        {
+            FileOffset = br.ReadInt64(),
+            EndOffset = br.ReadInt64(),
+        };
+        var flags = br.ReadByte();
+        entry.HasNodes = (flags & 0x01) != 0;
+        entry.HasWays = (flags & 0x02) != 0;
+        entry.HasRelations = (flags & 0x04) != 0;
+        entry.NodeIdsKnown = (flags & 0x08) != 0;
+        entry.WayIdsKnown = (flags & 0x10) != 0;
+        entry.RelationIdsKnown = (flags & 0x20) != 0;
+
+        if (entry.NodeIdsKnown)
+        {
+            entry.NodeMinId = br.ReadInt64();
+            entry.NodeMaxId = br.ReadInt64();
+        }
+        if (entry.WayIdsKnown)
+        {
+            entry.WayMinId = br.ReadInt64();
+            entry.WayMaxId = br.ReadInt64();
+        }
+        if (entry.RelationIdsKnown)
+        {
+            entry.RelationMinId = br.ReadInt64();
+            entry.RelationMaxId = br.ReadInt64();
+        }
+        return entry;
+    }
+
+    private static void WriteBlockEntry(BinaryWriter bw, PBFBlockEntry entry)
+    {
+        bw.Write(entry.FileOffset);
+        bw.Write(entry.EndOffset);
+
+        byte flags = 0;
+        if (entry.HasNodes) flags |= 0x01;
+        if (entry.HasWays) flags |= 0x02;
+        if (entry.HasRelations) flags |= 0x04;
+        if (entry.NodeIdsKnown) flags |= 0x08;
+        if (entry.WayIdsKnown) flags |= 0x10;
+        if (entry.RelationIdsKnown) flags |= 0x20;
+        bw.Write(flags);
+
+        if (entry.NodeIdsKnown)
+        {
+            bw.Write(entry.NodeMinId);
+            bw.Write(entry.NodeMaxId);
+        }
+        if (entry.WayIdsKnown)
+        {
+            bw.Write(entry.WayMinId);
+            bw.Write(entry.WayMaxId);
+        }
+        if (entry.RelationIdsKnown)
+        {
+            bw.Write(entry.RelationMinId);
+            bw.Write(entry.RelationMaxId);
         }
     }
 
@@ -373,6 +640,12 @@ public class PBFOsmStreamSource : OsmStreamSource, IPBFOsmPrimitiveConsumer
         }
 
         _blockIndex.Upsert(entry);
+
+        if (_persistBlockIndex)
+        {
+            _pendingMutations++;
+            if (_pendingMutations >= FlushMutationThreshold) this.WriteBlockIndex();
+        }
     }
 
     // Section order in a well-formed PBF: nodes first, then ways, then relations. Kept as
@@ -535,6 +808,12 @@ public class PBFOsmStreamSource : OsmStreamSource, IPBFOsmPrimitiveConsumer
     private sealed class PBFBlockIndex
     {
         private readonly List<PBFBlockEntry> _entries = new List<PBFBlockEntry>();
+
+        /// <summary>
+        /// Direct read-only view of the sorted entry list. Safe to iterate while the
+        /// source is idle; do not iterate while a decoder pass is in flight.
+        /// </summary>
+        public IReadOnlyList<PBFBlockEntry> Snapshot() => _entries;
 
         public bool TryGetAt(long offset, out PBFBlockEntry entry)
         {

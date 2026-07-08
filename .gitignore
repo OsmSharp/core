@@ -32,6 +32,8 @@ TestResults*/
 *.vspx
 *.patch
 *.osm.pbf
+*.osm.pbf.blockindex
+*.osm.pbf.blockindex.tmp
 TestResult.xml
 
 .vs/*

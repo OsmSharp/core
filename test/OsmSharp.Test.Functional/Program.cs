@@ -182,6 +182,13 @@ public class Program
         testAction.TestPerf("Test indexing names.");
         OsmSharp.Logging.Logger.Log("Program", TraceEventType.Information, "Indexed names.");
 
+        // Block-index persistence: end-to-end check that sidecar writes/loads survive a
+        // full roundtrip, that all documented corruption modes discard cleanly, and that
+        // typed jumps land on the same element warm vs cold.
+        OsmSharp.Logging.Logger.Log("Program", TraceEventType.Information, "Running PBF block-index tests...");
+        new Action(() => PBFBlockIndexTests.Run(Download.Local))
+            .TestPerf("PBF block-index tests.");
+
         OsmSharp.Logging.Logger.Log("Program", TraceEventType.Information, "Testing finished.");
 #if DEBUG
         Console.ReadLine();

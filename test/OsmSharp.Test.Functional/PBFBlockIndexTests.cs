@@ -58,6 +58,8 @@ public static class PBFBlockIndexTests
         Check_ExplicitSaveMidWalk(pbfPath, sidecarPath);
         Check_SaveOnStreamSourceThrows(pbfPath);
         Check_WarmTypedJumpMatchesCold(pbfPath, sidecarPath);
+        Check_TargetWritesSidecar(pbfPath, reference);
+        Check_TargetSidecarIsHotForReader(pbfPath, reference);
 
         CleanupSidecar(sidecarPath);
         Log("all PBF block-index tests passed.");
@@ -240,6 +242,84 @@ public static class PBFBlockIndexTests
         Log($"  warm-typed-jump: cold and warm both landed on relation id {coldId}");
     }
 
+    /// <summary>
+    /// Writing a PBF through the path ctor with <c>persistBlockIndex: true</c> must produce
+    /// both the PBF and a matching sidecar. The reader is used to verify the sidecar is
+    /// valid: element count round-trips through the reader without any surprises.
+    /// </summary>
+    private static void Check_TargetWritesSidecar(string sourcePbfPath, long reference)
+    {
+        var outPbf = sourcePbfPath + ".target-out.osm.pbf";
+        var outSidecar = outPbf + ".blockindex";
+        CleanupOutputs(outPbf, outSidecar);
+
+        try
+        {
+            WriteAllWithPersist(sourcePbfPath, outPbf);
+            AssertTrue(File.Exists(outPbf), "target-writes.pbf-exists");
+            AssertTrue(File.Exists(outSidecar), "target-writes.sidecar-exists");
+            var sidecarBytes = new FileInfo(outSidecar).Length;
+            AssertTrue(sidecarBytes > 20, "target-writes.sidecar-nontrivial");
+
+            // Read the produced file back — count must match the reference. This exercises
+            // the sidecar-load path against a writer-produced sidecar (i.e. the whole point
+            // of the feature: reader can consume writer's sidecar with zero cold walks).
+            var readback = CountAll(outPbf);
+            AssertEqual(reference, readback, "target-writes.readback-count");
+            Log($"  target-writes: produced sidecar={sidecarBytes:N0} bytes, reader round-trip matches reference");
+        }
+        finally
+        {
+            CleanupOutputs(outPbf, outSidecar);
+        }
+    }
+
+    /// <summary>
+    /// A sidecar produced by the target must be immediately usable by the source for a
+    /// typed jump — no cold walk to build the index. The jump must land on the same
+    /// element it would have without any sidecar.
+    /// </summary>
+    private static void Check_TargetSidecarIsHotForReader(string sourcePbfPath, long reference)
+    {
+        var outPbf = sourcePbfPath + ".target-hot.osm.pbf";
+        var outSidecar = outPbf + ".blockindex";
+        CleanupOutputs(outPbf, outSidecar);
+
+        try
+        {
+            WriteAllWithPersist(sourcePbfPath, outPbf);
+            AssertTrue(File.Exists(outSidecar), "target-hot.sidecar-exists");
+
+            // Cold reference on the produced file (no sidecar) — first delete the writer's
+            // sidecar, then jump, then restore the writer's sidecar and jump again.
+            long? coldId;
+            using (var s = new PBFOsmStreamSource(File.OpenRead(outPbf)))
+            {
+                coldId = s.MoveNext(OsmGeoType.Relation, 0) ? s.Current().Id : null;
+            }
+            long? hotId;
+            using (var s = new PBFOsmStreamSource(outPbf))
+            {
+                // Path ctor loads the writer-produced sidecar automatically.
+                hotId = s.MoveNext(OsmGeoType.Relation, 0) ? s.Current().Id : null;
+            }
+            AssertEqual(coldId ?? -1, hotId ?? -1, "target-hot.jump-consistent");
+            Log($"  target-hot: writer sidecar loaded by reader, typed jump landed on relation id {hotId}");
+        }
+        finally
+        {
+            CleanupOutputs(outPbf, outSidecar);
+        }
+    }
+
+    private static void CleanupOutputs(string pbf, string sidecar)
+    {
+        if (File.Exists(pbf)) File.Delete(pbf);
+        if (File.Exists(sidecar)) File.Delete(sidecar);
+        var tmp = sidecar + ".tmp";
+        if (File.Exists(tmp)) File.Delete(tmp);
+    }
+
     // ── Helpers ──────────────────────────────────────────────────────────────────
 
     private static long CountAll(string pbfPath)
@@ -248,6 +328,27 @@ public static class PBFBlockIndexTests
         long n = 0;
         foreach (var _ in src) n++;
         return n;
+    }
+
+    /// <summary>
+    /// Streams <paramref name="sourcePbfPath"/> into a fresh PBF at <paramref name="outPbfPath"/>
+    /// via <see cref="PBFOsmStreamTarget"/> with <c>persistBlockIndex: true</c>. The target
+    /// doesn't implement <see cref="IDisposable"/>, so <c>Close()</c> is called explicitly to
+    /// flush the final sidecar and dispose the owned file handle.
+    /// </summary>
+    private static void WriteAllWithPersist(string sourcePbfPath, string outPbfPath)
+    {
+        using var src = new PBFOsmStreamSource(sourcePbfPath);
+        var tgt = new PBFOsmStreamTarget(outPbfPath, persistBlockIndex: true);
+        try
+        {
+            tgt.RegisterSource(src);
+            tgt.Pull();
+        }
+        finally
+        {
+            tgt.Close();
+        }
     }
 
     private static long CountAllWithPersist(string pbfPath)

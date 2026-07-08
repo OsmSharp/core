@@ -51,10 +51,6 @@ public class PBFOsmStreamSource : OsmStreamSource, IPBFOsmPrimitiveConsumer
     private int _pendingMutations;
     private const int FlushMutationThreshold = 256;
 
-    private static readonly byte[] BlockIndexMagic =
-        { (byte)'O', (byte)'S', (byte)'M', (byte)'B', (byte)'I', (byte)'D', (byte)'X', 0 };
-    private const uint BlockIndexVersion = 1;
-
     /// <summary>
     /// Creates a new source of PBF formatted OSM data.
     /// </summary>
@@ -142,95 +138,20 @@ public class PBFOsmStreamSource : OsmStreamSource, IPBFOsmPrimitiveConsumer
 
     private void TryLoadBlockIndex()
     {
-        try
+        if (BlockIndexSidecar.TryLoad(_blockIndexPath, _pbfPath, _blockIndex))
         {
-            var pbfInfo = new FileInfo(_pbfPath);
-            if (!pbfInfo.Exists) return;
-            var pbfLength = pbfInfo.Length;
-            var pbfMtimeTicks = pbfInfo.LastWriteTimeUtc.Ticks;
-
-            using var fs = File.OpenRead(_blockIndexPath);
-            using var br = new BinaryReader(fs);
-
-            // Magic + version — either off means a foreign or older file, discard.
-            var magic = br.ReadBytes(BlockIndexMagic.Length);
-            if (magic.Length != BlockIndexMagic.Length) return;
-            for (var i = 0; i < BlockIndexMagic.Length; i++)
-            {
-                if (magic[i] != BlockIndexMagic[i]) return;
-            }
-            var version = br.ReadUInt32();
-            if (version != BlockIndexVersion) return;
-
-            // Fingerprint — length + mtime must match the current PBF exactly. If either
-            // is off, offsets in the sidecar may point at the wrong bytes; discard.
-            var storedLength = br.ReadInt64();
-            var storedMtimeTicks = br.ReadInt64();
-            if (storedLength != pbfLength) return;
-            if (storedMtimeTicks != pbfMtimeTicks) return;
-
-            var entryCount = br.ReadUInt32();
-
-            for (var i = 0; i < entryCount; i++)
-            {
-                var entry = ReadBlockEntry(br);
-                if (entry.FileOffset < 0 || entry.EndOffset <= entry.FileOffset
-                    || entry.EndOffset > storedLength)
-                {
-                    // Corrupt entry — stop, keep what we've loaded so far (all validated).
-                    return;
-                }
-                _blockIndex.Upsert(entry);
-            }
-
             this.SeedFirstPositionsFromIndex();
-        }
-        catch (EndOfStreamException)
-        {
-            // Truncated / malformed sidecar. Keep whatever entries made it in cleanly.
-        }
-        catch (IOException)
-        {
-            // Transient I/O — sidecar unavailable, run cold.
         }
     }
 
     private void WriteBlockIndex()
     {
         if (_blockIndexPath == null) return;
-        try
-        {
-            var pbfInfo = new FileInfo(_pbfPath);
-            if (!pbfInfo.Exists) return;
-            var pbfLength = pbfInfo.Length;
-            var pbfMtimeTicks = pbfInfo.LastWriteTimeUtc.Ticks;
-
-            var tmpPath = _blockIndexPath + ".tmp";
-            using (var fs = File.Create(tmpPath))
-            using (var bw = new BinaryWriter(fs))
-            {
-                bw.Write(BlockIndexMagic);
-                bw.Write(BlockIndexVersion);
-                bw.Write(pbfLength);
-                bw.Write(pbfMtimeTicks);
-
-                var entries = _blockIndex.Snapshot();
-                bw.Write((uint)entries.Count);
-                foreach (var entry in entries) WriteBlockEntry(bw, entry);
-            }
-
-            // Atomic swap: on POSIX and NTFS this is rename() / ReplaceFile, so either the
-            // old valid sidecar or the new one is at the target — never a torn write.
-            File.Move(tmpPath, _blockIndexPath, overwrite: true);
-            _pendingMutations = 0;
-        }
-        catch (IOException)
-        {
-            // Reset the counter so we don't spin retrying every entry after a persistent
-            // write failure (read-only mount, disk full). The in-memory index keeps
-            // growing; a later successful flush covers the gap.
-            _pendingMutations = 0;
-        }
+        // Reset the counter regardless of outcome — on I/O failure (read-only mount,
+        // disk full) we don't want to spin retrying every entry. The in-memory index
+        // keeps growing; a later successful flush covers the gap.
+        BlockIndexSidecar.Save(_blockIndexPath, _pbfPath, _blockIndex.Snapshot());
+        _pendingMutations = 0;
     }
 
     private void SeedFirstPositionsFromIndex()
@@ -249,70 +170,6 @@ public class PBFOsmStreamSource : OsmStreamSource, IPBFOsmPrimitiveConsumer
         }
         if (firstWay >= 0) _firstWayPosition = firstWay;
         if (firstRelation >= 0) _firstRelationPosition = firstRelation;
-    }
-
-    private static PBFBlockEntry ReadBlockEntry(BinaryReader br)
-    {
-        var entry = new PBFBlockEntry
-        {
-            FileOffset = br.ReadInt64(),
-            EndOffset = br.ReadInt64(),
-        };
-        var flags = br.ReadByte();
-        entry.HasNodes = (flags & 0x01) != 0;
-        entry.HasWays = (flags & 0x02) != 0;
-        entry.HasRelations = (flags & 0x04) != 0;
-        entry.NodeIdsKnown = (flags & 0x08) != 0;
-        entry.WayIdsKnown = (flags & 0x10) != 0;
-        entry.RelationIdsKnown = (flags & 0x20) != 0;
-
-        if (entry.NodeIdsKnown)
-        {
-            entry.NodeMinId = br.ReadInt64();
-            entry.NodeMaxId = br.ReadInt64();
-        }
-        if (entry.WayIdsKnown)
-        {
-            entry.WayMinId = br.ReadInt64();
-            entry.WayMaxId = br.ReadInt64();
-        }
-        if (entry.RelationIdsKnown)
-        {
-            entry.RelationMinId = br.ReadInt64();
-            entry.RelationMaxId = br.ReadInt64();
-        }
-        return entry;
-    }
-
-    private static void WriteBlockEntry(BinaryWriter bw, PBFBlockEntry entry)
-    {
-        bw.Write(entry.FileOffset);
-        bw.Write(entry.EndOffset);
-
-        byte flags = 0;
-        if (entry.HasNodes) flags |= 0x01;
-        if (entry.HasWays) flags |= 0x02;
-        if (entry.HasRelations) flags |= 0x04;
-        if (entry.NodeIdsKnown) flags |= 0x08;
-        if (entry.WayIdsKnown) flags |= 0x10;
-        if (entry.RelationIdsKnown) flags |= 0x20;
-        bw.Write(flags);
-
-        if (entry.NodeIdsKnown)
-        {
-            bw.Write(entry.NodeMinId);
-            bw.Write(entry.NodeMaxId);
-        }
-        if (entry.WayIdsKnown)
-        {
-            bw.Write(entry.WayMinId);
-            bw.Write(entry.WayMaxId);
-        }
-        if (entry.RelationIdsKnown)
-        {
-            bw.Write(entry.RelationMinId);
-            bw.Write(entry.RelationMaxId);
-        }
     }
 
     private bool _initialized = false;
@@ -798,100 +655,6 @@ public class PBFOsmStreamSource : OsmStreamSource, IPBFOsmPrimitiveConsumer
     {
         _activeRecorder?.TrackRelation(relation.id);
         this.QueuePrimitive(block, relation);
-    }
-
-    // Internal block index: sorted list of entries keyed by FileOffset. Warm-path skip
-    // consults this to avoid decompressing blobs whose contents we know we don't want.
-    // Deliberately internal: exposing raw offsets to callers would let a wrong value
-    // silently misread the file, and the win from cross-process caching isn't worth that
-    // risk. Cross-process caching, if ever needed, should ship as a verified sidecar file.
-    private sealed class PBFBlockIndex
-    {
-        private readonly List<PBFBlockEntry> _entries = new List<PBFBlockEntry>();
-
-        /// <summary>
-        /// Direct read-only view of the sorted entry list. Safe to iterate while the
-        /// source is idle; do not iterate while a decoder pass is in flight.
-        /// </summary>
-        public IReadOnlyList<PBFBlockEntry> Snapshot() => _entries;
-
-        public bool TryGetAt(long offset, out PBFBlockEntry entry)
-        {
-            var i = this.BinarySearchByOffset(offset);
-            if (i < 0) { entry = default; return false; }
-            entry = _entries[i];
-            return true;
-        }
-
-        public void Upsert(PBFBlockEntry entry)
-        {
-            var i = this.BinarySearchByOffset(entry.FileOffset);
-            if (i >= 0)
-            {
-                // Merge: preserve any Tier-2 info that a previous decode learned but this one didn't.
-                var existing = _entries[i];
-                if (!entry.NodeIdsKnown && existing.NodeIdsKnown)
-                {
-                    entry.NodeIdsKnown = true;
-                    entry.NodeMinId = existing.NodeMinId;
-                    entry.NodeMaxId = existing.NodeMaxId;
-                }
-                if (!entry.WayIdsKnown && existing.WayIdsKnown)
-                {
-                    entry.WayIdsKnown = true;
-                    entry.WayMinId = existing.WayMinId;
-                    entry.WayMaxId = existing.WayMaxId;
-                }
-                if (!entry.RelationIdsKnown && existing.RelationIdsKnown)
-                {
-                    entry.RelationIdsKnown = true;
-                    entry.RelationMinId = existing.RelationMinId;
-                    entry.RelationMaxId = existing.RelationMaxId;
-                }
-                _entries[i] = entry;
-            }
-            else
-            {
-                _entries.Insert(~i, entry);
-            }
-        }
-
-        private int BinarySearchByOffset(long offset)
-        {
-            var lo = 0;
-            var hi = _entries.Count - 1;
-            while (lo <= hi)
-            {
-                var mid = lo + ((hi - lo) >> 1);
-                var midOffset = _entries[mid].FileOffset;
-                if (midOffset == offset) return mid;
-                if (midOffset < offset) lo = mid + 1;
-                else hi = mid - 1;
-            }
-            return ~lo;
-        }
-    }
-
-    private struct PBFBlockEntry
-    {
-        public long FileOffset;
-        public long EndOffset;
-
-        public bool HasNodes;
-        public bool HasWays;
-        public bool HasRelations;
-
-        public bool NodeIdsKnown;
-        public long NodeMinId;
-        public long NodeMaxId;
-
-        public bool WayIdsKnown;
-        public long WayMinId;
-        public long WayMaxId;
-
-        public bool RelationIdsKnown;
-        public long RelationMinId;
-        public long RelationMaxId;
     }
 
     private sealed class BlockRecorder

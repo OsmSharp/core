@@ -354,7 +354,7 @@ public class PBFOsmStreamSource : OsmStreamSource, IPBFOsmPrimitiveConsumer
                 header.osmosis_replication_base_url);
         }
     }
-    
+
     private long _firstWayPosition = -1;
     private long _firstRelationPosition = -1;
 

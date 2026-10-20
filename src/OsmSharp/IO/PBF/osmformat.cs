@@ -77,6 +77,42 @@ namespace OsmSharp.IO.PBF
       get { return _source; }
       set { _source = value; }
     }
+    private long? _osmosis_replication_timestamp = null;
+    /// <summary>
+    /// Seconds since the epoch at which the data was current, where the writer recorded it.
+    /// </summary>
+    [global::ProtoBuf.ProtoMember(32, IsRequired = false, Name=@"osmosis_replication_timestamp", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public long? osmosis_replication_timestamp
+    {
+      get { return _osmosis_replication_timestamp; }
+      set { _osmosis_replication_timestamp = value; }
+    }
+
+    private long? _osmosis_replication_sequence_number = null;
+    /// <summary>
+    /// Which replication sequence the data includes up to, where the writer recorded it.
+    /// </summary>
+    [global::ProtoBuf.ProtoMember(33, IsRequired = false, Name=@"osmosis_replication_sequence_number", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public long? osmosis_replication_sequence_number
+    {
+      get { return _osmosis_replication_sequence_number; }
+      set { _osmosis_replication_sequence_number = value; }
+    }
+
+    private string _osmosis_replication_base_url = null;
+    /// <summary>
+    /// The replication endpoint the sequence above belongs to.
+    /// </summary>
+    [global::ProtoBuf.ProtoMember(34, IsRequired = false, Name=@"osmosis_replication_base_url", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public string osmosis_replication_base_url
+    {
+      get { return _osmosis_replication_base_url; }
+      set { _osmosis_replication_base_url = value; }
+    }
+
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

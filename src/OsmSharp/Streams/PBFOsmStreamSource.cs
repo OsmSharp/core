@@ -329,6 +329,32 @@ public class PBFOsmStreamSource : OsmStreamSource, IPBFOsmPrimitiveConsumer
     #region PBF Blocks Reader
 
     private PBFReader _reader;
+
+    /// <summary>
+    /// What the extract says about its own place in the replication stream, or null when it says
+    /// nothing or nothing has been read yet.
+    /// </summary>
+    /// <remarks>
+    /// A planet-derived extract records the sequence it was cut at. Without it, a database built
+    /// from the extract has no safe place to resume replication from: starting at the endpoint's
+    /// latest skips everything in between, and there is nothing afterwards that can tell.
+    /// Reading one object is enough to have passed the header.
+    /// </remarks>
+    public (DateTime timestamp, long sequenceNumber, string baseUrl)? ReplicationState
+    {
+        get
+        {
+            var header = _reader?.Header;
+            if (header?.osmosis_replication_sequence_number == null) return null;
+
+            var seconds = header.osmosis_replication_timestamp ?? 0;
+
+            return (DateTimeOffset.FromUnixTimeSeconds(seconds).UtcDateTime,
+                header.osmosis_replication_sequence_number.Value,
+                header.osmosis_replication_base_url);
+        }
+    }
+    
     private long _firstWayPosition = -1;
     private long _firstRelationPosition = -1;
 

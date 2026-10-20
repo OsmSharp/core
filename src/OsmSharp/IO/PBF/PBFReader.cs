@@ -58,6 +58,16 @@ public class PBFReader
         _stream.Dispose();
     }
 
+    /// <summary>
+    /// The header block, once a block has been read past it.
+    /// </summary>
+    /// <remarks>
+    /// Kept rather than discarded: it carries the replication timestamp and sequence an extract was
+    /// cut at, which is the only thing that says where a store built from it stands in the stream.
+    /// Null until the header has been read, so a caller reads a block first.
+    /// </remarks>
+    public HeaderBlock Header { get; private set; }
+
     private readonly PrimitiveBlock _block = new PrimitiveBlock();
     private readonly BlobHeader _header = new BlobHeader();
 
@@ -147,7 +157,8 @@ public class PBFReader
             {
                 if (header.type == Encoder.OSMHeader)
                 {
-                    _runtimeTypeModel.Deserialize(sourceStream, null, _headerBlockType);
+                    this.Header = _runtimeTypeModel.Deserialize(sourceStream, null,
+                        _headerBlockType) as HeaderBlock;
                     notFoundBut = true;
                 }
 
